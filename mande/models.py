@@ -25,6 +25,7 @@ EMPLOYMENT = (
 )
 
 GRADES = (
+	(-1,'Not Applicable'),
 	(0,'Not Enrolled'),
 	(1,'Grade 1'),
 	(2,'Grade 2'),
@@ -120,38 +121,42 @@ class Teacher(models.Model):
 class IntakeSurvey(models.Model):
 
 	student_id = models.AutoField(primary_key=True)
-	date = models.DateTimeField('Date of Intake')
+	date = models.DateField('Date of Intake')
+
+	#Student Biographical Information
 	name = models.CharField('Name',max_length=64,default='')
 	dob = models.DateField('DOB')
-	grade_appropriate = models.IntegerField(choices=GRADES,default=1)
-	graduation = models.IntegerField()
+	grade_appropriate = models.IntegerField('Appropriate Grade',choices=GRADES,default=1)
+	graduation = models.IntegerField('Expected 6th Grade Graduation')
 	gender = models.CharField(max_length=1,choices=GENDERS,default='M')
 	address = models.TextField('Home Address')
+	enrolled = models.CharField('Currently enrolled?',max_length=2,choices=YN,default='N')
+	grade_current = models.IntegerField('Current grade (if enrolled)',choices=GRADES,default=-1)
+	grade_last = models.IntegerField('Last grade attended (if not enrolled)',choices=GRADES,default=-1)
+	reasons = models.TextField('Reasons for not attening',blank=True)
 
+	#Father's Information
 	father_name = models.CharField('Father\'s Name',max_length=64)
 	father_phone = models.CharField('Father\'s Phone',max_length=64)
-	father_profession = models.CharField('Father\'s Profession',max_length=64,default='NA')
+	father_profession = models.CharField('Father\'s Profession',max_length=64)
 	father_employment = models.CharField('Father\'s Employment',max_length=1,choices=EMPLOYMENT,default=1)
 
-
+	#Mother's Information
 	mother_name = models.CharField('Mother\'s Name',max_length=64)
 	mother_phone = models.CharField('Mother\'s Phone',max_length=64)
-	mother_profession = models.CharField('Mother\'s Profession',max_length=64,default='NA')
+	mother_profession = models.CharField('Mother\'s Profession',max_length=64)
 	mother_employment= models.CharField('Mother\'s Employment',max_length=1,choices=EMPLOYMENT,default=1)
 
-	minors = models.IntegerField(default=0)
-	minors_in_school = models.IntegerField(default=0)
-	minors_working = models.IntegerField(default=0)
-	minors_profession = models.CharField('What are they doing for work?',max_length=256, default='NA')
-	minors_encouraged = models.CharField('Did you encourage them to take this job?',max_length=2,choices=YN,default='NA')
-	minors_training = models.CharField('Did they receive any vocational training?',max_length=2,choices=YN,default='NA')
-	minors_training_type = models.CharField('What kind of vocational training did they receive?',max_length=256,default='NA')
+	#Household Information
+	minors = models.IntegerField('Number of children living in household (including student)',default=0)
+	minors_in_school = models.IntegerField('Number of children enrolled in school last year',default=0)
+	minors_working = models.IntegerField('Number of children under 18 working 15+ hours per week',default=0)
+	minors_profession = models.CharField('What are they doing for work?',max_length=256, blank=True)
+	minors_encouraged = models.CharField('Did you encourage them to take this job?',max_length=2,choices=YN)
+	minors_training = models.CharField('Did they receive any vocational training?',max_length=2,choices=YN)
+	minors_training_type = models.CharField('What kind of vocational training did they receive?',max_length=256,blank=True)
 
-	enrolled = models.CharField('Currently enrolled?',max_length=2,choices=YN,default='N')
-	grade_current = models.IntegerField(choices=GRADES,default=1)
-	grade_last = models.IntegerField(choices=GRADES,default=1)
-	reasons = models.TextField(default='NA')
-	notes = models.TextField(default='NA')
+	notes = models.TextField(blank=True)
 
 	def __str__(self):
 	   return str(self.student_id)+' - '+self.name
