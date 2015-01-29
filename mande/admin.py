@@ -46,8 +46,14 @@ class IntakeSurveyAdmin(admin.ModelAdmin):
     list_filter = ('date','student_id','name')
     search_fields = ['name']
 
-admin.site.register(School)
-admin.site.register(Classroom)
+class SchoolAdmin(admin.ModelAdmin):
+        list_display = ('school_name','school_location')
+
+class ClassroomAdmin(admin.ModelAdmin):
+        list_display = ('school_id','classroom_id', 'cohort','classroom_number','classroom_location')
+
+admin.site.register(School,SchoolAdmin)
+admin.site.register(Classroom,ClassroomAdmin)
 admin.site.register(Teacher)
 
 admin.site.register(IntakeSurvey,IntakeSurveyAdmin)

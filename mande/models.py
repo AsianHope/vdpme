@@ -96,9 +96,16 @@ APPOINTMENT_TYPES = (
 	('DENTAL', 'Dental'),
 	('CHECKUP', 'Check-up'),
 )
+
+EXIT_REASONS = (
+	('MOVING', 'Moving to another location'),
+	('MOTIVATION','Don\'t want to continue.'),
+	('EMPLOYMENT','Got a job'),
+	('OTHER','Other')
+)
 class School(models.Model):
 	school_id = models.AutoField(primary_key=True)
-	school_name = models.CharField('School Name',max_length=128)
+	school_name = models.CharField('School Code',max_length=128)
 	school_location = models.CharField('Location',max_length=128)
 	def __str__(self):
 		return self.school_name
@@ -130,8 +137,8 @@ class IntakeSurvey(models.Model):
 	graduation = models.IntegerField('Expected 6th Grade Graduation')
 	gender = models.CharField(max_length=1,choices=GENDERS,default='M')
 	address = models.TextField('Home Address')
-	enrolled = models.CharField('Currently enrolled?',max_length=2,choices=YN,default='N')
-	grade_current = models.IntegerField('Current grade (if enrolled)',choices=GRADES,default=-1)
+	enrolled = models.CharField('Currently enrolled in (public) school?',max_length=2,choices=YN,default='N')
+	grade_current = models.IntegerField('Current grade in [public] school (if enrolled)',choices=GRADES,default=-1)
 	grade_last = models.IntegerField('Last grade attended (if not enrolled)',choices=GRADES,default=-1)
 	reasons = models.TextField('Reasons for not attening',blank=True)
 
@@ -194,8 +201,8 @@ class IntakeUpdate(models.Model):
 	minors_training = models.CharField('Did they receive any vocational training?',max_length=2,choices=YN,default='NA')
 	minors_training_type = models.CharField('What kind of vocational training did they receive?',max_length=256,default='NA')
 
-	enrolled = models.CharField('Currently enrolled?',max_length=2,choices=YN,default='N')
-	grade_current = models.IntegerField(choices=GRADES,default=1)
+	enrolled = models.CharField('Currently enrolled in formal school?',max_length=2,choices=YN,default='N')
+	grade_current = models.IntegerField('Current grade in (public) school?',choices=GRADES,default=1)
 	grade_last = models.IntegerField(choices=GRADES,default=1)
 	reasons = models.TextField(default='NA')
 	notes = models.TextField(default='NA')
@@ -206,16 +213,12 @@ class IntakeUpdate(models.Model):
 class StudentEvaluation(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
 	date = models.DateField('Observation Date')
-	academic_notes = models.TextField('Academic Growth Notes',default='NA')
-	academic_score = models.IntegerField('Academic Growth Score',choices=SCORES,default=1)
-	study_notes = models.TextField('Study/Learning Skills Notes',default='NA')
-	study_score = models.IntegerField('Study/Learning Skills Score',choices=SCORES,default=1)
-	personal_notes = models.TextField('Life Skills/Personal Development Notes',default='NA')
-	personal_score = models.IntegerField('Life Skills/Personal Development Score',choices=SCORES,default=1)
-	hygiene_notes = models.TextField('Hygeine Knowledge Notes',default='NA')
-	hygiene_score = models.IntegerField('Hygeine Score',choices=SCORES,default=1)
-	faith_notes = models.TextField('Christian Growth Notes',default='NA')
-	faith_score = models.IntegerField('Christian Growth Score',choices=SCORES,default=1)
+	academic_score = models.IntegerField('Academic Growth Score')
+	study_score = models.IntegerField('Study/Learning Skills Score')
+	personal_score = models.IntegerField('Life Skills/Personal Development Score')
+	hygiene_score = models.IntegerField('Hygeine Score')
+	faith_score = models.IntegerField('Christian Growth Score')
+	comments = models.TextField('Overall comments',blank=True)
 
 	def __str__(self):
 		return str(self.date)+' - '+str(self.student_id)
@@ -235,9 +238,10 @@ class SpiritualActivitiesSurvey(models.Model):
 class ExitSurvey(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
 	exit_date = models.DateField('Exit Date')
-	early_exit = models.CharField('Early (Pre 6th Grade) Exit',max_length=2,choices=YN,default='NA')
-	last_grade = models.IntegerField('Early (Pre 6th Grade) Exit',max_length=1,choices=GRADES,default=1)
-	early_exit_reason = models.TextField('Reason Leaving Early',default='NA')
+	early_exit = models.CharField('Early Exit (before achieveing age appropriate level)',max_length=2,choices=YN,default='NA')
+	last_grade = models.IntegerField('Public School Grade at exit',max_length=1,choices=GRADES,default=1)
+	early_exit_reason = models.CharField('Reason for Leaving Early',choices=EXIT_REASONS,max_length=32)
+	early_exit_comment = models.TextField('Comment',blank=True)
 	secondary_enrollment = models.CharField('Plan to enroll in secondary school?',max_length=2,choices=YN,default='NA')
 	def __str__(self):
 		return str(self.exit_date)+' - '+str(self.student_id)
@@ -247,15 +251,14 @@ class PostExitSurvey(models.Model):
 	post_exit_survey_date = models.DateField('Date of Survey',default=datetime.date.today)
 	exit_date = models.DateField('Exit Date')
 	early_exit = models.CharField('Early (Pre 6th Grade) Exit',max_length=2,choices=YN,default='NA')
-	last_grade = models.IntegerField('Last Grade at AH',max_length=1,choices=GRADES,default=1)
 	father_profession = models.CharField('Father\'s Profession',max_length=64,default='NA')
 	father_employment = models.CharField('Father\'s Employment',max_length=1,choices=EMPLOYMENT,default=1)
 	mother_profession = models.CharField('Mother\'s Profession',max_length=64,default='NA')
 	mother_employment= models.CharField('Mother\'s Employment',max_length=1,choices=EMPLOYMENT,default=1)
 	minors = models.IntegerField('How many children (under 18) are working?',default=0)
 	enrolled = models.CharField('Currently in school? [Primary Child]',max_length=2,choices=YN,default='NA')
-	grade_current = models.IntegerField('Current Grade',choices=GRADES,default=1)
-	grade_previous = models.IntegerField('Last Grade attended?',choices=GRADES,default=1)
+	grade_current = models.IntegerField('Current Grade in formal school (if in school)',choices=GRADES,default=1)
+	grade_previous = models.IntegerField('Last Grade attended (if not in school)',choices=GRADES,default=1)
 	reasons = models.TextField('Reasons for not attending')
 	def __str__(self):
 		return str(self.exit_date)+' - '+str(self.student_id)
@@ -289,8 +292,8 @@ class Academic(models.Model):
 	classroom_id = models.ForeignKey(Classroom)
 	test_date = models.DateField(default=datetime.date.today)
 	test_level = models.CharField(choices=GRADES,default=0,max_length=2)
-	test_grade_math = models.IntegerField(choices=ACHIEVEMENT_LEVELS,default=70,max_length=3)
-	test_grade_khmer = models.IntegerField(choices=ACHIEVEMENT_LEVELS,default=70,max_length=3)
+	test_grade_math = models.IntegerField(max_length=3)
+	test_grade_khmer = models.IntegerField(max_length=3)
 	promote = models.CharField(choices=YN,default='NA',max_length=2)
 
 	def __str__(self):
@@ -303,12 +306,12 @@ class Health(models.Model):
 	height = models.DecimalField(max_digits=5,decimal_places=2)
 	weight = models.DecimalField(max_digits=5,decimal_places=2)
 	extractions = models.IntegerField(max_length=1,default=0)
-	sealent = models.CharField(choices=YN,default='NA',max_length=2)
-	filling = models.IntegerField(max_length=1,default=0)
-	endo = models.IntegerField(max_length=1,default=0)
-	scaling = models.IntegerField(max_length=1,default=0)
-	pulped = models.IntegerField(max_length=1,default=0)
-	xray = models.IntegerField(max_length=1,default=0)
+	sealent = models.IntegerField(max_length=2,default=0)
+	filling = models.IntegerField(max_length=2,default=0)
+	endo = models.IntegerField(max_length=2,default=0)
+	scaling = models.IntegerField(max_length=2,default=0)
+	pulped = models.IntegerField(max_length=2,default=0)
+	xray = models.IntegerField(max_length=2,default=0)
 	notes = models.TextField(default='')
 
 	def __str__(self):
