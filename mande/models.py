@@ -237,6 +237,7 @@ class SpiritualActivitiesSurvey(models.Model):
 
 class ExitSurvey(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
+	survey_date = models.DateField('Exit Survey Performed',default=datetime.date.today)
 	exit_date = models.DateField('Exit Date')
 	early_exit = models.CharField('Early Exit (before achieveing age appropriate level)',max_length=2,choices=YN,default='NA')
 	last_grade = models.IntegerField('Public School Grade at exit',max_length=1,choices=GRADES,default=1)
@@ -250,7 +251,7 @@ class PostExitSurvey(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
 	post_exit_survey_date = models.DateField('Date of Survey',default=datetime.date.today)
 	exit_date = models.DateField('Exit Date')
-	early_exit = models.CharField('Early (Pre 6th Grade) Exit',max_length=2,choices=YN,default='NA')
+	early_exit = models.CharField('Early (before achieving grade level) Exit',max_length=2,choices=YN,default='NA')
 	father_profession = models.CharField('Father\'s Profession',max_length=64,default='NA')
 	father_employment = models.CharField('Father\'s Employment',max_length=1,choices=EMPLOYMENT,default=1)
 	mother_profession = models.CharField('Mother\'s Profession',max_length=64,default='NA')
@@ -259,11 +260,11 @@ class PostExitSurvey(models.Model):
 	enrolled = models.CharField('Currently in school? [Primary Child]',max_length=2,choices=YN,default='NA')
 	grade_current = models.IntegerField('Current Grade in formal school (if in school)',choices=GRADES,default=1)
 	grade_previous = models.IntegerField('Last Grade attended (if not in school)',choices=GRADES,default=1)
-	reasons = models.TextField('Reasons for not attending')
+	reasons = models.TextField('Reasons for not attending',blank=True)
 	def __str__(self):
 		return str(self.exit_date)+' - '+str(self.student_id)
 
-class AttendanceDaysOffered(models.Model):
+class AttendanceDayOffering(models.Model):
 	classroom_id = models.ForeignKey(Classroom)
 	date = models.DateField()
 	offered = models.CharField(max_length=2,choices=YN,default='Y')
@@ -291,13 +292,13 @@ class Academic(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
 	classroom_id = models.ForeignKey(Classroom)
 	test_date = models.DateField(default=datetime.date.today)
-	test_level = models.CharField(choices=GRADES,default=0,max_length=2)
+	test_level = models.IntegerField(choices=GRADES,default=0,max_length=2)
 	test_grade_math = models.IntegerField(max_length=3)
 	test_grade_khmer = models.IntegerField(max_length=3)
-	promote = models.CharField(choices=YN,default='NA',max_length=2)
+	promote = models.BooleanField(default=False)
 
 	def __str__(self):
-		return str(self.test_date)+ ':'+str(self.student_id)+self.test_level
+		return str(self.test_date)+ ':'+str(self.student_id)
 
 class Health(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
@@ -312,7 +313,7 @@ class Health(models.Model):
 	scaling = models.IntegerField(max_length=2,default=0)
 	pulped = models.IntegerField(max_length=2,default=0)
 	xray = models.IntegerField(max_length=2,default=0)
-	notes = models.TextField(default='')
+	notes = models.TextField(blank=True)
 
 	def __str__(self):
 		return str(self.appointment_date) + ': '+self.appointment_type+ ' - '+str(self.student_id)
@@ -320,6 +321,9 @@ class Health(models.Model):
 class ClassroomEnrollment(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
 	classroom_id = models.ForeignKey(Classroom)
+	enrollment_date = models.DateField(default=datetime.date.today)
+	drop_date = models.DateField(null=True,blank=True)
+
 	def __str__(self):
 		return str(self.student_id)+str(self.classroom_id)
 

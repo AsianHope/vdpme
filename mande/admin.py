@@ -16,7 +16,7 @@ from mande.models import PostExitSurvey
 from mande.models import StudentEvaluation
 from mande.models import SpiritualActivitiesSurvey
 
-from mande.models import AttendanceDaysOffered
+from mande.models import AttendanceDayOffering
 from mande.models import Attendance
 
 from mande.models import Discipline
@@ -25,6 +25,16 @@ from mande.models import Health
 
 from mande.models import ClassroomEnrollment
 from mande.models import ClassroomTeacher
+
+class SchoolAdmin(admin.ModelAdmin):
+        list_display = ('school_name','school_location')
+
+class ClassroomAdmin(admin.ModelAdmin):
+        list_display = ('school_id','classroom_id', 'cohort','classroom_number','classroom_location')
+        list_filter = ('school_id','cohort')
+
+class TeacherAdmin(admin.ModelAdmin):
+        list_display = ('teacher_id','name')
 
 class IntakeSurveyAdmin(admin.ModelAdmin):
     fieldsets = [
@@ -46,31 +56,76 @@ class IntakeSurveyAdmin(admin.ModelAdmin):
     list_filter = ('date','student_id','name')
     search_fields = ['name']
 
-class SchoolAdmin(admin.ModelAdmin):
-        list_display = ('school_name','school_location')
+class IntakeInternalAdmin(admin.ModelAdmin):
+    list_display = ('student_id','enrollment_date','starting_grade')
+    list_filter = ('starting_grade','enrollment_date')
 
-class ClassroomAdmin(admin.ModelAdmin):
-        list_display = ('school_id','classroom_id', 'cohort','classroom_number','classroom_location')
+class IntakeUpdateAdmin(admin.ModelAdmin):
+    list_display = ('student_id','date')
+    list_filter = ('date',)
 
+class ExitSurveyAdmin(admin.ModelAdmin):
+    list_display = ('student_id','exit_date','last_grade','early_exit_reason')
+    list_filter = ('exit_date','last_grade','early_exit_reason')
+
+class PostExitSurveyAdmin(admin.ModelAdmin):
+    list_display = ('student_id','exit_date','enrolled')
+    list_filter = ('exit_date','enrolled')
+
+class StudentEvaluationAdmin(admin.ModelAdmin):
+    list_display = ('student_id', 'date', 'academic_score', 'study_score', 'personal_score', 'hygiene_score', 'faith_score')
+    list_filter = ('date',)
+
+class SpiritualActivitiesSurveyAdmin(admin.ModelAdmin):
+    list_display = ('student_id','date')
+    list_filter = ('date',)
+
+class AttendanceDayOfferingAdmin(admin.ModelAdmin):
+    list_display = ('classroom_id', 'date', 'offered')
+    list_filter = ('classroom_id', 'date', 'offered')
+
+class AttendanceAdmin(admin.ModelAdmin):
+    list_display = ('date','student_id','attendance')
+    list_filter = ('date','attendance')
+
+class DisciplineAdmin(admin.ModelAdmin):
+    list_display = ('incident_date','student_id','classroom_id','incident_code')
+    list_filter = ('incident_date','incident_code')
+
+class AcademicAdmin(admin.ModelAdmin):
+    list_display = ('test_date','classroom_id','student_id','test_level','promote')
+    list_filter = ('classroom_id','test_level','promote')
+
+class HealthAdmin(admin.ModelAdmin):
+    list_display = ('appointment_date','appointment_type','student_id')
+    list_filter = ('appointment_date','appointment_type')
+
+class ClassroomEnrollmentAdmin(admin.ModelAdmin):
+    list_display = ('classroom_id','student_id','enrollment_date','drop_date')
+    list_filter = ('classroom_id','enrollment_date','drop_date')
+
+class ClassroomTeacherAdmin(admin.ModelAdmin):
+    list_display = ('classroom_id','teacher_id')
+    list_filter = ('classroom_id','teacher_id')
 admin.site.register(School,SchoolAdmin)
 admin.site.register(Classroom,ClassroomAdmin)
-admin.site.register(Teacher)
+admin.site.register(Teacher,TeacherAdmin)
 
 admin.site.register(IntakeSurvey,IntakeSurveyAdmin)
-admin.site.register(IntakeInternal)
-admin.site.register(IntakeUpdate)
-admin.site.register(ExitSurvey)
-admin.site.register(PostExitSurvey)
+admin.site.register(IntakeInternal,IntakeInternalAdmin)
+admin.site.register(IntakeUpdate,IntakeUpdateAdmin)
+admin.site.register(ExitSurvey,ExitSurveyAdmin)
+admin.site.register(PostExitSurvey,PostExitSurveyAdmin)
 
-admin.site.register(StudentEvaluation)
-admin.site.register(SpiritualActivitiesSurvey)
+admin.site.register(StudentEvaluation,StudentEvaluationAdmin)
+admin.site.register(SpiritualActivitiesSurvey,SpiritualActivitiesSurveyAdmin)
 
-admin.site.register(AttendanceDaysOffered)
-admin.site.register(Attendance)
+admin.site.register(AttendanceDayOffering,AttendanceDayOfferingAdmin)
+admin.site.register(Attendance,AttendanceAdmin)
 
-admin.site.register(Discipline)
-admin.site.register(Academic)
-admin.site.register(Health)
+admin.site.register(Discipline,DisciplineAdmin)
+admin.site.register(Academic,AcademicAdmin)
+admin.site.register(Health,HealthAdmin)
 
-admin.site.register(ClassroomEnrollment)
-admin.site.register(ClassroomTeacher)
+admin.site.register(ClassroomEnrollment,ClassroomEnrollmentAdmin)
+admin.site.register(ClassroomTeacher,ClassroomTeacherAdmin)
