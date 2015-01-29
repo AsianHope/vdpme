@@ -1,5 +1,6 @@
 from django.db import models
 import datetime
+
 GENDERS = (
 	('M', 'Male'),
 	('F', 'Female'),
@@ -107,7 +108,7 @@ class School(models.Model):
 	school_id = models.AutoField(primary_key=True)
 	school_name = models.CharField('School Code',max_length=128)
 	school_location = models.CharField('Location',max_length=128)
-	def __str__(self):
+	def __unicode__(self):
 		return self.school_name
 
 class Classroom(models.Model):
@@ -116,14 +117,14 @@ class Classroom(models.Model):
 	school_id = models.ForeignKey(School)
 	classroom_number = models.CharField('Classroom Number',max_length=16)
 	classroom_location = models.CharField('Classroom Location',max_length=128)
-	def __str__(self):
-		return str(self.school_id)+ ' - '+ str(self.classroom_id)+' - '+str(self.cohort)
+	def __unicode__(self):
+		return unicode(self.school_id)+ ' - '+ unicode(self.classroom_id)+' - '+unicode(self.cohort)
 
 class Teacher(models.Model):
 	teacher_id = models.AutoField(primary_key=True)
 	name = models.CharField(max_length=32,default='')
-	def __str__(self):
-		return str(self.teacher_id)+' - '+self.name
+	def __unicode__(self):
+		return unicode(self.teacher_id)+' - '+self.name
 
 class IntakeSurvey(models.Model):
 
@@ -134,7 +135,7 @@ class IntakeSurvey(models.Model):
 	name = models.CharField('Name',max_length=64,default='')
 	dob = models.DateField('DOB')
 	grade_appropriate = models.IntegerField('Appropriate Grade',choices=GRADES,default=1)
-	graduation = models.IntegerField('Expected 6th Grade Graduation')
+	graduation = models.DateField('Expected 6th Grade Graduation')
 	gender = models.CharField(max_length=1,choices=GENDERS,default='M')
 	address = models.TextField('Home Address')
 	enrolled = models.CharField('Currently enrolled in (public) school?',max_length=2,choices=YN,default='N')
@@ -165,16 +166,16 @@ class IntakeSurvey(models.Model):
 
 	notes = models.TextField(blank=True)
 
-	def __str__(self):
-	   return str(self.student_id)+' - '+self.name
+	def __unicode__(self):
+	   return unicode(self.student_id)+' - '+self.name
 
 class IntakeInternal(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
 	enrollment_date = models.DateField('Enrollment Date')
 	starting_grade = models.IntegerField(choices=GRADES,default=1)
 
-	def __str__(self):
-		return str(self.student_id)
+	def __unicode__(self):
+		return unicode(self.student_id)
 
 class IntakeUpdate(models.Model):
 
@@ -207,8 +208,8 @@ class IntakeUpdate(models.Model):
 	reasons = models.TextField(default='NA')
 	notes = models.TextField(default='NA')
 
-	def __str__(self):
-		return str(self.date)+' - '+str(self.student_id)
+	def __unicode__(self):
+		return unicode(self.date)+' - '+unicode(self.student_id)
 
 class StudentEvaluation(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
@@ -220,8 +221,8 @@ class StudentEvaluation(models.Model):
 	faith_score = models.IntegerField('Christian Growth Score')
 	comments = models.TextField('Overall comments',blank=True)
 
-	def __str__(self):
-		return str(self.date)+' - '+str(self.student_id)
+	def __unicode__(self):
+		return unicode(self.date)+' - '+unicode(self.student_id)
 
 class SpiritualActivitiesSurvey(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
@@ -232,8 +233,8 @@ class SpiritualActivitiesSurvey(models.Model):
 	personal_baptism = models.CharField('Have you been baptized?',max_length=2,choices=YN,default='NA')
 	personal_bible_reading = models.CharField('Have you spent time reading the Bible in the last week?',max_length=2,choices=YN,default='NA')
 	personal_prayer_aloud = models.CharField('Have you prayed aloud in the last week?',max_length=2,choices=YN,default='NA')
-	def __str__(self):
-		return str(self.date)+' - '+str(self.student_id)
+	def __unicode__(self):
+		return unicode(self.date)+' - '+unicode(self.student_id)
 
 class ExitSurvey(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
@@ -244,8 +245,8 @@ class ExitSurvey(models.Model):
 	early_exit_reason = models.CharField('Reason for Leaving Early',choices=EXIT_REASONS,max_length=32)
 	early_exit_comment = models.TextField('Comment',blank=True)
 	secondary_enrollment = models.CharField('Plan to enroll in secondary school?',max_length=2,choices=YN,default='NA')
-	def __str__(self):
-		return str(self.exit_date)+' - '+str(self.student_id)
+	def __unicode__(self):
+		return unicode(self.exit_date)+' - '+unicode(self.student_id)
 
 class PostExitSurvey(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
@@ -261,22 +262,22 @@ class PostExitSurvey(models.Model):
 	grade_current = models.IntegerField('Current Grade in formal school (if in school)',choices=GRADES,default=1)
 	grade_previous = models.IntegerField('Last Grade attended (if not in school)',choices=GRADES,default=1)
 	reasons = models.TextField('Reasons for not attending',blank=True)
-	def __str__(self):
-		return str(self.exit_date)+' - '+str(self.student_id)
+	def __unicode__(self):
+		return unicode(self.exit_date)+' - '+unicode(self.student_id)
 
 class AttendanceDayOffering(models.Model):
 	classroom_id = models.ForeignKey(Classroom)
 	date = models.DateField()
 	offered = models.CharField(max_length=2,choices=YN,default='Y')
-	def __str__(self):
-		return str(self.classroom_id)+' - '+str(self.date)
+	def __unicode__(self):
+		return unicode(self.classroom_id)+' - '+unicode(self.date)
 class Attendance(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
 	date = models.DateField('Attendance Day',default=datetime.date.today)
 	attendance = models.CharField(max_length=2,choices=ATTENDANCE_CODES)
-	notes = models.CharField(max_length=256,default='')
-	def __str__(self):
-		return str(self.date) + ': '+ self.attendance + ' - ' + str(self.student_id)
+	notes = models.CharField(max_length=256,blank=True)
+	def __unicode__(self):
+		return unicode(self.date) + ': '+ self.attendance + ' - ' + unicode(self.student_id)
 
 class Discipline(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
@@ -285,8 +286,8 @@ class Discipline(models.Model):
 	incident_code = models.IntegerField(choices=DISCIPLINE_CODES,default=1)
 	incident_description = models.CharField(max_length=256,default='')
 
-	def __str__(self):
-			return str(self.incident_date)+ ':'+str(self.student_id)
+	def __unicode__(self):
+			return unicode(self.incident_date)+ ':'+unicode(self.student_id)
 
 class Academic(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
@@ -297,8 +298,8 @@ class Academic(models.Model):
 	test_grade_khmer = models.IntegerField(max_length=3)
 	promote = models.BooleanField(default=False)
 
-	def __str__(self):
-		return str(self.test_date)+ ':'+str(self.student_id)
+	def __unicode__(self):
+		return unicode(self.test_date)+ ':'+unicode(self.student_id)
 
 class Health(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
@@ -315,8 +316,8 @@ class Health(models.Model):
 	xray = models.IntegerField(max_length=2,default=0)
 	notes = models.TextField(blank=True)
 
-	def __str__(self):
-		return str(self.appointment_date) + ': '+self.appointment_type+ ' - '+str(self.student_id)
+	def __unicode__(self):
+		return unicode(self.appointment_date) + ': '+self.appointment_type+ ' - '+unicode(self.student_id)
 
 class ClassroomEnrollment(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
@@ -324,11 +325,11 @@ class ClassroomEnrollment(models.Model):
 	enrollment_date = models.DateField(default=datetime.date.today)
 	drop_date = models.DateField(null=True,blank=True)
 
-	def __str__(self):
-		return str(self.student_id)+str(self.classroom_id)
+	def __unicode__(self):
+		return unicode(self.student_id)+unicode(self.classroom_id)
 
 class ClassroomTeacher(models.Model):
 	classroom_id = models.ForeignKey(Classroom)
 	teacher_id = models.ForeignKey(Teacher)
-	def __str__(self):
-		return str(self.teacher_id)+str(self.classroom_id)
+	def __unicode__(self):
+		return unicode(self.teacher_id)+unicode(self.classroom_id)
