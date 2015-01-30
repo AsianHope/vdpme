@@ -53,32 +53,38 @@ class IntakeSurveyAdmin(admin.ModelAdmin):
 
     ]
     list_display = ('date','student_id','name','grade_appropriate')
-    list_filter = ('date','student_id','name')
-    search_fields = ['name']
+    list_filter = ('date','grade_appropriate')
+    search_fields = ['name','student_id']
 
 class IntakeInternalAdmin(admin.ModelAdmin):
     list_display = ('student_id','enrollment_date','starting_grade')
     list_filter = ('starting_grade','enrollment_date')
+    raw_id_fields = ('student_id',)
 
 class IntakeUpdateAdmin(admin.ModelAdmin):
     list_display = ('student_id','date')
     list_filter = ('date',)
+    raw_id_fields = ('student_id',)
 
 class ExitSurveyAdmin(admin.ModelAdmin):
     list_display = ('student_id','exit_date','last_grade','early_exit_reason')
     list_filter = ('exit_date','last_grade','early_exit_reason')
+    raw_id_fields = ('student_id',)
 
 class PostExitSurveyAdmin(admin.ModelAdmin):
     list_display = ('student_id','exit_date','enrolled')
     list_filter = ('exit_date','enrolled')
+    raw_id_fields = ('student_id',)
 
 class StudentEvaluationAdmin(admin.ModelAdmin):
     list_display = ('student_id', 'date', 'academic_score', 'study_score', 'personal_score', 'hygiene_score', 'faith_score')
     list_filter = ('date',)
+    raw_id_fields = ('student_id',)
 
 class SpiritualActivitiesSurveyAdmin(admin.ModelAdmin):
     list_display = ('student_id','date')
     list_filter = ('date',)
+    raw_id_fields = ('student_id',)
 
 class AttendanceDayOfferingAdmin(admin.ModelAdmin):
     list_display = ('classroom_id', 'date', 'offered')
@@ -87,26 +93,32 @@ class AttendanceDayOfferingAdmin(admin.ModelAdmin):
 class AttendanceAdmin(admin.ModelAdmin):
     list_display = ('date','student_id','attendance')
     list_filter = ('date','attendance')
+    raw_id_fields = ('student_id',)
 
 class DisciplineAdmin(admin.ModelAdmin):
     list_display = ('incident_date','student_id','classroom_id','incident_code')
     list_filter = ('incident_date','incident_code')
+    raw_id_fields = ('student_id',)
 
 class AcademicAdmin(admin.ModelAdmin):
     list_display = ('test_date','classroom_id','student_id','test_level','promote')
     list_filter = ('classroom_id','test_level','promote')
+    raw_id_fields = ('student_id',)
 
 class HealthAdmin(admin.ModelAdmin):
     list_display = ('appointment_date','appointment_type','student_id')
     list_filter = ('appointment_date','appointment_type')
+    raw_id_fields = ('student_id',)
 
 class ClassroomEnrollmentAdmin(admin.ModelAdmin):
     list_display = ('classroom_id','student_id','enrollment_date','drop_date')
     list_filter = ('classroom_id','enrollment_date','drop_date')
+    raw_id_fields = ('student_id',)
 
 class ClassroomTeacherAdmin(admin.ModelAdmin):
     list_display = ('classroom_id','teacher_id')
     list_filter = ('classroom_id','teacher_id')
+    
 admin.site.register(School,SchoolAdmin)
 admin.site.register(Classroom,ClassroomAdmin)
 admin.site.register(Teacher,TeacherAdmin)
