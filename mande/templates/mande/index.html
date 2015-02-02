@@ -1,0 +1,13 @@
+<h1>Intake Surveys</h1>
+<table border="1">
+    {% for survey in surveys %}
+
+    <tr>
+      <td><a href ="{% url 'student_detail' survey.student_id %}">{{ survey.student_id }}</a></td>
+      <td>{{survey.name}}</td>
+      <td>{{survey.gender}}</td>
+      <td>{{survey.dob}}</td>
+      <td>{{survey.student_id}}</td>
+
+    {% endfor %}
+</ul>

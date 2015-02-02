@@ -1,0 +1,13 @@
+<h1>Intake Surveys</h1>
+<table border="1">
+    {% for survey in object_list %}
+
+    <tr>
+      <td>{{survey.student_id}}</td>
+      <td>{{survey.name}}</td>
+      <td>{{survey.gender}}</td>
+      <td>{{survey.dob}}</td>
+      <td>{{survey.student_id}}</td>
+
+    {% endfor %}
+</ul>
