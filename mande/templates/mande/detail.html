@@ -1,6 +1,117 @@
-
+<style>
+table,tr,td,th{
+  border: solid 1px black;
+  border-collapse: collapse;
+h1{
+  margin-bottom: .1em;
+}
+</style>
 <h1>Detail for {{survey.name}}</h1>
-<h2>Updates</h2>
-    <table><tr>
-      <td>{{survey.father_name}}</td>
-    </tr></table>
+<small>Time since last update:
+  {% firstof recent_update.date|timesince survey.date|timesince "Never updated" %} </small>
+<h3>
+<table>
+  <tr>
+    <td>Gender: </td>
+    <td>{{ survey.get_gender_display }}</td>
+  </tr>
+  <tr>
+    <td>DOB: </td>
+    <td>{{ survey.dob|date:'d N Y'}} ({{survey.dob|timesince}} old)</td>
+  </tr>
+  <tr>
+    <td>Enrolled: </td>
+    <td>{% firstof recent_intake.enrollment_date|date:'d N Y' "Not yet enrolled" %}</td>
+  </tr>
+  <tr>
+    <td>Starting Grade: </td>
+    <td>{% firstof recent_intake.get_starting_grade_display "Not yet enrolled" %}</td>
+  </tr>
+  <tr>
+    <td>Current Grade: </td>
+    <td>{% firstof current_grade.get_test_level_display "No academic records found" %}</td>
+  </tr>
+  <tr>
+    <td>Expected 6th Grade Graduation: </td>
+    <td>{% firstof survey.graduation|date:'d N Y' "Not Entered" %}</td>
+  </tr>
+
+</table>
+
+<h3>Academics</h3>
+<table>
+<tr>
+  <th>Test Date</th>
+  <th>Test Grade</th>
+  <th>Math</th>
+  <th>Khmer</th>
+  <th>Promoted?</th>
+</tr>
+{% for test in academics %}
+<tr>
+  <td>{{test.test_date|date:'d N Y'}}</td>
+  <td>{{test.get_test_level_display}}</td>
+  <td>{{test.test_grade_math}}</td>
+  <td>{{test.test_grade_khmer}}</td>
+  <td>{{test.promote}}</td>
+</tr>
+{% endfor %}
+
+</table>
+<h3>Discipline</h3>
+<table>
+<tr>
+  <th>Date of Incident</th>
+  <th>Code</th>
+
+</tr>
+{% for incident in discipline %}
+<tr>
+  <td>{{incident.incident_date|date:'d N Y'}}</td>
+  <td>{{incident.get_incident_code_display}}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+<h3>Father's Information</h3>
+    <table>
+      <tr>
+        <td>Name: </td>
+        <td>{% firstof recent_update.father_name survey.father_name "Not Entered" %}</td>
+      </tr>
+      <tr>
+        <td>Phone: </td>
+        <td>{% firstof recent_update.father_phone survey.father_phone "Not Entered" %}</td>
+      </tr>
+      <tr>
+        <td>Profession:</td>
+        <td>{% firstof recent_update.father_profession survey.father_profession "Not Entered" %}</td>
+      </tr>
+      <tr>
+        <td>Employment (1-10, 1 is low income):</td>
+        <td>{% firstof recent_update.father_employment survey.father_employment "Not Entered" %}</td>
+      </tr>
+
+    </table>
+
+<h3>Mother's Information</h3>
+    <table>
+      <tr>
+        <td>Name: </td>
+        <td>{% firstof recent_update.mother_name survey.mother_name "Not Entered" %}</td>
+      </tr>
+      <tr>
+        <td>Phone: </td>
+        <td>{% firstof recent_update.mother_phone survey.mother_phone "Not Entered" %}</td>
+      </tr>
+      <tr>
+        <td>Profession:</td>
+        <td>{% firstof recent_update.mother_profession survey.mother_profession "Not Entered" %}</td>
+      </tr>
+      <tr>
+        <td>Employment (1-10, 1 is low income):</td>
+        <td>{% firstof recent_update.mother_employment survey.mother_employment "Not Entered" %}</td>
+      </tr>
+
+    </table>
