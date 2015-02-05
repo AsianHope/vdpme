@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django.core.exceptions import ObjectDoesNotExist
+from datetime import date
+from datetime import datetime
+from datetime import timedelta
 
 from django.views.generic import ListView
 from mande.models import IntakeSurvey
@@ -32,7 +35,7 @@ def student_detail(request, student_id):
     try:
         current_grade = academics.filter(promote=True).latest('test_date')
     except ObjectDoesNotExist:
-        current_grade = None
+        current_grade = {'test_level':0}
 
     context = {
         'survey':survey,
@@ -41,7 +44,9 @@ def student_detail(request, student_id):
         'recent_intake':recent_intake,
         'academics':academics,
         'current_grade':current_grade,
-        'discipline':discipline}
+        'discipline':discipline,
+        'cur_year':date.today().year,
+        'graduation':survey.dob + timedelta(days=365*11)}
     print survey.student_id
     return render(request, 'mande/detail.html', context)
 

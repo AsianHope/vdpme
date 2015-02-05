@@ -1,3 +1,5 @@
+{% load mathfilters %}
+
 <style>
 table,tr,td,th{
   border: solid 1px black;
@@ -7,6 +9,7 @@ h1{
 }
 </style>
 <h1>Detail for {{survey.name}}</h1>
+<h2>Student ID: {{survey.student_id}}</h2>
 <small>Time since last update:
   {% firstof recent_update.date|timesince survey.date|timesince "Never updated" %} </small>
 <h3>
@@ -24,17 +27,29 @@ h1{
     <td>{% firstof recent_intake.enrollment_date|date:'d N Y' "Not yet enrolled" %}</td>
   </tr>
   <tr>
-    <td>Starting Grade: </td>
-    <td>{% firstof recent_intake.get_starting_grade_display "Not yet enrolled" %}</td>
-  </tr>
-  <tr>
-    <td>Current Grade: </td>
-    <td>{% firstof current_grade.get_test_level_display "No academic records found" %}</td>
-  </tr>
-  <tr>
     <td>Expected 6th Grade Graduation: </td>
-    <td>{% firstof survey.graduation|date:'d N Y' "Not Entered" %}</td>
+    <td>Jul. {{ graduation|date:'Y' }}</td>
   </tr>
+</table><br/>
+<table>
+  <tr>
+    <th>VDP Grade when Enrolled: </th><th>Current VDP Grade:</th><th>Public School Current Grade</th><th>Grades/Years to achieve</th>
+  </tr>
+  <tr>
+    <td>{% firstof survey.get_grade_appropriate_display "Not yet collected" %}</td>
+    <td>{% firstof current_grade.get_test_level_display "No academic records found" %}</td>
+    <td>{% firstof recent_survey.get_grade_current_display recent_survey.get_grade_last_display survey.get_grade_current_display survey.get_grade_last_display %}</td>
+    {% with grad_date=graduation|date:'Y' %}
+    <td>{{ 6|sub:current_grade.test_level }} / {{ grad_date|sub:cur_year }}</td>
+    {% endwith %}
+  </tr>
+  <tr>
+
+
+  </tr>
+</table><br/>
+<table>
+
 
 </table>
 

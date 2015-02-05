@@ -12,6 +12,12 @@ YN = (
 	('NA', 'Not Applicable'),
 )
 
+SITES = (
+	('1','PKPN'),
+	('2','PPT'),
+	('3','TK')
+
+)
 EMPLOYMENT = (
 	('1', '1 - Very Low Wage'),
 	('2', '2'),
@@ -34,6 +40,9 @@ GRADES = (
 	(4,'Grade 4'),
 	(5,'Grade 5'),
 	(6,'Grade 6'),
+	(50,'English'),
+	(60,'Computers'),
+	(70,'Vietnamese')
 )
 
 SCORES = (
@@ -61,7 +70,7 @@ COHORTS = (
 
 ATTENDANCE_CODES = (
 	('P','Present'),
-	('A','Unapproved Absence'),
+	('UA','Unapproved Absence'),
 	('AA','Approved Absence'),
 )
 
@@ -71,27 +80,8 @@ DISCIPLINE_CODES = (
 	(3,'Lying'),
 	(4,'Cursing'),
 	(5,'Other'),
-
-
 )
 
-ACHIEVEMENT_LEVELS = (
-	(99,'A+'),
-	(95,'A'),
-	(90,'A-'),
-	(89,'B+'),
-	(85,'B'),
-	(80,'B-'),
-	(79,'C+'),
-	(75,'C'),
-	(70,'C-'),
-	(69,'D+'),
-	(65,'D'),
-	(60,'D-'),
-	(50,'F'),
-	(0,'I'),
-	(999,'NA')
-)
 
 APPOINTMENT_TYPES = (
 	('DENTAL', 'Dental'),
@@ -130,12 +120,13 @@ class IntakeSurvey(models.Model):
 
 	student_id = models.AutoField(primary_key=True)
 	date = models.DateField('Date of Intake')
+	site = models.IntegerField('Site',choices=SITES,default=1)
 
 	#Student Biographical Information
 	name = models.CharField('Name',max_length=64,default='')
 	dob = models.DateField('DOB')
 	grade_appropriate = models.IntegerField('Appropriate Grade',choices=GRADES,default=1)
-	graduation = models.DateField('Expected 6th Grade Graduation')
+	graduation = models.DateField('Expected 6th Grade Graduation') #can calculate this based on dob
 	gender = models.CharField(max_length=1,choices=GENDERS,default='M')
 	address = models.TextField('Home Address')
 	enrolled = models.CharField('Currently enrolled in (public) school?',max_length=2,choices=YN,default='N')
@@ -145,13 +136,13 @@ class IntakeSurvey(models.Model):
 
 	#Father's Information
 	father_name = models.CharField('Father\'s Name',max_length=64)
-	father_phone = models.CharField('Father\'s Phone',max_length=64)
+	father_phone = models.CharField('Father\'s Phone',max_length=128)
 	father_profession = models.CharField('Father\'s Profession',max_length=64)
 	father_employment = models.CharField('Father\'s Employment',max_length=1,choices=EMPLOYMENT,default=1)
 
 	#Mother's Information
 	mother_name = models.CharField('Mother\'s Name',max_length=64)
-	mother_phone = models.CharField('Mother\'s Phone',max_length=64)
+	mother_phone = models.CharField('Mother\'s Phone',max_length=128)
 	mother_profession = models.CharField('Mother\'s Profession',max_length=64)
 	mother_employment= models.CharField('Mother\'s Employment',max_length=1,choices=EMPLOYMENT,default=1)
 
@@ -184,13 +175,13 @@ class IntakeUpdate(models.Model):
 	address = models.TextField('Home Address')
 
 	father_name = models.CharField('Father\'s Name',max_length=64)
-	father_phone = models.CharField('Father\'s Phone',max_length=64)
+	father_phone = models.CharField('Father\'s Phone',max_length=128)
 	father_profession = models.CharField('Father\'s Profession',max_length=64,default='NA')
 	father_employment = models.CharField('Father\'s Employment',max_length=1,choices=EMPLOYMENT,default=1)
 
 
 	mother_name = models.CharField('Mother\'s Name',max_length=64)
-	mother_phone = models.CharField('Mother\'s Phone',max_length=64)
+	mother_phone = models.CharField('Mother\'s Phone',max_length=128)
 	mother_profession = models.CharField('Mother\'s Profession',max_length=64,default='NA')
 	mother_employment= models.CharField('Mother\'s Employment',max_length=1,choices=EMPLOYMENT,default=1)
 
@@ -241,7 +232,7 @@ class ExitSurvey(models.Model):
 	survey_date = models.DateField('Exit Survey Performed',default=datetime.date.today)
 	exit_date = models.DateField('Exit Date')
 	early_exit = models.CharField('Early Exit (before achieveing age appropriate level)',max_length=2,choices=YN,default='NA')
-	last_grade = models.IntegerField('Public School Grade at exit',max_length=1,choices=GRADES,default=1)
+	last_grade = models.IntegerField('Public School Grade at exit',choices=GRADES,default=1)
 	early_exit_reason = models.CharField('Reason for Leaving Early',choices=EXIT_REASONS,max_length=32)
 	early_exit_comment = models.TextField('Comment',blank=True)
 	secondary_enrollment = models.CharField('Plan to enroll in secondary school?',max_length=2,choices=YN,default='NA')
@@ -293,7 +284,7 @@ class Academic(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
 	classroom_id = models.ForeignKey(Classroom)
 	test_date = models.DateField(default=datetime.date.today)
-	test_level = models.IntegerField(choices=GRADES,default=0,max_length=2)
+	test_level = models.IntegerField(choices=GRADES,default=0)
 	test_grade_math = models.IntegerField(max_length=3)
 	test_grade_khmer = models.IntegerField(max_length=3)
 	promote = models.BooleanField(default=False)
