@@ -12,7 +12,8 @@ from mande.models import IntakeUpdate
 
 def index(request):
     surveys = IntakeSurvey.objects.order_by('student_id')
-    context = {'surveys': surveys}
+    females = surveys.filter(gender='F')
+    context = {'surveys': surveys, 'females': females}
     return render(request, 'mande/index.html', context)
 
 def student_detail(request, student_id):
@@ -46,7 +47,7 @@ def student_detail(request, student_id):
         'current_grade':current_grade,
         'discipline':discipline,
         'cur_year':date.today().year,
-        'graduation':survey.dob + timedelta(days=365*11)}
+        'graduation':survey.dob + timedelta(days=365*12)}
     print survey.student_id
     return render(request, 'mande/detail.html', context)
 
