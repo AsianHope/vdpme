@@ -14,7 +14,7 @@ def index(request):
     surveys = IntakeSurvey.objects.order_by('student_id')
     females = surveys.filter(gender='F')
     context = {'surveys': surveys, 'females': females}
-    return render(request, 'mande/index.html', context)
+    return render(request, 'mande/index2.html', context)
 
 def student_detail(request, student_id):
     survey = IntakeSurvey.objects.get(pk=student_id)

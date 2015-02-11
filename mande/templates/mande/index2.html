@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Mande - Asian Hope VDP Monitoring and Evaluation</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/static/mande/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="/static/mande/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Timeline CSS -->
+    <link href="/static/mande/dist/css/timeline.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/static/mande/dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="/static/mande/bower_components/morrisjs/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="/static/mande/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-/static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Mande v0.01a</a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <ul class="nav navbar-top-links navbar-right">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-envelope fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-messages">
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <strong>John Smith</strong>
+                                    <span class="pull-right text-muted">
+                                        <em>Yesterday</em>
+                                    </span>
+                                </div>
+                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <strong>John Smith</strong>
+                                    <span class="pull-right text-muted">
+                                        <em>Yesterday</em>
+                                    </span>
+                                </div>
+                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <strong>John Smith</strong>
+                                    <span class="pull-right text-muted">
+                                        <em>Yesterday</em>
+                                    </span>
+                                </div>
+                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="text-center" href="#">
+                                <strong>Read All Messages</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-messages -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-tasks fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-tasks">
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Task 1</strong>
+                                        <span class="pull-right text-muted">40% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                                            <span class="sr-only">40% Complete (success)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Task 2</strong>
+                                        <span class="pull-right text-muted">20% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+                                            <span class="sr-only">20% Complete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Task 3</strong>
+                                        <span class="pull-right text-muted">60% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                            <span class="sr-only">60% Complete (warning)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Task 4</strong>
+                                        <span class="pull-right text-muted">80% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+                                            <span class="sr-only">80% Complete (danger)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="text-center" href="#">
+                                <strong>See All Tasks</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-tasks -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-alerts">
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-comment fa-fw"></i> New Comment
+                                    <span class="pull-right text-muted small">4 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-twitter fa-fw"></i> 3 New Followers
+                                    <span class="pull-right text-muted small">12 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-envelope fa-fw"></i> Message Sent
+                                    <span class="pull-right text-muted small">4 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-tasks fa-fw"></i> New Task
+                                    <span class="pull-right text-muted small">4 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-upload fa-fw"></i> Server Rebooted
+                                    <span class="pull-right text-muted small">4 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="text-center" href="#">
+                                <strong>See All Alerts</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-alerts -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                        </li>
+                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+            <!-- /.navbar-top-links -->
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                            </div>
+                            <!-- /input-group -->
+                        </li>
+                        <li>
+                            <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Reports<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="flot.html">Catch Up School Population</a>
+                                </li>
+                                <li>
+                                    <a href="morris.html">Skills Training Population</a>
+                                </li>
+                                <li>
+                                    <a href="morris.html">Age Appropriate Level</a>
+                                </li>
+                                <li>
+                                    <a href="morris.html">Students who have left</a>
+                                </li>
+                                <li>
+                                    <a href="morris.html">Test Results</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="tables.html"><i class="fa fa-table fa-fw"></i>Attendance</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-edit fa-fw"></i>Surveys<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="panels-wells.html">Intake Survey</a>
+                                </li>
+                                <li>
+                                    <a href="buttons.html">Update of Info</a>
+                                </li>
+                                <li>
+                                    <a href="notifications.html">Exit Survey</a>
+                                </li>
+                                <li>
+                                    <a href="typography.html">Post-Exit Survey</a>
+                                </li>
+                                <li>
+                                    <a href="icons.html">Spiritual Activities</a>
+                                </li>
+
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-sitemap fa-fw"></i>School Management<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="#">Enrolment</a>
+                                </li>
+                                <li>
+                                    <a href="#">Attendance <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="#">Take Attedance</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Set Attendance Days</a>
+                                        </li>
+                                    </ul>
+                                    <!-- /.nav-third-level -->
+                                </li>
+                                <li><a href="#">Discipline</a>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-files-o fa-fw"></i> Sample Pages<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="blank.html">Blank Page</a>
+                                </li>
+                                <li>
+                                    <a href="login.html">Login Page</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-/static-side -->
+        </nav>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Dashboard</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-bar-chart-o fa-fw"></i> VDP at a Glance
+                            <div class="pull-right">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                        Actions
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right" role="menu">
+                                        <li><a href="#">Action</a>
+                                        </li>
+                                        <li><a href="#">Another action</a>
+                                        </li>
+                                        <li><a href="#">Something else here</a>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">Separated link</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="col-md-3">
+                              <table class="table table-striped table-bordered table-hover">
+                                <tr><td colspan=3>Catch Up Students: <strong>{{surveys|length}}</strong></td></tr>
+                                <tr><td>PKPN: <strong>234</strong></td><td>TK: <strong>75</strong></td><td>PPT: <strong>230</strong></td></tr>
+                                <tr><td>F: <strong>245</strong></td><td>M: <strong>123</strong></td></tr>
+                              </table>
+                              <table class="table table-striped table-bordered table-hover">
+                                <tr><td colspan=6>By Grade:</td></tr>
+                                <tr><td>1: <strong>245</strong></td>
+                                     <td>2: <strong>123</strong></td>
+                                     <td>3: <strong>123</strong></td>
+                                     <td>4: <strong>123</strong></td>
+                                     <td>5: <strong>123</strong></td>
+                                     <td>6: <strong>123</strong></td>
+                                </tr>
+                              </table>
+
+                              <table class="table table-striped table-bordered table-hover">
+                                <tr><td colspan=3>Skill Training Students:</td></tr>
+                                <tr><td>English: <strong>245</strong></td>
+                                     <td>Vietnamese: <strong>123</strong></td>
+                                     <td>Computer: <strong>123</strong></td>
+                                </tr>
+                              </table>
+                            </div>
+                            <div class="col-md-3"><strong>TK</strong>
+                              <div id="morris-donut-chart-tk"></div>
+                            </div>
+                            <div class="col-md-3"><strong>PPT</strong>
+                              <div id="morris-donut-chart-ppt"></div>
+                            </div>
+                            <div class="col-md-3"><strong>PKPN</strong>
+                              <div id="morris-donut-chart-pkpn"></div>
+                            </div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-bar-chart-o fa-fw"></i> VDP by Grade
+                            <div class="pull-right">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                        Actions
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right" role="menu">
+                                        <li><a href="#">Action</a>
+                                        </li>
+                                        <li><a href="#">Another action</a>
+                                        </li>
+                                        <li><a href="#">Something else here</a>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">Separated link</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Class</th>
+                                                    <th>Site</th>
+                                                    <th>Grade</th>
+                                                    <th>Students</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>TK-1</td>
+                                                    <td>Toul Kork</td>
+                                                    <td>Grade 1</td>
+                                                    <td>33</td>
+                                                </tr>
+                                                <tr>
+                                                  <td>PKPN-4</td>
+                                                    <td>Prek Pneu</td>
+                                                    <td>Grade 4</td>
+                                                    <td>18</td>
+                                                </tr>
+                                                <tr>
+                                                  <td>PPT-1</td>
+                                                    <td>PP Thmey</td>
+                                                    <td>Grade 1</td>
+                                                    <td>15</td>
+                                                </tr>
+                                                <tr>
+                                                  <td>TK-4</td>
+                                                    <td>Toul Kork</td>
+                                                    <td>Grade 4</td>
+                                                    <td>19</td>
+                                                </tr>
+                                                <tr>
+                                                  <td>TK-2</td>
+                                                    <td>Toul Kork</td>
+                                                    <td>Grade 2</td>
+                                                    <td>18</td>
+                                                </tr>
+                                                <tr>
+                                                  <td>CP-1</td>
+                                                    <td>PP Thmey</td>
+                                                    <td>Computers</td>
+                                                    <td>8</td>
+                                                </tr>
+                                                <tr>
+                                                  <td>VN-2</td>
+                                                    <td>Prek Pneu</td>
+                                                    <td>Vietnamese</td>
+                                                    <td>24</td>
+                                                </tr>
+                                                <tr>
+                                                  <td>EN-1</td>
+                                                    <td>PP Thmey</td>
+                                                    <td>English</td>
+                                                    <td>12</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.table-responsive -->
+                                </div>
+                                <!-- /.col-lg-4 (nested) -->
+                                <div class="col-lg-8">
+                                    <div id="morris-bar-chart"></div>
+                                </div>
+                                <!-- /.col-lg-8 (nested) -->
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-8 -->
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-bell fa-fw"></i> Recent Activity
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="list-group">
+                                <a href="#" class="list-group-item">
+                                    <i class="fa fa-comment fa-fw"></i> Intake survey for "Phearey" added
+                                    <span class="pull-right text-muted small"><em>4 minutes ago by Chanrith</em>
+                                    </span>
+                                </a>
+                                <a href="#" class="list-group-item">
+                                    <i class="fa fa-building fa-fw"></i> "Chanthorn" enrolled in VDP-TK-4
+                                    <span class="pull-right text-muted small"><em>12 minutes ago by Sila</em>
+                                    </span>
+                                </a>
+                                <a href="#" class="list-group-item">
+                                    <i class="fa fa-times fa-fw"></i> Discipline for "Pidor" added
+                                    <span class="pull-right text-muted small"><em>27 minutes ago by Gunilla</em>
+                                    </span>
+                                </a>
+                                <a href="#" class="list-group-item">
+                                    <i class="fa fa-tasks fa-fw"></i> Update of info for "Chendamony"
+                                    <span class="pull-right text-muted small"><em>43 minutes ago by Chenda</em>
+                                    </span>
+                                </a>
+                                <a href="#" class="list-group-item">
+                                    <i class="fa fa-upload fa-fw"></i> Spiritual Activities Survey for "Sokchan"
+                                    <span class="pull-right text-muted small"><em>48 minutes ago by Chenda</em>
+                                    </span>
+                                </a>
+                                <a href="#" class="list-group-item">
+                                    <i class="fa fa-bolt fa-fw"></i> Attendance taken for PKPN-4
+                                    <span class="pull-right text-muted small"><em>52 minutes ago by Chanrith</em>
+                                    </span>
+                                </a>
+                                <a href="#" class="list-group-item">
+                                    <i class="fa fa-mortar-board fa-fw"></i> "Srey" reached grade level!
+                                    <span class="pull-right text-muted small"><em>53 minutes ago by Chanrith</em>
+                                    </span>
+                                </a>
+                                <a href="#" class="list-group-item">
+                                    <i class="fa fa-minus-square fa-fw"></i> Exit Survey for "Liza"
+                                    <span class="pull-right text-muted small"><em>59 minutes ago by Sila</em>
+                                    </span>
+                                </a>
+                                <a href="#" class="list-group-item">
+                                    <i class="fa fa-medkit fa-fw"></i> Medical Survey for "Sokanisa"
+                                    <span class="pull-right text-muted small"><em>Yesterday by Chenda</em>
+                                    </span>
+                                </a>
+                            </div>
+                            <!-- /.list-group -->
+                            <a href="#" class="btn btn-default btn-block">View All Alerts</a>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-bar-chart-o fa-fw"></i> Students at Grade Level
+                        </div>
+                        <div class="panel-body">
+                            <div id="morris-area-chart"></div>
+                            <a href="#" class="btn btn-default btn-block">View Details</a>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-4 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="/static/mande/bower_components/jquery/dist/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/static/mande/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="/static/mande/bower_components/metisMenu/dist/metisMenu.min.js"></script>
+
+    <!-- Morris Charts JavaScript -->
+    <script src="/static/mande/bower_components/raphael/raphael-min.js"></script>
+    <script src="/static/mande/bower_components/morrisjs/morris.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+
+          Morris.Area({
+              element: 'morris-area-chart',
+              data: [{
+                  period: '2014',
+                  tk: 40,
+                  pkpn: 50,
+                  ppt: 100,
+                  tot: 200
+              }, {
+                  period: '2015',
+                  tk: 2,
+                  pkpn: 2,
+                  ppt: 4,
+                  tot: 30
+              }, {
+                  period: '2016',
+                  tk: 2,
+                  pkpn: 10,
+                  ppt: 12,
+                  tot: 50
+              }, {
+                  period: '2017',
+                  tk: 20,
+                  pkpn: 15,
+                  ppt: 2,
+                  tot: 100
+              }, {
+                  period: '2018',
+                  tk: 15,
+                  pkpn: 100,
+                  ppt: 15,
+                  tot: 200
+              }, {
+                  period: '2019',
+                  tk: 20,
+                  pkpn: 10,
+                  ppt: 15,
+                  tot: 100
+              }, {
+                  period: '2020',
+                  tk: 20,
+                  pkpn: 50,
+                  ppt: 100,
+                  tot: 200
+              }, {
+                  period: '2021',
+                  tk: 50,
+                  pkpn: 15,
+                  ppt: 100,
+                  tot: 300
+              }, ],
+              xkey: 'period',
+              ykeys: ['tk', 'pkpn', 'ppt','tot'],
+              labels: ['TK', 'PKPN', 'PPT','Total Students'],
+              pointSize: 2,
+              hideHover: 'auto',
+              resize: true
+          });
+
+          Morris.Donut({
+              element: 'morris-donut-chart-tk',
+              data: [{
+                  label: "M",
+                  value: 12
+              }, {
+                  label: "F",
+                  value: 30
+              }, ],
+              resize: true,
+              colors: ['#d9534f','#337ab7']
+          });
+
+          Morris.Donut({
+              element: 'morris-donut-chart-ppt',
+              data: [{
+                  label: "M",
+                  value: 150
+              }, {
+                  label: "F",
+                  value: 180
+              }, ],
+              resize: true,
+              colors: ['#d9534f','#337ab7']
+          });
+
+          Morris.Donut({
+              element: 'morris-donut-chart-pkpn',
+              data: [{
+                  label: "M",
+                  value: 50
+              }, {
+                  label: "F",
+                  value: 90
+              }, ],
+              resize: true,
+              colors: ['#d9534f','#337ab7']
+          });
+
+
+          Morris.Bar({
+              element: 'morris-bar-chart',
+              data: [{
+                  y: 'G1',
+                  a: 100,
+                  b: 90,
+                  c: 33
+              }, {
+                  y: 'G2',
+                  a: 75,
+                  b: 65,
+                  c: 33
+              }, {
+                  y: 'G3',
+                  a: 50,
+                  b: 40,
+                  c: 33
+              }, {
+                  y: 'G4',
+                  a: 75,
+                  b: 65,
+                  c: 33
+              }, {
+                  y: 'G5',
+                  a: 50,
+                  b: 40,
+                  c: 33
+              }, {
+                  y: 'G6',
+                  a: 75,
+                  b: 65,
+                  c: 33
+              },
+              ],
+              xkey: 'y',
+              ykeys: ['a', 'b', 'c'],
+              labels: ['TK', 'PKPN','PPT'],
+              hideHover: 'auto',
+              resize: true
+          });
+
+      });
+
+    </script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="/static/mande/dist/js/sb-admin-2.js"></script>
+
+</body>
+
+</html>
