@@ -120,7 +120,7 @@ class IntakeSurvey(models.Model):
 
 	student_id = models.AutoField(primary_key=True)
 	date = models.DateField('Date of Intake')
-	site = models.IntegerField('Site',choices=SITES,default=1)
+	site = models.ForeignKey('School')
 
 	#Student Biographical Information
 	name = models.CharField('Name',max_length=64,default='')

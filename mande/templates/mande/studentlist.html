@@ -10,7 +10,7 @@
       {% for survey in surveys %}
 
       <tr>
-        <td>{{survey.get_site_display}}</td>
+        <td>{{survey.site.school_name}}</td>
         <td><a href ="{% url 'student_detail' survey.student_id %}">{{ survey.student_id }}</a></td>
         <td>{{survey.name}}</td>
         <td>{{survey.get_gender_display}}</td>
