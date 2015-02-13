@@ -16,6 +16,11 @@ def index(request):
     context = {'surveys': surveys, 'females': females}
     return render(request, 'mande/index2.html', context)
 
+def student_list(request):
+    surveys = IntakeSurvey.objects.order_by('student_id')
+    context = {'surveys': surveys}
+    return render(request, 'mande/studentlist.html', context)
+
 def student_detail(request, student_id):
     survey = IntakeSurvey.objects.get(pk=student_id)
     updates = survey.intakeupdate_set.all().filter().order_by('-date')

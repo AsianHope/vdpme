@@ -13,9 +13,9 @@ YN = (
 )
 
 SITES = (
-	('1','PKPN'),
-	('2','PPT'),
-	('3','TK')
+	(1,'PKPN'),
+	(2,'PPT'),
+	(3,'TK')
 
 )
 EMPLOYMENT = (

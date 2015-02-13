@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load mathfilters %}
+{% block title %}Intake Surveys{% endblock %}
+
+{% block content %}
+<div class="dataTable_wrapper">
+  <table class="table table-striped table-hover" id="studentDataTable">
+    <thead><tr><th>Site</th><th>SID</th><th>Name</th><th>Gender</th><th>DOB</th></tr></thead>
+    <tbody>
+      {% for survey in surveys %}
+
+      <tr>
+        <td>{{survey.get_site_display}}</td>
+        <td><a href ="{% url 'student_detail' survey.student_id %}">{{ survey.student_id }}</a></td>
+        <td>{{survey.name}}</td>
+        <td>{{survey.get_gender_display}}</td>
+        <td>{{survey.dob}}</td>
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+
+{% block script %}
+ <!-- DataTables JavaScript -->
+    <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#studentDataTable').DataTable({
+      responsive: true,
+      pageLength: 25,
+  });
+});
+</script>
+
+{% endblock %}

@@ -39,7 +39,7 @@ class TeacherAdmin(admin.ModelAdmin):
 class IntakeSurveyAdmin(admin.ModelAdmin):
     fieldsets = [
         ('',
-        {'fields': ['date']}),
+        {'fields': ['date','site']}),
         ('Student Biographical Information',
         {'fields': ['name','dob','grade_appropriate','graduation','gender','address','enrolled','grade_current','grade_last','reasons']}),
         ('Information about the Father',
@@ -118,7 +118,7 @@ class ClassroomEnrollmentAdmin(admin.ModelAdmin):
 class ClassroomTeacherAdmin(admin.ModelAdmin):
     list_display = ('classroom_id','teacher_id')
     list_filter = ('classroom_id','teacher_id')
-    
+
 admin.site.register(School,SchoolAdmin)
 admin.site.register(Classroom,ClassroomAdmin)
 admin.site.register(Teacher,TeacherAdmin)
