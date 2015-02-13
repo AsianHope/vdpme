@@ -2,14 +2,26 @@ from django.conf.urls import patterns, url
 
 from mande import views
 urlpatterns = patterns('',
-    # ex: /polls/
+    # ex: /mande/
     url(r'^$', views.index, name='index'),
+    # ex: /mande/students/
     url(r'^students/$', views.student_list, name='student_list'),
-    # ex: /polls/5/
+    # ex: /mande/students/4
     url(r'^students/(?P<student_id>\d+)/$', views.student_detail, name='student_detail'),
-    # ex: /polls/5/results/
-    url(r'^(?P<student_id>\d+)/results/$', views.results, name='results'),
-    # ex: /polls/5/vote/
-    url(r'^(?P<student_id>\d+)/vote/$', views.vote, name='vote'),
+    # ex: /mande/reports/
+    url(r'^reports/$', views.report_list, name='report_list'),
+
+    # ex: /mande/sites/
+    url(r'^sites/$', views.site_list, name='site_list'),
+
+    url(r'^attendance/$', views.attendance, name='attendance'),
+    url(r'^attendance/calendar$', views.attendance_calendar, name='attendance_calendar'),
+    url(r'^attendance/calendar/(?P<classroom_id>\d+)/$', views.attendance_days, name='attendance_days'),
+
+    url(r'^attendance/take/(?P<classroom_id>\d+)/$', views.take_attendance, name='take_attendance'),
+
+
+
+
 
 )

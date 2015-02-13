@@ -1,278 +1,408 @@
+{% extends "base.html" %}
 {% load mathfilters %}
-<head>
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"
-        rel="stylesheet">
-  <script type="text/javascript">
-  window.onload = function () {
-    var genderchartpkpn = new CanvasJS.Chart("genderReportPKPN",
-	{
-		title:{
-			text: "PKPN"
-		},
-                animationEnabled: true,
-		data: [
-		{
-			type: "doughnut",
-			startAngle: 60,
-			toolTipContent: "{legendText}: {y} ",
-			showInLegend: false,
-			dataPoints: [
-      {% with boys=surveys|length %}
-      {% with girls=females|length %}
-      {  y: {{boys|sub:girls}} , indexlabel: "Male",legendText:"M"},
-      {% endwith %}
-      {% endwith %}
-				{y: {{females|length}}, indexLabel: "Female", legendText: "F" },
-			]
-		}
-		]
-	});
+{% block title %}Dashboard{% endblock %}
 
-  var genderchartppt = new CanvasJS.Chart("genderReportPPT",
-{
-  title:{
-    text: "PPT"
-  },
-              animationEnabled: true,
-  data: [
-  {
-    type: "doughnut",
-    startAngle: 60,
-    toolTipContent: "{legendText}: {y} ",
-    showInLegend: false,
-    dataPoints: [
-    {% with boys=surveys|length %}
-    {% with girls=females|length %}
-    {  y: {{boys|sub:girls}} , indexlabel: "Male",legendText:"M"},
-    {% endwith %}
-    {% endwith %}
-      {y: {{females|length}}, indexLabel: "Female", legendText: "F" },
-    ]
-  }
-  ]
-});
+{% block content %}
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-bar-chart-o fa-fw"></i> VDP at a Glance
+                            <div class="pull-right">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                        Actions
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right" role="menu">
+                                        <li><a href="#">Action</a>
+                                        </li>
+                                        <li><a href="#">Another action</a>
+                                        </li>
+                                        <li><a href="#">Something else here</a>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">Separated link</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="col-md-3">
+                              <table class="table table-striped table-bordered table-hover">
+                                <tr><td colspan=3>Catch Up Students: <strong>{{surveys|length}}</strong></td></tr>
+                                <tr><td>PKPN: <strong>234</strong></td><td>TK: <strong>75</strong></td><td>PPT: <strong>230</strong></td></tr>
+                                <tr><td>F: <strong>245</strong></td><td>M: <strong>123</strong></td></tr>
+                              </table>
+                              <table class="table table-striped table-bordered table-hover">
+                                <tr><td colspan=6>By Grade:</td></tr>
+                                <tr><td>1: <strong>245</strong></td>
+                                     <td>2: <strong>123</strong></td>
+                                     <td>3: <strong>123</strong></td>
+                                     <td>4: <strong>123</strong></td>
+                                     <td>5: <strong>123</strong></td>
+                                     <td>6: <strong>123</strong></td>
+                                </tr>
+                              </table>
 
-var gendercharttk = new CanvasJS.Chart("genderReportTK",
-{
-title:{
-  text: "TK"
-},
-            animationEnabled: true,
-data: [
-{
-  type: "doughnut",
-  startAngle: 60,
-  toolTipContent: "{legendText}: {y} ",
-  showInLegend: false,
-  dataPoints: [
-  {% with boys=surveys|length %}
-  {% with girls=females|length %}
-  {  y: {{boys|sub:girls}} , indexlabel: "Male",legendText:"M"},
-  {% endwith %}
-  {% endwith %}
-    {y: {{females|length}}, indexLabel: "Female", legendText: "F" },
-  ]
-}
-]
-});
-var achievementpkpn = new CanvasJS.Chart("achievmentpkpn",
-{  theme: "theme2",
-  title:{
-    text: "Students at grade level"
-  },
-              animationEnabled: true,
-  data: [
-  {
-    type: "doughnut",
-    startAngle: 180,
-    toolTipContent: "{legendText}: {y} ",
-    showInLegend: false,
-    dataPoints: [
-     {y: 225 , indexlabel: "At Grade Level",legendText:"At Grade Level"},
-      {y: {{females|length}}, indexLabel: "Not At Grade Level", legendText: "Not At Grade Level" },
-    ]
-  }
-  ]
-});
-    var agechart = new CanvasJS.Chart("ageReport",
-    {
-      title:{
-      text: "Age Breakdown"
-      },
-      axisY:{
-        title:"Number of Students"
-      },
-      animationEnabled: true,
-      data: [
-      {
-        type: "stackedColumn",
-        toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}",
-        name: "Grade 1",
-        showInLegend: "true",
-        dataPoints: [
-        {% with boys=surveys|length %}
-        {% with girls=females|length %}
-        {  y: {{boys|sub:girls}} , label: "PKPN"},
-        {% endwith %}
-        {% endwith %}
-        {  y: 100 , label: "PPT"},
-        {  y: 75 , label: "TK"},
-        {  y: 200 , label: "Total"},
+                              <table class="table table-striped table-bordered table-hover">
+                                <tr><td colspan=3>Skill Training Students:</td></tr>
+                                <tr><td>English: <strong>245</strong></td>
+                                     <td>Vietnamese: <strong>123</strong></td>
+                                     <td>Computer: <strong>123</strong></td>
+                                </tr>
+                              </table>
+                            </div>
+                            <div class="col-md-3"><strong>TK</strong>
+                              <div id="morris-donut-chart-tk"></div>
+                            </div>
+                            <div class="col-md-3"><strong>PPT</strong>
+                              <div id="morris-donut-chart-ppt"></div>
+                            </div>
+                            <div class="col-md-3"><strong>PKPN</strong>
+                              <div id="morris-donut-chart-pkpn"></div>
+                            </div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-bar-chart-o fa-fw"></i> VDP by Grade
+                            <div class="pull-right">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                        Actions
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right" role="menu">
+                                        <li><a href="#">Action</a>
+                                        </li>
+                                        <li><a href="#">Another action</a>
+                                        </li>
+                                        <li><a href="#">Something else here</a>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">Separated link</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Class</th>
+                                                    <th>Site</th>
+                                                    <th>Grade</th>
+                                                    <th>Students</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>TK-1</td>
+                                                    <td>Toul Kork</td>
+                                                    <td>Grade 1</td>
+                                                    <td>33</td>
+                                                </tr>
+                                                <tr>
+                                                  <td>PKPN-4</td>
+                                                    <td>Prek Pneu</td>
+                                                    <td>Grade 4</td>
+                                                    <td>18</td>
+                                                </tr>
+                                                <tr>
+                                                  <td>PPT-1</td>
+                                                    <td>PP Thmey</td>
+                                                    <td>Grade 1</td>
+                                                    <td>15</td>
+                                                </tr>
+                                                <tr>
+                                                  <td>TK-4</td>
+                                                    <td>Toul Kork</td>
+                                                    <td>Grade 4</td>
+                                                    <td>19</td>
+                                                </tr>
+                                                <tr>
+                                                  <td>TK-2</td>
+                                                    <td>Toul Kork</td>
+                                                    <td>Grade 2</td>
+                                                    <td>18</td>
+                                                </tr>
+                                                <tr>
+                                                  <td>CP-1</td>
+                                                    <td>PP Thmey</td>
+                                                    <td>Computers</td>
+                                                    <td>8</td>
+                                                </tr>
+                                                <tr>
+                                                  <td>VN-2</td>
+                                                    <td>Prek Pneu</td>
+                                                    <td>Vietnamese</td>
+                                                    <td>24</td>
+                                                </tr>
+                                                <tr>
+                                                  <td>EN-1</td>
+                                                    <td>PP Thmey</td>
+                                                    <td>English</td>
+                                                    <td>12</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.table-responsive -->
+                                </div>
+                                <!-- /.col-lg-4 (nested) -->
+                                <div class="col-lg-8">
+                                    <div id="morris-bar-chart"></div>
+                                </div>
+                                <!-- /.col-lg-8 (nested) -->
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-8 -->
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-bell fa-fw"></i> Recent Activity
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="list-group">
+                                <a href="#" class="list-group-item">
+                                    <i class="fa fa-comment fa-fw"></i> Intake survey for "Phearey" added
+                                    <span class="pull-right text-muted small"><em>4 minutes ago by Chanrith</em>
+                                    </span>
+                                </a>
+                                <a href="#" class="list-group-item">
+                                    <i class="fa fa-building fa-fw"></i> "Chanthorn" enrolled in VDP-TK-4
+                                    <span class="pull-right text-muted small"><em>12 minutes ago by Sila</em>
+                                    </span>
+                                </a>
+                                <a href="#" class="list-group-item">
+                                    <i class="fa fa-times fa-fw"></i> Discipline for "Pidor" added
+                                    <span class="pull-right text-muted small"><em>27 minutes ago by Gunilla</em>
+                                    </span>
+                                </a>
+                                <a href="#" class="list-group-item">
+                                    <i class="fa fa-tasks fa-fw"></i> Update of info for "Chendamony"
+                                    <span class="pull-right text-muted small"><em>43 minutes ago by Chenda</em>
+                                    </span>
+                                </a>
+                                <a href="#" class="list-group-item">
+                                    <i class="fa fa-upload fa-fw"></i> Spiritual Activities Survey for "Sokchan"
+                                    <span class="pull-right text-muted small"><em>48 minutes ago by Chenda</em>
+                                    </span>
+                                </a>
+                                <a href="#" class="list-group-item">
+                                    <i class="fa fa-bolt fa-fw"></i> Attendance taken for PKPN-4
+                                    <span class="pull-right text-muted small"><em>52 minutes ago by Chanrith</em>
+                                    </span>
+                                </a>
+                                <a href="#" class="list-group-item">
+                                    <i class="fa fa-mortar-board fa-fw"></i> "Srey" reached grade level!
+                                    <span class="pull-right text-muted small"><em>53 minutes ago by Chanrith</em>
+                                    </span>
+                                </a>
+                                <a href="#" class="list-group-item">
+                                    <i class="fa fa-minus-square fa-fw"></i> Exit Survey for "Liza"
+                                    <span class="pull-right text-muted small"><em>59 minutes ago by Sila</em>
+                                    </span>
+                                </a>
+                                <a href="#" class="list-group-item">
+                                    <i class="fa fa-medkit fa-fw"></i> Medical Survey for "Sokanisa"
+                                    <span class="pull-right text-muted small"><em>Yesterday by Chenda</em>
+                                    </span>
+                                </a>
+                            </div>
+                            <!-- /.list-group -->
+                            <a href="#" class="btn btn-default btn-block">View All Alerts</a>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-bar-chart-o fa-fw"></i> Students at Grade Level
+                        </div>
+                        <div class="panel-body">
+                            <div id="morris-area-chart"></div>
+                            <a href="#" class="btn btn-default btn-block">View Details</a>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-4 -->
+            </div>
+            <!-- /.row -->
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript">
+      $(function() {
+
+          Morris.Area({
+              element: 'morris-area-chart',
+              data: [{
+                  period: '2014',
+                  tk: 40,
+                  pkpn: 50,
+                  ppt: 100,
+                  tot: 200
+              }, {
+                  period: '2015',
+                  tk: 2,
+                  pkpn: 2,
+                  ppt: 4,
+                  tot: 30
+              }, {
+                  period: '2016',
+                  tk: 2,
+                  pkpn: 10,
+                  ppt: 12,
+                  tot: 50
+              }, {
+                  period: '2017',
+                  tk: 20,
+                  pkpn: 15,
+                  ppt: 2,
+                  tot: 100
+              }, {
+                  period: '2018',
+                  tk: 15,
+                  pkpn: 100,
+                  ppt: 15,
+                  tot: 200
+              }, {
+                  period: '2019',
+                  tk: 20,
+                  pkpn: 10,
+                  ppt: 15,
+                  tot: 100
+              }, {
+                  period: '2020',
+                  tk: 20,
+                  pkpn: 50,
+                  ppt: 100,
+                  tot: 200
+              }, {
+                  period: '2021',
+                  tk: 50,
+                  pkpn: 15,
+                  ppt: 100,
+                  tot: 300
+              }, ],
+              xkey: 'period',
+              ykeys: ['tk', 'pkpn', 'ppt','tot'],
+              labels: ['TK', 'PKPN', 'PPT','Total Students'],
+              pointSize: 2,
+              hideHover: 'auto',
+              resize: true
+          });
+
+          Morris.Donut({
+              element: 'morris-donut-chart-tk',
+              data: [{
+                  label: "M",
+                  value: 12
+              }, {
+                  label: "F",
+                  value: 30
+              }, ],
+              resize: true,
+              colors: ['#d9534f','#337ab7']
+          });
+
+          Morris.Donut({
+              element: 'morris-donut-chart-ppt',
+              data: [{
+                  label: "M",
+                  value: 150
+              }, {
+                  label: "F",
+                  value: 180
+              }, ],
+              resize: true,
+              colors: ['#d9534f','#337ab7']
+          });
 
 
-        ]
-      },  {
-        type: "stackedColumn",
-        toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}",
-        name: "Grade 2",
-        showInLegend: "true",
-        dataPoints: [
-        {  y: {{females|length}} , label: "PKPN"},
-        {  y: 100 , label: "PPT"},
-        {  y: 85 , label: "TK"},
-        {  y: 300 , label: "Total"},
-
-
-        ]
-      },  {
-        type: "stackedColumn",
-        toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}",
-        name: "Grade 3",
-        showInLegend: "true",
-        dataPoints: [
-        {  y: {{females|length}} , label: "PKPN"},
-        {  y: 100 , label: "PPT"},
-        {  y: 85 , label: "TK"},
-        {  y: 300 , label: "Total"},
-
-
-        ]
-      },  {
-        type: "stackedColumn",
-        toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}",
-        name: "Grade 4",
-        showInLegend: "true",
-        dataPoints: [
-        {  y: {{females|length}} , label: "PKPN"},
-        {  y: 100 , label: "PPT"},
-        {  y: 85 , label: "TK"},
-        {  y: 300 , label: "Total"},
-
-
-        ]
-      },  {
-        type: "stackedColumn",
-        toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}",
-        name: "Grade 5",
-        showInLegend: "true",
-        dataPoints: [
-        {  y: {{females|length}} , label: "PKPN"},
-        {  y: 100 , label: "PPT"},
-        {  y: 85 , label: "TK"},
-        {  y: 300 , label: "Total"},
-
-
-        ]
-      },  {
-        type: "stackedColumn",
-        toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y}",
-        name: "Grade 6",
-        showInLegend: "true",
-        dataPoints: [
-        {  y: {{females|length}} , label: "PKPN"},
-        {  y: 100 , label: "PPT"},
-        {  y: 85 , label: "TK"},
-        {  y: 300 , label: "Total"},
-
-
-        ]
-      }
-      ]
-      ,
-      legend:{
-        cursor:"pointer",
-        itemclick: function(e) {
-          if (typeof (e.dataSeries.visible) ===  "undefined" || e.dataSeries.visible) {
-            e.dataSeries.visible = false;
-          }
-          else
-          {
-            e.dataSeries.visible = true;
-          }
-          agechart.render();
-        }
-      }
-    });
-    genderchartpkpn.render();
-    genderchartppt.render();
-    gendercharttk.render();
-
-    achievementpkpn.render();
-    agechart.render();
-  }
-  </script>
- <script type="text/javascript" src="https://services.asianhope.org/cdn/canvasjs.min.js"></script></head>
-
-<div class="container">
-<h1>at a glance</h1>
-
-<div class="row col-md-12" style="border: 1px solid gray;">
-  <h2>Catch up schools</h2>
-  <div class = "row">
-    <div class="col-md-3">
-      <table class="table table-striped table-bordered table-hover">
-        <tr><td colspan=3>Total students: <strong>{{surveys|length}}</strong></td></tr>
-        <tr><td>PKPN: <strong>234</strong></td><td>TK: <strong>75</strong></td><td>PPT: <strong>230</strong></td></tr>
-        <tr><td>F: <strong>245</strong></td><td>M: <strong>123</strong></td></tr>
-      </table>
-      <table class="table table-striped table-bordered table-hover">
-        <tr><td colspan=6>By Grade:</td></tr>
-        <tr><td>1: <strong>245</strong></td>
-             <td>2: <strong>123</strong></td>
-             <td>3: <strong>123</strong></td>
-             <td>4: <strong>123</strong></td>
-             <td>5: <strong>123</strong></td>
-             <td>6: <strong>123</strong></td>
-        </tr>
-      </table>
-
-      <table class="table table-striped table-bordered table-hover">
-        <tr><td colspan=3>Skill Training:</td></tr>
-        <tr><td>English: <strong>245</strong></td>
-             <td>Vietnamese: <strong>123</strong></td>
-             <td>Computer: <strong>123</strong></td>
-        </tr>
-      </table>
-    </div>
-    <div class="col-md-12">
-      <div id="genderReportPKPN" class="col-md-3" style="height: 300px;"></div>
-      <div id="genderReportPPT" class="col-md-3" style="height: 300px;"></div>
-      <div id="genderReportTK" class="col-md-3" style="height: 300px;"></div>
-    </div>
-  </div>
-  <div class="row">
-    <div class = "col-md-12">
-      <div id="achievmentpkpn" class="col-md-6" style="height: 300px; width: 50%;"></div>
-      <div id="ageReport" class="col-md-6" style="height: 300px; width: 50%;"></div>
-    </div>
-  </div>
-</div>
 
 
 
+          Morris.Donut({
+              element: 'morris-donut-chart-pkpn',
+              data: [{
+
+                {% with boys=surveys|length %}
+                {% with girls=females|length %}
+                  label: "M",
+                  value:  {{boys|sub:girls}},
+                {% endwith %}
+                {% endwith %}
+              }, {
+                  label: "F",
+                  value: {{females|length}}
+              }, ],
+              resize: true,
+              colors: ['#d9534f','#337ab7']
+          });
 
 
-<h1>Intake Surveys</h1>
-<table class="table table-striped">
-    {% for survey in surveys %}
+          Morris.Bar({
+              element: 'morris-bar-chart',
+              data: [{
+                  y: 'G1',
+                  a: 100,
+                  b: 90,
+                  c: 33
+              }, {
+                  y: 'G2',
+                  a: 75,
+                  b: 65,
+                  c: 33
+              }, {
+                  y: 'G3',
+                  a: 50,
+                  b: 40,
+                  c: 33
+              }, {
+                  y: 'G4',
+                  a: 75,
+                  b: 65,
+                  c: 33
+              }, {
+                  y: 'G5',
+                  a: 50,
+                  b: 40,
+                  c: 33
+              }, {
+                  y: 'G6',
+                  a: 75,
+                  b: 65,
+                  c: 33
+              },
+              ],
+              xkey: 'y',
+              ykeys: ['a', 'b', 'c'],
+              labels: ['TK', 'PKPN','PPT'],
+              hideHover: 'auto',
+              resize: true
+          });
 
-    <tr>
-      <td><a href ="{% url 'student_detail' survey.student_id %}">{{ survey.student_id }}</a></td>
-      <td>{{survey.name}}</td>
-      <td>{{survey.gender}}</td>
-      <td>{{survey.dob}}</td>
-      <td>{{survey.student_id}}</td>
+      });
 
-    {% endfor %}
-</ul>
-</div>
+    </script>
+{% endblock %}

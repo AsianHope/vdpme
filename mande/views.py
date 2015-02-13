@@ -9,17 +9,55 @@ from datetime import timedelta
 from django.views.generic import ListView
 from mande.models import IntakeSurvey
 from mande.models import IntakeUpdate
+from mande.models import Classroom
+from mande.models import Teacher
+from mande.models import ClassroomEnrollment
+from mande.models import ClassroomTeacher
 
 def index(request):
     surveys = IntakeSurvey.objects.order_by('student_id')
     females = surveys.filter(gender='F')
     context = {'surveys': surveys, 'females': females}
-    return render(request, 'mande/index2.html', context)
+    return render(request, 'mande/index.html', context)
 
 def student_list(request):
     surveys = IntakeSurvey.objects.order_by('student_id')
     context = {'surveys': surveys}
     return render(request, 'mande/studentlist.html', context)
+
+def report_list(request):
+    context= {}
+    return render(request, 'mande/reportlist.html', context)
+
+def site_list(request):
+    context= {}
+    return render(request, 'mande/sitelist.html', context)
+
+def attendance(request):
+    context= {}
+    return render(request, 'mande/attendance.html', context)
+
+def attendance_calendar(request):
+    classrooms = Classroom.objects.all()
+    context= {'classrooms':classrooms}
+    return render(request, 'mande/attendancecalendar.html', context)
+
+def attendance_days(request,classroom_id):
+    classroom = Classroom.objects.get(pk=classroom_id)
+    print classroom
+    context= {'classroom':classroom}
+    return render(request, 'mande/attendancedays.html', context)
+
+def take_attendance(request, classroom_id):
+    classroom = Classroom.objects.get(pk=classroom_id)
+    students = ClassroomEnrollment.objects.filter(classroom_id=1)
+    #students.exclude(drop_date<date.today())
+    context= {'classroom':classroom, 'students':students}
+    return render(request, 'mande/takeattendance.html', context)
+
+
+
+
 
 def student_detail(request, student_id):
     survey = IntakeSurvey.objects.get(pk=student_id)
@@ -55,10 +93,3 @@ def student_detail(request, student_id):
         'graduation':survey.dob + timedelta(days=365*12)}
     print survey.student_id
     return render(request, 'mande/detail.html', context)
-
-def results(request, question_id):
-    response = "You're looking at the results of question %s."
-    return HttpResponse(response % question_id)
-
-def vote(request, question_id):
-    return HttpResponse("You're voting on question %s." % question_id)

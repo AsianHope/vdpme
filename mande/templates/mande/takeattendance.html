@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}
+Taking attendance for {{classroom}}
+{% endblock %}
+
+{% block content %}
+<ul>
+   {% for student in students %}
+	<li>{{student}}</li>
+   {% endfor %}
+{% endblock %}
+
+{% block script %}
+{% endblock %}
