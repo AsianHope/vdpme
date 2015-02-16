@@ -18,7 +18,8 @@ urlpatterns = patterns('',
     url(r'^attendance/calendar$', views.attendance_calendar, name='attendance_calendar'),
     url(r'^attendance/calendar/(?P<classroom_id>\d+)/$', views.attendance_days, name='attendance_days'),
 
-    url(r'^attendance/take/(?P<classroom_id>\d+)/$', views.take_attendance, name='take_attendance'),
+    url(r'^attendance/take/$', views.take_attendance, name='take_attendance'),
+    url(r'^attendance/take/(?P<classroom_id>\d+)/$', views.take_class_attendance, name='take_class_attendance'),
 
 
 

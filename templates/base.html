@@ -304,7 +304,15 @@
                             <!-- /.nav-second-level -->
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-table fa-fw"></i>Attendance</a>
+                            <a href="#"><i class="fa fa-table fa-fw"></i>Attendance<span class="fa arrow"></span></a>
+                              <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="{% url 'take_attendance' %}">Take Attedance</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'attendance_calendar' %}">Modify Attendance Calendars</a>
+                                </li>
+                              </ul>
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-edit fa-fw"></i>Surveys<span class="fa arrow"></span></a>
@@ -337,23 +345,12 @@
                                 <li>
                                     <a href="#">Enrolment</a>
                                 </li>
-                                <li>
-                                    <a href="#">Attendance <span class="fa arrow"></span></a>
-                                    <ul class="nav nav-third-level">
-                                        <li>
-                                            <a href="#">Take Attedance</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Set Attendance Days</a>
-                                        </li>
-                                    </ul>
-                                    <!-- /.nav-third-level -->
-                                </li>
+
                                 <li><a href="#">Discipline</a>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
-                      
+
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->

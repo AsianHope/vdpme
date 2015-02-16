@@ -13,6 +13,7 @@ from mande.models import Classroom
 from mande.models import Teacher
 from mande.models import ClassroomEnrollment
 from mande.models import ClassroomTeacher
+from mande.models import Attendance
 
 def index(request):
     surveys = IntakeSurvey.objects.order_by('student_id')
@@ -48,14 +49,37 @@ def attendance_days(request,classroom_id):
     context= {'classroom':classroom}
     return render(request, 'mande/attendancedays.html', context)
 
-def take_attendance(request, classroom_id):
+def take_class_attendance(request, classroom_id):
+    try:
+        attendance = request.POST.dict()
+        attendance_date = attendance['attendance_date']
+    except:
+        attendance_date = date.today().isoformat()
+
     classroom = Classroom.objects.get(pk=classroom_id)
-    students = ClassroomEnrollment.objects.filter(classroom_id=1)
-    #students.exclude(drop_date<date.today())
-    context= {'classroom':classroom, 'students':students}
+    students = ClassroomEnrollment.objects.filter(classroom_id=classroom_id).exclude(drop_date__lte=attendance_date)
+    #get pre-existing attendance entries
+    sidlist = []
+    for student in students:
+
+        sidlist.append(int(student.student_id.student_id))
+
+    attendance_entries = Attendance.objects.filter(student_id__in=sidlist).filter(date=attendance_date)
+
+    #remove students who already have attendance taken
+    already_taken = []
+    for attendance in attendance_entries:
+        already_taken.append(int(attendance.student_id.student_id))
+    students = students.exclude(student_id__in=already_taken)
+
+    context= {'classroom':classroom, 'students':students, 'attendance_date':attendance_date, 'attendance_entries':attendance_entries}
+
+    return render(request, 'mande/takeclassattendance.html', context)
+
+def take_attendance(request):
+    classrooms = Classroom.objects.all()
+    context= {'classrooms':classrooms}
     return render(request, 'mande/takeattendance.html', context)
-
-
 
 
 
