@@ -21,6 +21,7 @@ urlpatterns = patterns('',
     url(r'^attendance/take/$', views.take_attendance, name='take_attendance'),
     url(r'^attendance/take/(?P<classroom_id>\d+)/$', views.take_class_attendance, name='take_class_attendance'),
 
+    url(r'^surveys/intake/$', views.intake_survey, name='intake_survey'),
 
 
 

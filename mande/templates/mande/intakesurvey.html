@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+{% block title %}
+Performing Intake Survey
+{% endblock %}
+
+{% block content %}
+
+<form action = "{% url 'intake_survey' %}" method="post">
+    {% csrf_token %}
+    {{ form|bootstrap_horizontal:'col-md-4' }}
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+{% endblock %}

@@ -15,6 +15,8 @@ from mande.models import ClassroomEnrollment
 from mande.models import ClassroomTeacher
 from mande.models import Attendance
 
+from mande.forms import IntakeSurveyForm
+
 def index(request):
     surveys = IntakeSurvey.objects.order_by('student_id')
     females = surveys.filter(gender='F')
@@ -117,3 +119,19 @@ def student_detail(request, student_id):
         'graduation':survey.dob + timedelta(days=365*12)}
     print survey.student_id
     return render(request, 'mande/detail.html', context)
+
+def intake_survey(request):
+    if request.method == 'POST':
+        form = IntakeSurveyForm(request.POST)
+        print form
+        if form.is_valid():
+            #process
+            print form.cleaned_data
+            #then return
+            return HttpResponseRedirect('/surveys/intake/')
+    else:
+        print "form is invalid"
+        form = IntakeSurveyForm()
+
+    context = {'form': form}
+    return render(request, 'mande/intakesurvey.html', context)
