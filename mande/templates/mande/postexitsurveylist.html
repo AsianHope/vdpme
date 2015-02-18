@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+{% block title %}
+Post-Exit Survey Eligible Students
+{% endblock %}
+
+{% block content %}
+<table class="table table-bordered table-striped table-hover" id="attendanceTable">
+  <thead><tr>
+    <th>SID</th>
+    <th>Name</th>
+    <th>Perform</th>
+  </thead>
+  <tbody>
+{% for exitsurvey in exitsurveys %}
+  <tr>
+    <td>{{exitsurvey.student_id.student_id}}</td>
+    <td>{{exitsurvey.student_id.name}}</td>
+    <td><a href = "{% url 'post_exit_survey' exitsurvey.student_id.student_id %}" class="btn btn-danger btn-xs" role="button">Perform Post-Exit Survey</a></td>
+  </tr>
+{% endfor %}
+  </tbody>
+</table>
+{% endblock %}

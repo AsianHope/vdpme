@@ -126,7 +126,7 @@ class IntakeSurvey(models.Model):
 	name = models.CharField('Name',max_length=64,default='')
 	dob = models.DateField('DOB')
 	grade_appropriate = models.IntegerField('Appropriate Grade',choices=GRADES,default=1)
-	graduation = models.DateField('Expected 6th Grade Graduation') #can calculate this based on dob
+	#graduation = models.DateField('Expected 6th Grade Graduation') #can calculate this based on dob
 	gender = models.CharField(max_length=1,choices=GENDERS,default='M')
 	address = models.TextField('Home Address')
 	enrolled = models.CharField('Currently enrolled in (public) school?',max_length=2,choices=YN,default='N')

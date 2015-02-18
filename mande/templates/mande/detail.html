@@ -2,18 +2,24 @@
 {% load mathfilters %}
 {% block title %}
 
-  {{survey.name}} <small>Student ID: {{survey.student_id}}</small>
+
+
+{{survey.name}} <small>Student ID: {{survey.student_id}}</small>
+<button class="btn btn-primary"><a href="/mande/students/" style="color: white">Back to all students</a></button><br/>
 
 {% endblock %}
 
 {% block content %}
-<button class="btn btn-primary"><a href="/mande/students/" style="color: white">Back to all students</a></button><br/>
+
 <div class="container">
 
   <div class="row">
     <div class = "col-md-3"><div style="background-color: gray; border: 1px solid black; width:175px; height: 225px;">photo?</div>
-    <small>Time since last update:
+      <small>Time since last update:
       {% firstof recent_update.date|timesince survey.date|timesince "Never updated" %} </small>
+      <button class="btn btn-primary"><a href="{% url 'intake_update' survey.student_id %}" style="color: white">Update now?</a></button><br/>
+
+
     </div>
     <div class = "col-md-5">
   <table class="table table-striped table-hover">

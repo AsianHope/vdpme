@@ -22,6 +22,19 @@ urlpatterns = patterns('',
     url(r'^attendance/take/(?P<classroom_id>\d+)/$', views.take_class_attendance, name='take_class_attendance'),
 
     url(r'^surveys/intake/$', views.intake_survey, name='intake_survey'),
+    url(r'^surveys/intake_update/(?P<student_id>\d+)/$', views.intake_update, name='intake_update'),
+    url(r'^surveys/intake_update/$', views.intake_update, name='intake_update'),
+
+    url(r'^surveys/exit/(?P<student_id>\d+)/$', views.exit_survey, name='exit_survey'),
+    url(r'^surveys/exit/$', views.exit_survey, name='exit_survey'),
+
+    url(r'^surveys/post_exit/(?P<student_id>\d+)/$', views.post_exit_survey, name='post_exit_survey'),
+    url(r'^surveys/post_exit/$', views.post_exit_survey_list, name='post_exit_survey'),
+
+    url(r'^surveys/spiritualactivities/(?P<student_id>\d+)/$', views.spiritualactivities_survey, name='spiritualactivities_survey'),
+    url(r'^surveys/spiritualactivities/$', views.spiritualactivities_survey, name='spiritualactivities_survey'),
+
+    url(r'^surveys/success/$', views.survey_success, name='survey_success'),
 
 
 

@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% load bootstrap %}
 {% block title %}
-Performing Intake Survey
+Performing Exit Survey
 {% endblock %}
 
 {% block content %}
 
 <div class="col-md-3"></div>
 <div class="col-md-6">
-<form action = "{% url 'intake_survey' %}" method="post">
+<form action = "{% url 'exit_survey' %}" method="post">
 
     {{ form|bootstrap }}
     {% csrf_token %}
