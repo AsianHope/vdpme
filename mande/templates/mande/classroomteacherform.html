@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+{% block title %}
+Manage Classroom Assignments
+{% endblock %}
+
+{% block content %}
+
+
+<div class="col-md-3">
+
+  <h3>Unassigned Classrooms</h3>
+  <ul style="color:red;">
+    {% for class in unassigned_classrooms %}
+      <li>{{ class }}</li>
+    {% endfor %}
+  </ul>
+</div>
+<div class="col-md-6">
+<form action = "{% url 'classroomteacher_form' teacher_id %}" method="post">
+
+    {{ form|bootstrap }}
+    {% csrf_token %}
+    <div class="col-md-12">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+</div>
+<div class="col-md-3"></div>
+
+<div class="col-md-12">
+  <h3>Current Assignments</h3>
+    <table class="table table-striped table-hover" id="classroomDataTable">
+    <thead>
+      <tr><th>Site</th><th>Teacher</th><th>Classroom</th></tr>
+    </thead>
+    <tbody>
+      {% for class in current_assignments %}
+      <tr>
+          <td>{{ class.classroom_id.school_id }}</td>
+          <td>{{ class.teacher_id }}</a></td>
+          <td>{{ class.classroom_id }}</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+   </table>
+</div>
+
+{% endblock %}
+{% block script %}
+ <!-- DataTables JavaScript -->
+    <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#classroomDataTable').DataTable({
+      responsive: true,
+      pageLength: 25,
+  });
+});
+</script>
+
+{% endblock %}

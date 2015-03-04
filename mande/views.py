@@ -27,6 +27,9 @@ from mande.forms import PostExitSurveyForm
 from mande.forms import SpiritualActivitiesSurveyForm
 from mande.forms import DisciplineForm
 from mande.forms import TeacherForm
+from mande.forms import ClassroomForm
+from mande.forms import ClassroomTeacherForm
+
 def index(request):
     surveys = IntakeSurvey.objects.order_by('student_id')
     females = surveys.filter(gender='F')
@@ -279,16 +282,71 @@ def discipline_form(request,student_id=0):
     context = {'form': form,'student_id':student_id}
     return render(request, 'mande/disciplineform.html', context)
 
-def teacher_form(request):
+def teacher_form(request, teacher_id=0):
     current_teachers = Teacher.objects.all()
+
+    if int(teacher_id)>0:
+        instance = Teacher.objects.get(pk=teacher_id)
+    else:
+        instance = Teacher()
+
     if request.method == 'POST':
-        form = TeacherForm(request.POST)
+        form = TeacherForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
             #then return
-            return HttpResponseRedirect('/mande/success/')
+            return HttpResponseRedirect('/mande/school-management/teachers/'+str(teacher_id))
     else:
-            form = TeacherForm()
+            form = TeacherForm(instance=instance)
 
-    context = {'form': form, 'current_teachers':current_teachers}
+    context = {'form': form, 'teacher_id':teacher_id,'current_teachers':current_teachers}
     return render(request, 'mande/teacherform.html', context)
+
+def classroom_form(request, classroom_id=0):
+    current_classrooms = Classroom.objects.all()
+
+    if int(classroom_id)>0:
+        instance = Classroom.objects.get(pk=classroom_id)
+    else:
+        instance = Classroom()
+
+
+    if request.method == 'POST':
+        form = ClassroomForm(request.POST, instance=instance)
+        print form
+        if form.is_valid():
+            form.save()
+            #then return
+            return HttpResponseRedirect('/mande/school-management/classrooms/'+str(classroom_id))
+    else:
+        form = ClassroomForm(instance=instance)
+
+
+    context = {'form': form, 'classroom_id':classroom_id, 'current_classrooms':current_classrooms}
+    return render(request, 'mande/classroomform.html', context)
+
+def classroomteacher_form(request, teacher_id=0):
+    current_assignments = ClassroomTeacher.objects.all()
+
+    classrooms_with_teachers = []
+    for classroom in current_assignments:
+        classrooms_with_teachers.append(int(classroom.classroom_id.classroom_id))
+
+    unassigned_classrooms = Classroom.objects.all().exclude(classroom_id__in=classrooms_with_teachers)
+
+    if int(teacher_id)>0:
+        current_assignments = current_assignments.filter(teacher_id=teacher_id)
+
+    if request.method == 'POST':
+        form = ClassroomTeacherForm(request.POST)
+        print form
+        if form.is_valid():
+            form.save()
+            #then return
+            return HttpResponseRedirect('/mande/school-management/classrooms/assignment/'+str(teacher_id))
+    else:
+        form = ClassroomTeacherForm()
+
+
+    context = {'form': form, 'teacher_id':teacher_id, 'current_assignments':current_assignments, 'unassigned_classrooms':unassigned_classrooms}
+    return render(request, 'mande/classroomteacherform.html', context)

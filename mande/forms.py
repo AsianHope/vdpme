@@ -6,6 +6,8 @@ from mande.models import PostExitSurvey
 from mande.models import SpiritualActivitiesSurvey
 from mande.models import Discipline
 from mande.models import Teacher
+from mande.models import Classroom
+from mande.models import ClassroomTeacher
 from django.forms.extras.widgets import SelectDateWidget
 
 class Html5DateInput(forms.DateInput):
@@ -50,3 +52,11 @@ class DisciplineForm(forms.ModelForm):
 class TeacherForm(forms.ModelForm):
     class Meta:
         model = Teacher
+
+class ClassroomForm(forms.ModelForm):
+    class Meta:
+        model = Classroom
+
+class ClassroomTeacherForm(forms.ModelForm):
+    class Meta:
+        model = ClassroomTeacher

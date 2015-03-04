@@ -1,20 +1,20 @@
 {% extends "base.html" %}
 {% load bootstrap %}
 {% block title %}
-Current Teachers
+Manage Teachers
 {% endblock %}
 
 {% block content %}
 <div class="col-md-12">
   <ul>
     {% for teacher in current_teachers %}
-      <li>{{teacher.name}}</li>
+      <li><a href = "{% url 'teacher_form' %}{{teacher.teacher_id}}">{{teacher.name}}</a></li>
     {% endfor %}
   </ul>
 </div>
 <div class="col-md-3"></div>
 <div class="col-md-6">
-<form action = "{% url 'teacher_form' %}" method="post">
+<form action = "{% url 'teacher_form' teacher_id %}" method="post">
 
     {{ form|bootstrap }}
     {% csrf_token %}

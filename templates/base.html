@@ -340,13 +340,24 @@
                             <a href="#"><i class="fa fa-sitemap fa-fw"></i>School Management<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                  <a href="/mande/students/">Student Information</a>
+                                  <a href="{% url 'student_list' %}">Student Information</a>
                                 </li>
                                 <li>
                                     <a href="#">Enrolment</a>
                                 </li>
 
-                                <li><a href="#">Discipline</a>
+                                <li>
+                                    <a href="{% url 'discipline_form' %}">Discipline</a>
+                                </li>
+                                <li>
+                                  <a href="{% url 'teacher_form' %}">Manage Teachers</a>
+                                </li>
+                                <li>
+                                  <a href="{% url 'classroom_form' %}">Manage Classrooms</a>
+                                </li>
+                                <li>
+                                  <a href="{% url 'classroomteacher_form' %}">Manage Classroom Assignments</a>
+                                </li>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>

@@ -108,13 +108,13 @@ class Classroom(models.Model):
 	classroom_number = models.CharField('Classroom Number',max_length=16)
 	classroom_location = models.CharField('Classroom Location',max_length=128)
 	def __unicode__(self):
-		return unicode(self.school_id)+ ' - '+ unicode(self.classroom_id)+' - '+unicode(self.cohort)
+		return unicode(self.school_id)+ ' - '+ unicode(self.classroom_number)+' - '+unicode(self.classroom_location)
 
 class Teacher(models.Model):
 	teacher_id = models.AutoField(primary_key=True)
 	name = models.CharField(max_length=32,default='')
 	def __unicode__(self):
-		return unicode(self.teacher_id)+' - '+self.name
+		return self.name
 
 class IntakeSurvey(models.Model):
 

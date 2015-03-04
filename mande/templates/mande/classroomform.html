@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+{% block title %}
+Manage Classrooms
+{% endblock %}
+
+{% block content %}
+<div class="col-md-3">
+  <ul>
+    {% for classroom in current_classrooms %}
+      <li><a href = "{% url 'classroom_form' %}{{classroom.classroom_id}}">{{ classroom }}</a></li>
+    {% endfor %}
+  </ul>
+  <a href = "{% url 'classroom_form' %}" class="btn btn-primary" role="button">Add a new classroom</a>
+</div>
+
+<div class="col-md-9">
+<form action = "{% url 'classroom_form' classroom_id %}" method="post">
+
+    {{ form|bootstrap }}
+    {% csrf_token %}
+    <div class="col-md-12">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+</div>
+
+
+{% endblock %}
