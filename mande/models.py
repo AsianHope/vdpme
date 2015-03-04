@@ -273,7 +273,7 @@ class Attendance(models.Model):
 class Discipline(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
 	classroom_id = models.ForeignKey(Classroom)
-	incident_date = models.DateTimeField(default=datetime.datetime.now)
+	incident_date = models.DateField('Incident Date',default=datetime.date.today)
 	incident_code = models.IntegerField(choices=DISCIPLINE_CODES,default=1)
 	incident_description = models.CharField(max_length=256,default='')
 

@@ -25,6 +25,8 @@ from mande.forms import IntakeUpdateForm
 from mande.forms import ExitSurveyForm
 from mande.forms import PostExitSurveyForm
 from mande.forms import SpiritualActivitiesSurveyForm
+from mande.forms import DisciplineForm
+from mande.forms import TeacherForm
 def index(request):
     surveys = IntakeSurvey.objects.order_by('student_id')
     females = surveys.filter(gender='F')
@@ -133,39 +135,9 @@ def intake_survey(request):
         form = IntakeSurveyForm(request.POST)
         print form
         if form.is_valid():
-            #process
-            intake = IntakeSurvey(
-            date = form.cleaned_data['date'],
-            site = form.cleaned_data['site'],
-            name = form.cleaned_data['name'],
-            dob = form.cleaned_data['dob'],
-            grade_appropriate = form.cleaned_data['grade_appropriate'],
-            gender = form.cleaned_data['gender'],
-            address = form.cleaned_data['address'],
-            enrolled = form.cleaned_data['enrolled'],
-            grade_current = form.cleaned_data['grade_current'],
-            grade_last = form.cleaned_data['grade_last'],
-            reasons = form.cleaned_data['reasons'],
-            father_name = form.cleaned_data['father_name'],
-            father_phone = form.cleaned_data['father_phone'],
-            father_profession = form.cleaned_data['father_profession'],
-            father_employment = form.cleaned_data['father_employment'],
-            mother_name = form.cleaned_data['mother_name'],
-            mother_phone = form.cleaned_data['mother_phone'],
-            mother_profession = form.cleaned_data['mother_profession'],
-            mother_employment= form.cleaned_data['mother_employment'],
-            minors = form.cleaned_data['minors'],
-            minors_in_school = form.cleaned_data['minors_in_school'],
-            minors_working = form.cleaned_data['minors_working'],
-            minors_profession = form.cleaned_data['minors_profession'],
-            minors_encouraged = form.cleaned_data['minors_encouraged'],
-            minors_training = form.cleaned_data['minors_training'],
-            minors_training_type = form.cleaned_data['minors_training_type'],
-            notes = form.cleaned_data['notes'],
-            )
-            intake.save()
+            form.save()
             #then return
-            return HttpResponseRedirect('/mande/surveys/success')
+            return HttpResponseRedirect('/mande/success/')
     else:
         print "form is invalid"
         form = IntakeSurveyForm()
@@ -187,36 +159,9 @@ def intake_update(request,student_id=0):
         form = IntakeUpdateForm(request.POST)
         print form
         if form.is_valid():
-            #process
-            print form.cleaned_data
-            intake = IntakeUpdate(
-                student_id = form.cleaned_data['student_id'],
-                date = form.cleaned_data['date'],
-                address = form.cleaned_data['address'],
-                enrolled = form.cleaned_data['enrolled'],
-                grade_current = form.cleaned_data['grade_current'],
-                grade_last = form.cleaned_data['grade_last'],
-                reasons = form.cleaned_data['reasons'],
-                father_name = form.cleaned_data['father_name'],
-                father_phone = form.cleaned_data['father_phone'],
-                father_profession = form.cleaned_data['father_profession'],
-                father_employment = form.cleaned_data['father_employment'],
-                mother_name = form.cleaned_data['mother_name'],
-                mother_phone = form.cleaned_data['mother_phone'],
-                mother_profession = form.cleaned_data['mother_profession'],
-                mother_employment= form.cleaned_data['mother_employment'],
-                minors = form.cleaned_data['minors'],
-                minors_in_school = form.cleaned_data['minors_in_school'],
-                minors_working = form.cleaned_data['minors_working'],
-                minors_profession = form.cleaned_data['minors_profession'],
-                minors_encouraged = form.cleaned_data['minors_encouraged'],
-                minors_training = form.cleaned_data['minors_training'],
-                minors_training_type = form.cleaned_data['minors_training_type'],
-                notes = form.cleaned_data['notes'],
-            )
-            intake.save()
+            form.save()
             #then return
-            return HttpResponseRedirect('/mande/surveys/success')
+            return HttpResponseRedirect('/mande/success/')
     else:
         print "form is invalid"
         form = IntakeUpdateForm(instance=most_recent)
@@ -230,20 +175,9 @@ def exit_survey(request,student_id=0):
         form = ExitSurveyForm(request.POST)
 
         if form.is_valid():
-            #process
-            exit = ExitSurvey(
-                student_id = form.cleaned_data['student_id'],
-                survey_date = form.cleaned_data['survey_date'],
-                exit_date = form.cleaned_data['exit_date'],
-                early_exit = form.cleaned_data['early_exit'],
-                last_grade = form.cleaned_data['last_grade'],
-                early_exit_reason =  form.cleaned_data['early_exit_reason'],
-                early_exit_comment = form.cleaned_data['early_exit_comment'],
-                secondary_enrollment = form.cleaned_data['secondary_enrollment'],
-            )
-            exit.save()
+            form.save()
             #then return
-            return HttpResponseRedirect('/mande/surveys/success')
+            return HttpResponseRedirect('/mande/success/')
     else:
         if student_id > 0:
             form = ExitSurveyForm({'student_id':student_id})
@@ -272,26 +206,9 @@ def post_exit_survey(request,student_id):
         form = PostExitSurveyForm(request.POST)
         print form
         if form.is_valid():
-            #process
-            print form.cleaned_data
-            exit = PostExitSurvey(
-                student_id = form.cleaned_data['student_id'],
-                post_exit_survey_date = form.cleaned_data['post_exit_survey_date'],
-                exit_date = form.cleaned_data['exit_date'],
-                early_exit = form.cleaned_data['early_exit'],
-                father_profession = form.cleaned_data['father_profession'],
-                father_employment = form.cleaned_data['father_employment'],
-                mother_profession = form.cleaned_data['mother_profession'],
-                mother_employment= form.cleaned_data['mother_employment'],
-                minors = form.cleaned_data['minors'],
-                enrolled = form.cleaned_data['enrolled'],
-                grade_current = form.cleaned_data['grade_current'],
-                grade_previous = form.cleaned_data['grade_previous'],
-                reasons = form.cleaned_data['reasons'],
-            )
-            exit.save()
+            form.save
             #then return
-            return HttpResponseRedirect('/mande/surveys/success')
+            return HttpResponseRedirect('/mande/success/')
     else:
         form = PostExitSurveyForm({
             'student_id':student_id,
@@ -328,20 +245,9 @@ def spiritualactivities_survey(request,student_id=0):
         form = SpiritualActivitiesSurveyForm(request.POST)
 
         if form.is_valid():
-            #process
-            survey = SpiritualActivitiesSurvey(
-                student_id = form.cleaned_data['student_id'],
-                date = form.cleaned_data['date'],
-                family_attend_church = form.cleaned_data['family_attend_church'],
-                personal_attend_church = form.cleaned_data['personal_attend_church'],
-                personal_prayer = form.cleaned_data['personal_prayer'],
-                personal_baptism = form.cleaned_data['personal_baptism'],
-                personal_bible_reading =  form.cleaned_data['personal_bible_reading'],
-                personal_prayer_aloud = form.cleaned_data['personal_prayer_aloud'],
-            )
-            survey.save()
+            form.save()
             #then return
-            return HttpResponseRedirect('/mande/surveys/success')
+            return HttpResponseRedirect('/mande/success')
     else:
         if student_id > 0:
             form = SpiritualActivitiesSurveyForm({'student_id':student_id})
@@ -353,3 +259,36 @@ def spiritualactivities_survey(request,student_id=0):
 
 def survey_success(request):
     return render(request, 'mande/success.html',{})
+
+def discipline_form(request,student_id=0):
+
+    if request.method == 'POST':
+        form = DisciplineForm(request.POST)
+
+        if form.is_valid():
+            #process
+            form.save()
+            #then return
+            return HttpResponseRedirect('/mande/success/')
+    else:
+        if student_id > 0:
+            form = DisciplineForm({'student_id':student_id})
+        else:
+            form = DisciplineForm()
+
+    context = {'form': form,'student_id':student_id}
+    return render(request, 'mande/disciplineform.html', context)
+
+def teacher_form(request):
+    current_teachers = Teacher.objects.all()
+    if request.method == 'POST':
+        form = TeacherForm(request.POST)
+        if form.is_valid():
+            form.save()
+            #then return
+            return HttpResponseRedirect('/mande/success/')
+    else:
+            form = TeacherForm()
+
+    context = {'form': form, 'current_teachers':current_teachers}
+    return render(request, 'mande/teacherform.html', context)

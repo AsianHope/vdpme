@@ -4,6 +4,8 @@ from mande.models import IntakeUpdate
 from mande.models import ExitSurvey
 from mande.models import PostExitSurvey
 from mande.models import SpiritualActivitiesSurvey
+from mande.models import Discipline
+from mande.models import Teacher
 from django.forms.extras.widgets import SelectDateWidget
 
 class Html5DateInput(forms.DateInput):
@@ -38,3 +40,13 @@ class SpiritualActivitiesSurveyForm(forms.ModelForm):
     date = forms.DateField(label="Survey Date",widget=Html5DateInput)
     class Meta:
         model = SpiritualActivitiesSurvey
+
+class DisciplineForm(forms.ModelForm):
+    incident_date = forms.DateField(label="Incident Date",widget=Html5DateInput)
+    class Meta:
+        model = Discipline
+        fields = ['student_id', 'classroom_id','incident_date','incident_code','incident_description']
+
+class TeacherForm(forms.ModelForm):
+    class Meta:
+        model = Teacher

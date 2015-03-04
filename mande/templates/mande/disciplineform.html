@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% load bootstrap %}
 {% block title %}
-Performing Spiritual Activities Survey
+Discipline
 {% endblock %}
 
 {% block content %}
 
 <div class="col-md-3"></div>
 <div class="col-md-6">
-<form action = "{% url 'spiritualactivities_survey' student_id %}" method="post">
+<form action = "{% url 'discipline_form' student_id %}" method="post">
 
     {{ form|bootstrap }}
     {% csrf_token %}
