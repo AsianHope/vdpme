@@ -46,6 +46,9 @@ urlpatterns = patterns('',
     url(r'^school-management/classrooms/assignment/$', views.classroomteacher_form, name='classroomteacher_form'),
     url(r'^school-management/classrooms/assignment/(?P<teacher_id>\d+)/$', views.classroomteacher_form, name='classroomteacher_form'),
 
+    url(r'^school-management/enrollment/(?P<student_id>\d+)/$', views.classroomenrollment_form, name='classroomenrollment_form'),
+    url(r'^school-management/enrollment/$', views.classroomenrollment_form, name='classroomenrollment_form'),
+
     url(r'^success/$', views.survey_success, name='survey_success'),
 
 

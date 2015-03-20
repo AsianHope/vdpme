@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+{% block title %}
+Classroom Enrollment
+{% endblock %}
+
+{% block content %}
+
+<div class="col-md-12">
+  <form action = "{% url 'classroomenrollment_form' student_id %}" method="post">
+      {% csrf_token %}
+      <div class = "col-md-4">
+      {{form.classroom_id | bootstrap}}
+      {{form.enrollment_date | bootstrap}}
+      <label for "selectedstudents">Currently Selected Students</label>
+      <ol id="selectedstudents">
+      </ol>
+
+      </div>
+      <div class = "col-md-8">
+      {{form.student_id }}
+      </div>
+
+      <div class="col-md-12">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+  </form>
+
+
+</div>
+
+{% endblock %}
+
+{% block script %}
+ <!-- DataTables JavaScript -->
+    <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#id_student_id').DataTable({
+      responsive: true,
+      pageLength: 5,
+  });
+});
+$("[type=checkbox]").change(function(){
+      // varible to hold string
+      if($(this).is(':checked')){
+          $('#selectedstudents').append('<li id="'+this.id+'student">'+$('label[for="'+this.id+'"]').text()+'</li>');
+      } else {
+          $('#'+this.id+'student').remove();
+      }
+});
+</script>
+
+{% endblock %}

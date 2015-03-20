@@ -29,6 +29,7 @@ from mande.forms import DisciplineForm
 from mande.forms import TeacherForm
 from mande.forms import ClassroomForm
 from mande.forms import ClassroomTeacherForm
+from mande.forms import ClassroomEnrollmentForm
 
 def index(request):
     surveys = IntakeSurvey.objects.order_by('student_id')
@@ -350,3 +351,22 @@ def classroomteacher_form(request, teacher_id=0):
 
     context = {'form': form, 'teacher_id':teacher_id, 'current_assignments':current_assignments, 'unassigned_classrooms':unassigned_classrooms}
     return render(request, 'mande/classroomteacherform.html', context)
+
+def classroomenrollment_form(request,student_id=0):
+
+    if request.method == 'POST':
+        form = ClassroomEnrollmentForm(request.POST)
+
+        if form.is_valid():
+            #process
+            form.save()
+            #then return
+            return HttpResponseRedirect('/mande/success/')
+    else:
+        if student_id > 0:
+            form = ClassroomEnrollmentForm({'student_id':student_id})
+        else:
+            form = ClassroomEnrollmentForm()
+
+    context = {'form': form,'student_id':student_id}
+    return render(request, 'mande/classroomenrollmentform.html', context)
