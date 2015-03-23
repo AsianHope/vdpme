@@ -9,6 +9,7 @@ from mande.models import Teacher
 from mande.models import Classroom
 from mande.models import ClassroomTeacher
 from mande.models import ClassroomEnrollment
+from mande.models import Attendance
 from django.forms.extras.widgets import SelectDateWidget
 from django.forms import CheckboxSelectMultiple
 from django.utils.safestring import mark_safe
@@ -78,3 +79,8 @@ class ClassroomEnrollmentForm(forms.ModelForm):
 
     class Meta:
         model = ClassroomEnrollment
+
+class AttendanceForm(forms.ModelForm):
+    class Meta:
+        model = Attendance
+        exclude = ('date',)

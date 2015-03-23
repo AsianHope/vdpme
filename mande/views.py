@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.core.exceptions import ObjectDoesNotExist
+from django.forms.formsets import formset_factory
+
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
@@ -30,6 +32,7 @@ from mande.forms import TeacherForm
 from mande.forms import ClassroomForm
 from mande.forms import ClassroomTeacherForm
 from mande.forms import ClassroomEnrollmentForm
+from mande.forms import AttendanceForm
 
 def index(request):
     surveys = IntakeSurvey.objects.order_by('student_id')
@@ -66,31 +69,52 @@ def attendance_days(request,classroom_id):
     return render(request, 'mande/attendancedays.html', context)
 
 def take_class_attendance(request, classroom_id):
+
+    #figure out which day of attendance we're after, default to today
+    #TODO: check attendance calendar for this classroom_id
     try:
         attendance = request.POST.dict()
+        print attendance
         attendance_date = attendance['attendance_date']
     except:
         attendance_date = date.today().isoformat()
 
     classroom = Classroom.objects.get(pk=classroom_id)
     students = ClassroomEnrollment.objects.filter(classroom_id=classroom_id).exclude(drop_date__lte=attendance_date)
+
+    #now that we have the students for the attendance day, let's figure out if we're posting new attendance
+    #if request.method == 'POST':
+    AttendanceFormSet = formset_factory(AttendanceForm)
+    student_attendance = []
+    for student in students:
+        existing_attendance = Attendance.objects.filter(student_id=student.student_id.student_id)
+        student_attendance.append({ 'student_id':student.student_id,
+                                    'date':attendance_date,
+                                    
+
+                                    })
+
+    formset = AttendanceFormSet(initial = student_attendance)
+
     #get pre-existing attendance entries
     sidlist = []
+    '''
     for student in students:
 
         sidlist.append(int(student.student_id.student_id))
-
+    '''
     attendance_entries = Attendance.objects.filter(student_id__in=sidlist).filter(date=attendance_date)
 
     #remove students who already have attendance taken
     already_taken = []
+    '''
     for attendance in attendance_entries:
         already_taken.append(int(attendance.student_id.student_id))
     students = students.exclude(student_id__in=already_taken)
+    '''
+    context= {'classroom':classroom, 'students':students, 'attendance_date':attendance_date, 'attendance_entries':attendance_entries, 'formset':formset}
 
-    context= {'classroom':classroom, 'students':students, 'attendance_date':attendance_date, 'attendance_entries':attendance_entries}
-
-    return render(request, 'mande/takeclassattendance.html', context)
+    return render(request, 'mande/takeclassattendanceformset.html', context)
 
 def take_attendance(request):
     classrooms = Classroom.objects.all()
@@ -105,6 +129,7 @@ def student_detail(request, student_id):
     intake = survey.intakeinternal_set.all().filter().order_by('-enrollment_date')
     academics = survey.academic_set.all().filter().order_by('-test_date')
     discipline = survey.discipline_set.all().filter().order_by('-incident_date')
+    classroomenrollment = survey.classroomenrollment_set.all().filter().order_by('drop_date')
     if len(updates) > 0:
         recent_update = updates[0]
     else:
@@ -130,7 +155,8 @@ def student_detail(request, student_id):
         'current_grade':current_grade,
         'discipline':discipline,
         'cur_year':date.today().year,
-        'graduation':survey.dob + timedelta(days=365*12)}
+        'graduation':survey.dob + timedelta(days=365*12),
+        'classroomenrollment':classroomenrollment}
     print survey.student_id
     return render(request, 'mande/detail.html', context)
 
@@ -358,6 +384,7 @@ def classroomenrollment_form(request,student_id=0):
         classroom_id = Classroom.objects.get(pk=request.POST.get('classroom_id'))
         enrollment_date = request.POST.get('enrollment_date')
 
+        #this seems janky to me - surely there is a better way?
         for student in request.POST.getlist('student_id'):
             student_id = IntakeSurvey.objects.get(pk=student)
             enrollment = ClassroomEnrollment(classroom_id=classroom_id, student_id=student_id, enrollment_date=enrollment_date)

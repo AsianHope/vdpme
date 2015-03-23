@@ -103,9 +103,9 @@ class School(models.Model):
 
 class Classroom(models.Model):
 	classroom_id = models.AutoField(primary_key=True)
-	cohort = models.IntegerField('Cohort',choices=GRADES,default=2014,max_length=8)
+	cohort = models.IntegerField('Target Grade',choices=GRADES,default=2014,max_length=8)
 	school_id = models.ForeignKey(School)
-	classroom_number = models.CharField('Classroom Number',max_length=16)
+	classroom_number = models.CharField('Description',max_length=16)
 	classroom_location = models.CharField('Classroom Location',max_length=128)
 	def __unicode__(self):
 		return unicode(self.school_id)+ ' - '+ unicode(self.classroom_number)+' - '+unicode(self.classroom_location)
@@ -262,10 +262,11 @@ class AttendanceDayOffering(models.Model):
 	offered = models.CharField(max_length=2,choices=YN,default='Y')
 	def __unicode__(self):
 		return unicode(self.classroom_id)+' - '+unicode(self.date)
+
 class Attendance(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
 	date = models.DateField('Attendance Day',default=datetime.date.today)
-	attendance = models.CharField(max_length=2,choices=ATTENDANCE_CODES)
+	attendance = models.CharField(max_length=2,choices=ATTENDANCE_CODES,default='P')
 	notes = models.CharField(max_length=256,blank=True)
 	def __unicode__(self):
 		return unicode(self.date) + ': '+ self.attendance + ' - ' + unicode(self.student_id)

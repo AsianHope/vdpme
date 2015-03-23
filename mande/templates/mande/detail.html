@@ -93,52 +93,70 @@
   {% endfor %}
 
   </table>
-<div class="row">
-  <div class="col-md-6">
-  <h3>Father's Information</h3>
-<table class="table table-bordered table-striped table-hover">
-        <tr>
-          <td>Name: </td>
-          <td>{% firstof recent_update.father_name survey.father_name "Not Entered" %}</td>
-        </tr>
-        <tr>
-          <td>Phone: </td>
-          <td>{% firstof recent_update.father_phone survey.father_phone "Not Entered" %}</td>
-        </tr>
-        <tr>
-          <td>Profession:</td>
-          <td>{% firstof recent_update.father_profession survey.father_profession "Not Entered" %}</td>
-        </tr>
-        <tr>
-          <td>Employment (1-10, 1 is low income):</td>
-          <td>{% firstof recent_update.father_employment survey.father_employment "Not Entered" %}</td>
-        </tr>
+  <div class="row">
+    <div class="col-md-6">
+      <h3>Father's Information</h3>
+      <table class="table table-bordered table-striped table-hover">
+          <tr>
+            <td>Name: </td>
+            <td>{% firstof recent_update.father_name survey.father_name "Not Entered" %}</td>
+          </tr>
+          <tr>
+            <td>Phone: </td>
+            <td>{% firstof recent_update.father_phone survey.father_phone "Not Entered" %}</td>
+          </tr>
+          <tr>
+            <td>Profession:</td>
+            <td>{% firstof recent_update.father_profession survey.father_profession "Not Entered" %}</td>
+          </tr>
+          <tr>
+            <td>Employment (1-10, 1 is low income):</td>
+            <td>{% firstof recent_update.father_employment survey.father_employment "Not Entered" %}</td>
+          </tr>
 
-      </table>
-</div>
-<div class="col-md-6">
-  <h3>Mother's Information</h3>
-    <table class="table table-bordered table-striped table-hover">
-        <tr>
-          <td>Name: </td>
-          <td>{% firstof recent_update.mother_name survey.mother_name "Not Entered" %}</td>
-        </tr>
-        <tr>
-          <td>Phone: </td>
-          <td>{% firstof recent_update.mother_phone survey.mother_phone "Not Entered" %}</td>
-        </tr>
-        <tr>
-          <td>Profession:</td>
-          <td>{% firstof recent_update.mother_profession survey.mother_profession "Not Entered" %}</td>
-        </tr>
-        <tr>
-          <td>Employment (1-10, 1 is low income):</td>
-          <td>{% firstof recent_update.mother_employment survey.mother_employment "Not Entered" %}</td>
-        </tr>
+        </table>
+    </div>
+    <div class="col-md-6">
+      <h3>Mother's Information</h3>
+        <table class="table table-bordered table-striped table-hover">
+            <tr>
+              <td>Name: </td>
+              <td>{% firstof recent_update.mother_name survey.mother_name "Not Entered" %}</td>
+            </tr>
+            <tr>
+              <td>Phone: </td>
+              <td>{% firstof recent_update.mother_phone survey.mother_phone "Not Entered" %}</td>
+            </tr>
+            <tr>
+              <td>Profession:</td>
+              <td>{% firstof recent_update.mother_profession survey.mother_profession "Not Entered" %}</td>
+            </tr>
+            <tr>
+              <td>Employment (1-10, 1 is low income):</td>
+              <td>{% firstof recent_update.mother_employment survey.mother_employment "Not Entered" %}</td>
+            </tr>
 
-      </table>
-</div>
-</div>
+          </table>
+    </div>
+  </div>
+
+  <h3>Course History:</h3>
+  <table class="table table-bordered table-striped table-hover">
+  <tr>
+    <th>Date Enrolled</th>
+    <th>Date Dropped</th>
+    <th>Course</th
+
+  </tr>
+  {% for class in classroomenrollment %}
+  <tr>
+    <td>{{class.enrollment_date|date:'d N Y'}}</td>
+    <td>{{class.drop_date|date:'d N Y'}}</td>
+    <td>{{class.classroom_id}}</td>
+  </tr>
+  {% endfor %}
+
+  </table>
 </div>
 
 {% endblock %}
