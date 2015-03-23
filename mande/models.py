@@ -103,7 +103,7 @@ class School(models.Model):
 
 class Classroom(models.Model):
 	classroom_id = models.AutoField(primary_key=True)
-	cohort = models.IntegerField('Cohort',choices=COHORTS,default=2014,max_length=8)
+	cohort = models.IntegerField('Cohort',choices=GRADES,default=2014,max_length=8)
 	school_id = models.ForeignKey(School)
 	classroom_number = models.CharField('Classroom Number',max_length=16)
 	classroom_location = models.CharField('Classroom Location',max_length=128)

@@ -355,13 +355,15 @@ def classroomteacher_form(request, teacher_id=0):
 def classroomenrollment_form(request,student_id=0):
 
     if request.method == 'POST':
-        form = ClassroomEnrollmentForm(request.POST)
+        classroom_id = Classroom.objects.get(pk=request.POST.get('classroom_id'))
+        enrollment_date = request.POST.get('enrollment_date')
 
-        if form.is_valid():
-            #process
-            form.save()
-            #then return
-            return HttpResponseRedirect('/mande/success/')
+        for student in request.POST.getlist('student_id'):
+            student_id = IntakeSurvey.objects.get(pk=student)
+            enrollment = ClassroomEnrollment(classroom_id=classroom_id, student_id=student_id, enrollment_date=enrollment_date)
+            enrollment.save()
+
+        return HttpResponseRedirect('/mande/success/')
     else:
         if student_id > 0:
             form = ClassroomEnrollmentForm({'student_id':student_id})
