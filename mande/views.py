@@ -68,51 +68,58 @@ def attendance_days(request,classroom_id):
     context= {'classroom':classroom}
     return render(request, 'mande/attendancedays.html', context)
 
-def take_class_attendance(request, classroom_id):
-
-    #figure out which day of attendance we're after, default to today
-    #TODO: check attendance calendar for this classroom_id
-    try:
-        attendance = request.POST.dict()
-        print attendance
-        attendance_date = attendance['attendance_date']
-    except:
-        attendance_date = date.today().isoformat()
+def take_class_attendance(request, classroom_id, attendance_date=date.today().isoformat()):
+    message = ''
+    if attendance_date != date.today().isoformat():
+        warning = 'The selected date is not today!'
+    else:
+        warning = ''
 
     classroom = Classroom.objects.get(pk=classroom_id)
     students = ClassroomEnrollment.objects.filter(classroom_id=classroom_id).exclude(drop_date__lte=attendance_date)
-
+    AttendanceFormSet = formset_factory(AttendanceForm,extra=0)
     #now that we have the students for the attendance day, let's figure out if we're posting new attendance
-    #if request.method == 'POST':
-    AttendanceFormSet = formset_factory(AttendanceForm)
-    student_attendance = []
-    for student in students:
-        existing_attendance = Attendance.objects.filter(student_id=student.student_id.student_id)
-        student_attendance.append({ 'student_id':student.student_id,
-                                    'date':attendance_date,
-                                    
+    if request.method == 'POST':
 
-                                    })
+        formset = AttendanceFormSet(request.POST)
+        print formset.errors
+        for form in formset:
 
-    formset = AttendanceFormSet(initial = student_attendance)
+                try:
+                    message = "Attendance recorded"
+                    f = form.cleaned_data
 
-    #get pre-existing attendance entries
-    sidlist = []
-    '''
-    for student in students:
+                    a = Attendance.objects.get(student_id=f.get('student_id'), date=f.get('attendance_date'))
 
-        sidlist.append(int(student.student_id.student_id))
-    '''
-    attendance_entries = Attendance.objects.filter(student_id__in=sidlist).filter(date=attendance_date)
+                    form.save(instance=a)
+                    message = "Attendance updated"
+                except ObjectDoesNotExist:
+                
+                    form.save()
 
-    #remove students who already have attendance taken
-    already_taken = []
-    '''
-    for attendance in attendance_entries:
-        already_taken.append(int(attendance.student_id.student_id))
-    students = students.exclude(student_id__in=already_taken)
-    '''
-    context= {'classroom':classroom, 'students':students, 'attendance_date':attendance_date, 'attendance_entries':attendance_entries, 'formset':formset}
+    else:
+        student_attendance = []
+        for student in students:
+            try:
+                existing_attendance = Attendance.objects.get(student_id=student.student_id.student_id,date=attendance_date)
+                student_attendance.append({ 'student_id':student.student_id,
+                                            'date':attendance_date,
+                                            'attendance':existing_attendance.attendance,
+                                            'notes':existing_attendance.notes
+                                            })
+
+            except ObjectDoesNotExist:
+                student_attendance.append({ 'student_id':student.student_id,
+                                        'date':attendance_date,
+                                        })
+
+        formset = AttendanceFormSet(initial = student_attendance)
+    context= {  'classroom':classroom,
+                'students':students,
+                'attendance_date':attendance_date,
+                'formset':formset,
+                'warning': warning,
+                'message': message}
 
     return render(request, 'mande/takeclassattendanceformset.html', context)
 

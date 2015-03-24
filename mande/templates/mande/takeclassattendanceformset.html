@@ -7,8 +7,9 @@ Taking attendance for {{classroom}}
 {% block content %}
 
 <div class="col-md-9">
-  <form method="post" action="{% url 'take_class_attendance' classroom.classroom_id %}">
+  <form method="post" action="{% url 'take_class_attendance' classroom.classroom_id attendance_date %}">
     {% csrf_token %}
+    {{ formset.management_form }}
     <div class="form-group">
       <table class="table table-bordered table-striped table-hover" id="attendanceTable">
         <thead><tr>
@@ -19,25 +20,15 @@ Taking attendance for {{classroom}}
         <tbody>
           {% for form in formset %}
           <tr>
-              <td>{{form.student_id.value}}</td>
+              <td>{{form.student_id.value}}{{ form.student_id.as_hidden }} {{form.date.as_hidden}} {{form.classroom_id.as_hidden}}</td>
               <td>{{form.student_id.value | name_by_sid}}</td>
               <td>{{ form.attendance }}</td>
-              <td><input type="text" /></td>
-          </tr>
-          {% endfor %}
-          {% for attendance in attendance_entries %}
-          <tr>
-              <td>{{attendance.student_id.student_id}}</td>
-              <td>{{attendance.student_id.name}}</td>
-              <td>{{ attendance.get_attendance_display }}<input type="radio" name="{{student.student_id.student_id}}" value ="P" checked/></td>
-              <td><input type="radio" name="{{student.student_id.student_id}}" value="UA"/></td>
-              <td><input type="radio" name="{{student.student_id.student_id}}" value="AA"/></td>
-              <td>{{attendance.notes}}</td>
+              <td>{{ form.notes }}</td>
           </tr>
           {% endfor %}
         </tbody>
         <tfoot>
-          <tr><td colspan=6><button class="btn btn-primary">Submit</button></td></tr>
+          <tr><td colspan=4><button class="btn btn-primary">Submit</button></td></tr>
         </tfoot>
 
       </table>
@@ -47,16 +38,12 @@ Taking attendance for {{classroom}}
 
 
 <div class="col-md-3">
-    <form method="post" action="{% url 'take_class_attendance' classroom.classroom_id %}">
-      {% csrf_token %}
       <input type="date" name="attendance_date" class="form-control" id="datePicker"/>
-    </form>
+      <p style="color:red">{{ warning }}</p>
+      <p style="color:green">{{ message }}</p>
 </div>
 
 
-{% for form in formset %}
-{{form.student_id.value}}
-{%endfor%}
 {% endblock %}
 
 {% block script %}
@@ -67,11 +54,18 @@ Taking attendance for {{classroom}}
 
 $(document).ready( function() {
     $('#datePicker').val('{{attendance_date}}');
+
     $(function() {
       $('#datePicker').change(function() {
-        this.form.submit();
+          //split on /
+          $url = window.location.href.split('/')
+          //replace the final value (the date)
+          $url[$url.length-2] = $(this).val()
+          //rewrite the url with the new date in place
+          window.location.href = $url.join('/')
       });
     });
+
     $('#attendanceTable').DataTable({
       responsive: true,
       pageLength: 300,

@@ -270,6 +270,8 @@ class Attendance(models.Model):
 	notes = models.CharField(max_length=256,blank=True)
 	def __unicode__(self):
 		return unicode(self.date) + ': '+ self.attendance + ' - ' + unicode(self.student_id)
+	class Meta:
+		unique_together = (('student_id', 'date'),)
 
 class Discipline(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
