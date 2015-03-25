@@ -266,7 +266,7 @@ class AttendanceDayOffering(models.Model):
 class Attendance(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
 	date = models.DateField('Attendance Day',default=datetime.date.today)
-	attendance = models.CharField(max_length=2,choices=ATTENDANCE_CODES,default='P')
+	attendance = models.CharField(max_length=2,choices=ATTENDANCE_CODES,default='P',null=True)
 	notes = models.CharField(max_length=256,blank=True)
 	def __unicode__(self):
 		return unicode(self.date) + ': '+ self.attendance + ' - ' + unicode(self.student_id)

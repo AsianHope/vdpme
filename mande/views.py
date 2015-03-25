@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.core.exceptions import ObjectDoesNotExist
-from django.forms.formsets import formset_factory
+from django.forms.models import modelformset_factory
 
 from datetime import date
 from datetime import datetime
@@ -77,43 +77,26 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
 
     classroom = Classroom.objects.get(pk=classroom_id)
     students = ClassroomEnrollment.objects.filter(classroom_id=classroom_id).exclude(drop_date__lte=attendance_date)
-    AttendanceFormSet = formset_factory(AttendanceForm,extra=0)
-    #now that we have the students for the attendance day, let's figure out if we're posting new attendance
+
+    #pre instantiate data for this form so that we can update the whole queryset later
+    for student in students:
+        Attendance.objects.get_or_create(student_id=student.student_id, date=attendance_date, defaults={'attendance':None})
+
+    #now get the whole set of attendance objects and create the formset
+    student_attendance = Attendance.objects.filter(student_id=students, date=attendance_date)
+    AttendanceFormSet = modelformset_factory(Attendance, form=AttendanceForm, extra=0)
+
     if request.method == 'POST':
 
         formset = AttendanceFormSet(request.POST)
-        print formset.errors
-        for form in formset:
-
-                try:
-                    message = "Attendance recorded"
-                    f = form.cleaned_data
-
-                    a = Attendance.objects.get(student_id=f.get('student_id'), date=f.get('attendance_date'))
-
-                    form.save(instance=a)
-                    message = "Attendance updated"
-                except ObjectDoesNotExist:
-                
-                    form.save()
+        if formset.is_valid():
+            formset.save()
+            message = "Attendance saved."
+            #clean up the mess we created making blank rows to update.
+            Attendance.objects.filter(attendance=None).delete()
 
     else:
-        student_attendance = []
-        for student in students:
-            try:
-                existing_attendance = Attendance.objects.get(student_id=student.student_id.student_id,date=attendance_date)
-                student_attendance.append({ 'student_id':student.student_id,
-                                            'date':attendance_date,
-                                            'attendance':existing_attendance.attendance,
-                                            'notes':existing_attendance.notes
-                                            })
-
-            except ObjectDoesNotExist:
-                student_attendance.append({ 'student_id':student.student_id,
-                                        'date':attendance_date,
-                                        })
-
-        formset = AttendanceFormSet(initial = student_attendance)
+        formset = AttendanceFormSet(queryset = student_attendance)
     context= {  'classroom':classroom,
                 'students':students,
                 'attendance_date':attendance_date,
