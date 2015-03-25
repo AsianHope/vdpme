@@ -139,6 +139,7 @@ def student_detail(request, student_id):
     except ObjectDoesNotExist:
         current_grade = {'test_level':0}
 
+    graduation = survey.dob +timedelta(days=365*12) if survey.dob is not None else "No birthday entered"
     context = {
         'survey':survey,
         'updates':updates,
@@ -148,7 +149,7 @@ def student_detail(request, student_id):
         'current_grade':current_grade,
         'discipline':discipline,
         'cur_year':date.today().year,
-        'graduation':survey.dob + timedelta(days=365*12),
+        'graduation': graduation,
         'classroomenrollment':classroomenrollment,
         'attendance_present':attendance_present,
         'attendance_approved_absence':attendance_approved_absence,
