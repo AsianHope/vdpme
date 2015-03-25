@@ -83,4 +83,3 @@ class ClassroomEnrollmentForm(forms.ModelForm):
 class AttendanceForm(forms.ModelForm):
     class Meta:
         model = Attendance
-    

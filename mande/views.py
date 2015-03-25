@@ -120,6 +120,9 @@ def student_detail(request, student_id):
     academics = survey.academic_set.all().filter().order_by('-test_date')
     discipline = survey.discipline_set.all().filter().order_by('-incident_date')
     classroomenrollment = survey.classroomenrollment_set.all().filter().order_by('drop_date')
+    attendance_present = survey.attendance_set.all().filter(attendance='P').count()
+    attendance_approved_absence = survey.attendance_set.all().filter(attendance='AA').count()
+    attendance_unapproved_absence = survey.attendance_set.all().filter(attendance='UA').count()
     if len(updates) > 0:
         recent_update = updates[0]
     else:
@@ -146,7 +149,10 @@ def student_detail(request, student_id):
         'discipline':discipline,
         'cur_year':date.today().year,
         'graduation':survey.dob + timedelta(days=365*12),
-        'classroomenrollment':classroomenrollment}
+        'classroomenrollment':classroomenrollment,
+        'attendance_present':attendance_present,
+        'attendance_approved_absence':attendance_approved_absence,
+        'attendance_unapproved_absence':attendance_unapproved_absence}
     print survey.student_id
     return render(request, 'mande/detail.html', context)
 

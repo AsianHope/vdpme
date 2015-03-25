@@ -57,7 +57,46 @@
 
 
   </table>
+<div class="row">
+  <div class="col-md-6">
+    <h3>Discipline</h3>
+  <table class="table table-bordered table-striped table-hover">
+    <tr>
+      <th>Date of Incident</th>
+      <th>Code</th>
 
+    </tr>
+    {% for incident in discipline %}
+    <tr>
+      <td>{{incident.incident_date|date:'d N Y'}}</td>
+      <td>{{incident.get_incident_code_display}}</td>
+    </tr>
+    {% endfor %}
+
+    </table>
+  </div>
+  <div class="col-md-6">
+    <h3>Attendance</h3>
+  <table class="table table-bordered table-striped table-hover">
+    <tr>
+      <th>Present</th>
+      <th>Approved Absences</th>
+      <th>Unapproved Absences</th>
+
+
+    </tr>
+    <tr>
+      <td>{{attendance_present}}</td>
+      <td>{{attendance_approved_absence}}</td>
+      <td>{{attendance_unapproved_absence}}</td>
+
+    </tr>
+
+
+    </table>
+  </div>
+</div>
+<div class="row">
   <h3>Academics</h3>
 <table class="table table-bordered table-striped table-hover">
   <tr>
@@ -78,22 +117,8 @@
   {% endfor %}
 
   </table>
-  <h3>Discipline</h3>
-<table class="table table-bordered table-striped table-hover">
-  <tr>
-    <th>Date of Incident</th>
-    <th>Code</th>
-
-  </tr>
-  {% for incident in discipline %}
-  <tr>
-    <td>{{incident.incident_date|date:'d N Y'}}</td>
-    <td>{{incident.get_incident_code_display}}</td>
-  </tr>
-  {% endfor %}
-
-  </table>
-  <div class="row">
+</div>
+<div class="row">
     <div class="col-md-6">
       <h3>Father's Information</h3>
       <table class="table table-bordered table-striped table-hover">
@@ -138,7 +163,7 @@
 
           </table>
     </div>
-  </div>
+</div>
 
   <h3>Course History:</h3>
   <table class="table table-bordered table-striped table-hover">
