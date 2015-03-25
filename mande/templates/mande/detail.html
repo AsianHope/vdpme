@@ -4,8 +4,14 @@
 
 
 
-{{survey.name}} <small>Student ID: {{survey.student_id}}</small>
+{{survey.name}}<br/>
+    <small>
+      <a href="#"><i id="decrement" class="fa fa-arrow-left"></i></a>
+        Student ID: <strong id="student_id">{{survey.student_id}}</strong>
+      <a href="#"><i id="increment" class="fa fa-arrow-right"></i></a>
+    </small><br/>
 <button class="btn btn-primary"><a href="/mande/students/" style="color: white">Back to all students</a></button><br/>
+
 
 {% endblock %}
 
@@ -184,4 +190,26 @@
   </table>
 </div>
 
+{% endblock %}
+{% block script %}
+
+<script type="text/javascript">
+
+$(document).ready( function() {
+  $(function() {
+    $('#decrement').click(function() {
+        //split on /
+        $url = window.location.href.split('/')
+        $url[$url.length-2] = Number($('#student_id').html())-1
+        window.location.href = $url.join('/')
+    });
+    $('#increment').click(function() {
+        //split on /
+        $url = window.location.href.split('/')
+        $url[$url.length-2] = Number($('#student_id').html())+1
+        window.location.href = $url.join('/')
+    });
+  });
+});
+</script>
 {% endblock %}
