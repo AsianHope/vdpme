@@ -5,6 +5,10 @@ from django.template import RequestContext, loader
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import modelformset_factory
 
+from django.utils.html import conditional_escape as esc
+from django.utils.safestring import mark_safe
+from calendar import HTMLCalendar, monthrange
+
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
@@ -20,6 +24,7 @@ from mande.models import Attendance
 from mande.models import ExitSurvey
 from mande.models import PostExitSurvey
 from mande.models import SpiritualActivitiesSurvey
+from mande.models import AttendanceDayOffering
 
 
 from mande.forms import IntakeSurveyForm
@@ -33,6 +38,7 @@ from mande.forms import ClassroomForm
 from mande.forms import ClassroomTeacherForm
 from mande.forms import ClassroomEnrollmentForm
 from mande.forms import AttendanceForm
+
 
 def index(request):
     surveys = IntakeSurvey.objects.order_by('student_id')
@@ -62,11 +68,6 @@ def attendance_calendar(request):
     context= {'classrooms':classrooms}
     return render(request, 'mande/attendancecalendar.html', context)
 
-def attendance_days(request,classroom_id):
-    classroom = Classroom.objects.get(pk=classroom_id)
-    print classroom
-    context= {'classroom':classroom}
-    return render(request, 'mande/attendancedays.html', context)
 
 def take_class_attendance(request, classroom_id, attendance_date=date.today().isoformat()):
     message = ''
@@ -154,19 +155,16 @@ def student_detail(request, student_id):
         'attendance_present':attendance_present,
         'attendance_approved_absence':attendance_approved_absence,
         'attendance_unapproved_absence':attendance_unapproved_absence}
-    print survey.student_id
     return render(request, 'mande/detail.html', context)
 
 def intake_survey(request):
     if request.method == 'POST':
         form = IntakeSurveyForm(request.POST)
-        print form
         if form.is_valid():
             form.save()
             #then return
             return HttpResponseRedirect('/mande/success/')
     else:
-        print "form is invalid"
         form = IntakeSurveyForm()
 
     context = {'form': form,}
@@ -184,13 +182,11 @@ def intake_update(request,student_id=0):
         most_recent = survey
     if request.method == 'POST':
         form = IntakeUpdateForm(request.POST)
-        print form
         if form.is_valid():
             form.save()
             #then return
             return HttpResponseRedirect('/mande/success/')
     else:
-        print "form is invalid"
         form = IntakeUpdateForm(instance=most_recent)
 
     context = {'form': form, 'survey':survey, 'student_id':student_id}
@@ -231,7 +227,6 @@ def post_exit_survey(request,student_id):
 
     if request.method == 'POST':
         form = PostExitSurveyForm(request.POST)
-        print form
         if form.is_valid():
             form.save
             #then return
@@ -337,7 +332,6 @@ def classroom_form(request, classroom_id=0):
 
     if request.method == 'POST':
         form = ClassroomForm(request.POST, instance=instance)
-        print form
         if form.is_valid():
             form.save()
             #then return
@@ -363,7 +357,6 @@ def classroomteacher_form(request, teacher_id=0):
 
     if request.method == 'POST':
         form = ClassroomTeacherForm(request.POST)
-        print form
         if form.is_valid():
             form.save()
             #then return
@@ -396,3 +389,69 @@ def classroomenrollment_form(request,student_id=0):
 
     context = {'form': form,'student_id':student_id}
     return render(request, 'mande/classroomenrollmentform.html', context)
+
+
+class AttendanceCalendar(HTMLCalendar):
+
+    def __init__(self, attendance_offerings):
+        super(AttendanceCalendar, self).__init__()
+        self.firstweekday = 6
+        self.attendance_offerings = self.breakout(attendance_offerings)
+
+    def formatday(self, day, weekday):
+        if day != 0:
+            cssclass = self.cssclasses[weekday]
+            if date.today() == date(self.year, self.month, day):
+                cssclass += ' today'
+
+            if day in self.attendance_offerings:
+                cssclass += ' filled'
+                return self.day_cell(cssclass, '%d %s' % (day, ''))
+            return self.day_cell(cssclass, day)
+        return self.day_cell('noday', '&nbsp;')
+
+    def formatmonth(self, year, month):
+        self.year, self.month = year, month
+        return super(AttendanceCalendar, self).formatmonth(year, month)
+
+    def breakout(self, attendance_offerings):
+        days = []
+        for attendance_offering in attendance_offerings:
+            days.append(attendance_offering.date.day)
+        return days
+
+    def day_cell(self, cssclass, body):
+        return '<td class="%s">%s</td>' % (cssclass, body)
+
+def attendance_days(request,classroom_id,attendance_date=date.today().isoformat()):
+
+    attendance_date = datetime.strptime(attendance_date,'%Y-%m-%d')
+    classroom = Classroom.objects.get(pk=classroom_id)
+
+
+    #submitting a day to be added or removed
+    if request.method == 'GET' and request.GET.get('day'):
+        day = request.GET.get('day')
+        #if we don't get an exception, we want to delete this object
+        try:
+            attendance_days = AttendanceDayOffering.objects.get(classroom_id=classroom,
+                                                                date__year=attendance_date.year,
+                                                                date__month=attendance_date.month,
+                                                                date__day=day)
+            attendance_days.delete()
+        #if we do get an exception, we want to create this object
+        except ObjectDoesNotExist:
+            newday = datetime.strptime(str(attendance_date.year)+'-'+str(attendance_date.month)+'-'+str(day),'%Y-%m-%d')
+            add = AttendanceDayOffering(classroom_id=classroom, date=newday)
+            add.save()
+        #TODO: make a success template so we can be smarter in our JS
+        return render(request,'mande/attendancedays.html','')
+
+    #otherwise display the calendar
+    else:
+        attendance_days = AttendanceDayOffering.objects.filter(classroom_id=classroom).filter(date__year=attendance_date.year, date__month=attendance_date.month)
+        lCalendar = AttendanceCalendar(attendance_days).formatmonth(attendance_date.year,attendance_date.month)
+
+        return render(request, 'mande/attendancedays.html', {'Calendar' : mark_safe(lCalendar),
+                                                       'classroom': classroom,
+                                                   })

@@ -4,8 +4,63 @@ Editing Attendance Calendar For {{classroom}}
 {% endblock %}
 
 {% block content %}
-There will be a fancy calendar editing thing here.
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-3" style="text-align: right;"><h1><a href="#"><i id="decrement" class="fa fa-arrow-left"></i></a></h1></div>
+    <div class ="col-md-6">
+      <style>
+        #calendar table{border: 1px black solid; width: 100%; height: 400px;}
+        #calendar tr, td{border: 1px black solid; width: 15%;}
+        .filled {background-color: lightblue;}
+        .today {background-color: yellow;}
+        .noday {background-color: gray;}
+        .filled.today{background-color: purple;}
+        th{text-align:center;}
+      </style>
+      <div id="calendar">
+        {{Calendar}}
+      </div>
+    </div>
+    <div class="col-md-3"><h1><a href="#"><i id="increment" class="fa fa-arrow-right"></i></a></h1></div>
+  </div>
+</div>
 {% endblock %}
 
 {% block script %}
+<script type="text/javascript">
+
+$(document).ready( function() {
+  // when we click on a td in calendar
+  $("#calendar").on('click','td',function(e){
+      //prevent whatever would have happend (probably nothing)
+      e.preventDefault();
+      //grab the day
+      var day = $(this).html();
+      //get the reference to the place we clicked
+      var calendarhole = $(this)
+      //send the day to the current location so we can toggle it in the DB
+      $.get(window.location.href,{'day':day},function( data ) {
+        calendarhole.toggleClass("filled")
+      });
+
+  });
+  $('#decrement').click(function() {
+      //split on /
+      $url = window.location.href.split('/')
+      var date = new Date(Date.parse($url[$url.length-2]))
+      date.setMonth(date.getMonth()-1)
+      $url[$url.length-2] = date.toISOString().split('T')[0]
+      window.location.href = $url.join('/')
+  });
+  $('#increment').click(function() {
+      //split on /a
+      $url = window.location.href.split('/')
+      var date = new Date(Date.parse($url[$url.length-2]))
+      date.setMonth(date.getMonth()+1)
+      $url[$url.length-2] = date.toISOString().split('T')[0]
+      window.location.href = $url.join('/')
+  });
+});
+</script>
 {% endblock %}
