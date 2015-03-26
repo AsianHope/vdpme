@@ -6,7 +6,7 @@ Take attendance for:
 {% block content %}
 <ul>
   {% for classroom in classrooms %}
-    <li><a href ="{% url 'take_class_attendance' classroom.classroom_id %}"> {{classroom}} </a></li>
+    <li><a href ="{% url 'take_class_attendance' classroom.classroom_id attendance_date%}"> {{classroom}} </a></li>
   {% endfor %}
 {% endblock %}
 

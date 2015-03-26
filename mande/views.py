@@ -110,7 +110,7 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
 
 def take_attendance(request):
     classrooms = Classroom.objects.all()
-    context= {'classrooms':classrooms}
+    context= {'classrooms':classrooms, 'attendance_date':date.today().isoformat()}
     return render(request, 'mande/takeattendance.html', context)
 
 
