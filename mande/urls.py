@@ -16,7 +16,6 @@ urlpatterns = patterns('',
 
     url(r'^attendance/$', views.attendance, name='attendance'),
     url(r'^attendance/calendar$', views.attendance_calendar, name='attendance_calendar'),
-    url(r'^attendance/calendar/(?P<classroom_id>\d+)/$', views.attendance_days, name='attendance_days'),
     url(r'^attendance/calendar/(?P<classroom_id>\d+)/(?P<attendance_date>\d{4}-\d{1,2}-\d{1,2})/$', views.attendance_days, name='attendance_days'),
 
     url(r'^attendance/take/$', views.take_attendance, name='take_attendance'),

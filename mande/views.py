@@ -65,7 +65,8 @@ def attendance(request):
 
 def attendance_calendar(request):
     classrooms = Classroom.objects.all()
-    context= {'classrooms':classrooms}
+    attendance_date = date.today().replace(day=1).isoformat()
+    context= {'classrooms':classrooms, 'attendance_date':attendance_date}
     return render(request, 'mande/attendancecalendar.html', context)
 
 
