@@ -20,16 +20,33 @@ Taking attendance for {{classroom}}
         <tbody>
           {% for form in formset %}
           <tr>
-              <td>{{form.student_id.value}}{{ form.student_id.as_hidden }} {{form.date.as_hidden}} {{form.classroom_id.as_hidden}} {{form.id}}</td>
+              <td><a href="{%url 'student_detail' form.student_id.value %}">{{form.student_id.value}}</a>
+                {{ form.student_id.as_hidden }}{{form.date.as_hidden}}
+                {{form.classroom_id.as_hidden}}{{form.id}}
+              </td>
               <td>{{form.student_id.value | name_by_sid}}</td>
               <td>{{ form.attendance }}</td>
               <td>{{ form.notes }}</td>
           </tr>
           {% endfor %}
         </tbody>
+
         <tfoot>
-          <tr><td colspan=4><button class="btn btn-primary">Submit</button></td></tr>
+
+          <tr><td colspan=4>
+            {% if submit_enabled == True %}
+              <button class="btn btn-primary">Submit</button>
+            {% else %}
+              <p style="color:red">
+                This class does not meet today!
+              </p>
+              <p>
+                Want to <a href="{% url 'attendance_days' classroom.classroom_id attendance_date %}">change the attendance calendar?</a>
+              </p>
+            {% endif %}
+          </td></tr>
         </tfoot>
+
 
       </table>
     </div>

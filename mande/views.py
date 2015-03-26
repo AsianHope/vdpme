@@ -72,6 +72,7 @@ def attendance_calendar(request):
 
 def take_class_attendance(request, classroom_id, attendance_date=date.today().isoformat()):
     message = ''
+    submit_enabled = True
     if attendance_date != date.today().isoformat():
         warning = 'The selected date is not today!'
     else:
@@ -80,9 +81,20 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
     classroom = Classroom.objects.get(pk=classroom_id)
     students = ClassroomEnrollment.objects.filter(classroom_id=classroom_id).exclude(drop_date__lte=attendance_date)
 
+    #find out if any student attendance has been taken
+    student_attendance = Attendance.objects.filter(student_id=students, date=attendance_date)
+    if len(student_attendance) > 0:
+        message = 'Attendance for one or more students has been taken'
+
     #pre instantiate data for this form so that we can update the whole queryset later
     for student in students:
         Attendance.objects.get_or_create(student_id=student.student_id, date=attendance_date, defaults={'attendance':None})
+
+    try:
+        offered = AttendanceDayOffering.objects.get(classroom_id=classroom_id,date=attendance_date)
+    except ObjectDoesNotExist:
+        submit_enabled = False
+        Attendance.objects.filter(attendance=None).delete()
 
     #now get the whole set of attendance objects and create the formset
     student_attendance = Attendance.objects.filter(student_id=students, date=attendance_date)
@@ -103,8 +115,9 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
                 'students':students,
                 'attendance_date':attendance_date,
                 'formset':formset,
-                'warning': warning,
-                'message': message}
+                'warning': mark_safe(warning),
+                'message': message,
+                'submit_enabled': submit_enabled}
 
     return render(request, 'mande/takeclassattendanceformset.html', context)
 
