@@ -291,7 +291,6 @@ class Discipline(models.Model):
 
 class Academic(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
-	classroom_id = models.ForeignKey(Classroom)
 	test_date = models.DateField(default=datetime.date.today)
 	test_level = models.IntegerField(choices=GRADES,default=0)
 	test_grade_math = models.IntegerField(max_length=3)

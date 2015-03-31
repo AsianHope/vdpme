@@ -101,8 +101,8 @@ class DisciplineAdmin(admin.ModelAdmin):
     raw_id_fields = ('student_id',)
 
 class AcademicAdmin(admin.ModelAdmin):
-    list_display = ('test_date','classroom_id','student_id','test_level','promote')
-    list_filter = ('classroom_id','test_level','promote')
+    list_display = ('test_date','student_id','test_level','promote')
+    list_filter = ('test_level','promote')
     raw_id_fields = ('student_id',)
 
 class HealthAdmin(admin.ModelAdmin):
