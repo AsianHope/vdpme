@@ -293,12 +293,13 @@ class Academic(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
 	test_date = models.DateField(default=datetime.date.today)
 	test_level = models.IntegerField(choices=GRADES,default=0)
-	test_grade_math = models.IntegerField(max_length=3)
-	test_grade_khmer = models.IntegerField(max_length=3)
+	test_grade_math = models.IntegerField(max_length=3,null=True,blank=True)
+	test_grade_khmer = models.IntegerField(max_length=3,null=True,blank=True)
 	promote = models.BooleanField(default=False)
 
 	def __unicode__(self):
 		return unicode(self.test_date)+ ':'+unicode(self.student_id)
+		unique_together = (('student_id','test_date'))
 
 class Health(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)

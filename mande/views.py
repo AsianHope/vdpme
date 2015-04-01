@@ -26,7 +26,10 @@ from mande.models import ExitSurvey
 from mande.models import PostExitSurvey
 from mande.models import SpiritualActivitiesSurvey
 from mande.models import AttendanceDayOffering
+from mande.models import School
+from mande.models import Academic
 
+from mande.models import GRADES
 
 from mande.forms import IntakeSurveyForm
 from mande.forms import IntakeUpdateForm
@@ -39,6 +42,7 @@ from mande.forms import ClassroomForm
 from mande.forms import ClassroomTeacherForm
 from mande.forms import ClassroomEnrollmentForm
 from mande.forms import AttendanceForm
+from mande.forms import AcademicForm
 
 
 def index(request):
@@ -474,3 +478,72 @@ def attendance_days(request,classroom_id,attendance_date=date.today().isoformat(
         return render(request, 'mande/attendancedays.html', {'Calendar' : mark_safe(lCalendar),
                                                        'classroom': classroom,
                                                    })
+
+def academic_form(request, school_id, test_date=date.today().isoformat(), grade_id=None):
+    school = School.objects.get(pk=school_id)
+    warning = ''
+    message = ''
+    students = IntakeSurvey.objects.all().filter(site=school_id)
+
+    #find out if any student acadmics have been recorded
+    student_academics = Academic.objects.filter(student_id=students, test_date=test_date)
+
+    #pre instantiate data for this form so that we can update the whole queryset later
+    if grade_id is None:
+        for student in students:
+            Academic.objects.get_or_create(student_id=student, test_date=test_date, test_level=getStudentGradebyID(student.student_id))
+        student_academics = Academic.objects.filter(student_id=students, test_date=test_date)
+
+    else:
+        for student in students:
+            if getStudentGradebyID(student.student_id) == int(grade_id):
+                Academic.objects.get_or_create(student_id=student, test_date=test_date, test_level=grade_id)
+        student_academics = Academic.objects.filter(student_id=students, test_date=test_date, test_level=grade_id)
+
+    AcademicFormSet = modelformset_factory(Academic, form=AcademicForm, extra=0)
+
+    if request.method == 'POST':
+        formset = AcademicFormSet(request.POST)
+
+        if formset.is_valid():
+            formset.save()
+            message = "Saved."
+            #clean up the mess we created making blank rows to update.
+            Academic.objects.filter(Q(test_grade_khmer=None)&Q(test_grade_math=None)).delete()
+
+    else:
+        formset = AcademicFormSet(queryset = student_academics)
+    context= {  'school':school,
+                'grade_id': grade_id,
+                'students':students,
+                'test_date':test_date,
+                'formset':formset,
+                'warning': mark_safe(warning),
+                'message': message,
+                'grades': dict(GRADES)
+    }
+
+    return render(request, 'mande/academicform.html', context)
+
+
+#helper functions
+def getStudentGradebyID(student_id):
+    try:
+        student = IntakeSurvey.objects.get(pk=student_id)
+    except ObjectDoesNotExist:
+        current_grade = 0 #not enrolled
+
+    academics = student.academic_set.all().filter().order_by('-test_date')
+    intake = student.intakeinternal_set.all().filter().order_by('-enrollment_date')
+    if len(intake) > 0:
+        recent_intake = intake[0]
+    else:
+        recent_intake = 'Not enrolled'
+
+    try:
+        #their current grade is one more than that of the last test they passed
+        current_grade = (academics.filter(promote=True).latest('test_date').test_level)+1
+    except ObjectDoesNotExist:
+        current_grade = recent_intake.starting_grade if type(recent_intake) != str else 0
+
+    return current_grade

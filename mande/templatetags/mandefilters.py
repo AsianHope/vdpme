@@ -11,5 +11,8 @@ def name_by_sid(value):
 
 @register.filter(name='grade_by_id')
 def grade_by_id(value):
-    grade_dict = dict(GRADES)
-    return grade_dict.get(value, None)
+    if value is None:
+        return "All Students"
+    else:
+        grade_dict = dict(GRADES)
+        return grade_dict.get(int(value), None)

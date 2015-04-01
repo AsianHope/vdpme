@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load mandefilters %}
+{% block title %}
+Academic performace for {{school}} ({{ grade_id|grade_by_id }})
+{% endblock %}
+
+{% block content %}
+
+<div class="col-md-9">
+  {% if grade_id %}
+  <form method="post" action="{% url 'academic_form' school.school_id test_date grade_id %}">
+  {% else %}
+  <form method="post" action="{% url 'academic_form' school.school_id test_date %}">
+  {% endif %}
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <div class="form-group">
+      <table class="table table-bordered table-striped table-hover" id="academicTable">
+        <thead><tr>
+          <th>SID</th>
+          <th>Name</th>
+          <th>Level</th>
+          <th>Math</th>
+          <th>Khmer</th>
+          <th>Promote?</th>
+          </tr></thead>
+        <tbody>
+          {% for form in formset %}
+          <tr>
+              <td><a href="{%url 'student_detail' form.student_id.value %}">{{form.student_id.value}}</a>
+                {{ form.student_id.as_hidden }}{{form.test_date.as_hidden}}{{form.id}}{{form.errors}}
+              </td>
+              <td>{{form.student_id.value | name_by_sid}}</td>
+              <td>{{ form.test_level }}</td>
+              <td>{{ form.test_grade_math }}</td>
+              <td>{{ form.test_grade_khmer }}</td>
+              <td>{{ form.promote }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+
+        <tfoot>
+
+          <tr><td colspan=4>
+              <button class="btn btn-primary">Submit</button>
+          </td></tr>
+        </tfoot>
+
+
+      </table>
+    </div>
+  </form>
+</div>
+
+
+<div class="col-md-3">
+      <input type="date" name="attendance_date" class="form-control" id="datePicker"/>
+      <p style="color:red">{{ warning }}</p>
+      <p style="color:green">{{ message }}</p>
+
+      {% for grade_id,grade in grades.items %}
+      <p><a href="{% url 'academic_form' school.school_id test_date %}{{grade_id}}/">{{grade}}</a></p>
+      {% endfor %}
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+<!-- DataTables JavaScript -->
+<script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+<script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript">
+
+$(document).ready( function() {
+    $('#datePicker').val('{{test_date}}');
+
+    $(function() {
+      $('#datePicker').change(function() {
+          //split on /
+          $url = window.location.href.split('/')
+          //replace the final value (the date)
+          $url[$url.length-2] = $(this).val()
+          //rewrite the url with the new date in place
+          window.location.href = $url.join('/')
+      });
+    });
+
+    $('#academicTable').DataTable({
+      responsive: true,
+      pageLength: 300
+    });
+
+});
+
+</script>
+{% endblock %}

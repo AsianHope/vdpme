@@ -12,6 +12,8 @@ from mande.models import Classroom
 from mande.models import ClassroomTeacher
 from mande.models import ClassroomEnrollment
 from mande.models import Attendance
+from mande.models import Academic
+
 from django.forms.extras.widgets import SelectDateWidget
 from django.forms import CheckboxSelectMultiple
 from django.utils.safestring import mark_safe
@@ -95,3 +97,9 @@ class AttendanceForm(forms.ModelForm):
     class Meta:
         model = Attendance
         exclude=[]
+
+class AcademicForm(forms.ModelForm):
+    promote = forms.BooleanField(required=False)
+    class Meta:
+        model = Academic
+        exclude = []
