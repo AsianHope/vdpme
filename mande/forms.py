@@ -1,4 +1,6 @@
 from django import forms
+from datetime import date
+
 from mande.models import IntakeSurvey
 from mande.models import IntakeUpdate
 from mande.models import ExitSurvey
@@ -75,7 +77,7 @@ class CheckboxSelectMultipleP(forms.CheckboxSelectMultiple):
 
 class ClassroomEnrollmentForm(forms.ModelForm):
     student_id = forms.ModelMultipleChoiceField(widget=CheckboxSelectMultipleP,queryset=IntakeSurvey.objects.all())
-    enrollment_date = forms.DateField(label="Enrollment Date",widget=Html5DateInput)
+    enrollment_date = forms.DateField(label="Enrollment Date",widget=Html5DateInput,initial=date.today().isoformat())
 
     class Meta:
         model = ClassroomEnrollment
