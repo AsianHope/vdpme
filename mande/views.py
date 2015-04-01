@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import modelformset_factory
+from django.db.models import Q
 
 from django.utils.html import conditional_escape as esc
 from django.utils.safestring import mark_safe
@@ -341,8 +342,11 @@ def classroom_form(request, classroom_id=0):
 
     if int(classroom_id)>0:
         instance = Classroom.objects.get(pk=classroom_id)
+        #select students who have not dropped the class, or have not dropped it yet.
+        enrollments = instance.classroomenrollment_set.all().filter(Q(drop_date__lte=date.today().isoformat()) | Q(drop_date=None))
     else:
         instance = Classroom()
+        enrollments = None
 
 
     if request.method == 'POST':
@@ -355,7 +359,7 @@ def classroom_form(request, classroom_id=0):
         form = ClassroomForm(instance=instance)
 
 
-    context = {'form': form, 'classroom_id':classroom_id, 'current_classrooms':current_classrooms}
+    context = {'form': form, 'classroom_id':classroom_id, 'current_classrooms':current_classrooms, 'enrollments':enrollments}
     return render(request, 'mande/classroomform.html', context)
 
 def classroomteacher_form(request, teacher_id=0):

@@ -14,7 +14,7 @@ Manage Classrooms
   <a href = "{% url 'classroom_form' %}" class="btn btn-primary" role="button">Add a new classroom</a>
 </div>
 
-<div class="col-md-9">
+<div class="col-md-6">
 <form action = "{% url 'classroom_form' classroom_id %}" method="post">
 
     {{ form|bootstrap }}
@@ -24,6 +24,16 @@ Manage Classrooms
     </div>
 </form>
 </div>
+{% if enrollments != None %}
+<div class = "col-md-3">
+  <h3>Currently Enrolled Students</h3>
+  <ul>
+    {% for enrollment in enrollments %}
+      <li>{{enrollment.student_id}}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
 
 
 {% endblock %}
