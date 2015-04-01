@@ -25,29 +25,34 @@ class IntakeSurveyForm(forms.ModelForm):
 
     class Meta:
         model = IntakeSurvey
+        exclude=[]
 
 class IntakeUpdateForm(forms.ModelForm):
     date = forms.DateField(label="Survey Date",widget=Html5DateInput)
 
     class Meta:
         model = IntakeUpdate
+        exclude=[]
 
 class ExitSurveyForm(forms.ModelForm):
     survey_date = forms.DateField(label="Survey Date",widget=Html5DateInput)
     exit_date = forms.DateField(label="Exit Date",widget=Html5DateInput)
     class Meta:
         model = ExitSurvey
+        exclude=[]
 
 class PostExitSurveyForm(forms.ModelForm):
     post_exit_survey_date = forms.DateField(label="Post Exit Survey Date",widget=Html5DateInput)
     exit_date = forms.DateField(label="Exit Date",widget=Html5DateInput)
     class Meta:
         model = PostExitSurvey
+        exclude=[]
 
 class SpiritualActivitiesSurveyForm(forms.ModelForm):
     date = forms.DateField(label="Survey Date",widget=Html5DateInput)
     class Meta:
         model = SpiritualActivitiesSurvey
+        exclude=[]
 
 class DisciplineForm(forms.ModelForm):
     incident_date = forms.DateField(label="Incident Date",widget=Html5DateInput)
@@ -58,14 +63,17 @@ class DisciplineForm(forms.ModelForm):
 class TeacherForm(forms.ModelForm):
     class Meta:
         model = Teacher
+        exclude=[]
 
 class ClassroomForm(forms.ModelForm):
     class Meta:
         model = Classroom
+        exclude=[]
 
 class ClassroomTeacherForm(forms.ModelForm):
     class Meta:
         model = ClassroomTeacher
+        exclude=[]
 
 
 #hackity hack custom renderer for ClassroomEnrollmentForm - TODO: learn how to do this properly ;)
@@ -81,7 +89,9 @@ class ClassroomEnrollmentForm(forms.ModelForm):
 
     class Meta:
         model = ClassroomEnrollment
+        exclude=[]
 
 class AttendanceForm(forms.ModelForm):
     class Meta:
         model = Attendance
+        exclude=[]
