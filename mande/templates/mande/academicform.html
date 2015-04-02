@@ -14,7 +14,7 @@ Academic performace for {{school}} ({{ grade_id|grade_by_id }})
   {% endif %}
     {% csrf_token %}
     {{ formset.management_form }}
-    <div class="form-group">
+    <div class="form-group table-responsive">
       <table class="table table-bordered table-striped table-hover" id="academicTable">
         <thead><tr>
           <th>SID</th>
@@ -26,22 +26,27 @@ Academic performace for {{school}} ({{ grade_id|grade_by_id }})
           </tr></thead>
         <tbody>
           {% for form in formset %}
-          <tr>
-              <td><a href="{%url 'student_detail' form.student_id.value %}">{{form.student_id.value}}</a>
-                {{ form.student_id.as_hidden }}{{form.test_date.as_hidden}}{{form.id}}{{form.errors}}
-              </td>
-              <td>{{form.student_id.value | name_by_sid}}</td>
-              <td>{{ form.test_level }}</td>
-              <td>{{ form.test_grade_math }}</td>
-              <td>{{ form.test_grade_khmer }}</td>
-              <td>{{ form.promote }}</td>
-          </tr>
+
+            {% if form.test_grade_math.value %}
+              <tr class="info">
+            {% else %}
+              <tr>
+            {% endif %}
+                <td><a href="{%url 'student_detail' form.student_id.value %}">{{form.student_id.value}}</a>
+                  {{ form.student_id.as_hidden }}{{form.test_date.as_hidden}}{{form.id}}
+                </td>
+                <td>{{form.student_id.value | name_by_sid}}</td>
+                <td>{{ form.test_level }}</td>
+                <td>{{ form.test_grade_math }}</td>
+                <td>{{ form.test_grade_khmer }}</td>
+                <td>{{ form.promote }}</td>
+            </tr>
           {% endfor %}
         </tbody>
 
         <tfoot>
 
-          <tr><td colspan=4>
+          <tr><td colspan=6>
               <button class="btn btn-primary">Submit</button>
           </td></tr>
         </tfoot>
@@ -88,7 +93,7 @@ $(document).ready( function() {
 
     $('#academicTable').DataTable({
       responsive: true,
-      pageLength: 300
+      pageLength: 300,
     });
 
 });

@@ -100,6 +100,8 @@ class AttendanceForm(forms.ModelForm):
 
 class AcademicForm(forms.ModelForm):
     promote = forms.BooleanField(required=False)
+    test_grade_math = forms.IntegerField(widget=forms.TextInput(attrs={'size':'3'}), required=False)
+    test_grade_khmer = forms.IntegerField(widget=forms.TextInput(attrs={'size':'3'}), required=False)
     class Meta:
         model = Academic
         exclude = []
