@@ -50,7 +50,7 @@ urlpatterns = patterns('',
     url(r'^school-management/enrollment/$', views.classroomenrollment_form, name='classroomenrollment_form'),
 
 
-    url(r'^school-management/academics/$', views.academic_form, name='academic_form'),
+    url(r'^school-management/academics/$', views.academic_select, name='academic_select'),
     url(r'^school-management/academics/(?P<school_id>\d+)/(?P<test_date>\d{4}-\d{1,2}-\d{1,2})/$', views.academic_form, name='academic_form'),
     url(r'^school-management/academics/(?P<school_id>\d+)/(?P<test_date>\d{4}-\d{1,2}-\d{1,2})/(?P<grade_id>\d+)/$', views.academic_form, name='academic_form'),
 

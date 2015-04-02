@@ -525,6 +525,13 @@ def academic_form(request, school_id, test_date=date.today().isoformat(), grade_
 
     return render(request, 'mande/academicform.html', context)
 
+def academic_select(request):
+    schools = School.objects.all()
+    context = { 'schools':schools,
+                'grades': dict(GRADES),
+                'today': date.today().isoformat(),
+    }
+    return render(request, 'mande/academicselect.html',context)
 
 #helper functions
 def getStudentGradebyID(student_id):
