@@ -137,7 +137,9 @@ def student_detail(request, student_id):
     survey = IntakeSurvey.objects.get(pk=student_id)
     updates = survey.intakeupdate_set.all().filter().order_by('-date')
     intake = survey.intakeinternal_set.all().filter().order_by('-enrollment_date')
-    academics = survey.academic_set.all().filter().order_by('-test_date')
+    #select only semester tests which have grades in them
+    academics = survey.academic_set.all().filter(
+        Q(test_grade_khmer__isnull=False) & Q(test_grade_math__isnull=False)).order_by('-test_date')
     discipline = survey.discipline_set.all().filter().order_by('-incident_date')
     classroomenrollment = survey.classroomenrollment_set.all().filter().order_by('drop_date')
     attendance_present = survey.attendance_set.all().filter(attendance='P').count()

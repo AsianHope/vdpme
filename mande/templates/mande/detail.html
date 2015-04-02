@@ -11,188 +11,225 @@
         Student ID: <strong id="student_id">{{survey.student_id}}</strong>
       <a href="#"><i id="increment" class="fa fa-arrow-right"></i></a>
     </small><br/>
-<button class="btn btn-primary"><a href="/mande/students/" style="color: white">Back to all students</a></button><br/>
+<button class="btn btn-primary"><a href="/mande/students/" style="color: white">Back to all students</a></button>
+<button class="btn btn-danger"><a href="{% url 'intake_update' survey.student_id %}" style="color: white">Update this Student's Information?</a></button><br/>
 
 
 {% endblock %}
 
 {% block content %}
 
-<div class="container">
 
-  <div class="row">
-    <div class = "col-md-3"><div style="background-color: gray; border: 1px solid black; width:175px; height: 225px;">photo?</div>
-      <small>Time since last update:
-      {% firstof recent_update.date|timesince survey.date|timesince "Never updated" %} </small>
-      <button class="btn btn-primary"><a href="{% url 'intake_update' survey.student_id %}" style="color: white">Update now?</a></button><br/>
+
+<div class="row">
+  <div class = "col-md-3"><div style="background-color: gray; border: 1px solid black; width:175px; height: 225px;"></div>
+    <small>Last Update: {% firstof recent_update.date|date:'d N Y' survey.date|date:'d N Y' "Never updated" %}</small>
+
 
 
     </div>
-    <div class = "col-md-5">
-  <table class="table table-striped table-hover">
-      <tr>
-        <td>Gender: </td>
-        <td>{{ survey.get_gender_display }}</td>
-      </tr>
-      <tr>
-        <td>DOB: </td>
-        <td>{{ survey.dob|date:'d N Y'}} <br/>({{survey.dob|timesince}} old)</td>
-      </tr>
-      <tr>
-        <td>Enrolled: </td>
-        <td>{% firstof recent_intake.enrollment_date|date:'d N Y' "Not yet enrolled" %}</td>
-      </tr>
-      <tr>
-        <td>Expected 6th Grade Graduation: </td>
-        <td>Jul. {{ graduation|date:'Y' }}</td>
-      </tr>
-    </table>
+    <div class = "col-md-4">
+      <div class = "table-responsive">
+        <table class="table table-striped table-hover">
+            <tr>
+              <td>Gender: </td>
+              <td>{{ survey.get_gender_display }}</td>
+            </tr>
+            <tr>
+              <td>DOB: </td>
+              <td>{{ survey.dob|date:'d N Y'}} <br/>({{survey.dob|timesince}} old)</td>
+            </tr>
+            <tr>
+              <td>Enrolled: </td>
+              <td>{% firstof recent_intake.enrollment_date|date:'d N Y' "Not yet enrolled" %}</td>
+            </tr>
+            <tr>
+              <td>Expected 6th Grade Graduation: </td>
+              <td>Jul. {{ graduation|date:'Y' }}</td>
+            </tr>
+          </table>
+        </div>
   </div>
   <div class="col-md-4">
-  <table class="table table-striped table-hover">
-      <tr><td>VDP Grade when Enrolled: </td>  <td>{% firstof recent_intake.get_starting_grade_display "Not yet collected" %}</td></tr>
-      <tr><td>Current VDP Grade:</td>  <td> {% firstof current_grade|grade_by_id "No academic records found" %}</td></tr>
-      <tr><td>Public School Current Grade</td><td>{% firstof recent_survey.get_grade_current_display recent_survey.get_grade_last_display survey.get_grade_current_display survey.get_grade_last_display %}</td></tr>
-      {% with grad_date=graduation|date:'Y' %}
-      {% if current_grade <= 6 %}
-      <tr><td>Grades/Years to achieve</td><td>{{ 6|sub:current_grade }} / {{ grad_date|sub:cur_year }}</td>
-      {%endif%}
-      </tr>
-        {% endwith %}
-    </table>
-  </div>
-  </div>
-<table class="table table-bordered table-striped table-hover">
-
-
-  </table>
-<div class="row">
-  <div class="col-md-6">
-    <h3>Discipline</h3>
-  <table class="table table-bordered table-striped table-hover">
-    <tr>
-      <th>Date of Incident</th>
-      <th>Code</th>
-
-    </tr>
-    {% for incident in discipline %}
-    <tr>
-      <td>{{incident.incident_date|date:'d N Y'}}</td>
-      <td>{{incident.get_incident_code_display}}</td>
-    </tr>
-    {% endfor %}
-
-    </table>
-  </div>
-  <div class="col-md-6">
-    <h3>Attendance</h3>
-  <table class="table table-bordered table-striped table-hover">
-    <tr>
-      <th>Present</th>
-      <th>Approved Absences</th>
-      <th>Unapproved Absences</th>
-
-
-    </tr>
-    <tr>
-      <td>{{attendance_present}}</td>
-      <td>{{attendance_approved_absence}}</td>
-      <td>{{attendance_unapproved_absence}}</td>
-
-    </tr>
-
-
-    </table>
-  </div>
-</div>
-<div class="row">
-  <h3>Academics</h3>
-<table class="table table-bordered table-striped table-hover">
-  <tr>
-    <th>Test Date</th>
-    <th>Test Grade</th>
-    <th>Math</th>
-    <th>Khmer</th>
-    <th>Promoted?</th>
-  </tr>
-  {% for test in academics %}
-  <tr>
-    <td>{{test.test_date|date:'d N Y'}}</td>
-    <td>{{test.get_test_level_display}}</td>
-    <td>{{test.test_grade_math}}</td>
-    <td>{{test.test_grade_khmer}}</td>
-    <td>{{test.promote}}</td>
-  </tr>
-  {% endfor %}
-
-  </table>
-</div>
-<div class="row">
-    <div class="col-md-6">
-      <h3>Father's Information</h3>
-      <table class="table table-bordered table-striped table-hover">
-          <tr>
-            <td>Name: </td>
-            <td>{% firstof recent_update.father_name survey.father_name "Not Entered" %}</td>
+    <div class = "table-responsive">
+      <table class="table table-striped table-hover">
+          <tr><td>VDP Grade when Enrolled: </td>  <td>{% firstof recent_intake.get_starting_grade_display "Not yet collected" %}</td></tr>
+          <tr><td>Current VDP Grade:</td>  <td> {% firstof current_grade|grade_by_id "No academic records found" %}</td></tr>
+          <tr><td>Public School Current Grade</td><td>{% firstof recent_survey.get_grade_current_display recent_survey.get_grade_last_display survey.get_grade_current_display survey.get_grade_last_display %}</td></tr>
+          {% with grad_date=graduation|date:'Y' %}
+          {% if current_grade <= 6 %}
+          <tr><td>Grades/Years to achieve</td><td>{{ 6|sub:current_grade }} / {{ grad_date|sub:cur_year }}</td>
+          {%endif%}
           </tr>
-          <tr>
-            <td>Phone: </td>
-            <td>{% firstof recent_update.father_phone survey.father_phone "Not Entered" %}</td>
-          </tr>
-          <tr>
-            <td>Profession:</td>
-            <td>{% firstof recent_update.father_profession survey.father_profession "Not Entered" %}</td>
-          </tr>
-          <tr>
-            <td>Employment (1-10, 1 is low income):</td>
-            <td>{% firstof recent_update.father_employment survey.father_employment "Not Entered" %}</td>
-          </tr>
-
+            {% endwith %}
         </table>
     </div>
-    <div class="col-md-6">
-      <h3>Mother's Information</h3>
+  </div>
+</div>
+<ul class ="nav nav-tabs">
+  <li role = "presentation" class="active"><a href="#academic" aria-controls="academic" role="tab" data-toggle="tab">Academic Performance</a></li>
+  <li role = "presentation"><a href="#enrollment" aria-controls="contact" role="tab" data-toggle="tab">Course History</a></li>
+  <li role = "presentation"><a href="#contact" aria-controls="contact" role="tab" data-toggle="tab">Contact</a></li>
+  <li role = "presentation"><a href="#household" aria-controls="household" role="tab" data-toggle="tab">Household</a></li>
+  <li role = "presentation"><a href="#notes" aria-controls="notes" role="tab" data-toggle="tab">Notes</a></li>
+</ul>
+
+<div class="tab-content">
+  <div role="tabpanel" class="tab-pane active" id="academic">
+    <div class = "col-md-12">
+      <h3>Academics</h3>
+      <div class="table-responsive">
         <table class="table table-bordered table-striped table-hover">
-            <tr>
-              <td>Name: </td>
-              <td>{% firstof recent_update.mother_name survey.mother_name "Not Entered" %}</td>
-            </tr>
-            <tr>
-              <td>Phone: </td>
-              <td>{% firstof recent_update.mother_phone survey.mother_phone "Not Entered" %}</td>
-            </tr>
-            <tr>
-              <td>Profession:</td>
-              <td>{% firstof recent_update.mother_profession survey.mother_profession "Not Entered" %}</td>
-            </tr>
-            <tr>
-              <td>Employment (1-10, 1 is low income):</td>
-              <td>{% firstof recent_update.mother_employment survey.mother_employment "Not Entered" %}</td>
-            </tr>
+          <tr>
+            <th>Test Date</th>
+            <th>Test Grade</th>
+            <th>Math</th>
+            <th>Khmer</th>
+            <th>Promoted?</th>
+          </tr>
+          {% for test in academics %}
+          <tr>
+            <td>{{test.test_date|date:'d N Y'}}</td>
+            <td>{{test.get_test_level_display}}</td>
+            <td>{{test.test_grade_math}}</td>
+            <td>{{test.test_grade_khmer}}</td>
+            <td>{{test.promote}}</td>
+          </tr>
+          {% endfor %}
 
           </table>
+      </div>
     </div>
+    <div class="col-md-6">
+      <h3>Discipline</h3>
+    <table class="table table-bordered table-striped table-hover">
+      <tr>
+        <th>Date of Incident</th>
+        <th>Code</th>
+
+      </tr>
+      {% for incident in discipline %}
+      <tr>
+        <td>{{incident.incident_date|date:'d N Y'}}</td>
+        <td>{{incident.get_incident_code_display}}</td>
+      </tr>
+      {% endfor %}
+
+      </table>
+    </div>
+    <div class="col-md-6">
+      <h3>Attendance</h3>
+    <table class="table table-bordered table-striped table-hover">
+      <tr>
+        <th>Present</th>
+        <th>Approved Absences</th>
+        <th>Unapproved Absences</th>
+
+
+      </tr>
+      <tr>
+        <td>{{attendance_present}}</td>
+        <td>{{attendance_approved_absence}}</td>
+        <td>{{attendance_unapproved_absence}}</td>
+
+      </tr>
+
+
+      </table>
+    </div>
+
+
+  </div>
+
+  <div role="tabpanel" class="tab-pane" id="enrollment">
+    <div class ="col-md-12">
+      <h3>Course History:</h3>
+      <div class = "table-responsive">
+        <table class="table table-bordered table-striped table-hover">
+        <tr>
+          <th>Date Enrolled</th>
+          <th>Date Dropped</th>
+          <th>Course</th
+
+        </tr>
+        {% for class in classroomenrollment %}
+        <tr>
+          <td>{{class.enrollment_date|date:'d N Y'}}</td>
+          <td>{{class.drop_date|date:'d N Y'}}</td>
+          <td>{{class.classroom_id}}</td>
+        </tr>
+        {% endfor %}
+
+        </table>
+      </div>
+    </div>
+  </div>
+  <div role="tabpanel" class="tab-pane" id="contact">
+    <h3>Contact Information</h3>
+    <div class="col-md-12">
+
+      <div class = "table-responsive">
+        <table class="table table-bordered table-striped table-hover">
+              <tr><td colspan=4 class="text-center"><strong>Father</strong></td><td colspan=4 class="text-center"><strong>Mother</strong></td></tr>
+              <td><strong>Name:</strong></td>
+              <td>{% firstof recent_update.father_name survey.father_name "Not Entered" %}</td>
+
+              <td><strong>Phone:</strong> </td>
+              <td>{% firstof recent_update.father_phone survey.father_phone "Not Entered" %}</td>
+
+              <td><strong>Name:</strong> </td>
+              <td>{% firstof recent_update.mother_name survey.mother_name "Not Entered" %}</td>
+
+              <td><strong>Phone:</strong> </td>
+              <td>{% firstof recent_update.mother_phone survey.mother_phone "Not Entered" %}</td>
+            <tr><td colspan=8 class="text-center"><strong>Home Address</strong></td></tr>
+            <tr><td colspan=8 class="text-center">{% firstof recent_update.address survey.address "Not Entered" %}</td></tr>
+          </table>
+      </div>
+    </div>
+  </div>
+
+  <div role="tabpanel" class="tab-pane" id="household">
+    <div class="col-md-12">
+      <h3>Home of Origin</h3>
+        <div class = "table-responsive">
+          <table class="table table-bordered table-striped table-hover text-center">
+              <tr><td colspan=2><strong>Father</strong></td><td colspan=2><strong>Mother</strong></td></tr>
+              <tr class="info"><td><strong>Profession</strong></td><td><strong>Income</strong></td><td><strong>Profession</strong></td><td><strong>Income</strong></td></tr>
+              <tr>
+                <td>{% firstof recent_update.father_profession survey.father_profession "Not Entered" %}</td>
+                <td>{% firstof recent_update.father_employment survey.father_employment "Not Entered" %}</td>
+                <td>{% firstof recent_update.mother_profession survey.mother_profession "Not Entered" %}</td>
+                <td>{% firstof recent_update.mother_employment survey.mother_employment "Not Entered" %}</td>
+              </tr>
+            </table>
+          </div>
+
+      <div class="table-responsive">
+
+        <table class="table table-bordered table-striped table-hover">
+          <tr><td><strong>Minors in Household</strong></td><td colspan=3>{% firstof recent_update.minors survey.minors "Not Entered"%}</td></tr>
+          <tr><td><strong>Working Minors</strong></td><td>{% firstof recent_update.minors_working survey.minors_working "Not Entered"%}</td>
+          <td><strong>Minors in School</strong></td><td>{% firstof recent_update.minors_in_school survey.minors_in_school "Not Entered"%}</td></tr>
+        </table>
+        <table class="table table-bordered table-striped table-hover">
+          <tr><td><strong>What are they doing for work?</strong></td><td colspan=3>{% firstof recent_update.minors_profession survey.minors_profession "Not Entered"%}</td></tr>
+          <tr><td><strong>Were they encouraged?</strong></td><td>{% firstof recent_update.minors_encouraged survey.minors_encouraged "Not Entered"%}</td>
+              <td><strong>Did they receive any vocational training?</strong></td><td>{% firstof recent_update.minors_training survey.minors_training "Not Entered"%}</td></tr>
+          <td><strong>What kind of vocational training did they receive?</strong></td><td colspan=3>{% firstof recent_update.minors_training_type survey.minors_training_type "Not Entered"%}</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div role="tabpanel" class="tab-pane" id="notes">
+    <h3>Notes</h3>
+    <div class="table-responsive" style="min-height: 3em;">
+      <table class="table table-bordered table-striped table-hover">
+        <tr><td>{% firstof recent_update.notes survey.notes "No notes entered" %}</td></tr>
+      </table>
+    </div>
+  </div>
 </div>
-
-  <h3>Course History:</h3>
-  <table class="table table-bordered table-striped table-hover">
-  <tr>
-    <th>Date Enrolled</th>
-    <th>Date Dropped</th>
-    <th>Course</th
-
-  </tr>
-  {% for class in classroomenrollment %}
-  <tr>
-    <td>{{class.enrollment_date|date:'d N Y'}}</td>
-    <td>{{class.drop_date|date:'d N Y'}}</td>
-    <td>{{class.classroom_id}}</td>
-  </tr>
-  {% endfor %}
-
-  </table>
-</div>
-
 {% endblock %}
 {% block script %}
 
