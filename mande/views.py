@@ -47,8 +47,19 @@ from mande.forms import AcademicForm
 
 def index(request):
     surveys = IntakeSurvey.objects.order_by('student_id')
-    females = surveys.filter(gender='F')
-    context = {'surveys': surveys, 'females': females}
+    tot_females = surveys.filter(gender='F').count()
+
+    schools = School.objects.all()
+    breakdown = {}
+    for school in schools:
+         name = school.school_name
+         total = surveys.filter(site=school)
+         females = total.filter(gender='F').count()
+         males = total.filter(gender='M').count()
+         breakdown[name] = {'F':females, 'M':males}
+
+    print breakdown
+    context = {'surveys': surveys, 'females': tot_females, 'breakdown':breakdown}
     return render(request, 'mande/index.html', context)
 
 def student_list(request):

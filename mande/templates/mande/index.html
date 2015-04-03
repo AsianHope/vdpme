@@ -30,11 +30,17 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <div class="col-md-3">
+                            <div class="col-md-12">
                               <table class="table table-striped table-bordered table-hover">
-                                <tr><td colspan=3>Catch Up Students: <strong>{{surveys|length}}</strong></td></tr>
-                                <tr><td>PKPN: <strong>234</strong></td><td>TK: <strong>75</strong></td><td>PPT: <strong>230</strong></td></tr>
-                                <tr><td>F: <strong>245</strong></td><td>M: <strong>123</strong></td></tr>
+                                <tr><td colspan=3>Catch Up Students: <strong>{{surveys|length}}</strong> ({{females}} female)</td></tr>
+                                <tr><td>
+                                {% for school,attributes in breakdown.items %}
+                                <div class="col-md-4">
+                                <strong>{{school}} <br/>(total: {{attributes.M|add:attributes.F}})</strong>
+                                  <div id="morris-donut-chart-{{school}}"></div>
+                                </div>
+                                {% endfor %}
+                                </td></tr>
                               </table>
                               <table class="table table-striped table-bordered table-hover">
                                 <tr><td colspan=6>By Grade:</td></tr>
@@ -55,15 +61,7 @@
                                 </tr>
                               </table>
                             </div>
-                            <div class="col-md-3"><strong>TK</strong>
-                              <div id="morris-donut-chart-tk"></div>
-                            </div>
-                            <div class="col-md-3"><strong>PPT</strong>
-                              <div id="morris-donut-chart-ppt"></div>
-                            </div>
-                            <div class="col-md-3"><strong>PKPN</strong>
-                              <div id="morris-donut-chart-pkpn"></div>
-                            </div>
+
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -312,53 +310,21 @@
               resize: true
           });
 
-          Morris.Donut({
-              element: 'morris-donut-chart-tk',
-              data: [{
-                  label: "M",
-                  value: 12
-              }, {
-                  label: "F",
-                  value: 30
-              }, ],
-              resize: true,
-              colors: ['#d9534f','#337ab7']
-          });
-
-          Morris.Donut({
-              element: 'morris-donut-chart-ppt',
-              data: [{
-                  label: "M",
-                  value: 150
-              }, {
-                  label: "F",
-                  value: 180
-              }, ],
-              resize: true,
-              colors: ['#d9534f','#337ab7']
-          });
-
-
-
-
-
-          Morris.Donut({
-              element: 'morris-donut-chart-pkpn',
-              data: [{
-
-                {% with boys=surveys|length %}
-                {% with girls=females|length %}
-                  label: "M",
-                  value:  {{boys|sub:girls}},
-                {% endwith %}
-                {% endwith %}
-              }, {
-                  label: "F",
-                  value: {{females|length}}
-              }, ],
-              resize: true,
-              colors: ['#d9534f','#337ab7']
-          });
+          {% for school,attributes in breakdown.items %}
+            Morris.Donut({
+                element: 'morris-donut-chart-{{school}}',
+                data: [
+                {% for key,value in attributes.items %}
+                {
+                    label: "{{key}}",
+                    value: {{value}},
+                },
+                {% endfor %}
+                ],
+                resize: true,
+                colors: ['#d9534f','#337ab7']
+            });
+          {% endfor %}
 
 
           Morris.Bar({
