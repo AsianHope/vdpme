@@ -4,7 +4,7 @@ from django.contrib import admin
 from mande import views
 
 urlpatterns = patterns('',
-    url(r'^mande/', include('mande.urls')),
+    url(r'^', include('mande.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login/$', login),
     url(r'^logout/$', logout),
