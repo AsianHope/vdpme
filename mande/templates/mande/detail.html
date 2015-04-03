@@ -195,13 +195,17 @@
         <div class = "table-responsive">
           <table class="table table-bordered table-striped table-hover text-center">
               <tr><td colspan=2><strong>Father</strong></td><td colspan=2><strong>Mother</strong></td></tr>
-              <tr class="info"><td><strong>Profession</strong></td><td><strong>Income</strong></td><td><strong>Profession</strong></td><td><strong>Income</strong></td></tr>
+              <tr><td class="info"><strong>Profession</strong></td>
+                  <td class="success"><strong>Income</strong></td>
+                  <td class="info"><strong>Profession</strong></td>
+                  <td class="success"><strong>Income</strong></td></tr>
               <tr>
-                <td>{% firstof recent_update.father_profession survey.father_profession "Not Entered" %}</td>
-                <td>{% firstof recent_update.father_employment survey.father_employment "Not Entered" %}</td>
-                <td>{% firstof recent_update.mother_profession survey.mother_profession "Not Entered" %}</td>
-                <td>{% firstof recent_update.mother_employment survey.mother_employment "Not Entered" %}</td>
+                <td class="info">{% firstof recent_update.father_profession survey.father_profession "Not Entered" %}</td>
+                <td class="success">{% firstof recent_update.father_employment survey.father_employment "Not Entered" %}</td>
+                <td class="info">{% firstof recent_update.mother_profession survey.mother_profession "Not Entered" %}</td>
+                <td class="success">{% firstof recent_update.mother_employment survey.mother_employment "Not Entered" %}</td>
               </tr>
+
             </table>
           </div>
 
