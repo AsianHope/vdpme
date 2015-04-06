@@ -12,11 +12,11 @@
       <a href="#"><i id="increment" class="fa fa-arrow-right"></i></a>
     </small><br/>
 <button class="btn btn-primary"><a href="{% url 'student_list' %}" style="color: white">Back to all students</a></button>
-<button class="btn btn-danger"><a href="{% url 'intake_update' survey.student_id %}" style="color: white">Update this Student's Information?</a></button>
+<button class="btn btn-info"><a href="{% url 'intake_update' survey.student_id %}" style="color: white">Update this Student's Information?</a></button>
 {% if current_grade == None %}
 <button class="btn btn-success"><a href="{% url 'intake_internal' survey.student_id %}" style="color: white">Enroll this student in VDP</a></button>
 {% else %}
-<button class="btn btn-info"><a href="{% url 'exit_survey' survey.student_id %}" style="color: white">Perform an exit survey for this student</a></button>
+<button class="btn btn-danger"><a href="{% url 'exit_survey' survey.student_id %}" style="color: white">Perform an exit survey for this student</a></button>
 {% endif %}
 <br/>
 
@@ -104,6 +104,7 @@
           {% endfor %}
 
           </table>
+          <button class="btn btn-success"><a href="{% url 'academic_select' %}" style="color: white">Add a semester test</a></button>
       </div>
     </div>
     <div class="col-md-6">
@@ -122,6 +123,7 @@
       {% endfor %}
 
       </table>
+      <button class="btn btn-danger"><a href="{% url 'discipline_form' survey.student_id %}" style="color: white">Add Incident</a></button>
     </div>
     <div class="col-md-6">
       <h3>Attendance</h3>
@@ -140,8 +142,8 @@
 
       </tr>
 
-
       </table>
+      <button class="btn btn-warning"><a href="{% url 'attendance' %}" style="color: white">Take Attendance</a></button>
     </div>
 
 
@@ -167,6 +169,7 @@
         {% endfor %}
 
         </table>
+        <button class="btn btn-success"><a href="{% url 'classroomenrollment_form' survey.student_id %}" style="color: white">Add a classroom</a></button>
       </div>
     </div>
   </div>

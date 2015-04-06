@@ -374,9 +374,9 @@ def discipline_form(request,student_id=0):
 
         if form.is_valid():
             #process
-            form.save()
+            instance=form.save()
             #then return
-            return HttpResponseRedirect(reverse('success'))
+            return HttpResponseRedirect(reverse('student_detail',kwargs={'student_id':instance.student_id.student_id}))
     else:
         if student_id > 0:
             form = DisciplineForm({'student_id':student_id})
