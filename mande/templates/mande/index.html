@@ -82,16 +82,18 @@
                                 {% endfor %}
                                 </td></tr>
                               </table>
-                              <table class="table table-striped table-bordered table-hover">
-                                <tr><td colspan=12>By VDP Grade:</td></tr>
-                                <tr>
-                                  {% for key, value in students_by_grade.items %}
-                                    {% if key <= 12 and key > 0 %}
-                                      <td><strong>{{key}}:</strong> {{value}}</td>
-                                    {% endif %}
-                                  {% endfor %}
-                                </tr>
-                              </table>
+                              <div class ="table-responsive">
+                                <table class="table table-striped table-bordered table-hover">
+                                  <tr><td colspan=12>By VDP Grade:</td></tr>
+                                  <tr>
+                                    {% for key, value in students_by_grade.items %}
+                                      {% if key <= 12 and key > 0 %}
+                                        <td><strong>{{key}}:</strong> {{value}}</td>
+                                      {% endif %}
+                                    {% endfor %}
+                                  </tr>
+                                </table>
+                              </div>
 
                               <table class="table table-striped table-bordered table-hover">
                                 <tr><td colspan=3>Skill Training Students:</td></tr>
