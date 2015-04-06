@@ -397,9 +397,9 @@ def teacher_form(request, teacher_id=0):
     if request.method == 'POST':
         form = TeacherForm(request.POST, instance=instance)
         if form.is_valid():
-            form.save()
+            instance=form.save()
             #then return
-            return HttpResponseRedirect('/mande/school-management/teachers/'+str(teacher_id))
+            return HttpResponseRedirect(reverse('teacher_form'))
     else:
             form = TeacherForm(instance=instance)
 
