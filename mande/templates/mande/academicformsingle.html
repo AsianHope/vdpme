@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+{% load mandefilters %}
+{% block title %}
+Adding a Semester Test for {{student_id|name_by_sid}}
+{% endblock %}
+
+{% block content %}
+<div class="col-md-3"></div>
+<div class="col-md-6">
+<form action = "{% url 'academic_form_single' student_id %}" method="post">
+
+  <div class="form-group table-responsive">
+    <table class="table table-bordered table-striped table-hover" id="academicTable">
+      <thead><tr>
+        <th>Date</th>
+        <th>SID</th>
+        <th>Name</th>
+        <th>Level</th>
+        <th>Math</th>
+        <th>Khmer</th>
+        <th>Promote?</th>
+        </tr></thead>
+      <tbody>
+          {% if form.test_grade_math.value %}
+            <tr class="info">
+          {% else %}
+            <tr>
+          {% endif %}
+              <td>{{form.test_date|bootstrap}}</td>
+              <td style="vertical-align:middle;"><a href="{%url 'student_detail' form.student_id.value %}">{{form.student_id.value}}</a>
+                {{ form.student_id.as_hidden }}{{form.id}}
+              </td>
+              <td style="vertical-align:middle;">{{form.student_id.value | name_by_sid}}</td>
+              <td>{{ form.test_level|bootstrap }}</td>
+              <td>{{ form.test_grade_math|bootstrap }}</td>
+              <td>{{ form.test_grade_khmer|bootstrap }}</td>
+              <td style="vertical-align:middle;">{{ form.promote|bootstrap }}</td>
+          </tr>
+      </tbody>
+
+      <tfoot>
+
+        <tr><td colspan=7>
+            <button class="btn btn-primary">Submit</button>
+        </td></tr>
+      </tfoot>
+
+
+    </table>
+    {% csrf_token %}
+</form>
+</div>
+<div class="col-md-3"></div>
+{% endblock %}

@@ -198,7 +198,7 @@ def student_detail(request, student_id):
 
     #select only semester tests which have grades in them
     academics = survey.academic_set.all().filter(
-        Q(test_grade_khmer__isnull=False) & Q(test_grade_math__isnull=False)).order_by('-test_date')
+        Q(test_grade_khmer__isnull=False) & Q(test_grade_math__isnull=False)).order_by('-test_level')
     discipline = survey.discipline_set.all().filter().order_by('-incident_date')
     classroomenrollment = survey.classroomenrollment_set.all().filter().order_by('drop_date')
     attendance_present = survey.attendance_set.all().filter(attendance='P').count()
@@ -217,7 +217,7 @@ def student_detail(request, student_id):
     #is this a better approach?
     try:
         #their current grade is one more than that of the last test they passed
-        current_grade = (academics.filter(promote=True).latest('test_date').test_level)+1
+        current_grade = (academics.filter(promote=True).latest('test_level').test_level)+1
     except ObjectDoesNotExist:
         current_grade = recent_intake.starting_grade if type(recent_intake) != str else None
 
@@ -621,6 +621,23 @@ def academic_select(request):
     }
     return render(request, 'mande/academicselect.html',context)
 
+def academic_form_single(request, student_id=0):
+    if request.method == 'POST':
+        form = AcademicForm(request.POST)
+        if form.is_valid():
+            #process
+            instance=form.save()
+            #then return
+            return HttpResponseRedirect(reverse('student_detail',kwargs={'student_id':instance.student_id.student_id}))
+    else:
+        if student_id > 0:
+            form = AcademicForm({'student_id':student_id, 'test_date':date.today().isoformat(),'test_level':getStudentGradebyID(student_id)})
+        else:
+            form = AcademicForm()
+
+    context = {'form': form,'student_id':student_id}
+
+    return render(request, 'mande/academicformsingle.html',context)
 #helper functions
 def getStudentGradebyID(student_id):
     try:
@@ -628,7 +645,7 @@ def getStudentGradebyID(student_id):
     except ObjectDoesNotExist:
         current_grade = 0 #not enrolled
 
-    academics = student.academic_set.all().filter().order_by('-test_date')
+    academics = student.academic_set.all().filter().order_by('-test_level')
     intake = student.intakeinternal_set.all().filter().order_by('-enrollment_date')
     if len(intake) > 0:
         recent_intake = intake[0]
@@ -637,7 +654,7 @@ def getStudentGradebyID(student_id):
 
     try:
         #their current grade is one more than that of the last test they passed
-        current_grade = (academics.filter(promote=True).latest('test_date').test_level)+1
+        current_grade = (academics.filter(promote=True).latest('test_level').test_level)+1
     except ObjectDoesNotExist:
         current_grade = recent_intake.starting_grade if type(recent_intake) != str else 0
 

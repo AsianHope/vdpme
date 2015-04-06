@@ -14,6 +14,7 @@ from mande.models import ClassroomEnrollment
 from mande.models import Attendance
 from mande.models import Academic
 from mande.models import IntakeInternal
+from mande.models import GRADES
 
 from django.forms.extras.widgets import SelectDateWidget
 from django.forms import CheckboxSelectMultiple
@@ -107,9 +108,11 @@ class AttendanceForm(forms.ModelForm):
         exclude=[]
 
 class AcademicForm(forms.ModelForm):
-    promote = forms.BooleanField(required=False)
-    test_grade_math = forms.IntegerField(widget=forms.TextInput(attrs={'size':'3'}), required=False)
-    test_grade_khmer = forms.IntegerField(widget=forms.TextInput(attrs={'size':'3'}), required=False)
+    promote = forms.BooleanField(label='',required=False)
+    test_grade_math = forms.IntegerField(label='',widget=forms.TextInput(attrs={'size':'3'}), required=False)
+    test_grade_khmer = forms.IntegerField(label='',widget=forms.TextInput(attrs={'size':'3'}), required=False)
+    test_date = forms.DateField(label='',widget=Html5DateInput)
+    test_level = forms.ChoiceField(label='',choices=GRADES)
     class Meta:
         model = Academic
         exclude = []

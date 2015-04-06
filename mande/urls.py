@@ -54,8 +54,9 @@ urlpatterns = patterns('',
 
 
     url(r'^school-management/academics/$', views.academic_select, name='academic_select'),
-    url(r'^school-management/academics/(?P<school_id>\d+)/(?P<test_date>\d{4}-\d{1,2}-\d{1,2})/$', views.academic_form, name='academic_form'),
-    url(r'^school-management/academics/(?P<school_id>\d+)/(?P<test_date>\d{4}-\d{1,2}-\d{1,2})/(?P<grade_id>\d+)/$', views.academic_form, name='academic_form'),
+    url(r'^school-management/academics/(?P<student_id>\d+)/$', views.academic_form_single, name='academic_form_single'),
+    url(r'^school-management/academics/bulk/(?P<school_id>\d+)/(?P<test_date>\d{4}-\d{1,2}-\d{1,2})/$', views.academic_form, name='academic_form'),
+    url(r'^school-management/academics/bulk/(?P<school_id>\d+)/(?P<test_date>\d{4}-\d{1,2}-\d{1,2})/(?P<grade_id>\d+)/$', views.academic_form, name='academic_form'),
 
     url(r'^success/$', views.survey_success, name='success'),
 
