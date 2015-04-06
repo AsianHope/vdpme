@@ -51,6 +51,19 @@ def index(request):
 
     schools = School.objects.all()
     breakdown = {}
+
+    students_by_grade = dict(GRADES)
+    students_by_grade_by_site  = dict(GRADES)
+
+    #zero things out for accurate counts
+    for key,grade in students_by_grade.iteritems():
+        students_by_grade[key] = 0
+        students_by_grade_by_site[key] = {}
+
+        for school in schools:
+            name = school.school_name
+            students_by_grade_by_site[key][unicode(name)] = 0
+
     for school in schools:
          name = school.school_name
          total = surveys.filter(site=school)
@@ -58,8 +71,26 @@ def index(request):
          males = total.filter(gender='M').count()
          breakdown[name] = {'F':females, 'M':males}
 
-    print breakdown
-    context = {'surveys': surveys, 'females': tot_females, 'breakdown':breakdown}
+
+    #loop through students and figure out what grades they're currently in
+    for student in surveys:
+        grade = getStudentGradebyID(student.student_id)
+        students_by_grade[grade] += 1
+        students_by_grade_by_site[grade][unicode(student.site)] +=1
+
+    #clean up students_by_grade_by_site so we're not displaying a bunch of blank data
+    clean_students_by_grade_by_site = dict(students_by_grade_by_site)
+    for key,grade in students_by_grade_by_site.iteritems():
+        if students_by_grade[key] == 0:
+            del clean_students_by_grade_by_site[key]
+
+    context = { 'surveys': surveys,
+                'females': tot_females,
+                'breakdown':breakdown,
+                'students_by_grade':students_by_grade,
+                'students_by_grade_by_site':clean_students_by_grade_by_site,
+                'schools':schools}
+
     return render(request, 'mande/index.html', context)
 
 def student_list(request):
