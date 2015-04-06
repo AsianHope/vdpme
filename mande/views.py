@@ -8,6 +8,8 @@ from django.db.models import Q
 
 from django.utils.html import conditional_escape as esc
 from django.utils.safestring import mark_safe
+from django.core.urlresolvers import reverse
+
 from calendar import HTMLCalendar, monthrange
 
 from datetime import date
@@ -227,7 +229,7 @@ def intake_survey(request):
         if form.is_valid():
             form.save()
             #then return
-            return HttpResponseRedirect('/mande/success/')
+            return HttpResponseRedirect(reverse('success'))
     else:
         form = IntakeSurveyForm()
 
@@ -249,7 +251,7 @@ def intake_update(request,student_id=0):
         if form.is_valid():
             form.save()
             #then return
-            return HttpResponseRedirect('/mande/success/')
+            return HttpResponseRedirect(reverse('success'))
     else:
         form = IntakeUpdateForm(instance=most_recent)
 
@@ -264,7 +266,7 @@ def exit_survey(request,student_id=0):
         if form.is_valid():
             form.save()
             #then return
-            return HttpResponseRedirect('/mande/success/')
+            return HttpResponseRedirect(reverse('success'))
     else:
         if student_id > 0:
             form = ExitSurveyForm({'student_id':student_id})
@@ -294,7 +296,7 @@ def post_exit_survey(request,student_id):
         if form.is_valid():
             form.save
             #then return
-            return HttpResponseRedirect('/mande/success/')
+            return HttpResponseRedirect(reverse('success'))
     else:
         form = PostExitSurveyForm({
             'student_id':student_id,
@@ -355,7 +357,7 @@ def discipline_form(request,student_id=0):
             #process
             form.save()
             #then return
-            return HttpResponseRedirect('/mande/success/')
+            return HttpResponseRedirect(reverse('success'))
     else:
         if student_id > 0:
             form = DisciplineForm({'student_id':student_id})
@@ -447,7 +449,7 @@ def classroomenrollment_form(request,student_id=0):
             enrollment = ClassroomEnrollment(classroom_id=classroom_id, student_id=student_id, enrollment_date=enrollment_date)
             enrollment.save()
 
-        return HttpResponseRedirect('/mande/success/')
+        return HttpResponseRedirect(reverse('success'))
     else:
         if student_id > 0:
             form = ClassroomEnrollmentForm({'student_id':student_id})
