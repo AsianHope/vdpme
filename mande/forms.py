@@ -13,6 +13,7 @@ from mande.models import ClassroomTeacher
 from mande.models import ClassroomEnrollment
 from mande.models import Attendance
 from mande.models import Academic
+from mande.models import IntakeInternal
 
 from django.forms.extras.widgets import SelectDateWidget
 from django.forms import CheckboxSelectMultiple
@@ -28,6 +29,13 @@ class IntakeSurveyForm(forms.ModelForm):
     class Meta:
         model = IntakeSurvey
         exclude=[]
+
+class IntakeInternalForm(forms.ModelForm):
+    enrollment_date = forms.DateField(label="Enrollment Date",widget=Html5DateInput)
+
+    class Meta:
+        model = IntakeInternal
+        exclude = []
 
 class IntakeUpdateForm(forms.ModelForm):
     date = forms.DateField(label="Survey Date",widget=Html5DateInput)

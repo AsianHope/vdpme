@@ -45,6 +45,7 @@ from mande.forms import ClassroomTeacherForm
 from mande.forms import ClassroomEnrollmentForm
 from mande.forms import AttendanceForm
 from mande.forms import AcademicForm
+from mande.forms import IntakeInternalForm
 
 
 def index(request):
@@ -227,14 +228,32 @@ def intake_survey(request):
     if request.method == 'POST':
         form = IntakeSurveyForm(request.POST)
         if form.is_valid():
-            form.save()
+            instance = form.save()
             #then return
-            return HttpResponseRedirect(reverse('success'))
+            return HttpResponseRedirect(reverse('student_detail', kwargs={'student_id':instance.student_id}))
     else:
         form = IntakeSurveyForm()
 
     context = {'form': form,}
     return render(request, 'mande/intakesurvey.html', context)
+
+def intake_internal(request, student_id=0):
+
+
+    if request.method == 'POST':
+        form = IntakeInternalForm(request.POST)
+        if form.is_valid():
+            form.save()
+            #then return
+            return HttpResponseRedirect(reverse('success'))
+    else:
+        if student_id > 0:
+            form = IntakeInternalForm({'student_id':student_id})
+        else:
+            form = IntakeInternalForm()
+
+    context = {'form': form,}
+    return render(request, 'mande/intakeinternal.html', context)
 
 def intake_update(request,student_id=0):
     try:
