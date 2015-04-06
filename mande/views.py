@@ -259,9 +259,9 @@ def intake_internal(request, student_id=0):
     if request.method == 'POST':
         form = IntakeInternalForm(request.POST)
         if form.is_valid():
-            form.save()
+            instance = form.save()
             #then return
-            return HttpResponseRedirect(reverse('success'))
+            return HttpResponseRedirect(reverse('student_detail',kwargs={'student_id':instance.student_id.student_id}))
     else:
         if student_id > 0:
             form = IntakeInternalForm({'student_id':student_id})
@@ -299,9 +299,9 @@ def exit_survey(request,student_id=0):
         form = ExitSurveyForm(request.POST)
 
         if form.is_valid():
-            form.save()
+            instance=form.save()
             #then return
-            return HttpResponseRedirect(reverse('success'))
+            return HttpResponseRedirect(reverse('student_detail', kwargs={'student_id':instance.student_id.student_id}))
     else:
         if student_id > 0:
             form = ExitSurveyForm({'student_id':student_id})
