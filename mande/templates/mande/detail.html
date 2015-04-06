@@ -11,7 +11,7 @@
         Student ID: <strong id="student_id">{{survey.student_id}}</strong>
       <a href="#"><i id="increment" class="fa fa-arrow-right"></i></a>
     </small><br/>
-<button class="btn btn-primary"><a href="/mande/students/" style="color: white">Back to all students</a></button>
+<button class="btn btn-primary"><a href="{% url 'student_list' %}" style="color: white">Back to all students</a></button>
 <button class="btn btn-danger"><a href="{% url 'intake_update' survey.student_id %}" style="color: white">Update this Student's Information?</a></button><br/>
 
 

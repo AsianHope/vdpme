@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 {% load mathfilters %}
+{% load mandefilters %}
 {% block title %}Intake Surveys{% endblock %}
 
 {% block content %}
 <div class="dataTable_wrapper">
   <table class="table table-striped table-hover" id="studentDataTable">
-    <thead><tr><th>Site</th><th>SID</th><th>Name</th><th>Gender</th><th>DOB</th></tr></thead>
+    <thead><tr><th>Site</th><th>SID</th><th>Name</th><th>Gender</th><th>DOB</th><th>Grade</th></tr></thead>
     <tbody>
       {% for survey in surveys %}
 
@@ -15,6 +16,7 @@
         <td>{{survey.name}}</td>
         <td>{{survey.get_gender_display}}</td>
         <td>{{survey.dob}}</td>
+        <td>{{survey.student_id | student_current_grade_by_id}}
 
       </tr>
       {% endfor %}

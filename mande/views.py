@@ -202,7 +202,7 @@ def student_detail(request, student_id):
         #their current grade is one more than that of the last test they passed
         current_grade = (academics.filter(promote=True).latest('test_date').test_level)+1
     except ObjectDoesNotExist:
-        current_grade = recent_intake.starting_grade if type(recent_intake) != str else 'Who knows!'
+        current_grade = recent_intake.starting_grade if type(recent_intake) != str else None
 
     graduation = survey.dob +timedelta(days=365*12) if survey.dob is not None else "No birthday entered"
     context = {
