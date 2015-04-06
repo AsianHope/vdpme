@@ -470,9 +470,18 @@ def classroomteacher_form(request, teacher_id=0):
     context = {'form': form, 'teacher_id':teacher_id, 'current_assignments':current_assignments, 'unassigned_classrooms':unassigned_classrooms}
     return render(request, 'mande/classroomteacherform.html', context)
 
-def classroomenrollment_form(request,student_id=0):
+def classroomenrollment_form(request,classroom_id=0):
+
+    if int(classroom_id)>0:
+        instance = Classroom.objects.get(pk=classroom_id)
+        #select students who have not dropped the class, or have not dropped it yet.
+        enrolled_students = instance.classroomenrollment_set.all().filter(Q(drop_date__lte=date.today().isoformat()) | Q(drop_date=None))
+    else:
+        instance = None;
+        enrolled_students = None
 
     if request.method == 'POST':
+        #can't rely on classroom_id set by url - it may have been changed by the user.
         classroom_id = Classroom.objects.get(pk=request.POST.get('classroom_id'))
         enrollment_date = request.POST.get('enrollment_date')
 
@@ -482,14 +491,14 @@ def classroomenrollment_form(request,student_id=0):
             enrollment = ClassroomEnrollment(classroom_id=classroom_id, student_id=student_id, enrollment_date=enrollment_date)
             enrollment.save()
 
-        return HttpResponseRedirect(reverse('classroom_form', kwargs={'classroom_id':classroom_id.classroom_id}))
+        return HttpResponseRedirect(reverse('classroomenrollment_form', kwargs={'classroom_id':classroom_id.classroom_id}))
     else:
-        if student_id > 0:
-            form = ClassroomEnrollmentForm({'student_id':student_id})
+        if classroom_id > 0:
+            form = ClassroomEnrollmentForm({'classroom_id':classroom_id, 'enrollment_date':date.today().isoformat()})
         else:
             form = ClassroomEnrollmentForm()
 
-    context = {'form': form,'student_id':student_id}
+    context = {'form': form,'classroom':instance, 'enrolled_students':enrolled_students}
     return render(request, 'mande/classroomenrollmentform.html', context)
 
 

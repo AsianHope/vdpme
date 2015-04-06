@@ -7,7 +7,7 @@ Classroom Enrollment
 {% block content %}
 
 <div class="col-md-12">
-  <form action = "{% url 'classroomenrollment_form' student_id %}" method="post">
+  <form action = "{% url 'classroomenrollment_form' %}" method="post">
       {% csrf_token %}
       <div class = "col-md-4">
       {{form.classroom_id | bootstrap}}
@@ -28,6 +28,22 @@ Classroom Enrollment
 
 
 </div>
+{% if classroom %}
+<div class="col-md-12">
+  <h2>Students Currently Enrolled in {{classroom}}</h2>
+  <div class="table-responsive">
+    <table class="table table-border  table-striped table-hover">
+      <thead>
+        <tr><th>Student</th><th>Enrollment Date</th><th>Drop Date</th></tr>
+      </thead>
+      {% for student in enrolled_students %}
+      <tr>
+        <td>{{student.student_id}}</td><td>{{student.enrollment_date}}</td><td>{{student.drop_date}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+{% endif %}
 
 {% endblock %}
 
@@ -42,6 +58,11 @@ $(document).ready(function(){
       responsive: true,
       pageLength: 5,
   });
+});
+$('#id_classroom_id').change(function(){
+  var selected = $('#id_classroom_id').val()
+  if(selected) url = '{% url 'classroomenrollment_form' %}'+selected+'/'
+  window.location.href=url
 });
 $("[type=checkbox]").change(function(){
       // varible to hold string
