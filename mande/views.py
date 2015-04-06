@@ -354,7 +354,7 @@ def spiritualactivities_survey(request,student_id=0):
         if form.is_valid():
             form.save()
             #then return
-            return HttpResponseRedirect('/mande/success')
+            return HttpResponseRedirect(reverse('success'))
     else:
         if student_id > 0:
             form = SpiritualActivitiesSurveyForm({'student_id':student_id})
@@ -421,9 +421,9 @@ def classroom_form(request, classroom_id=0):
     if request.method == 'POST':
         form = ClassroomForm(request.POST, instance=instance)
         if form.is_valid():
-            form.save()
+            instance=form.save()
             #then return
-            return HttpResponseRedirect('/mande/school-management/classrooms/'+str(classroom_id))
+            return HttpResponseRedirect(reverse('classroom_form', kwargs={'classroom_id':instance.classroom_id}))
     else:
         form = ClassroomForm(instance=instance)
 
@@ -448,7 +448,7 @@ def classroomteacher_form(request, teacher_id=0):
         if form.is_valid():
             form.save()
             #then return
-            return HttpResponseRedirect('/mande/school-management/classrooms/assignment/'+str(teacher_id))
+            return HttpResponseRedirect(reverse(classroomteacher_form, kwargs={'teacher_id':teacher_id}))
     else:
         form = ClassroomTeacherForm()
 
@@ -468,7 +468,7 @@ def classroomenrollment_form(request,student_id=0):
             enrollment = ClassroomEnrollment(classroom_id=classroom_id, student_id=student_id, enrollment_date=enrollment_date)
             enrollment.save()
 
-        return HttpResponseRedirect(reverse('success'))
+        return HttpResponseRedirect(reverse('classroom_form', kwargs={'classroom_id':classroom_id.classroom_id}))
     else:
         if student_id > 0:
             form = ClassroomEnrollmentForm({'student_id':student_id})
