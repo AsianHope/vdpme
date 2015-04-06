@@ -7,6 +7,7 @@ Post-Exit Survey Eligible Students
 {% block content %}
 <table class="table table-bordered table-striped table-hover" id="attendanceTable">
   <thead><tr>
+    <th>Date of Exit</th>
     <th>SID</th>
     <th>Name</th>
     <th>Perform</th>
@@ -14,6 +15,7 @@ Post-Exit Survey Eligible Students
   <tbody>
 {% for exitsurvey in exitsurveys %}
   <tr>
+    <td>{{exitsurvey.exit_date}}</td>
     <td>{{exitsurvey.student_id.student_id}}</td>
     <td>{{exitsurvey.student_id.name}}</td>
     <td><a href = "{% url 'post_exit_survey' exitsurvey.student_id.student_id %}" class="btn btn-danger btn-xs" role="button">Perform Post-Exit Survey</a></td>

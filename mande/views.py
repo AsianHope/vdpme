@@ -97,7 +97,11 @@ def index(request):
     return render(request, 'mande/index.html', context)
 
 def student_list(request):
-    surveys = IntakeSurvey.objects.order_by('student_id')
+    #only students who don't have exit surveys
+    surveys = IntakeSurvey.objects.order_by('student_id').exclude(
+        student_id__in=[
+            x.student_id.student_id for x in ExitSurvey.objects.all().filter(exit_date__lte=date.today().isoformat())
+        ])
     context = {'surveys': surveys}
     return render(request, 'mande/studentlist.html', context)
 
@@ -182,6 +186,16 @@ def student_detail(request, student_id):
     survey = IntakeSurvey.objects.get(pk=student_id)
     updates = survey.intakeupdate_set.all().filter().order_by('-date')
     intake = survey.intakeinternal_set.all().filter().order_by('-enrollment_date')
+
+    try:
+        exit_survey = survey.exitsurvey_set.all()[0]
+    except IndexError:
+        exit_survey = None
+    try:
+        post_exit_survey = survey.postexitsurvey_set.all()[0]
+    except IndexError:
+        post_exit_survey = None
+
     #select only semester tests which have grades in them
     academics = survey.academic_set.all().filter(
         Q(test_grade_khmer__isnull=False) & Q(test_grade_math__isnull=False)).order_by('-test_date')
@@ -221,7 +235,9 @@ def student_detail(request, student_id):
         'classroomenrollment':classroomenrollment,
         'attendance_present':attendance_present,
         'attendance_approved_absence':attendance_approved_absence,
-        'attendance_unapproved_absence':attendance_unapproved_absence}
+        'attendance_unapproved_absence':attendance_unapproved_absence,
+        'exit_survey':exit_survey,
+        'post_exit_survey':post_exit_survey}
     return render(request, 'mande/detail.html', context)
 
 def intake_survey(request):
@@ -296,10 +312,13 @@ def exit_survey(request,student_id=0):
     return render(request, 'mande/exitsurvey.html', context)
 
 def post_exit_survey(request,student_id):
+    #if the student hasn't had an exit survey performed alert the user
     try:
         exit = ExitSurvey.objects.get(student_id=student_id)
     except ObjectDoesNotExist:
         return render(request,'mande/errors/noexitsurvey.html',{'student_id':student_id})
+
+    #get students current info for pre-filling the survey
     try:
         survey = IntakeSurvey.objects.get(pk=student_id)
     except ObjectDoesNotExist:
@@ -313,9 +332,9 @@ def post_exit_survey(request,student_id):
     if request.method == 'POST':
         form = PostExitSurveyForm(request.POST)
         if form.is_valid():
-            form.save
+            form.save()
             #then return
-            return HttpResponseRedirect(reverse('success'))
+            return HttpResponseRedirect(reverse('post_exit_survey'))
     else:
         form = PostExitSurveyForm({
             'student_id':student_id,
@@ -336,12 +355,7 @@ def post_exit_survey(request,student_id):
     return render(request, 'mande/postexitsurvey.html', context)
 
 def post_exit_survey_list(request):
-    postexitsurveys = PostExitSurvey.objects.all()
-    pexitsurveysids= []
-    for pexitsurvey in postexitsurveys:
-        pexitsurveysids.append(int(pexitsurvey.student_id.student_id))
-
-    exitsurveys = ExitSurvey.objects.exclude(student_id__in=pexitsurveysids)
+    exitsurveys = ExitSurvey.objects.exclude(student_id__in=[x.student_id.student_id for x in PostExitSurvey.objects.all()]).order_by('-exit_date')
 
     context = {'exitsurveys':exitsurveys}
     return render(request, 'mande/postexitsurveylist.html',context)
