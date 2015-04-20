@@ -2,17 +2,20 @@
 {% load bootstrap %}
 {% block title %}
 Manage Teachers
+{% if action != None %}
+<small>{{action}}</action>
+{% endif %}
 {% endblock %}
 
 {% block content %}
 <div class="col-md-12">
-  <ul>
-    {% for teacher in current_teachers %}
-      <li><a href = "{% url 'teacher_form' %}{{teacher.teacher_id}}">{{teacher.name}}</a></li>
-    {% endfor %}
-  </ul>
+
 </div>
-<div class="col-md-3"></div>
+<div class="col-md-3"><ul>
+  {% for teacher in current_teachers %}
+    <li><a href = "{% url 'teacher_form' %}{{teacher.teacher_id}}">{{teacher}}</a></li>
+  {% endfor %}
+</ul></div>
 <div class="col-md-6">
 <form action = "{% url 'teacher_form' teacher_id %}" method="post">
 
@@ -23,6 +26,12 @@ Manage Teachers
     </div>
 </form>
 </div>
-<div class="col-md-3"></div>
+<div class="col-md-3">
+  {% if action == None %}
+    <a href = "{% url 'teacher_form' %}" role="button" class="btn btn-success">Adding a teacher</a>
+  {% else %}
+    <a href = "{% url 'teacher_form' %}" role="button" class="btn btn-danger">Add a teacher?</a>
+  {% endif %}
+</div>
 
 {% endblock %}

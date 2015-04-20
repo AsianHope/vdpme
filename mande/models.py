@@ -120,7 +120,7 @@ class Teacher(models.Model):
 	teacher_id = models.AutoField(primary_key=True)
 	name = models.CharField(max_length=32,default='')
 	def __unicode__(self):
-		return self.name
+		return unicode(self.teacher_id)+ ' - '+ unicode(self.name)
 
 class IntakeSurvey(models.Model):
 

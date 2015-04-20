@@ -402,11 +402,14 @@ def discipline_form(request,student_id=0):
 
 def teacher_form(request, teacher_id=0):
     current_teachers = Teacher.objects.all()
+    action = None
 
     if int(teacher_id)>0:
         instance = Teacher.objects.get(pk=teacher_id)
+        action = 'editing '+str(instance)
     else:
         instance = Teacher()
+        action = None
 
     if request.method == 'POST':
         form = TeacherForm(request.POST, instance=instance)
@@ -417,7 +420,7 @@ def teacher_form(request, teacher_id=0):
     else:
             form = TeacherForm(instance=instance)
 
-    context = {'form': form, 'teacher_id':teacher_id,'current_teachers':current_teachers}
+    context = {'form': form, 'teacher_id':teacher_id,'current_teachers':current_teachers, 'action':action}
     return render(request, 'mande/teacherform.html', context)
 
 def classroom_form(request, classroom_id=0):
