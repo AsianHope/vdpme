@@ -180,15 +180,15 @@ class IntakeUpdate(models.Model):
 	date = models.DateTimeField('Date of Update')
 	address = models.TextField('Home Address')
 
-	father_name = models.CharField('Father\'s Name',max_length=64)
-	father_phone = models.CharField('Father\'s Phone',max_length=128)
-	father_profession = models.CharField('Father\'s Profession',max_length=64,default='NA')
+	father_name = models.CharField('Father\'s Name',max_length=64,blank=True)
+	father_phone = models.CharField('Father\'s Phone',max_length=128,blank=True)
+	father_profession = models.CharField('Father\'s Profession',max_length=64,default='NA',blank=True)
 	father_employment = models.CharField('Father\'s Employment',max_length=1,choices=EMPLOYMENT,default=1)
 
 
-	mother_name = models.CharField('Mother\'s Name',max_length=64)
-	mother_phone = models.CharField('Mother\'s Phone',max_length=128)
-	mother_profession = models.CharField('Mother\'s Profession',max_length=64,default='NA')
+	mother_name = models.CharField('Mother\'s Name',max_length=64,blank=True)
+	mother_phone = models.CharField('Mother\'s Phone',max_length=128,blank=True)
+	mother_profession = models.CharField('Mother\'s Profession',max_length=64,default='NA',blank=True)
 	mother_employment= models.CharField('Mother\'s Employment',max_length=1,choices=EMPLOYMENT,default=1)
 
 	minors = models.IntegerField(default=0)
@@ -197,13 +197,13 @@ class IntakeUpdate(models.Model):
 	minors_profession = models.CharField('What are they doing for work?',max_length=256, default='NA')
 	minors_encouraged = models.CharField('Did you encourage them to take this job?',max_length=2,choices=YN,default='NA')
 	minors_training = models.CharField('Did they receive any vocational training?',max_length=2,choices=YN,default='NA')
-	minors_training_type = models.CharField('What kind of vocational training did they receive?',max_length=256,default='NA')
+	minors_training_type = models.CharField('What kind of vocational training did they receive?',max_length=256,default='NA',blank=True)
 
 	enrolled = models.CharField('Currently enrolled in formal school?',max_length=2,choices=YN,default='N')
 	grade_current = models.IntegerField('Current grade in (public) school?',choices=GRADES,default=1)
 	grade_last = models.IntegerField(choices=GRADES,default=1)
 	reasons = models.TextField(default='NA')
-	notes = models.TextField(default='NA')
+	notes = models.TextField(default='NA',blank=True)
 
 	def __unicode__(self):
 		return unicode(self.date)+' - '+unicode(self.student_id)
