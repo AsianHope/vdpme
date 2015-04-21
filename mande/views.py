@@ -51,7 +51,7 @@ from mande.forms import IntakeInternalForm
 from django.contrib.auth.models import User
 
 def index(request):
-    notifications = NotificationLog.objects.all()
+    notifications = NotificationLog.objects.order_by('-date')[:10]
     surveys = IntakeSurvey.objects.order_by('student_id')
     tot_females = surveys.filter(gender='F').count()
 
@@ -164,6 +164,8 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
         if formset.is_valid():
             formset.save()
             message = "Attendance saved."
+            log = NotificationLog(user=request.user, text='Took attendance for '+unicode(classroom), font_awesome_icon='fa-check-square')
+            log.save()
             #clean up the mess we created making blank rows to update.
             Attendance.objects.filter(attendance=None).delete()
 
@@ -249,6 +251,9 @@ def intake_survey(request):
         form = IntakeSurveyForm(request.POST)
         if form.is_valid():
             instance = form.save()
+            icon = 'fa-female' if instance.gender == 'F' else 'fa-male'
+            log = NotificationLog(user=request.user, text='Performed intake survey for '+unicode(instance.name), font_awesome_icon=icon)
+            log.save()
             #then return
             return HttpResponseRedirect(reverse('student_detail', kwargs={'student_id':instance.student_id}))
     else:
@@ -264,6 +269,9 @@ def intake_internal(request, student_id=0):
         form = IntakeInternalForm(request.POST)
         if form.is_valid():
             instance = form.save()
+            message = 'Enrolled  '+unicode(instance.student_id.name)+' in '+instance.get_starting_grade_display()
+            log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-user-plus')
+            log.save()
             #then return
             return HttpResponseRedirect(reverse('student_detail',kwargs={'student_id':instance.student_id.student_id}))
     else:
@@ -288,7 +296,10 @@ def intake_update(request,student_id=0):
     if request.method == 'POST':
         form = IntakeUpdateForm(request.POST)
         if form.is_valid():
-            form.save()
+            instance = form.save()
+            message = 'Updated '+unicode(instance.student_id.name)+'\'s record'
+            log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-upload')
+            log.save()
             #then return
             return HttpResponseRedirect(reverse('success'))
     else:
@@ -303,7 +314,10 @@ def exit_survey(request,student_id=0):
         form = ExitSurveyForm(request.POST)
 
         if form.is_valid():
-            instance=form.save()
+            instance = form.save()
+            message = 'Did an exit survey for '+unicode(instance.student_id.name)
+            log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-user-times')
+            log.save()
             #then return
             return HttpResponseRedirect(reverse('student_detail', kwargs={'student_id':instance.student_id.student_id}))
     else:
@@ -336,7 +350,10 @@ def post_exit_survey(request,student_id):
     if request.method == 'POST':
         form = PostExitSurveyForm(request.POST)
         if form.is_valid():
-            form.save()
+            instance = form.save()
+            message = 'Did a post exit survey for '+unicode(instance.student_id.name)
+            log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-heart')
+            log.save()
             #then return
             return HttpResponseRedirect(reverse('post_exit_survey'))
     else:
@@ -370,7 +387,10 @@ def spiritualactivities_survey(request,student_id=0):
         form = SpiritualActivitiesSurveyForm(request.POST)
 
         if form.is_valid():
-            form.save()
+            instance = form.save()
+            message = 'Performed spiritual activities survey for '+unicode(instance.student_id.name)
+            log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-fire')
+            log.save()
             #then return
             return HttpResponseRedirect(reverse('success'))
     else:
@@ -392,7 +412,10 @@ def discipline_form(request,student_id=0):
 
         if form.is_valid():
             #process
-            instance=form.save()
+            instance = form.save()
+            message = 'Logged discipline for '+unicode(instance.student_id.name)
+            log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-meh-o')
+            log.save()
             #then return
             return HttpResponseRedirect(reverse('student_detail',kwargs={'student_id':instance.student_id.student_id}))
     else:
@@ -418,7 +441,10 @@ def teacher_form(request, teacher_id=0):
     if request.method == 'POST':
         form = TeacherForm(request.POST, instance=instance)
         if form.is_valid():
-            instance=form.save()
+            instance = form.save()
+            message = 'Added a new teacher: '+unicode(instance.name) if action is None else 'Updated '+unicode(instance.name)+'\'s name'
+            log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-street-view')
+            log.save()
             #then return
             return HttpResponseRedirect(reverse('teacher_form'))
     else:
@@ -442,7 +468,10 @@ def classroom_form(request, classroom_id=0):
     if request.method == 'POST':
         form = ClassroomForm(request.POST, instance=instance)
         if form.is_valid():
-            instance=form.save()
+            instance = form.save()
+            message = 'Added classroom '+unicode(instance) if int(classroom_id)==0 else 'Edited classroom '+unicode(instance)
+            log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-university')
+            log.save()
             #then return
             return HttpResponseRedirect(reverse('classroom_form', kwargs={'classroom_id':instance.classroom_id}))
     else:
@@ -467,7 +496,10 @@ def classroomteacher_form(request, teacher_id=0):
     if request.method == 'POST':
         form = ClassroomTeacherForm(request.POST)
         if form.is_valid():
-            form.save()
+            instance = form.save()
+            message = 'Made '+unicode(instance.teacher_id)+' teacher of '+unicode(instance.classroom_id)
+            log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-pencil')
+            log.save()
             #then return
             return HttpResponseRedirect(reverse(classroomteacher_form, kwargs={'teacher_id':teacher_id}))
     else:
@@ -497,7 +529,10 @@ def classroomenrollment_form(request,classroom_id=0):
             student_id = IntakeSurvey.objects.get(pk=student)
             enrollment = ClassroomEnrollment(classroom_id=classroom_id, student_id=student_id, enrollment_date=enrollment_date)
             enrollment.save()
-
+        num = len(request.POST.getlist('student_id'))
+        message = 'Added '+str(num)+' students to '+unicode(classroom_id) if num >1 else 'Added '+str(num)+' student to '+unicode(classroom_id)
+        log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-level-up')
+        log.save()
         return HttpResponseRedirect(reverse('classroomenrollment_form', kwargs={'classroom_id':classroom_id.classroom_id}))
     else:
         if classroom_id > 0:
@@ -563,6 +598,7 @@ def attendance_days(request,classroom_id,attendance_date=date.today().isoformat(
             add = AttendanceDayOffering(classroom_id=classroom, date=newday)
             add.save()
         #TODO: make a success template so we can be smarter in our JS
+        #TODO: figure out a way to not group requests for slimmer logging
         return render(request,'mande/attendancedays.html','')
 
     #otherwise display the calendar
@@ -605,6 +641,12 @@ def academic_form(request, school_id, test_date=date.today().isoformat(), grade_
             message = "Saved."
             #clean up the mess we created making blank rows to update.
             Academic.objects.filter(Q(test_grade_khmer=None)&Q(test_grade_math=None)).delete()
+            if grade_id is None:
+                message = 'Recorded semester tests for '+str(school)
+            else:
+                message = 'Recorded semester tests for '+str(dict(GRADES)[int(grade_id)])+' at '+str(school)
+            log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-calculator')
+            log.save()
 
     else:
         formset = AcademicFormSet(queryset = student_academics)
@@ -633,7 +675,10 @@ def academic_form_single(request, student_id=0):
         form = AcademicForm(request.POST)
         if form.is_valid():
             #process
-            instance=form.save()
+            instance = form.save()
+            message = 'Recorded semester test for '+instance.student_id.name
+            log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-calculator')
+            log.save()
             #then return
             return HttpResponseRedirect(reverse('student_detail',kwargs={'student_id':instance.student_id.student_id}))
     else:
@@ -647,10 +692,10 @@ def academic_form_single(request, student_id=0):
     return render(request, 'mande/academicformsingle.html',context)
 
 def notification_log(request):
-    notifications = NotificationLog.objects.all()
+    notifications = NotificationLog.objects.order_by('-date')
     context = {'notifications':notifications}
     return render(request, 'mande/notificationlog.html',context)
-    
+
 #helper functions
 def getStudentGradebyID(student_id):
     try:
