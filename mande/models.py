@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 import datetime
 
 GENDERS = (
@@ -333,3 +334,16 @@ class ClassroomTeacher(models.Model):
 	teacher_id = models.ForeignKey(Teacher)
 	def __unicode__(self):
 		return unicode(self.teacher_id)+unicode(self.classroom_id)
+
+class NotificationLog(models.Model):
+	date = models.DateTimeField(auto_now=True)
+	user = models.ForeignKey(User, blank=True)
+	user_generated = models.BooleanField(default=True)
+	text = models.TextField()
+	font_awesome_icon = models.TextField(max_length=16,default="fa-bolt") #a font-awesome icon name
+
+	def __unicode__(self):
+		return unicode(self.date) + ' - '+ unicode(self.user) + ' ' + unicode(self.text)
+
+	class Meta:
+		get_latest_by = 'date'

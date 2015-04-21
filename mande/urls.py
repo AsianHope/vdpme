@@ -59,6 +59,7 @@ urlpatterns = patterns('',
     url(r'^school-management/academics/bulk/(?P<school_id>\d+)/(?P<test_date>\d{4}-\d{1,2}-\d{1,2})/(?P<grade_id>\d+)/$', views.academic_form, name='academic_form'),
 
     url(r'^success/$', views.survey_success, name='success'),
+    url(r'^log/$', views.notification_log, name='notification_log')
 
 
 

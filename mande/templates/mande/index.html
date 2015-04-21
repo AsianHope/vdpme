@@ -122,54 +122,18 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="list-group">
+                              {% for notification in notifications %}
+
                                 <a href="#" class="list-group-item">
-                                    <i class="fa fa-comment fa-fw"></i> Intake survey for "Phearey" added
-                                    <span class="pull-right text-muted small"><em>4 minutes ago by Chanrith</em>
+                                    <i class="fa {{notification.font_awesome_icon}} fa-fw"></i> {{notification.text}}
+                                    <span class="pull-right text-muted small">
+                                      <em>{{notification.date|timesince}} by {{notification.user}}</em>
                                     </span>
                                 </a>
-                                <a href="#" class="list-group-item">
-                                    <i class="fa fa-building fa-fw"></i> "Chanthorn" enrolled in VDP-TK-4
-                                    <span class="pull-right text-muted small"><em>12 minutes ago by Sila</em>
-                                    </span>
-                                </a>
-                                <a href="#" class="list-group-item">
-                                    <i class="fa fa-times fa-fw"></i> Discipline for "Pidor" added
-                                    <span class="pull-right text-muted small"><em>27 minutes ago by Gunilla</em>
-                                    </span>
-                                </a>
-                                <a href="#" class="list-group-item">
-                                    <i class="fa fa-tasks fa-fw"></i> Update of info for "Chendamony"
-                                    <span class="pull-right text-muted small"><em>43 minutes ago by Chenda</em>
-                                    </span>
-                                </a>
-                                <a href="#" class="list-group-item">
-                                    <i class="fa fa-upload fa-fw"></i> Spiritual Activities Survey for "Sokchan"
-                                    <span class="pull-right text-muted small"><em>48 minutes ago by Chenda</em>
-                                    </span>
-                                </a>
-                                <a href="#" class="list-group-item">
-                                    <i class="fa fa-bolt fa-fw"></i> Attendance taken for PKPN-4
-                                    <span class="pull-right text-muted small"><em>52 minutes ago by Chanrith</em>
-                                    </span>
-                                </a>
-                                <a href="#" class="list-group-item">
-                                    <i class="fa fa-mortar-board fa-fw"></i> "Srey" reached grade level!
-                                    <span class="pull-right text-muted small"><em>53 minutes ago by Chanrith</em>
-                                    </span>
-                                </a>
-                                <a href="#" class="list-group-item">
-                                    <i class="fa fa-minus-square fa-fw"></i> Exit Survey for "Liza"
-                                    <span class="pull-right text-muted small"><em>59 minutes ago by Sila</em>
-                                    </span>
-                                </a>
-                                <a href="#" class="list-group-item">
-                                    <i class="fa fa-medkit fa-fw"></i> Medical Survey for "Sokanisa"
-                                    <span class="pull-right text-muted small"><em>Yesterday by Chenda</em>
-                                    </span>
-                                </a>
+                              {% endfor %}
                             </div>
                             <!-- /.list-group -->
-                            <a href="#" class="btn btn-default btn-block">View All Alerts</a>
+                            <a href="{% url 'notification_log' %}" class="btn btn-default btn-block">View All Alerts</a>
                         </div>
                         <!-- /.panel-body -->
                     </div>

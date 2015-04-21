@@ -30,6 +30,7 @@ from mande.models import SpiritualActivitiesSurvey
 from mande.models import AttendanceDayOffering
 from mande.models import School
 from mande.models import Academic
+from mande.models import NotificationLog
 
 from mande.models import GRADES
 
@@ -47,8 +48,10 @@ from mande.forms import AttendanceForm
 from mande.forms import AcademicForm
 from mande.forms import IntakeInternalForm
 
+from django.contrib.auth.models import User
 
 def index(request):
+    notifications = NotificationLog.objects.all()
     surveys = IntakeSurvey.objects.order_by('student_id')
     tot_females = surveys.filter(gender='F').count()
 
@@ -92,7 +95,8 @@ def index(request):
                 'breakdown':breakdown,
                 'students_by_grade':students_by_grade,
                 'students_by_grade_by_site':clean_students_by_grade_by_site,
-                'schools':schools}
+                'schools':schools,
+                'notifications':notifications}
 
     return render(request, 'mande/index.html', context)
 
@@ -641,6 +645,12 @@ def academic_form_single(request, student_id=0):
     context = {'form': form,'student_id':student_id}
 
     return render(request, 'mande/academicformsingle.html',context)
+
+def notification_log(request):
+    notifications = NotificationLog.objects.all()
+    context = {'notifications':notifications}
+    return render(request, 'mande/notificationlog.html',context)
+    
 #helper functions
 def getStudentGradebyID(student_id):
     try:
