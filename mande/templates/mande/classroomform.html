@@ -6,12 +6,19 @@ Manage Classrooms
 
 {% block content %}
 <div class="col-md-3">
-  <ul>
-    {% for classroom in current_classrooms %}
-      <li><a href = "{% url 'classroom_form' %}{{classroom.classroom_id}}">{{ classroom }}</a></li>
-    {% endfor %}
-  </ul>
-  <a href = "{% url 'classroom_form' %}" class="btn btn-primary" role="button">Add a new classroom</a>
+  <table id="classroomDataTable" class="table table-bordered table-hover">
+    <thead>
+      <tr><th>Site</th><th>Grade</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      {% for classroom in current_classrooms %}
+        <tr>
+          <td><a href = "{% url 'classroom_form' %}{{classroom.classroom_id}}">{{ classroom.school_id }}</a></td>
+          <td><a href = "{% url 'classroom_form' %}{{classroom.classroom_id}}">{{ classroom.get_cohort_display }}</a></td>
+          <td><a href = "{% url 'classroom_form' %}{{classroom.classroom_id}}">{{ classroom.get_cohort_display }}</a></td>
+      {% endfor %}
+      </tbody>
+  </table>
 </div>
 
 <div class="col-md-6">
@@ -21,6 +28,7 @@ Manage Classrooms
     {% csrf_token %}
     <div class="col-md-12">
       <button type="submit" class="btn btn-primary">Submit</button>
+      <a href = "{% url 'classroom_form' %}" class="btn btn-success" role="button">Add a new classroom</a>
     </div>
 </form>
 </div>
@@ -35,5 +43,20 @@ Manage Classrooms
 </div>
 {% endif %}
 
+
+{% endblock %}
+{% block script %}
+ <!-- DataTables JavaScript -->
+    <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#classroomDataTable').DataTable({
+      responsive: true,
+      pageLength: 25,
+  });
+});
+</script>
 
 {% endblock %}
