@@ -112,7 +112,7 @@ class Classroom(models.Model):
 	classroom_id = models.AutoField(primary_key=True)
 	cohort = models.IntegerField('Target Grade',choices=GRADES,default=2014,max_length=8)
 	school_id = models.ForeignKey(School)
-	classroom_number = models.CharField('Description',max_length=16)
+	classroom_number = models.CharField('Description',max_length=16,blank=True)
 	classroom_location = models.CharField('Classroom Location',max_length=128,blank=True)
 	def __unicode__(self):
 		return unicode(self.school_id)+ ' - '+ unicode(self.get_cohort_display())+' - '+unicode(self.classroom_number)
