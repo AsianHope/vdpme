@@ -79,7 +79,7 @@ class TeacherForm(forms.ModelForm):
 class ClassroomForm(forms.ModelForm):
     class Meta:
         model = Classroom
-        exclude=[]
+        exclude=['classroom_location']
 
 class ClassroomTeacherForm(forms.ModelForm):
     class Meta:
