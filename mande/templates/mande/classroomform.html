@@ -5,7 +5,7 @@ Manage Classrooms
 {% endblock %}
 
 {% block content %}
-<div class="col-md-3">
+<div class="col-md-5">
   <table id="classroomDataTable" class="table table-bordered table-hover">
     <thead>
       <tr><th>Site</th><th>Grade</th><th>Description</th></tr>
@@ -21,7 +21,7 @@ Manage Classrooms
   </table>
 </div>
 
-<div class="col-md-6">
+<div class="col-md-3">
 <form action = "{% url 'classroom_form' classroom_id %}" method="post">
 
     {{ form|bootstrap }}
@@ -33,7 +33,7 @@ Manage Classrooms
 </form>
 </div>
 {% if enrollments != None %}
-<div class = "col-md-3">
+<div class = "col-md-4">
   <h3>Currently Enrolled Students</h3>
   <ul>
     {% for enrollment in enrollments %}
