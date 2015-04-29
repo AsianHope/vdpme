@@ -300,6 +300,7 @@ class Academic(models.Model):
 
 	def __unicode__(self):
 		return unicode(self.test_date)+ ':'+unicode(self.student_id)
+	class Meta:
 		unique_together = (('student_id','test_date'))
 
 class Health(models.Model):
@@ -328,6 +329,8 @@ class ClassroomEnrollment(models.Model):
 
 	def __unicode__(self):
 		return unicode(self.student_id)+unicode(self.classroom_id)
+	class Meta:
+		unique_together = (('student_id','classroom_id'))
 
 class ClassroomTeacher(models.Model):
 	classroom_id = models.ForeignKey(Classroom)

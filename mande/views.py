@@ -519,6 +519,7 @@ def classroomenrollment_form(request,classroom_id=0):
         instance = None;
         enrolled_students = None
 
+
     if request.method == 'POST':
         #can't rely on classroom_id set by url - it may have been changed by the user.
         classroom_id = Classroom.objects.get(pk=request.POST.get('classroom_id'))
@@ -527,8 +528,9 @@ def classroomenrollment_form(request,classroom_id=0):
         #this seems janky to me - surely there is a better way?
         for student in request.POST.getlist('student_id'):
             student_id = IntakeSurvey.objects.get(pk=student)
-            enrollment = ClassroomEnrollment(classroom_id=classroom_id, student_id=student_id, enrollment_date=enrollment_date)
-            enrollment.save()
+            e_date, enrollment = ClassroomEnrollment.objects.get_or_create(classroom_id=classroom_id, student_id=student_id)
+            e_date.enrollment_date = enrollment_date
+            e_date.save()
         num = len(request.POST.getlist('student_id'))
         message = 'Added '+str(num)+' students to '+unicode(classroom_id) if num >1 else 'Added '+str(num)+' student to '+unicode(classroom_id)
         log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-level-up')
