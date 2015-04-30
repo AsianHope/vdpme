@@ -52,7 +52,20 @@ from django.contrib.auth.models import User
 
 def index(request):
     notifications = NotificationLog.objects.order_by('-date')[:10]
-    surveys = IntakeSurvey.objects.order_by('student_id')
+
+    ''' enrolled students are those who have:
+          - completed an intake survey
+          AND
+              - do not have an exit survey
+              OR
+              - have an exit survey with an exit date after today
+    '''
+    #get a flat list of student_ids to exclude
+    exit_surveys = ExitSurvey.objects.all().filter(
+                        exit_date__lte=date.today().isoformat()
+                        ).values_list('student_id',flat=True)
+    surveys = IntakeSurvey.objects.order_by('student_id').exclude(student_id__in=exit_surveys)
+
     tot_females = surveys.filter(gender='F').count()
 
     schools = School.objects.all()
