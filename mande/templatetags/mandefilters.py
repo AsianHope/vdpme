@@ -44,3 +44,8 @@ def getStudentGradebyID(student_id):
         current_grade = recent_intake.starting_grade if type(recent_intake) != str else 0
 
     return grade_dict.get(current_grade, None)
+
+#get dictionary items
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)

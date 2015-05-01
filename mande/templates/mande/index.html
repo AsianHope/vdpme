@@ -84,11 +84,18 @@
                               </table>
                               <div class ="table-responsive">
                                 <table class="table table-striped table-bordered table-hover">
-                                  <tr><td colspan=12>By VDP Grade:</td></tr>
+                                  <tr><td colspan=12>At Age Appropriate Grade Level/<strong>Total</strong>:</td></tr>
+                                  <tr>
+                                  {% for key, value in students_by_grade.items %}
+                                    {% if key <= 12 and key > 0 %}
+                                      <td><strong>{{key}}</strong></td>
+                                    {% endif %}
+                                  {% endfor %}
+                                </tr>
                                   <tr>
                                     {% for key, value in students_by_grade.items %}
                                       {% if key <= 12 and key > 0 %}
-                                        <td><strong>{{key}}:</strong> {{value}}</td>
+                                        <td>{{students_at_gl_by_grade|get_item:key}}/<strong>{{value}}</strong></td>
                                       {% endif %}
                                     {% endfor %}
                                   </tr>

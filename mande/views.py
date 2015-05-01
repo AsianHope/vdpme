@@ -59,6 +59,9 @@ def index(request):
               - do not have an exit survey
               OR
               - have an exit survey with an exit date after today
+
+        note:   enrolled students include those accepted into the program who
+                who have not yet been assigned into a grade.
     '''
     #get a flat list of student_ids to exclude
     exit_surveys = ExitSurvey.objects.all().filter(
@@ -72,16 +75,21 @@ def index(request):
     breakdown = {}
 
     students_by_grade = dict(GRADES)
+    students_at_gl_by_grade = dict(GRADES)
     students_by_grade_by_site  = dict(GRADES)
+    students_at_gl_by_grade_by_site = dict(GRADES)
 
     #zero things out for accurate counts
     for key,grade in students_by_grade.iteritems():
         students_by_grade[key] = 0
+        students_at_gl_by_grade[key] = 0
         students_by_grade_by_site[key] = {}
+        students_at_gl_by_grade_by_site[key] = {}
 
         for school in schools:
             name = school.school_name
             students_by_grade_by_site[key][unicode(name)] = 0
+            students_at_gl_by_grade_by_site[key][unicode(name)] = 0
 
     for school in schools:
          name = school.school_name
@@ -97,6 +105,10 @@ def index(request):
         students_by_grade[grade] += 1
         students_by_grade_by_site[grade][unicode(student.site)] +=1
 
+        if studentAtAgeAppropriateGradeLevel(student.student_id):
+            students_at_gl_by_grade[grade] +=1
+            students_at_gl_by_grade_by_site[grade][unicode(student.site)] +=1
+
     #clean up students_by_grade_by_site so we're not displaying a bunch of blank data
     clean_students_by_grade_by_site = dict(students_by_grade_by_site)
     for key,grade in students_by_grade_by_site.iteritems():
@@ -107,19 +119,24 @@ def index(request):
                 'females': tot_females,
                 'breakdown':breakdown,
                 'students_by_grade':students_by_grade,
+                'students_at_gl_by_grade': students_at_gl_by_grade,
                 'students_by_grade_by_site':clean_students_by_grade_by_site,
+                'students_at_gl_by_grade_by_site': students_at_gl_by_grade_by_site,
                 'schools':schools,
                 'notifications':notifications}
 
     return render(request, 'mande/index.html', context)
 
 def student_list(request):
-    #only students who don't have exit surveys
-    surveys = IntakeSurvey.objects.order_by('student_id').exclude(
-        student_id__in=[
-            x.student_id.student_id for x in ExitSurvey.objects.all().filter(exit_date__lte=date.today().isoformat())
-        ])
-    context = {'surveys': surveys}
+    #get enrolled and accepted students
+    exit_surveys = ExitSurvey.objects.all().filter(
+                        exit_date__lte=date.today().isoformat()
+                        ).values_list('student_id',flat=True)
+    surveys = IntakeSurvey.objects.order_by('student_id').exclude(student_id__in=exit_surveys)
+    at_grade_level = {}
+    for student in surveys:
+            at_grade_level[student.student_id] = studentAtAgeAppropriateGradeLevel(student.student_id)
+    context = {'surveys': surveys, 'at_grade_level':at_grade_level}
     return render(request, 'mande/studentlist.html', context)
 
 def report_list(request):
@@ -732,3 +749,45 @@ def getStudentGradebyID(student_id):
         current_grade = recent_intake.starting_grade if type(recent_intake) != str else 0
 
     return current_grade
+
+def studentAtSchoolGradeLevel(student_id):
+    try:
+        survey = IntakeSurvey.objects.get(pk=student_id)
+    except ObjectDoesNotExist:
+        return False
+
+    current_grade = getStudentGradebyID(student_id)
+    updates = survey.intakeupdate_set.all().filter().order_by('-date')
+
+    #get most up to date information
+    if len(updates) > 0:
+        recent_survey = updates[0]
+    else:
+        recent_survey = survey
+
+    if current_grade == recent_survey.grade_current or current_grade == recent_survey.grade_last:
+        return True
+    else:
+        return False
+
+def studentAtAgeAppropriateGradeLevel(student_id):
+    # no record, no dice.
+    try:
+        survey = IntakeSurvey.objects.get(pk=student_id)
+    except ObjectDoesNotExist:
+        return False
+    # no DOB, no dice
+    if survey.dob == None:
+        return 'DOB not entered'
+
+    current_grade = getStudentGradebyID(student_id)
+    if current_grade>12:
+        return "N/A"
+
+    #age 5 is grade 1
+    approximate_age = date.today().year - survey.dob.year #break for kids born on Feb 29 in leap years.
+    age_appropriate_grade = approximate_age - 6
+    if current_grade >= age_appropriate_grade:
+        return True
+    else:
+        return False
