@@ -31,18 +31,17 @@ Classroom Enrollment
 {% if classroom %}
 <div class="col-md-12">
   <h2>Students Currently Enrolled in {{classroom}}</h2>
-  <div class="table-responsive">
-    <table class="table table-border  table-striped table-hover">
+    <table id="enrolled_students" class="table table-border table-striped table-hover">
       <thead>
-        <tr><th>Student</th><th>Enrollment Date</th><th>Drop Date</th></tr>
+        <tr><th>Student</th><th>Gender</th><th>Enrollment Date</th><th>Drop Date</th></tr>
       </thead>
       {% for student in enrolled_students %}
       <tr>
-        <td>{{student.student_id}}</td><td>{{student.enrollment_date}}</td><td>{{student.drop_date}}</td>
+        <td>{{student.student_id}}</td><td>{{student.student_id.gender}}</td><td>{{student.enrollment_date}}</td><td>{{student.drop_date}}</td>
       </tr>
       {% endfor %}
     </table>
-  </div>
+</div>
 {% endif %}
 
 {% endblock %}
@@ -53,11 +52,18 @@ Classroom Enrollment
     <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
 
 <script type="text/javascript">
+
 $(document).ready(function(){
   $('#id_student_id').DataTable({
       responsive: true,
       pageLength: 5,
   });
+
+  $('#enrolled_students').DataTable({
+      responsive: true,
+      pageLength: 25,
+  });
+
 });
 $('#id_classroom_id').change(function(){
   var selected = $('#id_classroom_id').val()
