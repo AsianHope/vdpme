@@ -31,6 +31,7 @@ from mande.models import AttendanceDayOffering
 from mande.models import School
 from mande.models import Academic
 from mande.models import NotificationLog
+from mande.models import Health
 
 from mande.models import GRADES
 
@@ -236,6 +237,8 @@ def student_detail(request, student_id):
     academics = survey.academic_set.all().filter(
         Q(test_grade_khmer__isnull=False) & Q(test_grade_math__isnull=False)).order_by('-test_level')
     discipline = survey.discipline_set.all().filter().order_by('-incident_date')
+    dental = survey.health_set.all().filter(appointment_type='DENTAL').order_by('-appointment_date')
+    checkups = survey.health_set.all().filter(appointment_type='CHECKUP').order_by('-appointment_date')
     classroomenrollment = survey.classroomenrollment_set.all().filter().order_by('drop_date')
     attendance_present = survey.attendance_set.all().filter(attendance='P').count()
     attendance_approved_absence = survey.attendance_set.all().filter(attendance='AA').count()
@@ -266,6 +269,8 @@ def student_detail(request, student_id):
         'academics':academics,
         'current_grade':current_grade,
         'discipline':discipline,
+        'dental':dental,
+        'checkups':checkups,
         'cur_year':date.today().year,
         'graduation': graduation,
         'classroomenrollment':classroomenrollment,

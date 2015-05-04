@@ -307,16 +307,16 @@ class Health(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
 	appointment_date = models.DateField(default=datetime.date.today)
 	appointment_type = models.CharField(choices=APPOINTMENT_TYPES,default='Check-up',max_length=16)
-	height = models.DecimalField(max_digits=5,decimal_places=2)
-	weight = models.DecimalField(max_digits=5,decimal_places=2)
-	extractions = models.IntegerField(max_length=1,default=0)
-	sealent = models.IntegerField(max_length=2,default=0)
-	filling = models.IntegerField(max_length=2,default=0)
-	endo = models.IntegerField(max_length=2,default=0)
-	scaling = models.IntegerField(max_length=2,default=0)
-	pulped = models.IntegerField(max_length=2,default=0)
-	xray = models.IntegerField(max_length=2,default=0)
-	notes = models.TextField(blank=True)
+	height = models.DecimalField(max_digits=5,decimal_places=2,null=True,blank=True) 	#Medical
+	weight = models.DecimalField(max_digits=5,decimal_places=2,null=True,blank=True) 	#Medical
+	extractions = models.IntegerField(max_length=1,default=0,null=True,blank=True) 	#dental
+	sealent = models.IntegerField(max_length=2,default=0,null=True,blank=True) 		#dental
+	filling = models.IntegerField(max_length=2,default=0,null=True,blank=True)		#dental
+	endo = models.IntegerField(max_length=2,default=0,null=True,blank=True)			#dental
+	scaling = models.IntegerField(max_length=2,default=0,null=True,blank=True)		#dental
+	pulped = models.IntegerField(max_length=2,default=0,null=True,blank=True)			#dental
+	xray = models.IntegerField(max_length=2,default=0,blank=True)			#dental
+	notes = models.TextField(blank=True)									#all
 
 	def __unicode__(self):
 		return unicode(self.appointment_date) + ': '+self.appointment_type+ ' - '+unicode(self.student_id)

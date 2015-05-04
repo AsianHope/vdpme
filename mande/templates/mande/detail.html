@@ -89,6 +89,7 @@
   <li role = "presentation"><a href="#contact" aria-controls="contact" role="tab" data-toggle="tab">Contact</a></li>
   <li role = "presentation"><a href="#household" aria-controls="household" role="tab" data-toggle="tab">Household</a></li>
   <li role = "presentation"><a href="#notes" aria-controls="notes" role="tab" data-toggle="tab">Notes</a></li>
+  <li role = "presentation"><a href="#health" aria-controls="health" role="tab" data-toggle="tab">Health</a></li>
 </ul>
 
 <div class="tab-content">
@@ -252,6 +253,58 @@
         <tr><td>{% firstof recent_update.notes survey.notes "No notes entered" %}</td></tr>
       </table>
     </div>
+  </div>
+  <div role="tabpanel" class="tab-pane" id="health">
+    <h3>Checkups</h3>
+    <div class="table-responsive" style="min-height: 3em;">
+      <table class="table table-bordered table-striped table-hover">
+        <thead>
+          <tr><th>Date</th><th>Height</th><th>Weight</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          {% for checkup in checkups %}
+          <tr><td>{{checkup.appointment_date |date:'d N Y'}}</td>
+              <td>{{checkup.height}}</td>
+              <td>{{checkup.weight}}</td>
+              <td>{{checkup.notes}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Checkups</h3>
+    <div class="table-responsive" style="min-height: 3em;">
+      <table class="table table-bordered table-striped table-hover">
+        <thead>
+          <tr><th>Date</th>
+              <th>Extractions</th>
+              <th>Sealent</th>
+              <th>Fillings</th>
+              <th>Endo</th>
+              <th>Scaling</th>
+              <th>Pulped</th>
+              <th>Xray</th>
+              <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for checkup in dental %}
+          <tr><td>{{checkup.appointment_date |date:'d N Y'}}</td>
+              <td>{{checkup.extractions}}</td>
+              <td>{{checkup.sealent}}</td>
+              <td>{{checkup.filling}}</td>
+              <td>{{checkup.endo}}</td>
+              <td>{{checkup.scaling}}</td>
+              <td>{{checkup.pulped}}</td>
+              <td>{{checkup.xray}}</td>
+              <td>{{checkup.notes}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
   </div>
 </div>
 {% endblock %}
