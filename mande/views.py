@@ -508,7 +508,7 @@ def classroom_form(request, classroom_id=0):
         form = ClassroomForm(instance=instance)
 
 
-    context = {'form': form, 'classroom_id':classroom_id, 'current_classrooms':current_classrooms, 'enrollments':enrollments}
+    context = {'form': form, 'classroom_id': classroom_id, 'selected_classroom':instance, 'current_classrooms':current_classrooms, 'enrollments':enrollments}
     return render(request, 'mande/classroomform.html', context)
 
 def classroomteacher_form(request, teacher_id=0):

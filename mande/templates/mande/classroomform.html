@@ -2,6 +2,11 @@
 {% load bootstrap %}
 {% block title %}
 Manage Classrooms
+{% if classroom_id > 0 %}
+<small>editing {{selected_classroom}}</action>
+{% else %}
+<small>adding a classroom</small>
+{% endif %}
 {% endblock %}
 
 {% block content %}
