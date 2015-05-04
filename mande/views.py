@@ -48,6 +48,7 @@ from mande.forms import ClassroomEnrollmentForm
 from mande.forms import AttendanceForm
 from mande.forms import AcademicForm
 from mande.forms import IntakeInternalForm
+from mande.forms import HealthForm
 
 from django.contrib.auth.models import User
 
@@ -733,6 +734,27 @@ def notification_log(request):
     context = {'notifications':notifications}
     return render(request, 'mande/notificationlog.html',context)
 
+def health_form(request, student_id=0):
+        if request.method == 'POST':
+            form = HealthForm(request.POST)
+            if form.is_valid():
+                #process
+                instance = form.save()
+                message = 'Input '+instance.appointment_type+' for '+instance.student_id.name
+
+                log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-medkit')
+                log.save()
+                #then return
+                return HttpResponseRedirect(reverse('student_detail',kwargs={'student_id':instance.student_id.student_id}))
+        else:
+            if student_id > 0:
+                form = HealthForm({'student_id':student_id, 'appointment_date':date.today().isoformat()})
+            else:
+                form = HealthForm()
+
+        context = {'form': form,'student_id':student_id}
+
+        return render(request, 'mande/healthform.html',context)
 #helper functions
 def getStudentGradebyID(student_id):
     try:

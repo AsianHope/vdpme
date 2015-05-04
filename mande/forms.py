@@ -14,6 +14,7 @@ from mande.models import ClassroomEnrollment
 from mande.models import Attendance
 from mande.models import Academic
 from mande.models import IntakeInternal
+from mande.models import Health
 from mande.models import GRADES
 
 from django.forms.extras.widgets import SelectDateWidget
@@ -116,3 +117,9 @@ class AcademicForm(forms.ModelForm):
     class Meta:
         model = Academic
         exclude = []
+
+class HealthForm(forms.ModelForm):
+    appointment_date = forms.DateField(label="Appointment Date",widget=Html5DateInput,initial=date.today().isoformat())
+    class Meta:
+        model = Health
+        exclude=[]

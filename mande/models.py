@@ -315,7 +315,7 @@ class Health(models.Model):
 	endo = models.IntegerField(max_length=2,default=0,null=True,blank=True)			#dental
 	scaling = models.IntegerField(max_length=2,default=0,null=True,blank=True)		#dental
 	pulped = models.IntegerField(max_length=2,default=0,null=True,blank=True)			#dental
-	xray = models.IntegerField(max_length=2,default=0,blank=True)			#dental
+	xray = models.IntegerField(max_length=2,default=0,null=True,blank=True)			#dental
 	notes = models.TextField(blank=True)									#all
 
 	def __unicode__(self):
