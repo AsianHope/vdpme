@@ -2,6 +2,9 @@
 {% load bootstrap %}
 {% block title %}
 Classroom Enrollment
+{% if classroom != None %}
+<small>enrolling students in {{classroom}}</action>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -17,10 +20,11 @@ Classroom Enrollment
       </ol>
 
       </div>
-      <div class = "col-md-8">
-      {{form.student_id }}
-      </div>
-
+      {% if classroom %}
+        <div class = "col-md-8">
+        {{form.student_id }}
+        </div>
+      {% endif %}
       <div class="col-md-12">
         <button type="submit" class="btn btn-primary">Submit</button>
       </div>
