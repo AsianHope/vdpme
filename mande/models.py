@@ -168,7 +168,7 @@ class IntakeSurvey(models.Model):
 	   return unicode(self.student_id)+' - '+self.name
 
 class IntakeInternal(models.Model):
-	student_id = models.ForeignKey(IntakeSurvey)
+	student_id = models.ForeignKey(IntakeSurvey,unique=True)
 	enrollment_date = models.DateField('Enrollment Date')
 	starting_grade = models.IntegerField(choices=GRADES,default=1)
 
@@ -301,7 +301,7 @@ class Academic(models.Model):
 	def __unicode__(self):
 		return unicode(self.test_date)+ ':'+unicode(self.student_id)
 	class Meta:
-		unique_together = (('student_id','test_date'))
+		unique_together = (('student_id','test_date','test_level','promote'))
 
 class Health(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
