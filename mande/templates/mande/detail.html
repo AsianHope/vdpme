@@ -175,7 +175,11 @@
         {% for class in classroomenrollment %}
         <tr>
           <td>{{class.enrollment_date|date:'d N Y'}}</td>
-          <td>{{class.drop_date|date:'d N Y'}}</td>
+          {% if class.drop_date %}
+            <td>{{class.drop_date|date:'d N Y'}}</td>
+          {% else %}
+            <td><a href="{% url 'classroomenrollment_individual' class.classroom_id.classroom_id survey.student_id %}?next={% url 'student_detail' survey.student_id %}" class="btn btn-danger btn-xs" role="button">Drop this class</a></td>
+          {% endif %}
           <td>{{class.classroom_id}}</td>
         </tr>
         {% endfor %}

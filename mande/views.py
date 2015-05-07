@@ -45,6 +45,7 @@ from mande.forms import TeacherForm
 from mande.forms import ClassroomForm
 from mande.forms import ClassroomTeacherForm
 from mande.forms import ClassroomEnrollmentForm
+from mande.forms import IndividualClassroomEnrollmentForm
 from mande.forms import AttendanceForm
 from mande.forms import AcademicForm
 from mande.forms import IntakeInternalForm
@@ -496,7 +497,7 @@ def classroom_form(request, classroom_id=0):
     if int(classroom_id)>0:
         instance = Classroom.objects.get(pk=classroom_id)
         #select students who have not dropped the class, or have not dropped it yet.
-        enrollments = instance.classroomenrollment_set.all().filter(Q(drop_date__lte=date.today().isoformat()) | Q(drop_date=None))
+        enrollments = instance.classroomenrollment_set.all().exclude(Q(drop_date__lte=date.today().isoformat()) | Q(drop_date=None))
     else:
         instance = Classroom()
         enrollments = None
@@ -551,7 +552,7 @@ def classroomenrollment_form(request,classroom_id=0):
     if int(classroom_id)>0:
         instance = Classroom.objects.get(pk=classroom_id)
         #select students who have not dropped the class, or have not dropped it yet.
-        enrolled_students = instance.classroomenrollment_set.all().filter(Q(drop_date__lte=date.today().isoformat()) | Q(drop_date=None))
+        enrolled_students = instance.classroomenrollment_set.all().exclude(Q(drop_date__lte=date.today().isoformat()) | Q(drop_date=None))
     else:
         instance = None;
         enrolled_students = None
@@ -582,6 +583,32 @@ def classroomenrollment_form(request,classroom_id=0):
     context = {'form': form,'classroom':instance, 'enrolled_students':enrolled_students}
     return render(request, 'mande/classroomenrollmentform.html', context)
 
+
+def classroomenrollment_individual(request,student_id=0,classroom_id=0):
+
+    if request.method == 'POST':
+        next_url = request.GET.get('next')
+        print next_url
+        #get_or_create returns a tuple with the object and its status
+        instance = ClassroomEnrollment.objects.get(classroom_id=classroom_id,student_id=student_id)
+
+        instance.drop_date = request.POST.get('drop_date')
+        instance.save()
+
+        message = 'Made changes to classroom enrollment for '+unicode(instance.student_id.name)
+        log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-fire')
+        log.save()
+        #then return
+        return HttpResponseRedirect(next_url)
+    else:
+        if student_id > 0:
+            instance = ClassroomEnrollment.objects.get(classroom_id=classroom_id,student_id=student_id)
+            form = IndividualClassroomEnrollmentForm(instance=instance)
+        else:
+            form = IndividualClassroomEnrollmentForm()
+
+    context = {'form': form,'student_id':student_id, 'classroom_id':classroom_id}
+    return render(request, 'mande/classroomenrollmentindividual.html', context)
 
 class AttendanceCalendar(HTMLCalendar):
 

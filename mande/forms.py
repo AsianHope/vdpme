@@ -103,6 +103,13 @@ class ClassroomEnrollmentForm(forms.ModelForm):
         model = ClassroomEnrollment
         exclude=[]
 
+class IndividualClassroomEnrollmentForm(forms.ModelForm):
+    drop_date = forms.DateField(label="Drop Date",widget=Html5DateInput,initial=date.today().isoformat())
+
+    class Meta:
+        model = ClassroomEnrollment
+        exclude=['enrollment_date']
+
 class AttendanceForm(forms.ModelForm):
     class Meta:
         model = Attendance
