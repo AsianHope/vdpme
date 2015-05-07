@@ -16,7 +16,7 @@ Post-Exit Survey Eligible Students
 {% for exitsurvey in exitsurveys %}
   <tr>
     <td>{{exitsurvey.exit_date}}</td>
-    <td>{{exitsurvey.student_id.student_id}}</td>
+    <td><a href = "{% url 'student_detail' exitsurvey.student_id.student_id %}">{{exitsurvey.student_id.student_id}}</a></td>
     <td>{{exitsurvey.student_id.name}}</td>
     <td><a href = "{% url 'post_exit_survey' exitsurvey.student_id.student_id %}" class="btn btn-danger btn-xs" role="button">Perform Post-Exit Survey</a></td>
   </tr>
