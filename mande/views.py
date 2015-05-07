@@ -497,7 +497,7 @@ def classroom_form(request, classroom_id=0):
     if int(classroom_id)>0:
         instance = Classroom.objects.get(pk=classroom_id)
         #select students who have not dropped the class, or have not dropped it yet.
-        enrollments = instance.classroomenrollment_set.all().exclude(Q(drop_date__lte=date.today().isoformat()) | Q(drop_date=None))
+        enrollments = instance.classroomenrollment_set.all().filter(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))
     else:
         instance = Classroom()
         enrollments = None
@@ -552,7 +552,7 @@ def classroomenrollment_form(request,classroom_id=0):
     if int(classroom_id)>0:
         instance = Classroom.objects.get(pk=classroom_id)
         #select students who have not dropped the class, or have not dropped it yet.
-        enrolled_students = instance.classroomenrollment_set.all().exclude(Q(drop_date__lte=date.today().isoformat()) | Q(drop_date=None))
+        enrolled_students = instance.classroomenrollment_set.all().filter(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))
     else:
         instance = None;
         enrolled_students = None
@@ -596,7 +596,7 @@ def classroomenrollment_individual(request,student_id=0,classroom_id=0):
         instance.save()
 
         message = 'Dropped '+unicode(instance.student_id.name)+' from '+unicode(instance.classroom_id)
-        log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-bell-slash')
+        log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-fire')
         log.save()
         #then return
         return HttpResponseRedirect(next_url)
