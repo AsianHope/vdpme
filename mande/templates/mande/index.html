@@ -87,15 +87,17 @@
                                   <tr><td colspan=12>At Age Appropriate Grade Level/<strong>Total</strong>:</td></tr>
                                   <tr>
                                   {% for key, value in students_by_grade.items %}
-                                    {% if key <= 12 and key > 0 %}
+                                    {% if key <= 12 and key > 0 and value %}
                                       <td><strong>{{key}}</strong></td>
                                     {% endif %}
                                   {% endfor %}
                                 </tr>
                                   <tr>
                                     {% for key, value in students_by_grade.items %}
-                                      {% if key <= 12 and key > 0 %}
-                                        <td>{{students_at_gl_by_grade|get_item:key}}/<strong>{{value}}</strong></td>
+                                      {% if key <= 12 and key > 0  and value %}
+                                        {% with atgl=students_at_gl_by_grade|get_item:key %}
+                                        <td>{{atgl}}/<strong>{{value}}<br/> <small>({% widthratio atgl value 100 %}%)</small></strong></td>
+                                        {% endwith %}
                                       {% endif %}
                                     {% endfor %}
                                   </tr>

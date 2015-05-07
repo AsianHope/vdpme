@@ -596,7 +596,7 @@ def classroomenrollment_individual(request,student_id=0,classroom_id=0):
         instance.save()
 
         message = 'Dropped '+unicode(instance.student_id.name)+' from '+unicode(instance.classroom_id)
-        log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-fire')
+        log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-bell-slash')
         log.save()
         #then return
         return HttpResponseRedirect(next_url)
