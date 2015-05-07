@@ -108,7 +108,7 @@
                                 <tr><td colspan=3>Skill Training Students:</td></tr>
                                 <tr>
                                   {% for key, value in students_by_grade.items %}
-                                    {% if key > 12 %}
+                                    {% if key > 12  and value %}
                                       <td><strong>{{key | grade_by_id}}:</strong> {{value}}</td>
                                     {% endif %}
                                   {% endfor %}
