@@ -171,8 +171,8 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
     classroom = Classroom.objects.get(pk=classroom_id)
     students = ClassroomEnrollment.objects.filter(classroom_id=classroom_id).exclude(drop_date__lte=attendance_date)
 
-    #find out if any student attendance has been taken
-    student_attendance = Attendance.objects.filter(student_id=students, date=attendance_date)
+    #find out if any student attendance has been taken, excluding placeholder attendance
+    student_attendance = Attendance.objects.filter(student_id=students, date=attendance_date).exclude(attendance=None)
     if len(student_attendance) > 0:
         message = 'Attendance for one or more students has been taken'
 
@@ -288,6 +288,7 @@ def intake_survey(request):
         if form.is_valid():
             instance = form.save()
             icon = 'fa-female' if instance.gender == 'F' else 'fa-male'
+            #message = 'Performed intake survey for <a href="'+reverse('student_detail',kwargs={'student_id':instance.student_id})+'">'+unicode(instance.name)+'</a>'
             log = NotificationLog(user=request.user, text='Performed intake survey for '+unicode(instance.name), font_awesome_icon=icon)
             log.save()
             #then return
