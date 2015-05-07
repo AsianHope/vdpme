@@ -15,7 +15,7 @@
         <td><a href ="{% url 'student_detail' survey.student_id %}">{{ survey.student_id }}</a></td>
         <td>{{survey.name}}</td>
         <td>{{survey.get_gender_display}}</td>
-        <td>{{survey.dob}}</td>
+        <td>{{survey.dob}} ({{survey.dob|timesince}} old)</td>
         {% with current_grade=survey.student_id|student_current_grade_by_id %}
           {% if current_grade == 'Not Enrolled' %}
           <td><a href="{% url 'intake_internal' survey.student_id %}" class="btn btn-success" role="button">Enroll</a></td>
