@@ -839,9 +839,13 @@ def studentAtAgeAppropriateGradeLevel(student_id):
     if current_grade>12:
         return "N/A"
 
-    #age 5 is grade 1
-    approximate_age = date.today().year - survey.dob.year #break for kids born on Feb 29 in leap years.
-    age_appropriate_grade = approximate_age - 6
+    #Look at calendar year child was born in to calculate their age
+    approximate_age = date.today().year - survey.dob.year
+    #if today is before grades change in August
+    if date.today().month < 8:
+        age_appropriate_grade = approximate_age - 6
+    else:
+        age_appropriate_grade = approximate_age - 5
     if current_grade >= age_appropriate_grade:
         return True
     else:
