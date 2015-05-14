@@ -32,8 +32,10 @@ from mande.models import School
 from mande.models import Academic
 from mande.models import NotificationLog
 from mande.models import Health
+from mande.models import AttendanceLog
 
 from mande.models import GRADES
+from mande.models import ATTENDANCE_CODES
 
 from mande.forms import IntakeSurveyForm
 from mande.forms import IntakeUpdateForm
@@ -196,8 +198,28 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
         formset = AttendanceFormSet(request.POST)
         if formset.is_valid():
             formset.save()
-            message = "Attendance saved."
-            log = NotificationLog(user=request.user, text='Took attendance for '+unicode(classroom), font_awesome_icon='fa-check-square')
+
+            #zero things out
+            absent = 0
+            present = 0
+            attendancecodes = dict(ATTENDANCE_CODES)
+            for key,code in attendancecodes.iteritems():
+                attendancecodes[key]=0
+            #count attendance codes
+            for form in formset:
+                attendancecodes[form.cleaned_data['attendance']] +=1
+                #attendance codes with 'A' in them mean absences.
+                if 'A' in form.cleaned_data['attendance']:
+                    absent +=1
+                else:
+                    present +=1
+
+            alog,created = AttendanceLog.objects.get_or_create(classroom=classroom, date=attendance_date)
+            alog.absent = absent
+            alog.present = present
+            alog.save()
+            message = 'Took attendance for '+unicode(classroom) + ' (A:'+unicode(absent)+',P:'+unicode(present)+')'
+            log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-check-square')
             log.save()
             #clean up the mess we created making blank rows to update.
             Attendance.objects.filter(attendance=None).delete()

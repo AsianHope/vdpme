@@ -74,7 +74,7 @@ COHORTS = (
 	(2023,'2023-2024'),
 	(2024,'2024-2025'),
 )
-
+#Attendance codes with an A in their code are counted as absences
 ATTENDANCE_CODES = (
 	('P','Present'),
 	('UA','Unapproved Absence'),
@@ -350,3 +350,14 @@ class NotificationLog(models.Model):
 
 	class Meta:
 		get_latest_by = 'date'
+
+class AttendanceLog(models.Model):
+	classroom = models.ForeignKey(Classroom)
+	date = models.DateField(auto_now=True)
+	absent = models.IntegerField(default=0)
+	present = models.IntegerField(default=0)
+
+	def __unicode__(self):
+		return unicode(self.classroom) + ': '+ unicode(self.date)
+	class Meta:
+			unique_together = (('classroom','date'))
