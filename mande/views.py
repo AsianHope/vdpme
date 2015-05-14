@@ -214,7 +214,10 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
                 else:
                     present +=1
 
-            alog,created = AttendanceLog.objects.get_or_create(classroom=classroom, date=attendance_date)
+
+            alog,created = AttendanceLog.objects.get_or_create( classroom=classroom,
+                                                                date=attendance_date,
+                                                              )
             alog.absent = absent
             alog.present = present
             alog.save()
@@ -610,7 +613,6 @@ def classroomenrollment_individual(request,student_id=0,classroom_id=0):
 
     if request.method == 'POST':
         next_url = request.GET.get('next')
-        print next_url
         #get_or_create returns a tuple with the object and its status
         instance = ClassroomEnrollment.objects.get(classroom_id=classroom_id,student_id=student_id)
 
@@ -697,6 +699,25 @@ def attendance_days(request,classroom_id,attendance_date=date.today().isoformat(
         return render(request, 'mande/attendancedays.html', {'Calendar' : mark_safe(lCalendar),
                                                        'classroom': classroom,
                                                    })
+
+def daily_attendance_report(request,attendance_date=date.today().isoformat()):
+    #only classrooms who take attendance, and who take attendance today.
+    classrooms = Classroom.objects.all().filter(active=True)
+    takesattendance = AttendanceDayOffering.objects.filter(date=attendance_date).values_list('classroom_id',flat=True)
+    classrooms = classrooms.filter(classroom_id__in=takesattendance)
+
+    classroomattendance = {}
+    for classroom in classrooms:
+        try:
+            classroomattendance[classroom] = AttendanceLog.objects.get(classroom=classroom,date=attendance_date)
+        except ObjectDoesNotExist:
+            classroomattendance[classroom] = None
+
+    return render(request, 'mande/attendancereport.html',
+                            {'classroomattendance' : classroomattendance,
+                             'attendance_date': attendance_date
+                                                                        })
+
 
 def academic_form(request, school_id, test_date=date.today().isoformat(), grade_id=None):
     school = School.objects.get(pk=school_id)

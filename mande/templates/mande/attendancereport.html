@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load mandefilters %}
+{% block title %}
+Attendance taken on {{ attendance_date }}
+{% endblock %}
+
+{% block content %}
+
+<div class="col-md-9">
+      <table class="table table-bordered table-striped table-hover" id="attendanceReportTable">
+        <thead><tr>
+          <th>Site</th>
+          <th>Grade</th>
+          <th>Description</th>
+          <th>Present</th>
+          <th>Absent</th>
+          <th>Take Attendance</th></tr></thead>
+        <tbody>
+          {% for classroom,attendance in classroomattendance.items %}
+          <tr>
+              <td>{{ classroom.school_id }}</td>
+              <td>{{ classroom.classroom_number }}</td>
+              <td>{{ classroom.get_cohort_display }}</td>
+              <td>{{ attendance.present }}</td>
+              <td>{{ attendance.absent }}</td>
+              {% if attendance %}
+              <td><a href = "{% url 'take_class_attendance' classroom.classroom_id attendance_date" role="button" class="btn btn-xs btn-success">Taken</a></td>
+              {% else %}
+              <td><a href = "{% url 'take_class_attendance' classroom.classroom_id attendance_date %}" role="button" class="btn btn-xs btn-danger">Take Attendance</a></td>
+              {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+    </div>
+
+
+    <div class="col-md-3">
+        <form method="post" action="{% url 'daily_attendance_report' %}">
+          {% csrf_token %}
+          <input type="date" name="attendance_date" class="form-control" id="datePicker"/>
+        </form>
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+ <!-- DataTables JavaScript -->
+    <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+$('#datePicker').val('{{attendance_date}}');
+$(function() {
+      $('#datePicker').change(function() {
+          //split on /
+          url = '{%url 'daily_attendance_report' %}' + $(this).val()
+          window.location.href = url
+      });
+    });
+
+$(document).ready(function(){
+  $('#attendanceReportTable').DataTable({
+      responsive: true,
+      pageLength: 25,
+  });
+});
+</script>
+
+{% endblock %}
