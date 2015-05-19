@@ -24,7 +24,7 @@ Attendance taken/available to be taken on {{ attendance_date }}
               <td>{{ attendance.present }}</td>
               <td>{{ attendance.absent }}</td>
               {% if attendance %}
-              <td><a href = "{% url 'take_class_attendance' classroom.classroom_id attendance_date" role="button" class="btn btn-xs btn-success">Taken</a></td>
+              <td><a href = "{% url 'take_class_attendance' classroom.classroom_id attendance_date %}" role="button" class="btn btn-xs btn-success">Taken</a></td>
               {% else %}
               <td><a href = "{% url 'take_class_attendance' classroom.classroom_id attendance_date %}" role="button" class="btn btn-xs btn-danger">Take Attendance</a></td>
               {% endif %}
