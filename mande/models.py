@@ -159,8 +159,8 @@ class IntakeSurvey(models.Model):
 	minors_in_school = models.IntegerField('Number of children enrolled in school last year',default=0)
 	minors_working = models.IntegerField('Number of children under 18 working 15+ hours per week',default=0)
 	minors_profession = models.CharField('What are they doing for work?',max_length=256, blank=True)
-	minors_encouraged = models.CharField('Did you encourage them to take this job?',max_length=2,choices=YN)
-	minors_training = models.CharField('Did they receive any vocational training?',max_length=2,choices=YN)
+	minors_encouraged = models.CharField('Did you encourage them to take this job?',max_length=2,choices=YN,default='NA')
+	minors_training = models.CharField('Did they receive any vocational training?',max_length=2,choices=YN,default='NA')
 	minors_training_type = models.CharField('What kind of vocational training did they receive?',max_length=256,blank=True)
 
 	notes = models.TextField(blank=True)
