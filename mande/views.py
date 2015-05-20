@@ -801,7 +801,7 @@ def academic_form_single(request, student_id=0):
     return render(request, 'mande/academicformsingle.html',context)
 
 def notification_log(request):
-    notifications = NotificationLog.objects.order_by('-date')
+    notifications = NotificationLog.objects.order_by('-date')[:500]
     context = {'notifications':notifications}
     return render(request, 'mande/notificationlog.html',context)
 
