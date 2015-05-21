@@ -110,7 +110,7 @@ class School(models.Model):
 
 class Classroom(models.Model):
 	classroom_id = models.AutoField(primary_key=True)
-	cohort = models.IntegerField('Target Grade',choices=GRADES,default=2014,max_length=8)
+	cohort = models.IntegerField('Target Grade',choices=GRADES,default=2014)
 	school_id = models.ForeignKey(School)
 	classroom_number = models.CharField('Description',max_length=16,blank=True)
 	classroom_location = models.CharField('Classroom Location',max_length=128,blank=True)
@@ -295,8 +295,8 @@ class Academic(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
 	test_date = models.DateField(default=datetime.date.today)
 	test_level = models.IntegerField(choices=GRADES,default=0)
-	test_grade_math = models.IntegerField(max_length=3,null=True,blank=True)
-	test_grade_khmer = models.IntegerField(max_length=3,null=True,blank=True)
+	test_grade_math = models.IntegerField(null=True,blank=True)
+	test_grade_khmer = models.IntegerField(null=True,blank=True)
 	promote = models.BooleanField(default=False)
 
 	def __unicode__(self):
@@ -310,13 +310,13 @@ class Health(models.Model):
 	appointment_type = models.CharField(choices=APPOINTMENT_TYPES,default='Check-up',max_length=16)
 	height = models.DecimalField(max_digits=5,decimal_places=2,null=True,blank=True) 	#Medical
 	weight = models.DecimalField(max_digits=5,decimal_places=2,null=True,blank=True) 	#Medical
-	extractions = models.IntegerField(max_length=1,default=0,null=True,blank=True) 	#dental
-	sealent = models.IntegerField(max_length=2,default=0,null=True,blank=True) 		#dental
-	filling = models.IntegerField(max_length=2,default=0,null=True,blank=True)		#dental
-	endo = models.IntegerField(max_length=2,default=0,null=True,blank=True)			#dental
-	scaling = models.IntegerField(max_length=2,default=0,null=True,blank=True)		#dental
-	pulped = models.IntegerField(max_length=2,default=0,null=True,blank=True)			#dental
-	xray = models.IntegerField(max_length=2,default=0,null=True,blank=True)			#dental
+	extractions = models.IntegerField(default=0,null=True,blank=True) 	#dental
+	sealent = models.IntegerField(default=0,null=True,blank=True) 		#dental
+	filling = models.IntegerField(default=0,null=True,blank=True)		#dental
+	endo = models.IntegerField(default=0,null=True,blank=True)			#dental
+	scaling = models.IntegerField(default=0,null=True,blank=True)		#dental
+	pulped = models.IntegerField(default=0,null=True,blank=True)			#dental
+	xray = models.IntegerField(default=0,null=True,blank=True)			#dental
 	notes = models.TextField(blank=True)									#all
 
 	def __unicode__(self):
