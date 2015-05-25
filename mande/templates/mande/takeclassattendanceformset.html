@@ -22,7 +22,7 @@ Taking attendance for {{classroom}}
           <tr>
               <td><a href="{%url 'student_detail' form.student_id.value %}">{{form.student_id.value}}</a>
                 {{ form.student_id.as_hidden }}{{form.date.as_hidden}}
-                {{form.classroom_id.as_hidden}}{{form.id}}
+                {{form.classroom.as_hidden}}{{form.id}}
               </td>
               <td>{{form.student_id.value | name_by_sid}}</td>
               <td>{{ form.attendance }}</td>

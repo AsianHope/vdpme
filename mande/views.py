@@ -181,7 +181,7 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
 
     #pre instantiate data for this form so that we can update the whole queryset later
     for student in students:
-        Attendance.objects.get_or_create(student_id=student.student_id, date=attendance_date, defaults={'attendance':None})
+        Attendance.objects.get_or_create(student_id=student.student_id, date=attendance_date, defaults={'attendance':None, 'classroom':classroom})
 
     try:
         offered = AttendanceDayOffering.objects.get(classroom_id=classroom_id,date=attendance_date)
@@ -190,7 +190,7 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
         Attendance.objects.filter(attendance=None).delete()
 
     #now get the whole set of attendance objects and create the formset
-    student_attendance = Attendance.objects.filter(student_id=students, date=attendance_date)
+    student_attendance = Attendance.objects.filter(student_id=students, date=attendance_date, classroom=classroom)
     AttendanceFormSet = modelformset_factory(Attendance, form=AttendanceForm, extra=0)
 
     if request.method == 'POST':
@@ -714,6 +714,24 @@ def daily_attendance_report(request,attendance_date=date.today().isoformat()):
             classroomattendance[classroom] = None
 
     return render(request, 'mande/attendancereport.html',
+                            {'classroomattendance' : classroomattendance,
+                             'attendance_date': attendance_date
+                                                                        })
+
+def daily_absence_report(request,attendance_date=date.today().isoformat()):
+    #only classrooms who take attendance, and who take attendance today.
+    classrooms = Classroom.objects.all().filter(active=True)
+    takesattendance = AttendanceDayOffering.objects.filter(date=attendance_date).values_list('classroom_id',flat=True)
+    classrooms = classrooms.filter(classroom_id__in=takesattendance)
+
+    classroomattendance = {}
+    for classroom in classrooms:
+        try:
+            classroomattendance[classroom] = Attendance.objects.filter(classroom=classroom,date=attendance_date,attendance='UA')
+        except ObjectDoesNotExist:
+            classroomattendance[classroom] = None
+
+    return render(request, 'mande/absencereport.html',
                             {'classroomattendance' : classroomattendance,
                              'attendance_date': attendance_date
                                                                         })

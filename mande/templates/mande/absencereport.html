@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load mandefilters %}
+{% block title %}
+Students absent on {{ attendance_date }}
+{% endblock %}
+
+{% block content %}
+
+<div class="col-md-9">
+      <table class="table table-bordered table-striped table-hover" id="attendanceReportTable">
+        <thead><tr>
+          <th>Site</th>
+          <th>Classroom</th>
+          <th>Student</th>
+          <th>Code</th>
+          <th>Mother</th>
+          <th>Father</th>
+          <th>Update</th>
+          <th>Note</th></tr></thead>
+        <tbody>
+          {% for classroom,attendance in classroomattendance.items %}
+          {% if attendance %}
+          {% for student in attendance %}
+          <tr>
+              <td>{{ classroom.school_id }}</td>
+              <td>{{ classroom }}</td>
+              <td>{{ student.student_id }}</td>
+              <td>{{ student.get_attendance_display }}</td>
+              <!- these are not the most current! --!>
+              <td>{{ student.student_id.mother_phone }}</td>
+              <td>{{ student.student_id.father_phone }}</td>
+              <td><a href = "{% url 'take_class_attendance' classroom.classroom_id attendance_date %}" role="button" class="btn btn-xs btn-danger">Update Attendance</a></td>
+              <td>{{ student.notes }}</td>
+          {% endfor %}
+          </tr>
+          {% else %}
+          {% endif %}
+          {% endfor %}
+        </tbody>
+
+      </table>
+    </div>
+
+
+    <div class="col-md-3">
+        <form method="post" action="{% url 'daily_attendance_report' %}">
+          {% csrf_token %}
+          <input type="date" name="attendance_date" class="form-control" id="datePicker"/>
+        </form>
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+ <!-- DataTables JavaScript -->
+    <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+$('#datePicker').val('{{attendance_date}}');
+$(function() {
+      $('#datePicker').change(function() {
+          //split on /
+          url = '{%url 'daily_attendance_report' %}' + $(this).val()
+          window.location.href = url
+      });
+    });
+
+$(document).ready(function(){
+  $('#attendanceReportTable').DataTable({
+      responsive: true,
+      pageLength: 25,
+  });
+});
+</script>
+
+{% endblock %}

@@ -273,6 +273,7 @@ class AttendanceDayOffering(models.Model):
 
 class Attendance(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
+	classroom = models.ForeignKey(Classroom, blank=True,null=True)
 	date = models.DateField('Attendance Day',default=datetime.date.today)
 	attendance = models.CharField(max_length=2,choices=ATTENDANCE_CODES,default='P',null=True)
 	notes = models.CharField(max_length=256,blank=True)
