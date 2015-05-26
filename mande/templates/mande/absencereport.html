@@ -23,12 +23,12 @@ Students absent on {{ attendance_date }}
           {% for student in attendance %}
           <tr>
               <td>{{ classroom.school_id }}</td>
-              <td>{{ classroom }}</td>
+              <td>{{ classroom.get_cohort_display }} - {{ classroom.classroom_number }}</td>
               <td>{{ student.student_id }}</td>
               <td>{{ student.get_attendance_display }}</td>
               <!- these are not the most current! --!>
-              <td>{{ student.student_id.mother_phone }}</td>
-              <td>{{ student.student_id.father_phone }}</td>
+              <td>{{ student.student_id.getRecentFields | get_item:'mother_phone' }}</td>
+              <td>{{ student.student_id.getRecentFields | get_item:'mother_phone' }}</td>
               <td><a href = "{% url 'take_class_attendance' classroom.classroom_id attendance_date %}" role="button" class="btn btn-xs btn-danger">Update Attendance</a></td>
               <td>{{ student.notes }}</td>
           {% endfor %}

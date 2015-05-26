@@ -168,6 +168,20 @@ class IntakeSurvey(models.Model):
 	def __unicode__(self):
 	   return unicode(self.student_id)+' - '+self.name
 
+	#return the most up to date information
+	def getRecentFields(self):
+		recent = {}
+		try:
+			current = IntakeUpdate.objects.all().filter(student_id=self.student_id).filter().order_by('-date')[0]
+		except IndexError:
+			current = self
+		for field in self._meta.fields:
+			try:
+				recent[field.name] = getattr(current,field.name)
+			except AttributeError:
+					recent[field.name] = getattr(self,field.name)
+		return recent
+
 class IntakeInternal(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey,unique=True)
 	enrollment_date = models.DateField('Enrollment Date')
