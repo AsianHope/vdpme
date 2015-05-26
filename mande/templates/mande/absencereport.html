@@ -62,7 +62,7 @@ $('#datePicker').val('{{attendance_date}}');
 $(function() {
       $('#datePicker').change(function() {
           //split on /
-          url = '{%url 'daily_attendance_report' %}' + $(this).val()
+          url = '{%url 'daily_absence_report' %}' + $(this).val()
           window.location.href = url
       });
     });
