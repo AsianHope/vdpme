@@ -190,7 +190,7 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
         Attendance.objects.filter(attendance=None).delete()
 
     #now get the whole set of attendance objects and create the formset
-    student_attendance = Attendance.objects.filter(student_id=students, date=attendance_date, classroom=classroom)
+    student_attendance = Attendance.objects.filter(student_id=students, date=attendance_date)
     AttendanceFormSet = modelformset_factory(Attendance, form=AttendanceForm, extra=0)
 
     if request.method == 'POST':
@@ -727,6 +727,7 @@ def daily_absence_report(request,attendance_date=date.today().isoformat()):
     classroomattendance = {}
     for classroom in classrooms:
         try:
+            #only displays unexcused absences
             classroomattendance[classroom] = Attendance.objects.filter(classroom=classroom,date=attendance_date,attendance='UA')
         except ObjectDoesNotExist:
             classroomattendance[classroom] = None
