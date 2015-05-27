@@ -85,7 +85,8 @@ def index(request):
     #figure out students who have internal intakes with enrollment dates before today
     enrolled_students = IntakeInternal.objects.all().filter(enrollment_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
     #figure out which students don't have internal intakes
-    not_enrolled = surveys.exclude(student_id__in=enrolled_students).values_list('student_id',flat=True)
+    unenrolled_students = surveys.exclude(student_id__in=enrolled_students) #pass this queryset on
+    not_enrolled = unenrolled_students.values_list('student_id',flat=True)
     #filter out students who aren't enrolled, as detailed above
     surveys = surveys.exclude(student_id__in=not_enrolled)
 
@@ -143,7 +144,8 @@ def index(request):
                 'students_by_grade_by_site':clean_students_by_grade_by_site,
                 'students_at_gl_by_grade_by_site': students_at_gl_by_grade_by_site,
                 'schools':schools,
-                'notifications':notifications}
+                'notifications':notifications,
+                'unenrolled_students':unenrolled_students[:5]}
 
     return render(request, 'mande/index.html', context)
 
