@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 import datetime
+from datetime import date
 
+TODAY = date.today().isoformat()
 GENDERS = (
 	('M', 'Male'),
 	('F', 'Female'),

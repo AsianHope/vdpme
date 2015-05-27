@@ -8,11 +8,6 @@ urlpatterns = patterns('',
     url(r'^students/$', views.student_list, name='student_list'),
     # ex: /mande/students/4
     url(r'^students/(?P<student_id>\d+)/$', views.student_detail, name='student_detail'),
-    # ex: /mande/reports/
-    url(r'^reports/$', views.report_list, name='report_list'),
-
-    # ex: /mande/sites/
-    url(r'^sites/$', views.site_list, name='site_list'),
 
     url(r'^attendance/$', views.attendance, name='attendance'),
     url(r'^attendance/calendar$', views.attendance_calendar, name='attendance_calendar'),

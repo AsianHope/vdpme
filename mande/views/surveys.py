@@ -37,6 +37,7 @@ from mande.models import IntakeInternal
 
 from mande.models import GRADES
 from mande.models import ATTENDANCE_CODES
+from mande.models import TODAY
 
 from mande.forms import IntakeSurveyForm
 from mande.forms import IntakeUpdateForm
@@ -61,35 +62,53 @@ from mande.utils import studentAtAgeAppropriateGradeLevel
 
 from django.contrib.auth.models import User
 
+'''
+*****************************************************************************
+Intake Survey
+ - process an IntakeSurveyForm and log the action
+*****************************************************************************
+'''
 def intake_survey(request):
     if request.method == 'POST':
         form = IntakeSurveyForm(request.POST)
         if form.is_valid():
             instance = form.save()
             icon = 'fa-female' if instance.gender == 'F' else 'fa-male'
-            #message = 'Performed intake survey for <a href="'+reverse('student_detail',kwargs={'student_id':instance.student_id})+'">'+unicode(instance.name)+'</a>'
-            log = NotificationLog(user=request.user, text='Performed intake survey for '+unicode(instance.name), font_awesome_icon=icon)
+            message = 'Performed intake survey for '+unicode(instance.name)
+            log = NotificationLog(  user=request.user,
+                                    text=message,
+                                    font_awesome_icon=icon)
             log.save()
             #then return
-            return HttpResponseRedirect(reverse('student_detail', kwargs={'student_id':instance.student_id}))
+            return HttpResponseRedirect(reverse('student_detail', kwargs=
+                                            {'student_id':instance.student_id}))
     else:
         form = IntakeSurveyForm()
 
     context = {'form': form,}
     return render(request, 'mande/intakesurvey.html', context)
 
+'''
+*****************************************************************************
+Internal Intake
+ - process an IntakeInteralForm and log the action
+*****************************************************************************
+'''
 def intake_internal(request, student_id=0):
-
 
     if request.method == 'POST':
         form = IntakeInternalForm(request.POST)
         if form.is_valid():
             instance = form.save()
-            message = 'Enrolled  '+unicode(instance.student_id.name)+' in '+instance.get_starting_grade_display()
-            log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-user-plus')
+            message = ( 'Enrolled  '+unicode(instance.student_id.name)+
+                        ' in '+instance.get_starting_grade_display())
+            log = NotificationLog(  user=request.user,
+                                    text=message,
+                                    font_awesome_icon='fa-user-plus')
             log.save()
             #then return
-            return HttpResponseRedirect(reverse('student_detail',kwargs={'student_id':instance.student_id.student_id}))
+            return HttpResponseRedirect(reverse('student_detail',kwargs=
+                                {'student_id':instance.student_id.student_id}))
     else:
         if student_id > 0:
             form = IntakeInternalForm({'student_id':student_id})
@@ -99,6 +118,12 @@ def intake_internal(request, student_id=0):
     context = {'form': form,}
     return render(request, 'mande/intakeinternal.html', context)
 
+'''
+*****************************************************************************
+Intake Update
+ - update student information and log the action
+*****************************************************************************
+'''
 def intake_update(request,student_id=0):
     try:
         survey = IntakeSurvey.objects.get(pk=student_id)
@@ -114,7 +139,9 @@ def intake_update(request,student_id=0):
         if form.is_valid():
             instance = form.save()
             message = 'Updated '+unicode(instance.student_id.name)+'\'s record'
-            log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-upload')
+            log = NotificationLog(  user=request.user,
+                                    text=message,
+                                    font_awesome_icon='fa-upload')
             log.save()
             #then return
             return HttpResponseRedirect(reverse('success'))
@@ -123,7 +150,12 @@ def intake_update(request,student_id=0):
 
     context = {'form': form, 'survey':survey, 'student_id':student_id}
     return render(request, 'mande/intakeupdate.html', context)
-
+'''
+*****************************************************************************
+Exit Survey
+ - process an ExitsurveyForm and log the action
+*****************************************************************************
+'''
 def exit_survey(request,student_id=0):
 
     if request.method == 'POST':
@@ -132,10 +164,13 @@ def exit_survey(request,student_id=0):
         if form.is_valid():
             instance = form.save()
             message = 'Did an exit survey for '+unicode(instance.student_id.name)
-            log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-user-times')
+            log = NotificationLog(  user=request.user,
+                                    text=message,
+                                    font_awesome_icon='fa-user-times')
             log.save()
             #then return
-            return HttpResponseRedirect(reverse('student_detail', kwargs={'student_id':instance.student_id.student_id}))
+            return HttpResponseRedirect(reverse('student_detail', kwargs=
+                                {'student_id':instance.student_id.student_id}))
     else:
         if student_id > 0:
             form = ExitSurveyForm({'student_id':student_id})
@@ -144,13 +179,20 @@ def exit_survey(request,student_id=0):
 
     context = {'form': form,'student_id':student_id}
     return render(request, 'mande/exitsurvey.html', context)
-
+'''
+*****************************************************************************
+Post Exit Survey
+ - process a PostExitSurveyForm and log the action
+*****************************************************************************
+'''
 def post_exit_survey(request,student_id):
     #if the student hasn't had an exit survey performed alert the user
     try:
         exit = ExitSurvey.objects.get(student_id=student_id)
     except ObjectDoesNotExist:
-        return render(request,'mande/errors/noexitsurvey.html',{'student_id':student_id})
+        return render(
+                        request,'mande/errors/noexitsurvey.html',
+                        {'student_id':student_id})
 
     #get students current info for pre-filling the survey
     try:
@@ -168,7 +210,9 @@ def post_exit_survey(request,student_id):
         if form.is_valid():
             instance = form.save()
             message = 'Did a post exit survey for '+unicode(instance.student_id.name)
-            log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-heart')
+            log = NotificationLog(  user=request.user,
+                                    text=message,
+                                    font_awesome_icon='fa-heart')
             log.save()
             #then return
             return HttpResponseRedirect(reverse('post_exit_survey'))
@@ -191,12 +235,27 @@ def post_exit_survey(request,student_id):
     context = {'form': form,'student_id':student_id }
     return render(request, 'mande/postexitsurvey.html', context)
 
+'''
+*****************************************************************************
+Post Exit Survey List
+ - show a list of all students who are eligible to do a post exit survey
+*****************************************************************************
+'''
 def post_exit_survey_list(request):
-    exitsurveys = ExitSurvey.objects.exclude(student_id__in=[x.student_id.student_id for x in PostExitSurvey.objects.all()]).order_by('-exit_date')
+    exitsurveys = ExitSurvey.objects.exclude(
+                                        student_id__in=
+                                        [x.student_id.student_id for x in PostExitSurvey.objects.all()]
+                                   ).order_by('-exit_date')
 
     context = {'exitsurveys':exitsurveys}
     return render(request, 'mande/postexitsurveylist.html',context)
 
+'''
+*****************************************************************************
+Spiritual Acitivies Survey
+ - process a SpiritualActivitiesSurveyForm and log the action
+*****************************************************************************
+'''
 def spiritualactivities_survey(request,student_id=0):
 
     if request.method == 'POST':
@@ -204,8 +263,11 @@ def spiritualactivities_survey(request,student_id=0):
 
         if form.is_valid():
             instance = form.save()
-            message = 'Performed spiritual activities survey for '+unicode(instance.student_id.name)
-            log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-fire')
+            message = ('Performed spiritual activities survey for '+
+                        unicode(instance.student_id.name))
+            log = NotificationLog(  user=request.user,
+                                    text=message,
+                                    font_awesome_icon='fa-fire')
             log.save()
             #then return
             return HttpResponseRedirect(reverse('success'))
@@ -218,24 +280,41 @@ def spiritualactivities_survey(request,student_id=0):
     context = {'form': form,'student_id':student_id}
     return render(request, 'mande/spiritualactivitiessurvey.html', context)
 
+'''
+*****************************************************************************
+Survey Success
+ - display a success message
+*****************************************************************************
+'''
 def survey_success(request):
     return render(request, 'mande/success.html',{})
 
+'''
+*****************************************************************************
+Health Form
+ - process a HealthForm and log the action
+*****************************************************************************
+'''
 def health_form(request, student_id=0):
         if request.method == 'POST':
             form = HealthForm(request.POST)
             if form.is_valid():
                 #process
                 instance = form.save()
-                message = 'Input '+instance.appointment_type+' for '+instance.student_id.name
+                message = ( 'Input '+instance.appointment_type+
+                            ' for '+instance.student_id.name)
 
-                log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-medkit')
+                log = NotificationLog(  user=request.user,
+                                        text=message,
+                                        font_awesome_icon='fa-medkit')
                 log.save()
                 #then return
-                return HttpResponseRedirect(reverse('student_detail',kwargs={'student_id':instance.student_id.student_id}))
+                return HttpResponseRedirect(reverse('student_detail',kwargs=
+                                {'student_id':instance.student_id.student_id}))
         else:
             if student_id > 0:
-                form = HealthForm({'student_id':student_id, 'appointment_date':date.today().isoformat()})
+                form = HealthForm({ 'student_id':student_id, 
+                                    'appointment_date':TODAY})
             else:
                 form = HealthForm()
 

@@ -37,6 +37,7 @@ from mande.models import IntakeInternal
 
 from mande.models import GRADES
 from mande.models import ATTENDANCE_CODES
+from mande.models import TODAY
 
 from mande.forms import IntakeSurveyForm
 from mande.forms import IntakeUpdateForm
@@ -60,7 +61,12 @@ from mande.utils import studentAtSchoolGradeLevel
 from mande.utils import studentAtAgeAppropriateGradeLevel
 
 from django.contrib.auth.models import User
-
+'''
+*****************************************************************************
+Dashboard
+ - summarize important student information
+*****************************************************************************
+'''
 def dashboard(request):
     notifications = NotificationLog.objects.order_by('-date')[:10]
 
@@ -76,14 +82,17 @@ def dashboard(request):
     '''
     #get a flat list of student_ids to exclude
     exit_surveys = ExitSurvey.objects.all().filter(
-                        exit_date__lte=date.today().isoformat()
+                        exit_date__lte=TODAY
                         ).values_list('student_id',flat=True)
 
     #filter out students who have exit surveys
-    surveys = IntakeSurvey.objects.order_by('student_id').exclude(student_id__in=exit_surveys)
+    surveys = IntakeSurvey.objects.order_by('student_id'
+                                 ).exclude(student_id__in=exit_surveys)
 
     #figure out students who have internal intakes with enrollment dates before today
-    enrolled_students = IntakeInternal.objects.all().filter(enrollment_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
+    enrolled_students = IntakeInternal.objects.all(
+                                             ).filter(enrollment_date__lte=TODAY
+                                             ).values_list('student_id',flat=True)
     #figure out which students don't have internal intakes
     unenrolled_students = surveys.exclude(student_id__in=enrolled_students) #pass this queryset on
     not_enrolled = unenrolled_students.values_list('student_id',flat=True)
@@ -92,6 +101,7 @@ def dashboard(request):
 
     tot_females = surveys.filter(gender='F').count()
 
+    #set up for collecting school breakdowns
     schools = School.objects.all()
     breakdown = {}
 
@@ -112,6 +122,7 @@ def dashboard(request):
             students_by_grade_by_site[key][unicode(name)] = 0
             students_at_gl_by_grade_by_site[key][unicode(name)] = 0
 
+    #get information for morris donut charts
     for school in schools:
          name = school.school_name
          total = surveys.filter(site=school)
@@ -150,16 +161,12 @@ def dashboard(request):
     return render(request, 'mande/index.html', context)
 
 
-
-def report_list(request):
-    context= {}
-    return render(request, 'mande/reportlist.html', context)
-
-def site_list(request):
-    context= {}
-    return render(request, 'mande/sitelist.html', context)
-
-
+'''
+*****************************************************************************
+Notification Log
+ - display the most recent 500 entires in the notification log
+*****************************************************************************
+'''
 def notification_log(request):
     notifications = NotificationLog.objects.order_by('-date')[:500]
     context = {'notifications':notifications}
