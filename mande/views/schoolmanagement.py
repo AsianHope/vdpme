@@ -61,94 +61,6 @@ from mande.utils import studentAtAgeAppropriateGradeLevel
 
 from django.contrib.auth.models import User
 
-def index(request):
-    notifications = NotificationLog.objects.order_by('-date')[:10]
-
-    ''' enrolled students are those who have:
-          - completed an intake survey
-          - have completed an internal intake
-          - have an enrollment date on their internal intake before today
-          AND
-              - do not have an exit survey
-              OR
-              - have an exit survey with an exit date after today
-
-    '''
-    #get a flat list of student_ids to exclude
-    exit_surveys = ExitSurvey.objects.all().filter(
-                        exit_date__lte=date.today().isoformat()
-                        ).values_list('student_id',flat=True)
-
-    #filter out students who have exit surveys
-    surveys = IntakeSurvey.objects.order_by('student_id').exclude(student_id__in=exit_surveys)
-
-    #figure out students who have internal intakes with enrollment dates before today
-    enrolled_students = IntakeInternal.objects.all().filter(enrollment_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
-    #figure out which students don't have internal intakes
-    unenrolled_students = surveys.exclude(student_id__in=enrolled_students) #pass this queryset on
-    not_enrolled = unenrolled_students.values_list('student_id',flat=True)
-    #filter out students who aren't enrolled, as detailed above
-    surveys = surveys.exclude(student_id__in=not_enrolled)
-
-    tot_females = surveys.filter(gender='F').count()
-
-    schools = School.objects.all()
-    breakdown = {}
-
-    students_by_grade = dict(GRADES)
-    students_at_gl_by_grade = dict(GRADES)
-    students_by_grade_by_site  = dict(GRADES)
-    students_at_gl_by_grade_by_site = dict(GRADES)
-
-    #zero things out for accurate counts
-    for key,grade in students_by_grade.iteritems():
-        students_by_grade[key] = 0
-        students_at_gl_by_grade[key] = 0
-        students_by_grade_by_site[key] = {}
-        students_at_gl_by_grade_by_site[key] = {}
-
-        for school in schools:
-            name = school.school_name
-            students_by_grade_by_site[key][unicode(name)] = 0
-            students_at_gl_by_grade_by_site[key][unicode(name)] = 0
-
-    for school in schools:
-         name = school.school_name
-         total = surveys.filter(site=school)
-         females = total.filter(gender='F').count()
-         males = total.filter(gender='M').count()
-         breakdown[name] = {'F':females, 'M':males}
-
-
-    #loop through students and figure out what grades they're currently in
-    for student in surveys:
-        grade = getStudentGradebyID(student.student_id)
-        students_by_grade[grade] += 1
-        students_by_grade_by_site[grade][unicode(student.site)] +=1
-
-        if studentAtAgeAppropriateGradeLevel(student.student_id):
-            students_at_gl_by_grade[grade] +=1
-            students_at_gl_by_grade_by_site[grade][unicode(student.site)] +=1
-
-    #clean up students_by_grade_by_site so we're not displaying a bunch of blank data
-    clean_students_by_grade_by_site = dict(students_by_grade_by_site)
-    for key,grade in students_by_grade_by_site.iteritems():
-        if students_by_grade[key] == 0:
-            del clean_students_by_grade_by_site[key]
-
-    context = { 'surveys': surveys,
-                'females': tot_females,
-                'breakdown':breakdown,
-                'students_by_grade':students_by_grade,
-                'students_at_gl_by_grade': students_at_gl_by_grade,
-                'students_by_grade_by_site':clean_students_by_grade_by_site,
-                'students_at_gl_by_grade_by_site': students_at_gl_by_grade_by_site,
-                'schools':schools,
-                'notifications':notifications,
-                'unenrolled_students':unenrolled_students}
-
-    return render(request, 'mande/index.html', context)
-
 def student_list(request):
     #get enrolled and accepted students
     exit_surveys = ExitSurvey.objects.all().filter(
@@ -160,14 +72,6 @@ def student_list(request):
             at_grade_level[student.student_id] = studentAtAgeAppropriateGradeLevel(student.student_id)
     context = {'surveys': surveys, 'at_grade_level':at_grade_level}
     return render(request, 'mande/studentlist.html', context)
-
-def report_list(request):
-    context= {}
-    return render(request, 'mande/reportlist.html', context)
-
-def site_list(request):
-    context= {}
-    return render(request, 'mande/sitelist.html', context)
 
 def attendance(request):
     context= {}
@@ -261,8 +165,6 @@ def take_attendance(request):
     context= {'classrooms':classrooms, 'attendance_date':date.today().isoformat()}
     return render(request, 'mande/takeattendance.html', context)
 
-
-
 def student_detail(request, student_id):
     survey = IntakeSurvey.objects.get(pk=student_id)
     updates = survey.intakeupdate_set.all().filter().order_by('-date')
@@ -324,166 +226,6 @@ def student_detail(request, student_id):
         'exit_survey':exit_survey,
         'post_exit_survey':post_exit_survey}
     return render(request, 'mande/detail.html', context)
-
-def intake_survey(request):
-    if request.method == 'POST':
-        form = IntakeSurveyForm(request.POST)
-        if form.is_valid():
-            instance = form.save()
-            icon = 'fa-female' if instance.gender == 'F' else 'fa-male'
-            #message = 'Performed intake survey for <a href="'+reverse('student_detail',kwargs={'student_id':instance.student_id})+'">'+unicode(instance.name)+'</a>'
-            log = NotificationLog(user=request.user, text='Performed intake survey for '+unicode(instance.name), font_awesome_icon=icon)
-            log.save()
-            #then return
-            return HttpResponseRedirect(reverse('student_detail', kwargs={'student_id':instance.student_id}))
-    else:
-        form = IntakeSurveyForm()
-
-    context = {'form': form,}
-    return render(request, 'mande/intakesurvey.html', context)
-
-def intake_internal(request, student_id=0):
-
-
-    if request.method == 'POST':
-        form = IntakeInternalForm(request.POST)
-        if form.is_valid():
-            instance = form.save()
-            message = 'Enrolled  '+unicode(instance.student_id.name)+' in '+instance.get_starting_grade_display()
-            log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-user-plus')
-            log.save()
-            #then return
-            return HttpResponseRedirect(reverse('student_detail',kwargs={'student_id':instance.student_id.student_id}))
-    else:
-        if student_id > 0:
-            form = IntakeInternalForm({'student_id':student_id})
-        else:
-            form = IntakeInternalForm()
-
-    context = {'form': form,}
-    return render(request, 'mande/intakeinternal.html', context)
-
-def intake_update(request,student_id=0):
-    try:
-        survey = IntakeSurvey.objects.get(pk=student_id)
-    except ObjectDoesNotExist:
-        survey = None
-    try:
-        update = IntakeUpdate.objects.filter(student_id=student_id).latest('date')
-        most_recent = update
-    except ObjectDoesNotExist:
-        most_recent = survey
-    if request.method == 'POST':
-        form = IntakeUpdateForm(request.POST)
-        if form.is_valid():
-            instance = form.save()
-            message = 'Updated '+unicode(instance.student_id.name)+'\'s record'
-            log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-upload')
-            log.save()
-            #then return
-            return HttpResponseRedirect(reverse('success'))
-    else:
-        form = IntakeUpdateForm(instance=most_recent)
-
-    context = {'form': form, 'survey':survey, 'student_id':student_id}
-    return render(request, 'mande/intakeupdate.html', context)
-
-def exit_survey(request,student_id=0):
-
-    if request.method == 'POST':
-        form = ExitSurveyForm(request.POST)
-
-        if form.is_valid():
-            instance = form.save()
-            message = 'Did an exit survey for '+unicode(instance.student_id.name)
-            log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-user-times')
-            log.save()
-            #then return
-            return HttpResponseRedirect(reverse('student_detail', kwargs={'student_id':instance.student_id.student_id}))
-    else:
-        if student_id > 0:
-            form = ExitSurveyForm({'student_id':student_id})
-        else:
-            form = ExitSurveyForm()
-
-    context = {'form': form,'student_id':student_id}
-    return render(request, 'mande/exitsurvey.html', context)
-
-def post_exit_survey(request,student_id):
-    #if the student hasn't had an exit survey performed alert the user
-    try:
-        exit = ExitSurvey.objects.get(student_id=student_id)
-    except ObjectDoesNotExist:
-        return render(request,'mande/errors/noexitsurvey.html',{'student_id':student_id})
-
-    #get students current info for pre-filling the survey
-    try:
-        survey = IntakeSurvey.objects.get(pk=student_id)
-    except ObjectDoesNotExist:
-        survey = None
-    try:
-        update = IntakeUpdate.objects.filter(student_id=student_id).latest('date')
-        most_recent = update
-    except ObjectDoesNotExist:
-        most_recent = survey
-
-    if request.method == 'POST':
-        form = PostExitSurveyForm(request.POST)
-        if form.is_valid():
-            instance = form.save()
-            message = 'Did a post exit survey for '+unicode(instance.student_id.name)
-            log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-heart')
-            log.save()
-            #then return
-            return HttpResponseRedirect(reverse('post_exit_survey'))
-    else:
-        form = PostExitSurveyForm({
-            'student_id':student_id,
-            'exit_date':exit.exit_date,
-            'early_exit':exit.early_exit,
-            'father_profession':most_recent.father_profession,
-            'father_employment':most_recent.father_employment,
-            'mother_profession':most_recent.mother_profession,
-            'mother_employment':most_recent.father_employment,
-            'minors':most_recent.minors,
-            'enrolled':most_recent.enrolled,
-            'grade_current':most_recent.grade_current,
-            'grade_previous':most_recent.grade_last,
-            'reasons':most_recent.reasons,
-        })
-
-    context = {'form': form,'student_id':student_id }
-    return render(request, 'mande/postexitsurvey.html', context)
-
-def post_exit_survey_list(request):
-    exitsurveys = ExitSurvey.objects.exclude(student_id__in=[x.student_id.student_id for x in PostExitSurvey.objects.all()]).order_by('-exit_date')
-
-    context = {'exitsurveys':exitsurveys}
-    return render(request, 'mande/postexitsurveylist.html',context)
-
-def spiritualactivities_survey(request,student_id=0):
-
-    if request.method == 'POST':
-        form = SpiritualActivitiesSurveyForm(request.POST)
-
-        if form.is_valid():
-            instance = form.save()
-            message = 'Performed spiritual activities survey for '+unicode(instance.student_id.name)
-            log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-fire')
-            log.save()
-            #then return
-            return HttpResponseRedirect(reverse('success'))
-    else:
-        if student_id > 0:
-            form = SpiritualActivitiesSurveyForm({'student_id':student_id})
-        else:
-            form = SpiritualActivitiesSurveyForm()
-
-    context = {'form': form,'student_id':student_id}
-    return render(request, 'mande/spiritualactivitiessurvey.html', context)
-
-def survey_success(request):
-    return render(request, 'mande/success.html',{})
 
 def discipline_form(request,student_id=0):
 
@@ -835,30 +577,3 @@ def academic_form_single(request, student_id=0):
     context = {'form': form,'student_id':student_id}
 
     return render(request, 'mande/academicformsingle.html',context)
-
-def notification_log(request):
-    notifications = NotificationLog.objects.order_by('-date')[:500]
-    context = {'notifications':notifications}
-    return render(request, 'mande/notificationlog.html',context)
-
-def health_form(request, student_id=0):
-        if request.method == 'POST':
-            form = HealthForm(request.POST)
-            if form.is_valid():
-                #process
-                instance = form.save()
-                message = 'Input '+instance.appointment_type+' for '+instance.student_id.name
-
-                log = NotificationLog(user=request.user, text=message, font_awesome_icon='fa-medkit')
-                log.save()
-                #then return
-                return HttpResponseRedirect(reverse('student_detail',kwargs={'student_id':instance.student_id.student_id}))
-        else:
-            if student_id > 0:
-                form = HealthForm({'student_id':student_id, 'appointment_date':date.today().isoformat()})
-            else:
-                form = HealthForm()
-
-        context = {'form': form,'student_id':student_id}
-
-        return render(request, 'mande/healthform.html',context)

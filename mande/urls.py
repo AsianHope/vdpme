@@ -3,7 +3,7 @@ from django.conf.urls import patterns, url
 from mande import views
 urlpatterns = patterns('',
     # ex: /mande/
-    url(r'^$', views.index, name='index'),
+    url(r'^$', views.dashboard, name='index'),
     # ex: /mande/students/
     url(r'^students/$', views.student_list, name='student_list'),
     # ex: /mande/students/4
