@@ -17,6 +17,8 @@ from mande.models import IntakeInternal
 from mande.models import Health
 from mande.models import GRADES
 
+from mande.utils import getEnrolledStudents
+
 from django.forms.extras.widgets import SelectDateWidget
 from django.forms import CheckboxSelectMultiple
 from django.utils.safestring import mark_safe
@@ -96,7 +98,8 @@ class CheckboxSelectMultipleP(forms.CheckboxSelectMultiple):
         return mark_safe(output.replace(u'<ul id="id_student_id">', u'<table class="table table-border" id="id_student_id"><thead><tr><td>Student</td></tr></thead><tbody>').replace(u'</ul>', u'</tbody></table>').replace(u'<li>', u'<tr><td>').replace(u'</li>', u'</td></tr>'))
 
 class ClassroomEnrollmentForm(forms.ModelForm):
-    student_id = forms.ModelMultipleChoiceField(widget=CheckboxSelectMultipleP,queryset=IntakeSurvey.objects.all())
+    enrolled_students = getEnrolledStudents()
+    student_id = forms.ModelMultipleChoiceField(widget=CheckboxSelectMultipleP,queryset=enrolled_students)
     enrollment_date = forms.DateField(label="Enrollment Date",widget=Html5DateInput,initial=date.today().isoformat())
 
     class Meta:
