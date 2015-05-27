@@ -33,6 +33,7 @@ from mande.models import Academic
 from mande.models import NotificationLog
 from mande.models import Health
 from mande.models import AttendanceLog
+from mande.models import IntakeInternal
 
 from mande.models import GRADES
 from mande.models import ATTENDANCE_CODES
@@ -60,19 +61,28 @@ def index(request):
 
     ''' enrolled students are those who have:
           - completed an intake survey
+          - have completed an internal intake
+          - have an enrollment date on their internal intake before today
           AND
               - do not have an exit survey
               OR
               - have an exit survey with an exit date after today
 
-        note:   enrolled students include those accepted into the program who
-                who have not yet been assigned into a grade.
     '''
     #get a flat list of student_ids to exclude
     exit_surveys = ExitSurvey.objects.all().filter(
                         exit_date__lte=date.today().isoformat()
                         ).values_list('student_id',flat=True)
+
+    #filter out students who have exit surveys
     surveys = IntakeSurvey.objects.order_by('student_id').exclude(student_id__in=exit_surveys)
+
+    #figure out students who have internal intakes with enrollment dates before today
+    enrolled_students = IntakeInternal.objects.all().filter(enrollment_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
+    #figure out which students don't have internal intakes
+    not_enrolled = surveys.exclude(student_id__in=enrolled_students).values_list('student_id',flat=True)
+    #filter out students who aren't enrolled, as detailed above
+    surveys = surveys.exclude(student_id__in=not_enrolled)
 
     tot_females = surveys.filter(gender='F').count()
 
