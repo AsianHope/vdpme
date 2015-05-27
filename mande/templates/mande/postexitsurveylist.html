@@ -5,8 +5,9 @@ Post-Exit Survey Eligible Students
 {% endblock %}
 
 {% block content %}
-<table class="table table-bordered table-striped table-hover" id="attendanceTable">
+<table class="table table-bordered table-striped table-hover" id="exitSurveyTable">
   <thead><tr>
+    <th>Site</th>
     <th>Date of Exit</th>
     <th>SID</th>
     <th>Name</th>
@@ -15,6 +16,7 @@ Post-Exit Survey Eligible Students
   <tbody>
 {% for exitsurvey in exitsurveys %}
   <tr>
+    <td>{{exitsurvey.student_id.site}}
     <td>{{exitsurvey.exit_date}}</td>
     <td><a href = "{% url 'student_detail' exitsurvey.student_id.student_id %}">{{exitsurvey.student_id.student_id}}</a></td>
     <td>{{exitsurvey.student_id.name}}</td>
@@ -23,4 +25,21 @@ Post-Exit Survey Eligible Students
 {% endfor %}
   </tbody>
 </table>
+{% endblock %}
+
+{% block script %}
+ <!-- DataTables JavaScript -->
+    <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+  $('#exitSurveyTable').DataTable({
+      responsive: true,
+      pageLength: 25,
+  });
+});
+</script>
+
 {% endblock %}
