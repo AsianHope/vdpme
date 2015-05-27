@@ -54,6 +54,11 @@ from mande.forms import AcademicForm
 from mande.forms import IntakeInternalForm
 from mande.forms import HealthForm
 
+from mande.utils import getEnrolledStudents
+from mande.utils import getStudentGradebyID
+from mande.utils import studentAtSchoolGradeLevel
+from mande.utils import studentAtAgeAppropriateGradeLevel
+
 from django.contrib.auth.models import User
 
 def index(request):
@@ -855,70 +860,3 @@ def health_form(request, student_id=0):
         context = {'form': form,'student_id':student_id}
 
         return render(request, 'mande/healthform.html',context)
-#helper functions
-def getStudentGradebyID(student_id):
-    try:
-        student = IntakeSurvey.objects.get(pk=student_id)
-    except ObjectDoesNotExist:
-        current_grade = 0 #not enrolled
-
-    academics = student.academic_set.all().filter().order_by('-test_level')
-    intake = student.intakeinternal_set.all().filter().order_by('-enrollment_date')
-    if len(intake) > 0:
-        recent_intake = intake[0]
-    else:
-        recent_intake = 'Not enrolled'
-
-    try:
-        #their current grade is one more than that of the last test they passed
-        current_grade = (academics.filter(promote=True).latest('test_level').test_level)+1
-    except ObjectDoesNotExist:
-        current_grade = recent_intake.starting_grade if type(recent_intake) != str else 0
-
-    return current_grade
-
-def studentAtSchoolGradeLevel(student_id):
-    try:
-        survey = IntakeSurvey.objects.get(pk=student_id)
-    except ObjectDoesNotExist:
-        return False
-
-    current_grade = getStudentGradebyID(student_id)
-    updates = survey.intakeupdate_set.all().filter().order_by('-date')
-
-    #get most up to date information
-    if len(updates) > 0:
-        recent_survey = updates[0]
-    else:
-        recent_survey = survey
-
-    if current_grade == recent_survey.grade_current or current_grade == recent_survey.grade_last:
-        return True
-    else:
-        return False
-
-def studentAtAgeAppropriateGradeLevel(student_id):
-    # no record, no dice.
-    try:
-        survey = IntakeSurvey.objects.get(pk=student_id)
-    except ObjectDoesNotExist:
-        return False
-    # no DOB, no dice
-    if survey.dob == None:
-        return 'DOB not entered'
-
-    current_grade = getStudentGradebyID(student_id)
-    if current_grade>12:
-        return "N/A"
-
-    #Look at calendar year child was born in to calculate their age
-    approximate_age = date.today().year - survey.dob.year
-    #if today is before grades change in August
-    if date.today().month < 8:
-        age_appropriate_grade = approximate_age - 6
-    else:
-        age_appropriate_grade = approximate_age - 5
-    if current_grade >= age_appropriate_grade:
-        return True
-    else:
-        return False
