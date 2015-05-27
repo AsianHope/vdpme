@@ -145,7 +145,7 @@ def index(request):
                 'students_at_gl_by_grade_by_site': students_at_gl_by_grade_by_site,
                 'schools':schools,
                 'notifications':notifications,
-                'unenrolled_students':unenrolled_students[:5]}
+                'unenrolled_students':unenrolled_students}
 
     return render(request, 'mande/index.html', context)
 

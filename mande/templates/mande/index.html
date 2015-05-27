@@ -70,7 +70,7 @@
                       </div>
                       <!-- /.panel-heading -->
                       <div class="panel-body">
-                        <table class="table table-bordered table-striped table-hover">
+                        <table class="table table-bordered table-striped table-hover" id="unenrolledStudentsTable">
                           <thead>
                             <tr>
                               <th>Site</th><th>Student</th><th>Enroll</th>
@@ -212,7 +212,19 @@
 {% endblock %}
 
 {% block script %}
+<!-- DataTables JavaScript -->
+   <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+   <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+
     <script type="text/javascript">
+
+    $(document).ready(function(){
+      $('#unenrolledStudentsTable').DataTable({
+          responsive: true,
+          pageLength: 5,
+      });
+    });
+
       $(function() {
 
           {% for school,attributes in breakdown.items %}
