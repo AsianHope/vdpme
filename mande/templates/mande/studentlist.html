@@ -38,10 +38,12 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-  $('#studentDataTable').DataTable({
+  var table = $('#studentDataTable').DataTable({
       responsive: true,
       pageLength: 25,
+      search: {caseInsensitive: false}
   });
+
 });
 </script>
 
