@@ -5,6 +5,7 @@ from django.template import RequestContext, loader
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import modelformset_factory
 from django.db.models import Q
+from django.forms.models import model_to_dict
 
 from django.utils.html import conditional_escape as esc
 from django.utils.safestring import mark_safe
@@ -61,6 +62,8 @@ from mande.utils import studentAtAgeAppropriateGradeLevel
 
 from django.contrib.auth.models import User
 from mande.models import TODAY
+
+
 
 '''
 *****************************************************************************
@@ -120,3 +123,45 @@ def daily_absence_report(request,attendance_date=TODAY):
                             {'classroomattendance' : classroomattendance,
                              'attendance_date': attendance_date
                                                                         })
+'''
+*****************************************************************************
+Data Audit
+ - Generate a list of student records with missing or anomalous data
+*****************************************************************************
+'''
+def data_audit(request,type='ALL'):
+    #modelfields = model_to_dict(IntakeSurvey.objects.all()[0])
+
+    students = IntakeSurvey.objects.all()
+
+    #a
+    anomalies = {}
+    '''students with missing information'''
+    for student in students:
+        temp = IntakeSurveyForm(data=student.getRecentFields())
+        for field in temp:
+            #blank fields
+            if field.data is None or len(unicode(field.data))==0:
+                if field.label!="Notes":
+                    try:
+                        anomalies[student].append(
+                                                {'text':'Missing '+field.label,
+                                                 'resolution':reverse('student_detail',kwargs=
+                                                                     {'student_id':student.student_id})})
+                    except KeyError:
+                        anomalies[student] = [{'text':'Missing '+field.label,
+                         'resolution':reverse('student_detail',kwargs=
+                                             {'student_id':student.student_id})}]
+
+
+
+    '''students with odd information'''
+    #weird birthdays compared to grade
+
+
+    '''students we suspect have left (significant number of absences)'''
+
+    print anomalies
+
+    return render(request, 'mande/data_audit.html',
+                            {'students' : anomalies,})

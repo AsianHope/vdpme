@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load mandefilters %}
+{% block title %}
+Data Audit
+{% endblock %}
+
+{% block content %}
+<div class="col-md-3"></div>
+<div class="col-md-6">
+      <table class="table table-bordered table-striped table-hover" id="dataAudit">
+        <thead><tr>
+          <th>Site</th>
+          <th>Student</th>
+          <th>Problem</th>
+        <tbody>
+          {% for student,issues in students.items %}
+          {% for issue in issues %}
+          <tr>
+              <td style="width:7em;">{{ student.site }}</td>
+              <td>{{ student }}</td>
+              <td><a href="{{issue.resolution}}" role="button" class="btn btn-xs btn-danger">{{ issue.text }}</a></td>
+          </tr>
+          {% endfor %}
+          {% endfor %}
+        </tbody>
+
+      </table>
+    </div>
+<div class="col-md-3"></div>
+
+{% endblock %}
+
+{% block script %}
+ <!-- DataTables JavaScript -->
+    <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+$('#datePicker').val('{{attendance_date}}');
+$(function() {
+      $('#datePicker').change(function() {
+          //split on /
+          url = '{%url 'daily_absence_report' %}' + $(this).val()
+          window.location.href = url
+      });
+    });
+
+$(document).ready(function(){
+  $('#dataAudit').DataTable({
+      responsive: true,
+      pageLength: 25,
+  });
+});
+</script>
+
+{% endblock %}
