@@ -25,6 +25,7 @@ urlpatterns = patterns('',
     url(r'^attendance/report/data_audit/$', views.data_audit, name='data_audit'),
 
     url(r'^surveys/intake/$', views.intake_survey, name='intake_survey'),
+    url(r'^surveys/intake/(?P<student_id>\d+)/$', views.intake_survey, name='intake_survey'),
     url(r'^surveys/intake/update/(?P<student_id>\d+)/$', views.intake_update, name='intake_update'),
     url(r'^surveys/intake/update/$', views.intake_update, name='intake_update'),
     url(r'^surveys/intake/internal/$', views.intake_internal, name='intake_internal'),

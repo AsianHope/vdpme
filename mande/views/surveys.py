@@ -68,9 +68,11 @@ Intake Survey
  - process an IntakeSurveyForm and log the action
 *****************************************************************************
 '''
-def intake_survey(request):
+def intake_survey(request,student_id=None):
+    instance = IntakeSurvey.objects.get(pk=student_id) if student_id else None
+    form = IntakeSurveyForm(request.POST or None,
+                            instance=instance)
     if request.method == 'POST':
-        form = IntakeSurveyForm(request.POST)
         if form.is_valid():
             instance = form.save()
             icon = 'fa-female' if instance.gender == 'F' else 'fa-male'
@@ -82,10 +84,8 @@ def intake_survey(request):
             #then return
             return HttpResponseRedirect(reverse('student_detail', kwargs=
                                             {'student_id':instance.student_id}))
-    else:
-        form = IntakeSurveyForm()
-
-    context = {'form': form,}
+    
+    context = {'form': form, 'student':instance}
     return render(request, 'mande/intakesurvey.html', context)
 
 '''
@@ -313,7 +313,7 @@ def health_form(request, student_id=0):
                                 {'student_id':instance.student_id.student_id}))
         else:
             if student_id > 0:
-                form = HealthForm({ 'student_id':student_id, 
+                form = HealthForm({ 'student_id':student_id,
                                     'appointment_date':TODAY})
             else:
                 form = HealthForm()

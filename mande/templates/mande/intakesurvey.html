@@ -1,15 +1,23 @@
 {% extends "base.html" %}
 {% load bootstrap %}
 {% block title %}
-Performing Intake Survey
+  {% if student %}
+    Editing Intake Survey for {{student}}
+  {% else %}
+    Performing Intake Survey
+  {% endif %}
 {% endblock %}
 
 {% block content %}
 
 <div class="col-md-3"></div>
 <div class="col-md-6">
-<form action = "{% url 'intake_survey' %}" method="post">
 
+{% if student %}
+<form action = "{% url 'intake_survey' student.student_id %}" method="post">
+{% else %}
+<form action = "{% url 'intake_survey' %}" method="post">
+{% endif %}
     {{ form|bootstrap }}
     {% csrf_token %}
     <div class="col-md-12">
