@@ -142,7 +142,7 @@ class IntakeSurvey(models.Model):
 	enrolled = models.CharField('Currently enrolled in (public) school?',max_length=2,choices=YN,default='N')
 	grade_current = models.IntegerField('Current grade in [public] school (if enrolled)',choices=GRADES,default=-1)
 	grade_last = models.IntegerField('Last grade attended (if not enrolled)',choices=GRADES,default=-1)
-	reasons = models.TextField('Reasons for not attening',blank=True)
+	reasons = models.TextField('Reasons for not attending',blank=True)
 
 	#Father's Information
 	father_name = models.CharField('Father\'s Name',max_length=64)
