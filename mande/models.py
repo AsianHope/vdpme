@@ -173,15 +173,19 @@ class IntakeSurvey(models.Model):
 	#return the most up to date information
 	def getRecentFields(self):
 		recent = {}
-		try:
-			current = IntakeUpdate.objects.all().filter(student_id=self.student_id).filter().order_by('-date')[0]
-		except IndexError:
-			current = self
+		#seed recent with the intake survey
 		for field in self._meta.fields:
-			try:
-				recent[field.name] = getattr(current,field.name)
-			except AttributeError:
-					recent[field.name] = getattr(self,field.name)
+			recent[field.name] = getattr(self,field.name)
+		#loop through all updates, oldest to most recent
+		updates = IntakeUpdate.objects.all().filter(student_id=self.student_id).filter().order_by('date')
+		for update in updates:
+			for field in self._meta.fields:
+				try:
+					attr = getattr(update,field.name)
+					if attr is not None and len(attr)>0:
+						recent[field.name] = attr #most recent non null update wins!
+				except (AttributeError, TypeError):
+					pass
 		return recent
 
 class IntakeInternal(models.Model):

@@ -18,7 +18,7 @@ Data Audit
           <tr>
               <td style="width:7em;">{{ student.site }}</td>
               <td>{{ student }}</td>
-              <td><a href="{{issue.resolution}}" role="button" class="btn btn-xs btn-danger">{{ issue.text }}</a></td>
+              <td><a href="{{issue.resolution}}?next={% url 'data_audit' %}" role="button" class="btn btn-xs btn-danger">{{ issue.text }}</a></td>
           </tr>
           {% endfor %}
           {% endfor %}

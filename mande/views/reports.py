@@ -146,13 +146,13 @@ def data_audit(request,type='ALL'):
                     try:
                         anomalies[student].append(
                                                 {'text':'Missing '+field.label,
-                                                 'resolution':reverse('student_detail',kwargs=
+                                                 'resolution':reverse('intake_update',kwargs=
                                                                      {'student_id':student.student_id})})
                     except KeyError:
                         anomalies[student] = [{'text':'Missing '+field.label,
-                         'resolution':reverse('student_detail',kwargs=
+                         'resolution':reverse('intake_update',kwargs=
                                              {'student_id':student.student_id})}]
-
+                    
 
 
     '''students with odd information'''
@@ -160,8 +160,6 @@ def data_audit(request,type='ALL'):
 
 
     '''students we suspect have left (significant number of absences)'''
-
-    print anomalies
 
     return render(request, 'mande/data_audit.html',
                             {'students' : anomalies,})

@@ -22,7 +22,7 @@ urlpatterns = patterns('',
     url(r'^attendance/report/absences/$', views.daily_absence_report, name='daily_absence_report'),
     url(r'^attendance/report/absences/(?P<attendance_date>\d{4}-\d{1,2}-\d{1,2})/$', views.daily_absence_report, name='daily_absence_report'),
 
-    url(r'^attendance/report/data_audit/$', views.data_audit, name='data_audit'),
+    url(r'^reports/data_audit/$', views.data_audit, name='data_audit'),
 
     url(r'^surveys/intake/$', views.intake_survey, name='intake_survey'),
     url(r'^surveys/intake/(?P<student_id>\d+)/$', views.intake_survey, name='intake_survey'),

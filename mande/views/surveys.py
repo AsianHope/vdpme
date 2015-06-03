@@ -84,7 +84,7 @@ def intake_survey(request,student_id=None):
             #then return
             return HttpResponseRedirect(reverse('student_detail', kwargs=
                                             {'student_id':instance.student_id}))
-    
+
     context = {'form': form, 'student':instance}
     return render(request, 'mande/intakesurvey.html', context)
 
@@ -125,6 +125,8 @@ Intake Update
 *****************************************************************************
 '''
 def intake_update(request,student_id=0):
+    next_url = request.GET.get('next')
+    print next_url
     try:
         survey = IntakeSurvey.objects.get(pk=student_id)
     except ObjectDoesNotExist:
@@ -144,11 +146,11 @@ def intake_update(request,student_id=0):
                                     font_awesome_icon='fa-upload')
             log.save()
             #then return
-            return HttpResponseRedirect(reverse('success'))
+            return HttpResponseRedirect(next_url)
     else:
         form = IntakeUpdateForm(instance=most_recent)
 
-    context = {'form': form, 'survey':survey, 'student_id':student_id}
+    context = {'form': form, 'survey':survey, 'student_id':student_id, 'next':next_url}
     return render(request, 'mande/intakeupdate.html', context)
 '''
 *****************************************************************************
