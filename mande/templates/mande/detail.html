@@ -13,7 +13,7 @@
     </small><br/>
 <a href="{% url 'student_list' %}" class="btn btn-primary" role="button">Back to all students</a>
 {% if exit_survey == None %}
-  <a href="{% url 'intake_update' survey.student_id %}" class="btn btn-info" role="button">Update this Student's Information?</a>
+  <a href="{% url 'intake_update' survey.student_id %}?next={% url 'student_detail' survey.student_id %}" class="btn btn-info" role="button">Update this Student's Information?</a>
   {% if current_grade == None %}
   <a href="{% url 'intake_internal' survey.student_id %}" class="btn btn-success" role="button">Enroll this student in VDP</a>
   {% else %}
