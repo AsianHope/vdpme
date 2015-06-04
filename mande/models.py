@@ -343,6 +343,9 @@ class Health(models.Model):
 	def __unicode__(self):
 		return unicode(self.appointment_date) + ': '+self.appointment_type+ ' - '+unicode(self.student_id)
 
+	class Meta:
+		unique_together = (('student_id','appointment_date','appointment_type'))
+		
 class ClassroomEnrollment(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
 	classroom_id = models.ForeignKey(Classroom)

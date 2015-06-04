@@ -7,7 +7,7 @@ Health Form
 {% block content %}
 <div class="col-md-3"></div>
 <div class="col-md-6">
-<form action = "{% url 'health_form' student_id %}" method="post">
+<form action = "{% url 'health_form' student_id %}?next={{next_url}}" method="post">
 
     {{ form|bootstrap }}
     {% csrf_token %}

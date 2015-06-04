@@ -133,3 +133,23 @@ class HealthForm(forms.ModelForm):
     class Meta:
         model = Health
         exclude=[]
+
+class HealthDentalForm(forms.ModelForm):
+    appointment_date = forms.DateField(label="Appointment Date",widget=Html5DateInput,initial=date.today().isoformat())
+    class Meta:
+        model = Health
+        exclude=['height','weight']
+
+class HealthCheckupForm(forms.ModelForm):
+    appointment_date = forms.DateField(label="Appointment Date",widget=Html5DateInput,initial=date.today().isoformat())
+    class Meta:
+        model = Health
+        exclude=[
+            'extractions',
+            'sealent',
+            'filling',
+            'endo',
+            'scaling',
+            'pulped',
+            'xray'
+        ]

@@ -54,6 +54,8 @@ from mande.forms import AttendanceForm
 from mande.forms import AcademicForm
 from mande.forms import IntakeInternalForm
 from mande.forms import HealthForm
+from mande.forms import HealthDentalForm
+from mande.forms import HealthCheckupForm
 
 from mande.utils import getEnrolledStudents
 from mande.utils import getStudentGradebyID
@@ -126,7 +128,6 @@ Intake Update
 '''
 def intake_update(request,student_id=0):
     next_url = request.GET.get('next')
-    print next_url
     try:
         survey = IntakeSurvey.objects.get(pk=student_id)
     except ObjectDoesNotExist:
@@ -297,13 +298,19 @@ Health Form
  - process a HealthForm and log the action
 *****************************************************************************
 '''
-def health_form(request, student_id=0):
+def health_form(request, student_id=0, appointment_date=TODAY, appointment_type=None):
+        next_url = request.GET.get('next')
         if request.method == 'POST':
             form = HealthForm(request.POST)
+            instance,created = Health.objects.get_or_create(student_id=IntakeSurvey.objects.get(pk=form.data['student_id']),
+                                          appointment_date=form.data['appointment_date'],
+                                          appointment_type=form.data['appointment_type'])
+            form = HealthForm(request.POST,instance=instance)
             if form.is_valid():
                 #process
                 instance = form.save()
-                message = ( 'Input '+instance.appointment_type+
+                action = 'Input ' if created else 'Updated '
+                message = ( action+instance.appointment_type+
                             ' for '+instance.student_id.name)
 
                 log = NotificationLog(  user=request.user,
@@ -311,15 +318,30 @@ def health_form(request, student_id=0):
                                         font_awesome_icon='fa-medkit')
                 log.save()
                 #then return
-                return HttpResponseRedirect(reverse('student_detail',kwargs=
-                                {'student_id':instance.student_id.student_id}))
+                return HttpResponseRedirect(next_url+'#health')
         else:
-            if student_id > 0:
-                form = HealthForm({ 'student_id':student_id,
-                                    'appointment_date':TODAY})
-            else:
-                form = HealthForm()
+            if student_id > 0 and appointment_type:
+                try:
+                    instance = Health.objects.get(student_id=IntakeSurvey.objects.get(pk=student_id),
+                                              appointment_date=appointment_date,
+                                              appointment_type=appointment_type)
+                    if appointment_type=='DENTAL':
+                        form = HealthDentalForm(instance=instance)
+                    else:
+                        form = HealthCheckupForm(instance=instance)
 
-        context = {'form': form,'student_id':student_id}
+                except ObjectDoesNotExist:
+                    form = HealthForm({ 'student_id':student_id,
+                                    'appointment_date':appointment_date,
+                                    'appointment_type':appointment_type})
+            else:
+                if student_id >0:
+                    form = HealthForm({'student_id':student_id,
+                                        'appointment_date':appointment_date})
+                else:
+                    form = HealthForm()
+
+        print next_url
+        context = {'form': form,'student_id':student_id,'next_url':next_url}
 
         return render(request, 'mande/healthform.html',context)

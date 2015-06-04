@@ -263,11 +263,12 @@
     <div class="table-responsive" style="min-height: 3em;">
       <table class="table table-bordered table-striped table-hover">
         <thead>
-          <tr><th>Date</th><th>Height</th><th>Weight</th><th>Notes</th></tr>
+          <tr><th style="width:4em;">Edit</th><th>Date</th><th>Height</th><th>Weight</th><th>Notes</th></tr>
         </thead>
         <tbody>
           {% for checkup in checkups %}
-          <tr><td>{{checkup.appointment_date |date:'d N Y'}}</td>
+          <tr><td><a href="{% url 'health_form' survey.student_id checkup.appointment_date|date:'Y-m-d' 'CHECKUP' %}" role="button" class="btn btn-xs btn-warning">Edit</a></td>
+              <td>{{checkup.appointment_date |date:'d N Y'}}</td>
               <td>{{checkup.height}}</td>
               <td>{{checkup.weight}}</td>
               <td>{{checkup.notes}}</td>
@@ -277,11 +278,12 @@
       </table>
     </div>
 
-    <h3>Checkups</h3>
+    <h3>Dentist Visits</h3>
     <div class="table-responsive" style="min-height: 3em;">
       <table class="table table-bordered table-striped table-hover">
         <thead>
-          <tr><th>Date</th>
+          <tr><th style="width:4em;" >Edit</th>
+              <th>Date</th>
               <th>Extractions</th>
               <th>Sealent</th>
               <th>Fillings</th>
@@ -294,7 +296,8 @@
         </thead>
         <tbody>
           {% for checkup in dental %}
-          <tr><td>{{checkup.appointment_date |date:'d N Y'}}</td>
+          <tr><td><a href="{% url 'health_form' survey.student_id checkup.appointment_date|date:'Y-m-d' 'DENTAL' %}" role="button" class="btn btn-xs btn-warning">Edit</a></td>
+              <td>{{checkup.appointment_date |date:'d N Y'}}</td>
               <td>{{checkup.extractions}}</td>
               <td>{{checkup.sealent}}</td>
               <td>{{checkup.filling}}</td>
@@ -303,19 +306,29 @@
               <td>{{checkup.pulped}}</td>
               <td>{{checkup.xray}}</td>
               <td>{{checkup.notes}}</td>
+
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
-    <a href="{% url 'health_form' survey.student_id %}" class="btn btn-success" role="button">Add a health/dental record</a>
+    <a href="{% url 'health_form' survey.student_id %}?next={% url 'student_detail' survey.student_id %}#health" class="btn btn-success" role="button">Add a health/dental record</a>
   </div>
 </div>
 {% endblock %}
 {% block script %}
 
 <script type="text/javascript">
+// Javascript to enable link to tab
+var url = document.location.toString();
+if (url.match('#')) {
+    $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
+}
 
+// Change hash for page-reload
+$('.nav-tabs a').on('shown.bs.tab', function (e) {
+    window.location.hash = e.target.hash;
+})
 $(document).ready( function() {
   $(function() {
     $('#decrement').click(function() {
