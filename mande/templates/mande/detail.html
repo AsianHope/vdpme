@@ -296,7 +296,7 @@
         </thead>
         <tbody>
           {% for checkup in dental %}
-          <tr><td><a href="{% url 'health_form' survey.student_id checkup.appointment_date|date:'Y-m-d' 'DENTAL' %}" role="button" class="btn btn-xs btn-warning">Edit</a></td>
+          <tr><td><a href="{% url 'health_form' survey.student_id checkup.appointment_date|date:'Y-m-d' 'DENTAL' %}?next={% url 'student_detail' survey.student_id %}#health" role="button" class="btn btn-xs btn-warning">Edit</a></td>
               <td>{{checkup.appointment_date |date:'d N Y'}}</td>
               <td>{{checkup.extractions}}</td>
               <td>{{checkup.sealent}}</td>
