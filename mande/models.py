@@ -103,6 +103,16 @@ EXIT_REASONS = (
 	('EMPLOYMENT','Got a job'),
 	('OTHER','Other')
 )
+
+RELATIONSHIPS = (
+	('FATHER','Father'),
+	('MOTHER','Mother'),
+	('GRANDFATHER','Grandfather'),
+	('GRANDMOTHER','Grandmother'),
+	('AUNT','Aunt'),
+	('UNCLE','Uncle'),
+	('OTHER','Other'),
+)
 class School(models.Model):
 	school_id = models.AutoField(primary_key=True)
 	school_name = models.CharField('School Code',max_length=128)
@@ -136,7 +146,7 @@ class IntakeSurvey(models.Model):
 	name = models.CharField('Name',max_length=64,default='')
 	dob = models.DateField('DOB')
 	grade_appropriate = models.IntegerField('Appropriate Grade',choices=GRADES,default=1)
-	#graduation = models.DateField('Expected 6th Grade Graduation') #can calculate this based on dob
+
 	gender = models.CharField(max_length=1,choices=GENDERS,default='M')
 	address = models.TextField('Home Address')
 	enrolled = models.CharField('Currently enrolled in (public) school?',max_length=2,choices=YN,default='N')
@@ -144,17 +154,20 @@ class IntakeSurvey(models.Model):
 	grade_last = models.IntegerField('Last grade attended (if not enrolled)',choices=GRADES,default=-1)
 	reasons = models.TextField('Reasons for not attending',blank=True)
 
-	#Father's Information
-	father_name = models.CharField('Father\'s Name',max_length=64)
-	father_phone = models.CharField('Father\'s Phone',max_length=128)
-	father_profession = models.CharField('Father\'s Profession',max_length=64)
-	father_employment = models.CharField('Father\'s Employment',max_length=1,choices=EMPLOYMENT,default=1)
+	#Guardian 1's Information
+	guardian1_name = models.CharField('Guardian 1\'s Name',max_length=64)
+	guardian1_relationship = models.CharField('Guardian 1\'s relationship to child',max_length=64,choices=RELATIONSHIPS,default='FATHER')
+	guardian1_phone = models.CharField('Guardian 1\'s Phone',max_length=128)
+	guardian1_profession = models.CharField('Guardian 1\'s Profession',max_length=64)
+	guardian1_employment = models.CharField('Guardian 1\'s Employment',max_length=1,choices=EMPLOYMENT,default=1)
 
-	#Mother's Information
-	mother_name = models.CharField('Mother\'s Name',max_length=64)
-	mother_phone = models.CharField('Mother\'s Phone',max_length=128)
-	mother_profession = models.CharField('Mother\'s Profession',max_length=64)
-	mother_employment= models.CharField('Mother\'s Employment',max_length=1,choices=EMPLOYMENT,default=1)
+
+	#Guardian 2's Information
+	guardian2_name = models.CharField('Guardian 2\'s Name',max_length=64,blank=True,null=True)
+	guardian2_relationship = models.CharField('Guardian 2\'s relationship to child',max_length=64,blank=True,null=True,choices=RELATIONSHIPS,default='MOTHER')
+	guardian2_phone = models.CharField('Guardian 2\'s Phone',max_length=128,blank=True,null=True)
+	guardian2_profession = models.CharField('Guardian 2\'s Profession',max_length=64,default='NA',blank=True,null=True)
+	guardian2_employment= models.CharField('Guardian 2\'s Employment',max_length=1,choices=EMPLOYMENT,default=1,blank=True,null=True)
 
 	#Household Information
 	minors = models.IntegerField('Number of children living in household (including student)',default=0)
@@ -202,16 +215,18 @@ class IntakeUpdate(models.Model):
 	date = models.DateTimeField('Date of Update')
 	address = models.TextField('Home Address')
 
-	father_name = models.CharField('Father\'s Name',max_length=64,blank=True)
-	father_phone = models.CharField('Father\'s Phone',max_length=128,blank=True)
-	father_profession = models.CharField('Father\'s Profession',max_length=64,default='NA',blank=True)
-	father_employment = models.CharField('Father\'s Employment',max_length=1,choices=EMPLOYMENT,default=1)
+	guardian1_name = models.CharField('Guardian 1\'s Name',max_length=64,blank=True)
+	guardian1_relationship = models.CharField('Guardian 1\'s relationship to child',max_length=64,choices=RELATIONSHIPS,default='FATHER')
+	guardian1_phone = models.CharField('Guardian 1\'s Phone',max_length=128,blank=True)
+	guardian1_profession = models.CharField('Guardian 1\'s Profession',max_length=64,default='NA',blank=True)
+	guardian1_employment = models.CharField('Guardian 1\'s Employment',max_length=1,choices=EMPLOYMENT,default=1)
 
 
-	mother_name = models.CharField('Mother\'s Name',max_length=64,blank=True)
-	mother_phone = models.CharField('Mother\'s Phone',max_length=128,blank=True)
-	mother_profession = models.CharField('Mother\'s Profession',max_length=64,default='NA',blank=True)
-	mother_employment= models.CharField('Mother\'s Employment',max_length=1,choices=EMPLOYMENT,default=1)
+	guardian2_name = models.CharField('Guardian 2\'s Name',max_length=64,blank=True,null=True)
+	guardian2_relationship = models.CharField('Guardian 2\'s relationship to child',max_length=64,blank=True,null=True,choices=RELATIONSHIPS,default='MOTHER')
+	guardian2_phone = models.CharField('Guardian 2\'s Phone',max_length=128,blank=True,null=True)
+	guardian2_profession = models.CharField('Guardian 2\'s Profession',max_length=64,default='NA',blank=True,null=True)
+	guardian2_employment= models.CharField('Guardian 2\'s Employment',max_length=1,choices=EMPLOYMENT,default=1,blank=True,null=True)
 
 	minors = models.IntegerField(default=0)
 	minors_in_school = models.IntegerField(default=0)
@@ -272,10 +287,15 @@ class PostExitSurvey(models.Model):
 	post_exit_survey_date = models.DateField('Date of Survey',default=datetime.date.today)
 	exit_date = models.DateField('Exit Date')
 	early_exit = models.CharField('Early (before achieving grade level) Exit',max_length=2,choices=YN,default='NA')
-	father_profession = models.CharField('Father\'s Profession',max_length=64,default='NA')
-	father_employment = models.CharField('Father\'s Employment',max_length=1,choices=EMPLOYMENT,default=1)
-	mother_profession = models.CharField('Mother\'s Profession',max_length=64,default='NA')
-	mother_employment= models.CharField('Mother\'s Employment',max_length=1,choices=EMPLOYMENT,default=1)
+
+	guardian1_relationship = models.CharField('Guardian 1\'s relationship to child',max_length=64,choices=RELATIONSHIPS,default='FATHER')
+	guardian1_profession = models.CharField('Guardian 1\'s Profession',max_length=64,default='NA')
+	guardian1_employment = models.CharField('Guardian 1\'s Employment',max_length=1,choices=EMPLOYMENT,default=1)
+
+	guardian2_relationship = models.CharField('Guardian 2\'s relationship to child',max_length=64,blank=True,null=True,choices=RELATIONSHIPS,default='MOTHER')
+	guardian2_profession = models.CharField('Guardian 2\'s Profession',max_length=64,default='NA',blank=True,null=True)
+	guardian2_employment= models.CharField('Guardian 2\'s Employment',max_length=1,choices=EMPLOYMENT,default=1,blank=True,null=True)
+
 	minors = models.IntegerField('How many children (under 18) are working?',default=0)
 	enrolled = models.CharField('Currently in school? [Primary Child]',max_length=2,choices=YN,default='NA')
 	grade_current = models.IntegerField('Current Grade in formal school (if in school)',choices=GRADES,default=1)
@@ -345,7 +365,7 @@ class Health(models.Model):
 
 	class Meta:
 		unique_together = (('student_id','appointment_date','appointment_type'))
-		
+
 class ClassroomEnrollment(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
 	classroom_id = models.ForeignKey(Classroom)

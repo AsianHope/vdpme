@@ -195,18 +195,23 @@
 
       <div class = "table-responsive">
         <table class="table table-bordered table-striped table-hover">
-              <tr><td colspan=4 class="text-center"><strong>Father</strong></td><td colspan=4 class="text-center"><strong>Mother</strong></td></tr>
+              <tr><td colspan=4 class="text-center">
+                    <strong>Guardian 1: {% firstof recent_update.get_guardian1_relationship_display survey.get_guardian1_relationship_display "Not Entered" %}</strong>
+                  </td>
+                  <td colspan=4 class="text-center">
+                    <strong>Guardian 2:  {% firstof recent_update.get_guardian2_relationship_display survey.get_guardian2_relationship_display "Not Entered" %}</strong>
+                  </td></tr>
               <td><strong>Name:</strong></td>
-              <td>{% firstof recent_update.father_name survey.father_name "Not Entered" %}</td>
+              <td>{% firstof recent_update.guardian1_name survey.guardian1_name "Not Entered" %}</td>
 
               <td><strong>Phone:</strong> </td>
-              <td>{% firstof recent_update.father_phone survey.father_phone "Not Entered" %}</td>
+              <td>{% firstof recent_update.guardian1_phone survey.guardian1_phone "Not Entered" %}</td>
 
               <td><strong>Name:</strong> </td>
-              <td>{% firstof recent_update.mother_name survey.mother_name "Not Entered" %}</td>
+              <td>{% firstof recent_update.guardian2_name survey.guardian2_name "Not Entered" %}</td>
 
               <td><strong>Phone:</strong> </td>
-              <td>{% firstof recent_update.mother_phone survey.mother_phone "Not Entered" %}</td>
+              <td>{% firstof recent_update.guardian2_phone survey.guardian2_phone "Not Entered" %}</td>
             <tr><td colspan=8 class="text-center"><strong>Home Address</strong></td></tr>
             <tr><td colspan=8 class="text-center">{% firstof recent_update.address survey.address "Not Entered" %}</td></tr>
           </table>
@@ -219,16 +224,17 @@
       <h3>Home of Origin</h3>
         <div class = "table-responsive">
           <table class="table table-bordered table-striped table-hover text-center">
-              <tr><td colspan=2><strong>Father</strong></td><td colspan=2><strong>Mother</strong></td></tr>
+              <tr><td colspan=2><strong>Guardian 1: {% firstof recent_update.get_guardian1_relationship_display survey.get_guardian1_relationship_display "Not Entered" %}</strong></td>
+                  <td colspan=2><strong>Guardian 2:  {% firstof recent_update.get_guardian2_relationship_display survey.get_guardian2_relationship_display "Not Entered" %}</strong></td></tr>
               <tr><td class="info"><strong>Profession</strong></td>
                   <td class="success"><strong>Income</strong></td>
                   <td class="info"><strong>Profession</strong></td>
                   <td class="success"><strong>Income</strong></td></tr>
               <tr>
-                <td class="info">{% firstof recent_update.father_profession survey.father_profession "Not Entered" %}</td>
-                <td class="success">{% firstof recent_update.father_employment survey.father_employment "Not Entered" %}</td>
-                <td class="info">{% firstof recent_update.mother_profession survey.mother_profession "Not Entered" %}</td>
-                <td class="success">{% firstof recent_update.mother_employment survey.mother_employment "Not Entered" %}</td>
+                <td class="info">{% firstof recent_update.guardian1_profession survey.guardian1_profession "Not Entered" %}</td>
+                <td class="success">{% firstof recent_update.guardian1_employment survey.guardian1_employment "Not Entered" %}</td>
+                <td class="info">{% firstof recent_update.guardian2_profession survey.guardian2_profession "Not Entered" %}</td>
+                <td class="success">{% firstof recent_update.guardian2_employment survey.guardian2_employment "Not Entered" %}</td>
               </tr>
 
             </table>
