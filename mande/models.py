@@ -228,9 +228,9 @@ class IntakeUpdate(models.Model):
 	guardian2_profession = models.CharField('Guardian 2\'s Profession',max_length=64,default='NA',blank=True,null=True)
 	guardian2_employment= models.CharField('Guardian 2\'s Employment',max_length=1,choices=EMPLOYMENT,default=1,blank=True,null=True)
 
-	minors = models.IntegerField(default=0)
-	minors_in_school = models.IntegerField(default=0)
-	minors_working = models.IntegerField(default=0)
+	minors = models.IntegerField('Number of children living in household (including student)',default=0)
+	minors_in_school = models.IntegerField('Number of children enrolled in school last year',default=0)
+	minors_working = models.IntegerField('Number of minors working',default=0)
 	minors_profession = models.CharField('What are they doing for work?',max_length=256, default='NA')
 	minors_encouraged = models.CharField('Did you encourage them to take this job?',max_length=2,choices=YN,default='NA')
 	minors_training = models.CharField('Did they receive any vocational training?',max_length=2,choices=YN,default='NA')
@@ -238,8 +238,8 @@ class IntakeUpdate(models.Model):
 
 	enrolled = models.CharField('Currently enrolled in formal school?',max_length=2,choices=YN,default='N')
 	grade_current = models.IntegerField('Current grade in (public) school?',choices=GRADES,default=1)
-	grade_last = models.IntegerField(choices=GRADES,default=1)
-	reasons = models.TextField(default='NA')
+	grade_last = models.IntegerField('Last grade in public school (if not currently enrolled)',choices=GRADES,default='-1')
+	reasons = models.TextField('Reasons for not attending school',default='NA')
 	notes = models.TextField(default='NA',blank=True)
 
 	def __unicode__(self):
@@ -296,7 +296,7 @@ class PostExitSurvey(models.Model):
 	guardian2_profession = models.CharField('Guardian 2\'s Profession',max_length=64,default='NA',blank=True,null=True)
 	guardian2_employment= models.CharField('Guardian 2\'s Employment',max_length=1,choices=EMPLOYMENT,default=1,blank=True,null=True)
 
-	minors = models.IntegerField('How many children (under 18) are working?',default=0)
+	minors = models.IntegerField('How many children in the household?',default=0)
 	enrolled = models.CharField('Currently in school? [Primary Child]',max_length=2,choices=YN,default='NA')
 	grade_current = models.IntegerField('Current Grade in formal school (if in school)',choices=GRADES,default=1)
 	grade_previous = models.IntegerField('Last Grade attended (if not in school)',choices=GRADES,default=1)
