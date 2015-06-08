@@ -32,7 +32,13 @@ class IntakeSurveyForm(forms.ModelForm):
 
     class Meta:
         model = IntakeSurvey
-        exclude=[]
+        exclude=[
+        'minors_working',
+        'minors_profession',
+        'minors_encouraged',
+        'minors_training',
+        'minors_training_type',
+        ]
 
 class IntakeInternalForm(forms.ModelForm):
     enrollment_date = forms.DateField(label="Enrollment Date",widget=Html5DateInput)
@@ -46,7 +52,13 @@ class IntakeUpdateForm(forms.ModelForm):
 
     class Meta:
         model = IntakeUpdate
-        exclude=[]
+        exclude=[
+        'minors_working',
+        'minors_profession',
+        'minors_encouraged',
+        'minors_training',
+        'minors_training_type',
+        ]
 
 class ExitSurveyForm(forms.ModelForm):
     survey_date = forms.DateField(label="Survey Date",widget=Html5DateInput)
