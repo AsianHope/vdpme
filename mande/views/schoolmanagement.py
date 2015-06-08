@@ -90,7 +90,6 @@ Student Detail
 '''
 def student_detail(request, student_id):
     survey = IntakeSurvey.objects.get(pk=student_id)
-    updates = survey.intakeupdate_set.all().filter().order_by('-date')
     intake = survey.intakeinternal_set.all().filter().order_by('-enrollment_date')
 
     try:
@@ -119,10 +118,6 @@ def student_detail(request, student_id):
     attendance_present = survey.attendance_set.all().filter(attendance='P').count()
     attendance_approved_absence = survey.attendance_set.all().filter(attendance='AA').count()
     attendance_unapproved_absence = survey.attendance_set.all().filter(attendance='UA').count()
-    if len(updates) > 0:
-        recent_update = updates[0]
-    else:
-        recent_update = "No recent updates"
 
     if len(intake) > 0:
         recent_intake = intake[0]
@@ -138,9 +133,7 @@ def student_detail(request, student_id):
 
     graduation = survey.dob +timedelta(days=365*12) if survey.dob is not None else "No birthday entered"
     context = {
-        'survey':survey,
-        'updates':updates,
-        'recent_update':recent_update,
+        'survey': survey.getRecentFields(),
         'recent_intake':recent_intake,
         'academics':academics,
         'current_grade':current_grade,

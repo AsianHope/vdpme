@@ -1,6 +1,7 @@
 from django import template
 from mande.models import IntakeSurvey
 from mande.models import GRADES
+from mande.models import RELATIONSHIPS
 from mande.models import Academic
 from mande.models import IntakeInternal
 from django.core.exceptions import ObjectDoesNotExist
@@ -20,6 +21,15 @@ def grade_by_id(value):
     else:
         grade_dict = dict(GRADES)
         return grade_dict.get(int(value), None)
+
+@register.filter(name='relationship_display')
+def relationship_display(value):
+    if value is None:
+        return "Unknown"
+    else:
+        rel_dict = dict(RELATIONSHIPS)
+        print rel_dict
+        return rel_dict.get(value, None)
 
 #duplicated in views.py - probably should link these methods
 @register.filter(name='student_current_grade_by_id')
