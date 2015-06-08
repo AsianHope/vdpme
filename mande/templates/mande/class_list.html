@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load mandefilters %}
+{% block title %}
+Class List
+{% endblock %}
+
+{% block content %}
+<div class="col-md-3"></div>
+<div class="col-md-6">
+      <table class="table table-bordered table-striped table-hover" id="classList">
+        <thead><tr>
+          <th style="width:7em;">Site</th>
+          <th>Grade</th>
+          <th>Description</th>
+          <th>Teacher(s)</th>
+          <th>Students</th>
+          <th>% Female</th>
+        <!--  <th>Enroll Students</th> -->
+        <tbody>
+          {% for classroom,class in class_list.items %}
+          <tr>
+              <td>{{ class.site }}</td>
+              <td>{{ class.target_grade|grade_by_id }}</td>
+              <td>{{ class.classroom_number }}</td>
+              <td>{% for teacher in class.teacher%} {{teacher.teacher_id.name}}<br/>{% endfor %}</td>
+              <td>{{ class.students}}</td><td> {% widthratio class.female class.students 100 %}%</td>
+          <!--    <td><a href="{% url 'classroomenrollment_form' classroom.classroom_id %}" role="button" class="btn btn-xs btn-success">Enroll students in this course</a> !-->
+
+          </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+    </div>
+<div class="col-md-3"></div>
+
+{% endblock %}
+
+{% block script %}
+ <!-- DataTables JavaScript -->
+    <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#classList').DataTable({
+      responsive: true,
+      pageLength: 25,
+  });
+});
+</script>
+
+{% endblock %}

@@ -152,7 +152,7 @@ def data_audit(request,type='ALL'):
                         anomalies[student] = [{'text':'Missing '+field.label,
                          'resolution':reverse('intake_update',kwargs=
                                              {'student_id':student.student_id})}]
-                    
+
 
 
     '''students with odd information'''
@@ -163,3 +163,46 @@ def data_audit(request,type='ALL'):
 
     return render(request, 'mande/data_audit.html',
                             {'students' : anomalies,})
+
+'''
+*****************************************************************************
+Class List
+ - Generate a summary for each class in each site:
+    + VDP Campus
+    + Class Name
+    + Teacher
+    + # of Students Enrolled
+*****************************************************************************
+'''
+def class_list(request,site='ALL'):
+    class_list={}
+    classrooms = Classroom.objects.all()
+    for classroom in classrooms:
+        instance = Classroom.objects.get(classroom_id=classroom.pk)
+        class_list[classroom]={
+            'site':classroom.school_id,
+            'target_grade':classroom.cohort,
+            'classroom_number':classroom.classroom_number,
+            'teacher': 'Not assigned',
+            'students': 0,
+            'female': 0,
+        }
+        try:
+            class_list[classroom]['teacher'] = ClassroomTeacher.objects.filter(classroom_id=classroom.pk)
+        except ObjectDoesNotExist:
+            pass
+        try:
+            enrolled_students =  instance.classroomenrollment_set.all().filter(
+                                        Q(drop_date__gte=TODAY) | Q(drop_date=None))
+            female_students = 0
+            for student in enrolled_students:
+                if student.student_id.gender == 'F':
+                    female_students +=1
+            class_list[classroom]['students'] = len(enrolled_students)
+            class_list[classroom]['female'] = female_students
+        except ObjectDoesNotExist:
+            pass
+
+
+    return render(request, 'mande/class_list.html',
+                            {'class_list' : class_list,})
