@@ -28,7 +28,6 @@ def relationship_display(value):
         return "Unknown"
     else:
         rel_dict = dict(RELATIONSHIPS)
-        print rel_dict
         return rel_dict.get(value, None)
 
 #duplicated in views.py - probably should link these methods
