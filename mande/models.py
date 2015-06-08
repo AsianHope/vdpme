@@ -171,7 +171,8 @@ class IntakeSurvey(models.Model):
 
 	#Household Information
 	minors = models.IntegerField('Number of children living in household (including student)',default=0)
-	minors_in_school = models.IntegerField('Number of children enrolled in school last year',default=0)
+	minors_in_public_school = models.IntegerField('Number of children enrolled in public school last year',default=0)
+	minors_in_other_school = models.IntegerField('Number of children enrolled in private school last year',default=0)
 	minors_working = models.IntegerField('Number of children under 18 working 15+ hours per week',default=0)
 	minors_profession = models.CharField('What are they doing for work?',max_length=256, blank=True)
 	minors_encouraged = models.CharField('Did you encourage them to take this job?',max_length=2,choices=YN,default='NA')
@@ -229,7 +230,8 @@ class IntakeUpdate(models.Model):
 	guardian2_employment= models.CharField('Guardian 2\'s Employment',max_length=1,choices=EMPLOYMENT,default=1,blank=True,null=True)
 
 	minors = models.IntegerField('Number of children living in household (including student)',default=0)
-	minors_in_school = models.IntegerField('Number of children enrolled in school last year',default=0)
+	minors_in_public_school = models.IntegerField('Number of children enrolled in public school last year',default=0)
+	minors_in_other_school = models.IntegerField('Number of children enrolled in private school last year',default=0)
 	minors_working = models.IntegerField('Number of minors working',default=0)
 	minors_profession = models.CharField('What are they doing for work?',max_length=256, default='NA')
 	minors_encouraged = models.CharField('Did you encourage them to take this job?',max_length=2,choices=YN,default='NA')
@@ -239,7 +241,7 @@ class IntakeUpdate(models.Model):
 	enrolled = models.CharField('Currently enrolled in formal school?',max_length=2,choices=YN,default='N')
 	grade_current = models.IntegerField('Current grade in (public) school?',choices=GRADES,default=1)
 	grade_last = models.IntegerField('Last grade in public school (if not currently enrolled)',choices=GRADES,default='-1')
-	reasons = models.TextField('Reasons for not attending school',default='NA')
+	reasons = models.TextField('Reasons for not attending school',default='NA',blank=True,null=True)
 	notes = models.TextField(default='NA',blank=True)
 
 	def __unicode__(self):
