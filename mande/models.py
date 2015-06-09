@@ -112,6 +112,7 @@ RELATIONSHIPS = (
 	('AUNT','Aunt'),
 	('UNCLE','Uncle'),
 	('OTHER','Other'),
+	('NONE','No guardian')
 )
 class School(models.Model):
 	school_id = models.AutoField(primary_key=True)
