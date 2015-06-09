@@ -14,7 +14,7 @@
 <div class="col-md-6">
 
 {% if student %}
-<form action = "{% url 'intake_survey' student.student_id %}" method="post">
+<form action = "{% url 'intake_survey' student.student_id %}?next={{next_url}}" method="post">
 {% else %}
 <form action = "{% url 'intake_survey' %}" method="post">
 {% endif %}
@@ -26,4 +26,21 @@
 </form>
 </div>
 <div class="col-md-3"></div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+$(document).ready(function(){
+  var limit = 'id_{{limit}}';
+  if(limit !== 'id_None'){
+    //loop through all form groups and hide everything but our limit
+    $('.form-group').each(function(index){
+      if(!$(this).find($('#id_{{limit}}')).length){
+        $(this).hide();
+      }
+    });
+  }
+});
+</script>
+
 {% endblock %}

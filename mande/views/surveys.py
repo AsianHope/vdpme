@@ -71,6 +71,8 @@ Intake Survey
 *****************************************************************************
 '''
 def intake_survey(request,student_id=None):
+    next_url = request.GET.get('next') #where we're going next
+    limit = request.GET.get('limit') #limit to a single field
     instance = IntakeSurvey.objects.get(pk=student_id) if student_id else None
     form = IntakeSurveyForm(request.POST or None,
                             instance=instance)
@@ -84,10 +86,9 @@ def intake_survey(request,student_id=None):
                                     font_awesome_icon=icon)
             log.save()
             #then return
-            return HttpResponseRedirect(reverse('student_detail', kwargs=
-                                            {'student_id':instance.student_id}))
+            return HttpResponseRedirect(next_url)
 
-    context = {'form': form, 'student':instance}
+    context = {'form': form, 'student':instance, 'next_url':next_url, 'limit':limit}
     return render(request, 'mande/intakesurvey.html', context)
 
 '''
