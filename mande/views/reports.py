@@ -64,7 +64,8 @@ from django.contrib.auth.models import User
 from mande.models import TODAY
 
 
-
+TOO_YOUNG = 4
+TOO_OLD = 18
 '''
 *****************************************************************************
 Daily Attendance Report
@@ -136,8 +137,9 @@ def data_audit(request,type='ALL'):
 
     #a
     anomalies = {}
-    '''students with missing information'''
+
     for student in students:
+        '''students with missing information'''
         temp = IntakeSurveyForm(data=student.getRecentFields())
         for field in temp:
             #blank fields
@@ -153,10 +155,23 @@ def data_audit(request,type='ALL'):
                          'resolution':reverse('intake_update',kwargs=
                                              {'student_id':student.student_id})}]
 
+        '''students with odd information'''
+        #weird birthdays compared to grade
 
+        #students who are quite young
+        if (student.dob.year > (datetime.now().year-TOO_YOUNG)) or (student.dob.year<datetime.now().year-TOO_OLD):
+            try:
+                anomalies[student].append(
+                                    {'text':'Incorrect DOB (~'+unicode(datetime.now().year-student.dob.year)+' years old)',
+                                     'resolution':reverse('intake_survey',kwargs=
+                                                         {'student_id':student.student_id}),
+                                    'limit':'dob'})
+            except KeyError:
+                anomalies[student] = [{'text':'Incorrect DOB (~'+unicode(datetime.now().year-student.dob.year)+' years old)',
+                                       'resolution':reverse('intake_survey',kwargs=
+                                       {'student_id':student.student_id}),
+                                       'limit':'dob'}]
 
-    '''students with odd information'''
-    #weird birthdays compared to grade
 
 
     '''students we suspect have left (significant number of absences)'''
