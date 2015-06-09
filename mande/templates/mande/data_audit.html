@@ -17,8 +17,8 @@ Data Audit
           {% for issue in issues %}
           <tr>
               <td style="width:7em;">{{ student.site }}</td>
-              <td>{{ student }}</td>
-              <td><a href="{{issue.resolution}}?next={% url 'data_audit' %}" role="button" class="btn btn-xs btn-danger">{{ issue.text }}</a></td>
+              <td><a href="{% url 'student_detail' student.student_id %}">{{ student }}</a></td>
+              <td><a href="{{issue.resolution}}?next={% url 'data_audit' %}&limit={{issue.limit}}" role="button" class="btn btn-xs btn-danger">{{ issue.text }}</a></td>
           </tr>
           {% endfor %}
           {% endfor %}
@@ -49,6 +49,7 @@ $(document).ready(function(){
   $('#dataAudit').DataTable({
       responsive: true,
       pageLength: 25,
+      order: [[2,'asc']]
   });
 });
 </script>
