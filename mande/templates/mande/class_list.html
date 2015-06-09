@@ -5,8 +5,8 @@ Class List
 {% endblock %}
 
 {% block content %}
-<div class="col-md-3"></div>
-<div class="col-md-6">
+<div class="col-md-1"></div>
+<div class="col-md-10">
       <table class="table table-bordered table-striped table-hover" id="classList">
         <thead><tr>
           <th style="width:7em;">Site</th>
@@ -32,7 +32,7 @@ Class List
 
       </table>
     </div>
-<div class="col-md-3"></div>
+<div class="col-md-1"></div>
 
 {% endblock %}
 
@@ -46,8 +46,10 @@ $(document).ready(function(){
   $('#classList').DataTable({
       responsive: true,
       pageLength: 25,
+      order: [[0,'asc'],[1,'asc'],[2,'asc']]
   });
 });
+
 </script>
 
 {% endblock %}
