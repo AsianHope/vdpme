@@ -4,7 +4,6 @@
 
 //custom sorting for program titles
  $.fn.dataTable.ext.type.order['jethro-pre'] = function ( d ) {
-      console.log(d);
      switch ( d ) {
          case 'Grade 1':     return 1;
          case 'Grade 2':     return 2;
