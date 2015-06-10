@@ -1,0 +1,15 @@
+/*!
+ * Custom Jethro Theme
+ */
+
+.dataTables_filter {
+    text-align: right;
+}
+
+.dataTables_paginate {
+    text-align: right;
+}
+
+.pagination {
+    margin: 0 0;
+}
