@@ -39,13 +39,18 @@ Class List
  <!-- DataTables JavaScript -->
     <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
     <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+    <script src="/static/mande/dist/js/jethro.js"></script>
 
 <script type="text/javascript">
+
 $(document).ready(function(){
   $('#classList').DataTable({
       responsive: true,
       pageLength: 25,
-      order: [[0,'asc'],[1,'asc'],[2,'asc']]
+      order: [[0,'asc'],[1,'asc'],[2,'asc']],
+      columnDefs: [
+       { type: 'jethro', targets: 1 }
+     ]
   });
 });
 

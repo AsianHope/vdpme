@@ -10,7 +10,8 @@ Students absent on {{ attendance_date }}
       <table class="table table-bordered table-striped table-hover" id="attendanceReportTable">
         <thead><tr>
           <th>Site</th>
-          <th>Classroom</th>
+          <th>Grade</th>
+          <th>Description</th>
           <th>Student</th>
           <th>Code</th>
           <th>Mother</th>
@@ -23,7 +24,8 @@ Students absent on {{ attendance_date }}
           {% for student in attendance %}
           <tr>
               <td>{{ classroom.school_id }}</td>
-              <td>{{ classroom.get_cohort_display }} - {{ classroom.classroom_number }}</td>
+              <td>{{ classroom.get_cohort_display }}</td>
+              <td>{{ classroom.classroom_number }}</td>
               <td>{{ student.student_id }}</td>
               <td>{{ student.get_attendance_display }}</td>
               <!- these are not the most current! --!>
@@ -56,6 +58,7 @@ Students absent on {{ attendance_date }}
  <!-- DataTables JavaScript -->
     <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
     <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+    <script src="/static/mande/dist/js/jethro.js"></script>
 
 <script type="text/javascript">
 $('#datePicker').val('{{attendance_date}}');
@@ -71,6 +74,10 @@ $(document).ready(function(){
   $('#attendanceReportTable').DataTable({
       responsive: true,
       pageLength: 25,
+      order: [[0,'asc'],[1,'asc'],[2,'asc']],
+      columnDefs: [
+       { type: 'jethro', targets: 1 }
+     ]
   });
 });
 </script>

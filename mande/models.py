@@ -49,9 +49,9 @@ GRADES = (
 	(10,'Grade 10'),
 	(11,'Grade 11'),
 	(12,'Grade 12'),
-	(50,'Voc-English'),
-	(60,'Voc-Computers'),
-	(70,'Voc-Vietnamese')
+	(50,'English'),
+	(60,'Computers'),
+	(70,'Vietnamese')
 )
 
 SCORES = (

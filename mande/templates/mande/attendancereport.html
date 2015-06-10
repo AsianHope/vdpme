@@ -19,8 +19,8 @@ Attendance taken/available to be taken on {{ attendance_date }}
           {% for classroom,attendance in classroomattendance.items %}
           <tr>
               <td>{{ classroom.school_id }}</td>
-              <td>{{ classroom.classroom_number }}</td>
               <td>{{ classroom.get_cohort_display }}</td>
+              <td>{{ classroom.classroom_number }}</td>      
               <td>{{ attendance.present }}</td>
               <td>{{ attendance.absent }}</td>
               {% if attendance %}
@@ -50,6 +50,8 @@ Attendance taken/available to be taken on {{ attendance_date }}
  <!-- DataTables JavaScript -->
     <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
     <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+    <script src="/static/mande/dist/js/jethro.js"></script>
+
 
 <script type="text/javascript">
 $('#datePicker').val('{{attendance_date}}');
@@ -65,6 +67,10 @@ $(document).ready(function(){
   $('#attendanceReportTable').DataTable({
       responsive: true,
       pageLength: 25,
+      order: [[0,'asc'],[1,'asc'],[2,'asc']],
+      columnDefs: [
+       { type: 'jethro', targets: 1 }
+     ]
   });
 });
 </script>
