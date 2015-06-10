@@ -14,7 +14,7 @@
 <div class="col-md-6">
 
 {% if student %}
-<form action = "{% url 'intake_survey' student.student_id %}?next={{next_url}}" method="post">
+<form action = "{% url 'intake_survey' student.student_id %}?next={{next_url}}&limit={{limit}}" method="post">
 {% else %}
 <form action = "{% url 'intake_survey' %}" method="post">
 {% endif %}
