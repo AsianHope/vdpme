@@ -97,7 +97,7 @@ def daily_attendance_report(request,attendance_date=TODAY):
 '''
 *****************************************************************************
 Daily Absence Report
- - lists all students with unexcuses absences and their contact info
+ - lists all students with unexcuses absences for the day and their contact info
 *****************************************************************************
 '''
 def daily_absence_report(request,attendance_date=TODAY):
@@ -171,10 +171,8 @@ def data_audit(request,type='ALL'):
                                        'resolution':reverse('intake_survey',kwargs=
                                        {'student_id':student.student_id}),
                                        'limit':'dob'}]
+        '''students we suspect have left (significant number of absences)'''
 
-
-
-    '''students we suspect have left (significant number of absences)'''
 
     return render(request, 'mande/data_audit.html',
                             {'students' : anomalies,})
@@ -221,3 +219,33 @@ def class_list(request,site='ALL'):
 
     return render(request, 'mande/class_list.html',
                             {'class_list' : class_list,})
+'''
+*****************************************************************************
+Student Absence Report
+ - makes a summary of all students and lists their daily absences/presence
+*****************************************************************************
+'''
+def student_absence_report(request):
+    attendances = Attendance.objects.all()
+
+    #set up dict of attendance codes with zero values
+    default_attendance ={}
+    attendancecodes = dict(ATTENDANCE_CODES)
+    for key,code in attendancecodes.iteritems():
+        default_attendance[key]=0
+
+    #default out all current students
+    attendance_by_sid = {}
+    currently_enrolled_students = getEnrolledStudents()
+    for student in currently_enrolled_students:
+        attendance_by_sid[student]=dict(default_attendance)
+
+
+    for attendance in attendances:
+        try:
+            attendance_by_sid[attendance.student_id][attendance.attendance] +=1
+        except KeyError:
+            pass; #students no longer in attendance that have attendance
+
+    return render(request, 'mande/student_absence_report.html',
+                                {'attendance_by_sid':attendance_by_sid, 'attendancecodes':attendancecodes})

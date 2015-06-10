@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load mandefilters %}
+{% block title %}
+Students daily absences
+{% endblock %}
+
+{% block content %}
+<div class="col-md-9">
+      <table class="table table-bordered table-striped table-hover" id="attendanceReportTable">
+        <thead><tr>
+          <th>Site</th>
+          <th>Student</th>
+        {% for key,code in attendancecodes.items %}
+          <th>{{code}}</th>
+        {% endfor %}
+
+        </tr></thead>
+        <tbody>
+          {% for student,attendance in attendance_by_sid.items %}
+          <tr>
+              <td>{{ student.site }}</td>
+              <td>{{ student }}</td>
+              {% for key,attendance_item in attendance.items %}
+              <td>{{attendance_item}}</td>
+              {% endfor %}
+              </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+    </div>
+
+
+    <div class="col-md-3">
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+ <!-- DataTables JavaScript -->
+    <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+$('#datePicker').val('{{attendance_date}}');
+
+$(document).ready(function(){
+  $('#attendanceReportTable').DataTable({
+      responsive: true,
+      pageLength: 25,
+      order: [[0,'asc']],
+  });
+});
+</script>
+
+{% endblock %}
