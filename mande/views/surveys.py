@@ -80,7 +80,13 @@ def intake_survey(request,student_id=None):
         if form.is_valid():
             instance = form.save()
             icon = 'fa-female' if instance.gender == 'F' else 'fa-male'
-            message = 'Performed intake survey for '+unicode(instance.name)
+            if student_id:
+                action = 'Updated'
+                if limit:
+                    action = action+' '+limit+ 'on' #Updated dob on intake...
+            else:
+                action='Performed'
+            message = action+' intake survey for '+unicode(instance.name)
             log = NotificationLog(  user=request.user,
                                     text=message,
                                     font_awesome_icon=icon)
