@@ -4,11 +4,44 @@ Modify attendance calendar for:
 {% endblock %}
 
 {% block content %}
-<ul>
-  {% for classroom in classrooms %}
-    <li><a href ="{% url 'attendance_days' classroom.classroom_id attendance_date%}"> {{classroom}} </a></li>
-  {% endfor %}
-{% endblock %}
+<div class="col-md-9">
+  <table id="classroomDataTable" class="table table-bordered table-hover">
+    <thead>
+      <tr><th>Site</th><th>Grade</th><th>Description</th><th>Edit</th></tr>
+    </thead>
+    <tbody>
+      {% for classroom in classrooms %}
+        <tr>
+          <td>{{ classroom.school_id }}</td>
+          <td>{{ classroom.get_cohort_display }}</td>
+          <td>{{ classroom.classroom_number }}</td>
+          <td><a href = "{% url 'attendance_days' classroom.classroom_id attendance_date %}" role="button" class="btn btn-xs btn-success">Modify Attendance Calendar</a></td>
+      {% endfor %}
+      </tbody>
+  </table>
+</div>
 
+<div class="col-md-3">
+</div>
+
+{% endblock %}
 {% block script %}
+ <!-- DataTables JavaScript -->
+    <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+    <script src="/static/mande/dist/js/jethro.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#classroomDataTable').DataTable({
+      responsive: true,
+      pageLength: 25,
+      order: [[0,'asc'],[1,'asc'],[2,'asc']],
+      columnDefs: [
+       { type: 'jethro', targets: 1 }
+     ]
+  });
+});
+</script>
+
 {% endblock %}
