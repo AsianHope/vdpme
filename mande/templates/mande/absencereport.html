@@ -14,8 +14,8 @@ Students absent on {{ attendance_date }}
           <th>Description</th>
           <th>Student</th>
           <th>Code</th>
-          <th>Mother</th>
-          <th>Father</th>
+          <th>Guardian 1</th>
+          <th>Guardian 2</th>
           <th>Update</th>
           <th>Note</th></tr></thead>
         <tbody>
@@ -28,9 +28,8 @@ Students absent on {{ attendance_date }}
               <td>{{ classroom.classroom_number }}</td>
               <td>{{ student.student_id }}</td>
               <td>{{ student.get_attendance_display }}</td>
-              <!- these are not the most current! --!>
-              <td>{{ student.student_id.getRecentFields | get_item:'mother_phone' }}</td>
-              <td>{{ student.student_id.getRecentFields | get_item:'mother_phone' }}</td>
+              <td>{{ student.student_id.getRecentFields | get_item:'guardian1_phone' }}</td>
+              <td>{{ student.student_id.getRecentFields | get_item:'guardian2_phone' }}</td>
               <td><a href = "{% url 'take_class_attendance' classroom.classroom_id attendance_date %}" role="button" class="btn btn-xs btn-danger">Update Attendance</a></td>
               <td>{{ student.notes }}</td>
           {% endfor %}
