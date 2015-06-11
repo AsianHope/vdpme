@@ -25,7 +25,16 @@ Data Audit
 
       </table>
     </div>
-<div class="col-md-3"></div>
+<div class="col-md-3">
+  <h3>Filters</h3>
+  <ul class = "buttonlist">
+
+    {% for filter in filters %}
+    <li><a role = "button" class="btn btn-sm btn-info" onclick ="table.search('{{filter|escapejs}}').draw();" href='#'>{{filter}}</a></li>
+    {% endfor %}
+    <li><a role = "button" class="btn btn-sm btn-warning" onclick="table.search('').draw()" href="#">Clear Search</a></li>
+  </ul>
+  </div>
 
 {% endblock %}
 
@@ -37,17 +46,9 @@ Data Audit
 
 
 <script type="text/javascript">
-$('#datePicker').val('{{attendance_date}}');
-$(function() {
-      $('#datePicker').change(function() {
-          //split on /
-          url = '{%url 'daily_absence_report' %}' + $(this).val()
-          window.location.href = url
-      });
-    });
-
+var table = null;
 $(document).ready(function(){
-  $('#dataAudit').DataTable({
+  table = $('#dataAudit').DataTable({
       responsive: true,
       pageLength: 25,
       order: [[2,'asc']]

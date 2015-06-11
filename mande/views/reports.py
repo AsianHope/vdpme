@@ -133,49 +133,69 @@ Data Audit
 def data_audit(request,type='ALL'):
     #modelfields = model_to_dict(IntakeSurvey.objects.all()[0])
 
-    students = IntakeSurvey.objects.all()
+    students = getEnrolledStudents()
+    filters = []
 
     #a
     anomalies = {}
 
     for student in students:
         '''students with missing information'''
+        text = 'Missing '
+        resolution = reverse('intake_update',kwargs={'student_id':student.student_id})
+
         temp = IntakeSurveyForm(data=student.getRecentFields())
         for field in temp:
             #blank fields
             if field.data is None or len(unicode(field.data))==0:
                 if field.label!="Notes":
-                    try:
-                        anomalies[student].append(
-                                                {'text':'Missing '+field.label,
-                                                 'resolution':reverse('intake_update',kwargs=
-                                                                     {'student_id':student.student_id})})
-                    except KeyError:
-                        anomalies[student] = [{'text':'Missing '+field.label,
-                         'resolution':reverse('intake_update',kwargs=
-                                             {'student_id':student.student_id})}]
+                    addAnomaly(anomalies, student, text+field.label, resolution)
+                    filters.append(text+field.label)
 
-        '''students with odd information'''
-        #weird birthdays compared to grade
-
-        #students who are quite young
+        '''students who are quite young or quite old'''
         if (student.dob.year > (datetime.now().year-TOO_YOUNG)) or (student.dob.year<datetime.now().year-TOO_OLD):
-            try:
-                anomalies[student].append(
-                                    {'text':'Incorrect DOB (~'+unicode(datetime.now().year-student.dob.year)+' years old)',
-                                     'resolution':reverse('intake_survey',kwargs=
-                                                         {'student_id':student.student_id}),
-                                    'limit':'dob'})
-            except KeyError:
-                anomalies[student] = [{'text':'Incorrect DOB (~'+unicode(datetime.now().year-student.dob.year)+' years old)',
-                                       'resolution':reverse('intake_survey',kwargs=
-                                       {'student_id':student.student_id}),
-                                       'limit':'dob'}]
-        '''students we suspect have left (significant number of absences)'''
+            text = 'Incorrect DOB '
+            age = '(~'+unicode(datetime.now().year-student.dob.year)+' years old)'
+            resolution = reverse('intake_survey',kwargs={'student_id':student.student_id})
+            limit = 'dob'
 
+            addAnomaly(anomalies, student, text+age, resolution, limit)
+            filters.append(text)
+        '''students who have never been present'''
+        if Attendance.objects.filter(student_id=student,attendance='P').count()==0:
 
+            '''are either not enrolled'''
+            if len(ClassroomEnrollment.objects.filter(student_id=student))==0:
+                text = 'Not enrolled in any classes'
+                resolution = reverse('classroomenrollment_form')
+                addAnomaly(anomalies, student, text, resolution)
+                filters.append(text)
+
+            '''... or just not good at showing up!'''
+            if Attendance.objects.filter(student_id=student).count()>0:
+                text = 'Has never attended class'
+                resolution = reverse('student_detail',kwargs={'student_id':student.student_id})
+                addAnomaly(anomalies, student, text, resolution)
+                filters.append(text)
+
+    #remove duplicates in a now long array
+    filters = set(filters)
+    filters = sorted(filters)
     return render(request, 'mande/data_audit.html',
-                            {'students' : anomalies,})
+                            {'students' : anomalies,'filters':filters})
+
+
+def addAnomaly(anomalies, student, text, resolution, limit=None):
+    try:
+        anomalies[student].append(
+                            {'text':text,
+                             'resolution':resolution,
+                            'limit':limit})
+    except KeyError:
+        anomalies[student] = [{'text':text,
+                               'resolution':resolution,
+                               'limit':limit}]
+    return anomalies
 
 '''
 *****************************************************************************

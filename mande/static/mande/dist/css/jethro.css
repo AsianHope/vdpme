@@ -13,3 +13,12 @@
 .pagination {
     margin: 0 0;
 }
+
+ul.buttonlist{
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
+ul.buttonlist li{
+  margin-bottom: .5em;
+}

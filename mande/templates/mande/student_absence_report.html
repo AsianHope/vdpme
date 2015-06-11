@@ -19,7 +19,7 @@ Students daily absences
           {% for student,attendance in attendance_by_sid.items %}
           <tr>
               <td>{{ student.site }}</td>
-              <td>{{ student }}</td>
+              <td><a href="{% url 'student_detail' student.student_id %}">{{ student }}</a></td>
               {% for key,attendance_item in attendance.items %}
               <td>{{attendance_item}}</td>
               {% endfor %}
