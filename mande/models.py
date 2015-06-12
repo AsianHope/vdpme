@@ -205,6 +205,18 @@ class IntakeSurvey(models.Model):
 					pass
 		return recent
 
+	def getNotes(self):
+		if self.notes is not None and len(self.notes)>1:
+			notes=[{'date': self.date, 'note':self.notes}]
+		else:
+			notes=[]
+		updates = IntakeUpdate.objects.all().filter(student_id=self.student_id).filter().order_by('date')
+		updates = updates.exclude(notes=None).exclude(notes='')
+		for update in updates:
+			notes.append({'date':update.date,'note':update.notes})
+
+		return notes;
+
 class IntakeInternal(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey,unique=True)
 	enrollment_date = models.DateField('Enrollment Date')

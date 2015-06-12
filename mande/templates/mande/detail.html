@@ -95,32 +95,35 @@
 <div class="tab-content">
   <div role="tabpanel" class="tab-pane active" id="academic">
     <div class = "col-md-12">
-      <h3>Academics</h3>
-      <div class="table-responsive">
-        <table class="table table-bordered table-striped table-hover">
-          <tr>
-            <th>Test Date</th>
-            <th>Test Grade</th>
-            <th>Math</th>
-            <th>Khmer</th>
-            <th>Promoted?</th>
-          </tr>
-          {% for test in academics %}
-          <tr>
-            <td>{{test.test_date|date:'d N Y'}}</td>
-            <td>{{test.get_test_level_display}}</td>
-            <td>{{test.test_grade_math}}</td>
-            <td>{{test.test_grade_khmer}}</td>
-            <td>{{test.promote}}</td>
-          </tr>
-          {% endfor %}
+      <h3>Academics <a href="{% url 'academic_form_single' survey.student_id %}" class="btn btn-xs btn-success" role="button">+ Add an achievement test</a></h3>
 
-          </table>
-          <a href="{% url 'academic_form_single' survey.student_id %}" class="btn btn-success" role="button">Add an achievement test</a>
-      </div>
+        <table class="table table-bordered table-striped table-hover" id="academicTable">
+          <thead>
+            <tr>
+              <th>Test Date</th>
+              <th>Test Grade</th>
+              <th>Math</th>
+              <th>Khmer</th>
+              <th>Promoted?</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for test in academics %}
+            <tr>
+              <td>{{test.test_date|date:'d N Y'}}</td>
+              <td>{{test.get_test_level_display}}</td>
+              <td>{{test.test_grade_math}}</td>
+              <td>{{test.test_grade_khmer}}</td>
+              <td>{{test.promote}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+
     </div>
     <div class = "col-md-12">
-      <h3>Student Evaluations</h3>
+      <h3>Student Evaluations   <a href="{% url 'studentevaluation_form_single' survey.student_id %}" class="btn btn-xs btn-info" role="button">+ Add a student evaluation</a> </h3>
       <table class="table table-bordered table-striped table-hover" id="evaluationTable">
         <thead>
           <tr><th>Date</th><th>Evaluation</th>
@@ -128,65 +131,67 @@
         <tbody>
       {% for evaluation in evaluations %}
 
-      <tr>
-        <td>{{evaluation.date|date:'d N Y'}}</td>
-        <td>
+          <tr>
+            <td>{{evaluation.date|date:'d N Y'}}</td>
+            <td>
 
-          <table class="table table-bordered table-striped table-hover">
-            <tr>
-              <th>Academic</th>
-              <th>Life Skills/Personal Development</th>
-              <th>Study/Learning Skills</th>
-              <th>Hygeine Knowledge</th>
-              <th>Christian Growth</th>
-            </tr>
+              <table class="table table-bordered table-striped table-hover">
+                <tr>
+                  <th>Academic</th>
+                  <th>Life Skills/Personal Development</th>
+                  <th>Study/Learning Skills</th>
+                  <th>Hygeine Knowledge</th>
+                  <th>Christian Growth</th>
+                </tr>
 
-            <tr>
-              <td>{{evaluation.academic_score}}</td>
-              <td>{{evaluation.study_score}}</td>
-              <td>{{evaluation.personal_score}}</td>
-              <td>{{evaluation.hygiene_score}}</td>
-              <td>{{evaluation.faith_score}}</td>
-            </tr>
-            <tr>
-              <td colspan=5>
-                <strong>General Comments</strong>
-              </td>
-            </tr>
-            <tr>
-              <td colspan=6>
-                {{evaluation.comments}}
-              </td>
-            </tr>
-            </table>
-      </td>
-    </tr>
+                <tr>
+                  <td>{{evaluation.academic_score}}</td>
+                  <td>{{evaluation.study_score}}</td>
+                  <td>{{evaluation.personal_score}}</td>
+                  <td>{{evaluation.hygiene_score}}</td>
+                  <td>{{evaluation.faith_score}}</td>
+                </tr>
+                <tr>
+                  <td colspan=5>
+                    <strong>General Comments</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan=6>
+                    {{evaluation.comments}}
+                  </td>
+                </tr>
+                </table>
+            </td>
+          </tr>
           {% endfor %}
-    </tbody>
-    </table>
-          <a href="{% url 'studentevaluation_form_single' survey.student_id %}" class="btn btn-info" role="button">Add a student evaluation</a>
-
-    </div>
-    <div class="col-md-6">
-      <h3>Discipline</h3>
-    <table class="table table-bordered table-striped table-hover">
-      <tr>
-        <th>Date of Incident</th>
-        <th>Code</th>
-
-      </tr>
-      {% for incident in discipline %}
-      <tr>
-        <td>{{incident.incident_date|date:'d N Y'}}</td>
-        <td>{{incident.get_incident_code_display}}</td>
-      </tr>
-      {% endfor %}
-
+        </tbody>
       </table>
-      <a href="{% url 'discipline_form' survey.student_id %}" class="btn btn-danger" role="button">Add Incident</a>
+
     </div>
     <div class="col-md-6">
-      <h3>Attendance</h3>
+      <h3>Discipline <a href="{% url 'discipline_form' survey.student_id %}" class="btn btn-xs btn-danger" role="button">+ Add Incident</a></h3>
+    <table class="table table-bordered table-striped table-hover" id="disciplineTable">
+      <thead>
+        <tr>
+          <th>Date of Incident</th>
+          <th>Code</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        {% for incident in discipline %}
+        <tr>
+          <td>{{incident.incident_date|date:'d N Y'}}</td>
+          <td>{{incident.get_incident_code_display}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    </div>
+    <div class="col-md-6">
+      <h3>Attendance  <a href="{% url 'attendance' %}" class="btn btn-xs btn-warning" role="button">+ Take Attendance</a></h3>
     <table class="table table-bordered table-striped table-hover">
       <tr>
         <th>Present</th>
@@ -203,7 +208,7 @@
       </tr>
 
       </table>
-      <a href="{% url 'attendance' %}" class="btn btn-warning" role="button">Take Attendance</a>
+
     </div>
 
 
@@ -211,34 +216,36 @@
 
   <div role="tabpanel" class="tab-pane" id="enrollment">
     <div class ="col-md-12">
-      <h3>Course History:</h3>
-      <div class = "table-responsive">
-        <table class="table table-bordered table-striped table-hover">
-        <tr>
-          <th>Date Enrolled</th>
-          <th>Date Dropped</th>
-          <th>Course</th
+      <h3>Course History   <a href="{% url 'classroomenrollment_form' %}" class="btn btn-xs btn-success" role="button">+ Add a course</a></h3>
 
-        </tr>
-        {% for class in classroomenrollment %}
-        <tr>
-          <td>{{class.enrollment_date|date:'d N Y'}}</td>
-          {% if class.drop_date %}
-            <td>{{class.drop_date|date:'d N Y'}}</td>
-          {% else %}
-            <td><a href="{% url 'classroomenrollment_individual' class.classroom_id.classroom_id survey.student_id %}?next={% url 'student_detail' survey.student_id %}" class="btn btn-danger btn-xs" role="button">Drop this class</a></td>
-          {% endif %}
-          <td>{{class.classroom_id}}</td>
-        </tr>
-        {% endfor %}
+        <table class="table table-bordered table-striped table-hover" id="courseHistoryTable">
+          <thead>
+            <tr>
+              <th>Date Enrolled</th>
+              <th>Date Dropped</th>
+              <th>Course</th
 
+            </tr>
+          </thead>
+          <tbody>
+            {% for class in classroomenrollment %}
+            <tr>
+              <td>{{class.enrollment_date|date:'d N Y'}}</td>
+              {% if class.drop_date %}
+                <td>{{class.drop_date|date:'d N Y'}}</td>
+              {% else %}
+                <td><a href="{% url 'classroomenrollment_individual' class.classroom_id.classroom_id survey.student_id %}?next={% url 'student_detail' survey.student_id %}" class="btn btn-danger btn-xs" role="button">Drop this class</a></td>
+              {% endif %}
+              <td>{{class.classroom_id}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
         </table>
-        <a href="{% url 'classroomenrollment_form' %}" class="btn btn-success" role="button">Add a classroom</a>
-      </div>
+
     </div>
   </div>
   <div role="tabpanel" class="tab-pane" id="contact">
-    <h3>Contact Information</h3>
+    <h3>Contact Information <a href="{% url 'intake_update' survey.student_id %}?next={% url 'student_detail' survey.student_id %}" class="btn btn-xs btn-info" role="button"> +Update this information?</a></h3>
     <div class="col-md-12">
 
       <div class = "table-responsive">
@@ -269,7 +276,7 @@
 
   <div role="tabpanel" class="tab-pane" id="household">
     <div class="col-md-12">
-      <h3>Home of Origin</h3>
+      <h3>Home of Origin <a href="{% url 'intake_update' survey.student_id %}?next={% url 'student_detail' survey.student_id %}" class="btn btn-xs btn-info" role="button"> +Update this information?</a></h3>
         <div class = "table-responsive">
           <table class="table table-bordered table-striped table-hover text-center">
               <tr><td colspan=2><strong>Guardian 1: {% firstof survey.guardian1_relationship|relationship_display "Not Entered" %}</strong></td>
@@ -308,17 +315,24 @@
     </div>
   </div>
   <div role="tabpanel" class="tab-pane" id="notes">
-    <h3>Notes</h3>
-    <div class="table-responsive" style="min-height: 3em;">
-      <table class="table table-bordered table-striped table-hover">
-        <tr><td>{% firstof survey.notes "No notes entered" %}</td></tr>
+    <h3>Notes <a href="{% url 'intake_update' survey.student_id %}?next={% url 'student_detail' survey.student_id %}" class="btn btn-xs btn-info" role="button"> +Update this information?</a></h3>
+
+      <table class="table table-bordered table-striped table-hover" id="notesTable">
+        <thead>
+          <tr><th>Date</th><th>Note</th></tr>
+        </thead>
+        <tbody>
+          {% for note in notes %}
+          <tr><td>{{note.date|date:'d N Y'}}</td><td>{{note.note}}</td></tr>
+          {% endfor %}
+        </tbody>
       </table>
-    </div>
+
   </div>
   <div role="tabpanel" class="tab-pane" id="health">
-    <h3>Checkups</h3>
-    <div class="table-responsive" style="min-height: 3em;">
-      <table class="table table-bordered table-striped table-hover">
+    <h3>Checkups   <a href="{% url 'health_form' survey.student_id TODAY 'CHECKUP' %}?next={% url 'student_detail' survey.student_id %}#health" class="btn btn-xs btn-success" role="button">+ Add a checkup</a></h3>
+
+      <table class="table table-bordered table-striped table-hover" id="checkupTable">
         <thead>
           <tr><th style="width:4em;">Edit</th><th>Date</th><th>Height</th><th>Weight</th><th>Notes</th></tr>
         </thead>
@@ -333,11 +347,10 @@
           {% endfor %}
         </tbody>
       </table>
-    </div>
 
-    <h3>Dentist Visits</h3>
-    <div class="table-responsive" style="min-height: 3em;">
-      <table class="table table-bordered table-striped table-hover">
+    <h3>Dentist Visits <a href="{% url 'health_form' survey.student_id TODAY 'DENTAL' %}?next={% url 'student_detail' survey.student_id %}#health" class="btn btn-xs btn-success" role="button">+ Add a dental visit</a></h3>
+
+      <table class="table table-bordered table-striped table-hover" id="dentalTable">
         <thead>
           <tr><th style="width:4em;" >Edit</th>
               <th>Date</th>
@@ -368,8 +381,7 @@
           {% endfor %}
         </tbody>
       </table>
-    </div>
-    <a href="{% url 'health_form' survey.student_id %}?next={% url 'student_detail' survey.student_id %}#health" class="btn btn-success" role="button">Add a health/dental record</a>
+
   </div>
 </div>
 {% endblock %}
@@ -404,11 +416,54 @@ $(document).ready( function() {
         window.location.href = $url.join('/')
     });
   });
-  var table = $('#evaluationTable').DataTable({
+  var evaluationtable = $('#evaluationTable').DataTable({
       responsive: true,
       pageLength: 1,
       searching: false,
       bLengthChange: false,
+      bInfo: false,
+  });
+  var academictable = $('#academicTable').DataTable({
+      responsive: true,
+      pageLength: 5,
+      searching: false,
+      bLengthChange: false,
+      bInfo: false,
+  });
+  var disciplinetable = $('#disciplineTable').DataTable({
+      responsive: true,
+      pageLength: 1,
+      searching: false,
+      bLengthChange: false,
+      bInfo: false,
+  });
+  var coursehistorytable = $('#courseHistoryTable').DataTable({
+      responsive: true,
+      pageLength: 5,
+      searching: false,
+      bLengthChange: false,
+      bInfo: false,
+  });
+  var checkuptable = $('#checkupTable').DataTable({
+      responsive: true,
+      pageLength: 5,
+      searching: false,
+      bLengthChange: false,
+      bInfo: false,
+  });
+  var dentaltable = $('#dentalTable').DataTable({
+      responsive: true,
+      pageLength: 5,
+      searching: false,
+      bLengthChange: false,
+      bInfo: false,
+  });
+  var notestable = $('#notesTable').DataTable({
+      responsive: true,
+      pageLength: 5,
+      searching: false,
+      bLengthChange: false,
+      bInfo: false,
   });
 
 });

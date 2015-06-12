@@ -156,6 +156,7 @@ def intake_update(request,student_id=0):
             #then return
             return HttpResponseRedirect(next_url)
     else:
+        most_recent.date = TODAY
         form = IntakeUpdateForm(instance=most_recent)
 
     context = {'form': form, 'survey':survey, 'student_id':student_id, 'next':next_url}

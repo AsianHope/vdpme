@@ -117,7 +117,7 @@ def student_detail(request, student_id):
                                                         Q(faith_score=None)
     )
 
-
+    notes = survey.getNotes()
     discipline = survey.discipline_set.all().filter().order_by('-incident_date')
     dental = survey.health_set.all().filter(
                                         appointment_type='DENTAL'
@@ -160,7 +160,9 @@ def student_detail(request, student_id):
         'attendance_approved_absence':attendance_approved_absence,
         'attendance_unapproved_absence':attendance_unapproved_absence,
         'exit_survey':exit_survey,
-        'post_exit_survey':post_exit_survey}
+        'post_exit_survey':post_exit_survey,
+        'notes':notes,
+        'TODAY':TODAY}
     return render(request, 'mande/detail.html', context)
 '''
 *****************************************************************************
