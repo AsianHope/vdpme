@@ -14,8 +14,10 @@ from mande.models import ClassroomEnrollment
 from mande.models import Attendance
 from mande.models import Academic
 from mande.models import IntakeInternal
+from mande.models import StudentEvaluation
 from mande.models import Health
 from mande.models import GRADES
+from mande.models import SCORES
 
 from mande.utils import getEnrolledStudents
 
@@ -165,3 +167,15 @@ class HealthCheckupForm(forms.ModelForm):
             'pulped',
             'xray'
         ]
+
+class StudentEvaluationForm(forms.ModelForm):
+    date = forms.DateField(label='',widget=Html5DateInput)
+    academic_score = forms.ChoiceField(label='',required=False,choices=SCORES,widget=forms.Select(attrs={'class': 'narrow-select'}))
+    study_score = forms.ChoiceField(label='',required=False,choices=SCORES,widget=forms.Select(attrs={'class': 'narrow-select'}))
+    personal_score = forms.ChoiceField(label='',required=False,choices=SCORES,widget=forms.Select(attrs={'class': 'narrow-select'}))
+    hygiene_score = forms.ChoiceField(label='',required=False,choices=SCORES,widget=forms.Select(attrs={'class': 'narrow-select'}))
+    faith_score = forms.ChoiceField(label='',required=False,choices=SCORES,widget=forms.Select(attrs={'class': 'narrow-select'}))
+    #comments = forms.TextField(label='')
+    class Meta:
+        model = StudentEvaluation
+        exclude = []

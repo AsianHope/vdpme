@@ -55,6 +55,7 @@ GRADES = (
 )
 
 SCORES = (
+	(None, '-----'),
 	(1,'1 - Little to no Growth'),
 	(2,'2'),
 	(3,'3'),
@@ -114,6 +115,7 @@ RELATIONSHIPS = (
 	('OTHER','Other'),
 	('NONE','No guardian')
 )
+
 class School(models.Model):
 	school_id = models.AutoField(primary_key=True)
 	school_name = models.CharField('School Code',max_length=128)
@@ -251,15 +253,24 @@ class IntakeUpdate(models.Model):
 class StudentEvaluation(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
 	date = models.DateField('Observation Date')
-	academic_score = models.IntegerField('Academic Growth Score')
-	study_score = models.IntegerField('Study/Learning Skills Score')
-	personal_score = models.IntegerField('Life Skills/Personal Development Score')
-	hygiene_score = models.IntegerField('Hygeine Score')
-	faith_score = models.IntegerField('Christian Growth Score')
+	academic_score = models.IntegerField('Academic Growth Score',choices=SCORES,blank=True,null=True,default=None)
+	#academic_notes = models.CharField('Academic Growth Notes',blank=True,null=True)
+	study_score = models.IntegerField('Study/Learning Skills Score',choices=SCORES,blank=True,null=True,default=None)
+	#study_notes = models.CharField('Academic Growth Notes',blank=True,null=True)
+	personal_score = models.IntegerField('Life Skills/Personal Development Score',choices=SCORES,blank=True,null=True,default=None)
+	#personal_notes = models.CharField('Life Skills/Personal Development Notes',blank=True,null=True)
+	hygiene_score = models.IntegerField('Hygeine Knowledge Score',choices=SCORES,blank=True,null=True,default=None)
+	#hygiene_notes = models.CharField('Hygeine Knowledge Notes',blank=True,null=True)
+	faith_score = models.IntegerField('Christian Growth Score',choices=SCORES,blank=True,null=True,default=None)
+	#faith_notes = models.CharField('Christian Growth Notes',blank=True,null=True)
+	#replacing individual notes fields with overall comments
 	comments = models.TextField('Overall comments',blank=True)
 
 	def __unicode__(self):
 		return unicode(self.date)+' - '+unicode(self.student_id)
+	class Meta:
+		unique_together = (('student_id', 'date'),)
+
 
 class SpiritualActivitiesSurvey(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
@@ -272,6 +283,7 @@ class SpiritualActivitiesSurvey(models.Model):
 	personal_prayer_aloud = models.CharField('Have you prayed aloud in the last week?',max_length=2,choices=YN,default='NA')
 	def __unicode__(self):
 		return unicode(self.date)+' - '+unicode(self.student_id)
+
 
 class ExitSurvey(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)

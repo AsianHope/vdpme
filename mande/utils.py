@@ -5,7 +5,7 @@ from mande.models import IntakeSurvey
 from mande.models import IntakeInternal
 
 from django.core.exceptions import ObjectDoesNotExist
-def getEnrolledStudents():
+def getEnrolledStudents(grade_id=None):
     ''' enrolled students are those who have:
           - completed an intake survey
           - have completed an internal intake
@@ -28,6 +28,16 @@ def getEnrolledStudents():
     not_enrolled = surveys.exclude(student_id__in=enrolled_students).values_list('student_id',flat=True)
     #filter out students who aren't enrolled, as detailed above
     enrolled = surveys.exclude(student_id__in=not_enrolled)
+
+    #if we have a grade_id, return only a subset of students enrolled in that grade
+    if grade_id:
+        in_grade_id = []
+        for student in enrolled:
+            if getStudentGradebyID(student.student_id) == grade_id:
+                in_grade_id.append(student)
+
+        enrolled = in_grade_id
+
     return enrolled
 
 def getStudentGradebyID(student_id):

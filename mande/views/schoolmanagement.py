@@ -34,6 +34,7 @@ from mande.models import NotificationLog
 from mande.models import Health
 from mande.models import AttendanceLog
 from mande.models import IntakeInternal
+from mande.models import StudentEvaluation
 
 from mande.models import GRADES
 from mande.models import ATTENDANCE_CODES
@@ -54,6 +55,7 @@ from mande.forms import AttendanceForm
 from mande.forms import AcademicForm
 from mande.forms import IntakeInternalForm
 from mande.forms import HealthForm
+from mande.forms import StudentEvaluationForm
 
 from mande.utils import getEnrolledStudents
 from mande.utils import getStudentGradebyID
@@ -90,8 +92,9 @@ Student Detail
 '''
 def student_detail(request, student_id):
     survey = IntakeSurvey.objects.get(pk=student_id)
-    intake = survey.intakeinternal_set.all().filter().order_by('-enrollment_date')
-
+    intake = survey.intakeinternal_set.all().filter().order_by(
+                                                        '-enrollment_date'
+                                                    )
     try:
         exit_survey = survey.exitsurvey_set.all()[0]
     except IndexError:
@@ -105,6 +108,15 @@ def student_detail(request, student_id):
     academics = survey.academic_set.all().filter(
         Q(test_grade_khmer__isnull=False) &
         Q(test_grade_math__isnull=False)).order_by('-test_level')
+
+    evaluations = survey.studentevaluation_set.all().order_by('-date').exclude(
+                                                        Q(academic_score=None)&
+                                                        Q(study_score=None)&
+                                                        Q(personal_score=None)&
+                                                        Q(hygiene_score=None)&
+                                                        Q(faith_score=None)
+    )
+
 
     discipline = survey.discipline_set.all().filter().order_by('-incident_date')
     dental = survey.health_set.all().filter(
@@ -136,6 +148,7 @@ def student_detail(request, student_id):
         'survey': survey.getRecentFields(),
         'recent_intake':recent_intake,
         'academics':academics,
+        'evaluations':evaluations,
         'current_grade':current_grade,
         'discipline':discipline,
         'dental':dental,
@@ -511,3 +524,123 @@ def academic_form_single(request, student_id=0):
     context = {'form': form,'student_id':student_id}
 
     return render(request, 'mande/academicformsingle.html',context)
+
+
+'''
+*****************************************************************************
+Student Evaluation Form
+ - process a StudentEvaluationForm and log the action
+*****************************************************************************
+'''
+def studentevaluation_form(request, school_id, date=TODAY, grade_id=None):
+    school = School.objects.get(pk=school_id)
+    warning = ''
+    message = ''
+    students = getEnrolledStudents(int(grade_id))
+    #pre instantiate data for this form so that we can update the whole queryset later
+    students_at_school_id = []
+    for student in students:
+        if student.site == school:
+            StudentEvaluation.objects.get_or_create(
+                                            student_id=student,date=date)
+            students_at_school_id.append(student.student_id)
+
+    #lets only work with the students at the specified school_id
+    students = students_at_school_id
+    student_evaluations = StudentEvaluation.objects.filter(student_id__in=students,
+                                                date=date)
+
+
+    StudentEvaluationFormSet = modelformset_factory(StudentEvaluation, form=StudentEvaluationForm, extra=0)
+
+    if request.method == 'POST':
+        formset = StudentEvaluationFormSet(request.POST)
+        print "Is formset valid?"
+        if formset.is_valid():
+            print "yes!s"
+            formset.save()
+            message = "Saved."
+            #clean up the mess we created making blank rows to update.
+            StudentEvaluation.objects.filter(
+                                        Q(academic_score=None)&
+                                        Q(study_score=None)&
+                                        Q(personal_score=None)&
+                                        Q(hygiene_score=None)&
+                                        Q(faith_score=None)
+                                    ).delete()
+            if grade_id is None:
+                message = 'Recorded student evaluations for '+str(school)
+            else:
+                message = ('Recorded student evaluations for '+
+                            str(dict(GRADES)[int(grade_id)])+
+                            ' at '+str(school))
+            log = NotificationLog(  user=request.user,
+                                    text=message,
+                                    font_awesome_icon='fa-calculator')
+            log.save()
+
+    else:
+        formset = StudentEvaluationFormSet(queryset = student_evaluations)
+    context= {  'school':school,
+                'grade_id': grade_id,
+                'students':students,
+                'date':date,
+                'formset':formset,
+                'warning': mark_safe(warning),
+                'message': message,
+                'grades': dict(GRADES)
+    }
+
+    return render(request, 'mande/studentevaluationform.html', context)
+'''
+*****************************************************************************
+Student Evaluation Select
+ - display a list of all grades for each school
+*****************************************************************************
+'''
+def studentevaluation_select(request):
+    schools = School.objects.all()
+    context = { 'schools':schools,
+                'grades': dict(GRADES),
+                'today': TODAY,
+    }
+    return render(request, 'mande/studentevaluationselect.html',context)
+
+'''
+*****************************************************************************
+Student Evaluation Form Single
+ - process a single StudentEvaluationForm for requested student and log the action
+*****************************************************************************
+'''
+def studentevaluation_form_single(request, student_id=0):
+    form = StudentEvaluationForm()
+    date = request.POST.get('date') if request.method=='POST' else TODAY
+
+    if student_id > 0:
+        try:
+            instance = StudentEvaluation.objects.get(student_id=IntakeSurvey.objects.get(pk=student_id),
+                                  date=date)
+            form = StudentEvaluationForm(instance=instance)
+        except ObjectDoesNotExist:
+            form = StudentEvaluationForm({
+                    'student_id':student_id,
+                    'date':TODAY})
+
+    if request.method == 'POST':
+        form = StudentEvaluationForm(request.POST,instance=instance)
+        if form.is_valid():
+            #process
+            instance = form.save()
+            message = 'Recorded student evaluation for '+instance.student_id.name
+            log = NotificationLog(user=request.user,
+                                  text=message,
+                                  font_awesome_icon='fa-calculator')
+            log.save()
+            #then return
+            return HttpResponseRedirect(
+                        reverse('student_detail',
+                                kwargs={'student_id':instance.student_id.student_id}))
+
+    context = {'form': form,'student_id':student_id}
+
+    return render(request, 'mande/studentevaluationformsingle.html',context)

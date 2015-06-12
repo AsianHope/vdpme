@@ -119,6 +119,54 @@
           <a href="{% url 'academic_form_single' survey.student_id %}" class="btn btn-success" role="button">Add an achievement test</a>
       </div>
     </div>
+    <div class = "col-md-12">
+      <h3>Student Evaluations</h3>
+      <table class="table table-bordered table-striped table-hover" id="evaluationTable">
+        <thead>
+          <tr><th>Date</th><th>Evaluation</th>
+        </thead>
+        <tbody>
+      {% for evaluation in evaluations %}
+
+      <tr>
+        <td>{{evaluation.date|date:'d N Y'}}</td>
+        <td>
+
+          <table class="table table-bordered table-striped table-hover">
+            <tr>
+              <th>Academic</th>
+              <th>Life Skills/Personal Development</th>
+              <th>Study/Learning Skills</th>
+              <th>Hygeine Knowledge</th>
+              <th>Christian Growth</th>
+            </tr>
+
+            <tr>
+              <td>{{evaluation.academic_score}}</td>
+              <td>{{evaluation.study_score}}</td>
+              <td>{{evaluation.personal_score}}</td>
+              <td>{{evaluation.hygiene_score}}</td>
+              <td>{{evaluation.faith_score}}</td>
+            </tr>
+            <tr>
+              <td colspan=5>
+                <strong>General Comments</strong>
+              </td>
+            </tr>
+            <tr>
+              <td colspan=6>
+                {{evaluation.comments}}
+              </td>
+            </tr>
+            </table>
+      </td>
+    </tr>
+          {% endfor %}
+    </tbody>
+    </table>
+          <a href="{% url 'studentevaluation_form_single' survey.student_id %}" class="btn btn-info" role="button">Add a student evaluation</a>
+
+    </div>
     <div class="col-md-6">
       <h3>Discipline</h3>
     <table class="table table-bordered table-striped table-hover">
@@ -326,6 +374,9 @@
 </div>
 {% endblock %}
 {% block script %}
+<!-- DataTables JavaScript -->
+   <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+   <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
 
 <script type="text/javascript">
 // Javascript to enable link to tab
@@ -353,6 +404,13 @@ $(document).ready( function() {
         window.location.href = $url.join('/')
     });
   });
+  var table = $('#evaluationTable').DataTable({
+      responsive: true,
+      pageLength: 1,
+      searching: false,
+      bLengthChange: false,
+  });
+
 });
 </script>
 {% endblock %}

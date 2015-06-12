@@ -22,3 +22,6 @@ ul.buttonlist{
 ul.buttonlist li{
   margin-bottom: .5em;
 }
+.narrow-select.form-control{
+  width:6em;
+}

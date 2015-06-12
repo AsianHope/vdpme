@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load mandefilters %}
+{% block title %}
+Please select a school.
+{% endblock %}
+
+{% block content %}
+{% for school in schools %}
+  <div class ="col-md-3">
+    <h1>{{school}}</h1>
+    <ul>
+      <li><a href = "{% url 'studentevaluation_form' school.school_id today %}">All Students</a></li>
+      {% for grade_id,grade in grades.items %}
+      <li><a href="{% url 'studentevaluation_form' school.school_id today %}{{grade_id}}/">{{grade}}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endfor %}
+{% endblock %}

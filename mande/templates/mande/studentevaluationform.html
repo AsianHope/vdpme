@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load mandefilters %}
+{% load bootstrap %}
+{% block title %}
+Student Evaluations for {{school}} ({{ grade_id|grade_by_id }})
+{% endblock %}
+
+{% block content %}
+
+<div class="col-md-9">
+  {% if grade_id %}
+  <form method="post" action="{% url 'studentevaluation_form' school.school_id date grade_id %}">
+  {% else %}
+  <form method="post" action="{% url 'studentevaluation_form' school.school_id date %}">
+  {% endif %}
+    {% csrf_token %}
+    {{ formset.management_form }}
+
+
+          {% for form in formset %}
+          <div class="form-group table-responsive">
+            {{form.id}}
+          <table class="table table-bordered table-striped table-hover" id="academicTable">
+            <thead>
+              <tr>
+                <th colspan=4><h3><a href="{% url 'student_detail' form.student_id.value%}">
+                        {{form.student_id.value}} - {{form.student_id.value|name_by_sid}}</a>
+                        {{ form.student_id.as_hidden }}{{ form.date.as_hidden }}</h3></th>
+                <th><h3>{{forloop.counter}} of {{formset|length}}</h3></th>
+              </tr>
+              <tr>
+              <th>Academic</th>
+              <th>Life/Personal
+              <th>Study/Learning</th>
+              <th>Hygeine</th>
+              <th>Christian Growth</th>
+              </tr></thead>
+            <tbody>
+              <tr>
+                <td>{{ form.academic_score|bootstrap }}</td>
+                <td>{{ form.study_score|bootstrap }}</td>
+                <td>{{ form.personal_score|bootstrap }}</td>
+                <td>{{ form.hygiene_score|bootstrap }}</td>
+                <td>{{ form.faith_score|bootstrap }}</td>
+            </tr>
+            <tr>
+              <td colspan=7>{{form.comments|bootstrap}}</strong>  <button class="btn btn-primary">Submit</button></td>
+            </tr>
+          </tbody>
+
+          <tfoot>
+          </tfoot>
+        </table>
+      </div>
+          {% endfor %}
+
+              <button class="btn btn-primary">Submit</button>
+
+
+
+
+
+  </form>
+</div>
+
+
+<div class="col-md-3">
+      <input type="date" name="attendance_date" class="form-control" id="datePicker"/>
+      <p style="color:red">{{ warning }}
+
+      </p>
+      <p style="color:green">{{ message }}</p>
+
+      <ul class="buttonlist">
+      {% for grade_id,grade in grades.items %}
+      <li><a role="button" class="btn btn-small btn-info" href="{% url 'studentevaluation_form' school.school_id date %}{{grade_id}}/">{{grade}}</a></li>
+      {% endfor %}
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+<!-- DataTables JavaScript -->
+<script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+<script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript">
+
+$(document).ready( function() {
+    $('#datePicker').val('{{date}}');
+
+    $(function() {
+      $('#datePicker').change(function() {
+          //split on /
+          $url = window.location.href.split('/')
+          //replace the final value (the date)
+          $url[$url.length-3] = $(this).val()
+          //rewrite the url with the new date in place
+          window.location.href = $url.join('/')
+      });
+    });
+
+    // $('#academicTable').DataTable({
+    //   responsive: true,
+    //   pageLength: 300,
+    //   columnDefs: [
+    //     {'width': '10px', 'targets':0}
+    //   ]
+    // });
+
+});
+
+</script>
+{% endblock %}
