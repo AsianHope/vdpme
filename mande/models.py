@@ -199,9 +199,15 @@ class IntakeSurvey(models.Model):
 			for field in self._meta.fields:
 				try:
 					attr = getattr(update,field.name)
-					if attr is not None and len(attr)>0:
-						recent[field.name] = attr #most recent non null update wins!
-				except (AttributeError, TypeError):
+					if attr is not None and field.name!='student_id':
+						if isinstance(attr, (str, unicode)):
+							if len(attr)>0: #for unicode things, only if they're of value
+
+								recent[field.name] = attr #most recent non null update wins!
+						else:
+							recent[field.name] = attr #most recent non null update wins!
+				except (AttributeError, TypeError) as e:
+					#print 'caught:  '+str(type(e))+' while processing '+field.name+'()'+str(type(attr))+')'
 					pass
 		return recent
 
