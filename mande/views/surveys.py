@@ -135,6 +135,7 @@ Intake Update
 '''
 def intake_update(request,student_id=0):
     next_url = request.GET.get('next')
+    next_tab = request.GET.get('tab')
     try:
         survey = IntakeSurvey.objects.get(pk=student_id)
     except ObjectDoesNotExist:
@@ -154,12 +155,12 @@ def intake_update(request,student_id=0):
                                     font_awesome_icon='fa-upload')
             log.save()
             #then return
-            return HttpResponseRedirect(next_url)
+            return HttpResponseRedirect(next_url+'#'+next_tab)
     else:
         most_recent.date = TODAY
         form = IntakeUpdateForm(instance=most_recent)
 
-    context = {'form': form, 'survey':survey, 'student_id':student_id, 'next':next_url}
+    context = {'form': form, 'survey':survey, 'student_id':student_id, 'next':next_url, 'tab':next_tab}
     return render(request, 'mande/intakeupdate.html', context)
 '''
 *****************************************************************************
@@ -349,7 +350,6 @@ def health_form(request, student_id=0, appointment_date=TODAY, appointment_type=
                 else:
                     form = HealthForm()
 
-        print next_url
         context = {'form': form,'student_id':student_id,'next_url':next_url}
 
         return render(request, 'mande/healthform.html',context)
