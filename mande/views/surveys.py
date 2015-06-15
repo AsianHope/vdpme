@@ -138,13 +138,11 @@ def intake_update(request,student_id=0):
     next_tab = request.GET.get('tab')
     try:
         survey = IntakeSurvey.objects.get(pk=student_id)
+        most_recent = survey.getRecentFields()
     except ObjectDoesNotExist:
         survey = None
-    try:
-        update = IntakeUpdate.objects.filter(student_id=student_id).latest('date')
-        most_recent = update
-    except ObjectDoesNotExist:
-        most_recent = survey
+        most_recent = {}
+
     if request.method == 'POST':
         form = IntakeUpdateForm(request.POST)
         if form.is_valid():
@@ -157,8 +155,9 @@ def intake_update(request,student_id=0):
             #then return
             return HttpResponseRedirect(next_url+'#'+next_tab)
     else:
-        most_recent.date = TODAY
-        form = IntakeUpdateForm(instance=most_recent)
+        #change the date today, for convenience
+        most_recent['date'] = TODAY
+        form = IntakeUpdateForm(most_recent)
 
     context = {'form': form, 'survey':survey, 'student_id':student_id, 'next':next_url, 'tab':next_tab}
     return render(request, 'mande/intakeupdate.html', context)
