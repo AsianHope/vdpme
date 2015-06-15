@@ -208,13 +208,10 @@ def post_exit_survey(request,student_id):
     #get students current info for pre-filling the survey
     try:
         survey = IntakeSurvey.objects.get(pk=student_id)
+        most_recent = survey.getRecentFields()
     except ObjectDoesNotExist:
         survey = None
-    try:
-        update = IntakeUpdate.objects.filter(student_id=student_id).latest('date')
-        most_recent = update
-    except ObjectDoesNotExist:
-        most_recent = survey
+        most_recent = None
 
     if request.method == 'POST':
         form = PostExitSurveyForm(request.POST)
@@ -228,20 +225,7 @@ def post_exit_survey(request,student_id):
             #then return
             return HttpResponseRedirect(reverse('post_exit_survey'))
     else:
-        form = PostExitSurveyForm({
-            'student_id':student_id,
-            'exit_date':exit.exit_date,
-            'early_exit':exit.early_exit,
-            'father_profession':most_recent.father_profession,
-            'father_employment':most_recent.father_employment,
-            'mother_profession':most_recent.mother_profession,
-            'mother_employment':most_recent.father_employment,
-            'minors':most_recent.minors,
-            'enrolled':most_recent.enrolled,
-            'grade_current':most_recent.grade_current,
-            'grade_previous':most_recent.grade_last,
-            'reasons':most_recent.reasons,
-        })
+        form = PostExitSurveyForm(most_recent)
 
     context = {'form': form,'student_id':student_id }
     return render(request, 'mande/postexitsurvey.html', context)
