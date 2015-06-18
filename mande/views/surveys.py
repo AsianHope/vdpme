@@ -37,7 +37,6 @@ from mande.models import IntakeInternal
 
 from mande.models import GRADES
 from mande.models import ATTENDANCE_CODES
-from mande.models import TODAY
 
 from mande.forms import IntakeSurveyForm
 from mande.forms import IntakeUpdateForm
@@ -63,6 +62,7 @@ from mande.utils import studentAtSchoolGradeLevel
 from mande.utils import studentAtAgeAppropriateGradeLevel
 
 from django.contrib.auth.models import User
+TODAY = date.today().isoformat()
 
 '''
 *****************************************************************************

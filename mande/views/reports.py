@@ -61,9 +61,9 @@ from mande.utils import studentAtSchoolGradeLevel
 from mande.utils import studentAtAgeAppropriateGradeLevel
 
 from django.contrib.auth.models import User
-from mande.models import TODAY
 
 
+TODAY = date.today().isoformat()
 TOO_YOUNG = 4
 TOO_OLD = 18
 '''
