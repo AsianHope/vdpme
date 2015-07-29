@@ -74,7 +74,6 @@ def dashboard(request):
     ''' enrolled students are those who have:
           - completed an intake survey
           - have completed an internal intake
-          - have an enrollment date on their internal intake before today
           AND
               - do not have an exit survey
               OR
@@ -92,7 +91,6 @@ def dashboard(request):
 
     #figure out students who have internal intakes with enrollment dates before today
     enrolled_students = IntakeInternal.objects.all(
-                                             ).filter(enrollment_date__lte=TODAY
                                              ).values_list('student_id',flat=True)
     #figure out which students don't have internal intakes
     unenrolled_students = surveys.exclude(student_id__in=enrolled_students) #pass this queryset on
