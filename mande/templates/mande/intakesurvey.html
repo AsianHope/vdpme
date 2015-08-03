@@ -18,7 +18,7 @@
 {% else %}
 <form action = "{% url 'intake_survey' %}" method="post">
 {% endif %}
-    {{ form|bootstrap }}
+    {{ form | bootstrap }}
     {% csrf_token %}
     <div class="col-md-12">
       <button type="submit" class="btn btn-primary">Submit</button>

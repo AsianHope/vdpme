@@ -257,6 +257,24 @@ def attendance_days(request,classroom_id,attendance_date=TODAY):
         #TODO: figure out a way to not group requests for slimmer logging
         return render(request,'mande/attendancedays.html','')
 
+    #copy this calendar to all other calendars at the site from today forward
+    elif request.method == 'GET' and request.GET.get('autoapply'):
+
+        attendance_days = AttendanceDayOffering.objects.all().filter(classroom_id=classroom).filter(date__gte=TODAY)
+        site_classrooms = Classroom.objects.all(
+                    ).filter(school_id=classroom.school_id
+                    ).exclude(classroom_id=classroom.classroom_id)
+
+        for site_class in site_classrooms:
+            AttendanceDayOffering.objects.filter(classroom_id=site_class).filter(date__gte=TODAY).delete()
+            for attendance_day in attendance_days:
+                AttendanceDayOffering.objects.get_or_create(classroom_id=site_class,
+                                                            date = attendance_day.date,
+                                                            offered = 'Y')
+
+
+
+        return render(request,'mande/attendancedays.html','')
     #otherwise display the calendar
     else:
         attendance_days = AttendanceDayOffering.objects.filter(
