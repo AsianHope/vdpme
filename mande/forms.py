@@ -170,11 +170,11 @@ class HealthCheckupForm(forms.ModelForm):
 
 class StudentEvaluationForm(forms.ModelForm):
     date = forms.DateField(label='',widget=Html5DateInput)
-    academic_score = forms.ChoiceField(label='',required=False,choices=SCORES,widget=forms.Select(attrs={'class': 'narrow-select'}))
-    study_score = forms.ChoiceField(label='',required=False,choices=SCORES,widget=forms.Select(attrs={'class': 'narrow-select'}))
-    personal_score = forms.ChoiceField(label='',required=False,choices=SCORES,widget=forms.Select(attrs={'class': 'narrow-select'}))
-    hygiene_score = forms.ChoiceField(label='',required=False,choices=SCORES,widget=forms.Select(attrs={'class': 'narrow-select'}))
-    faith_score = forms.ChoiceField(label='',required=False,choices=SCORES,widget=forms.Select(attrs={'class': 'narrow-select'}))
+    academic_score = forms.IntegerField(label='',required=False,min_value=0,max_value=100)
+    study_score = forms.IntegerField(label='',required=False,min_value=0,max_value=100)
+    personal_score = forms.IntegerField(label='',required=False,min_value=0,max_value=100)
+    hygiene_score = forms.IntegerField(label='',required=False,min_value=0,max_value=100)
+    faith_score = forms.IntegerField(label='',required=False,min_value=0,max_value=100)
     #comments = forms.TextField(label='')
     class Meta:
         model = StudentEvaluation

@@ -132,8 +132,8 @@
       {% for evaluation in evaluations %}
 
           <tr>
-            <td>{{evaluation.date|date:'d N Y'}}</td>
-            <td>
+            <td class="col-md-2">{{evaluation.date|date:'d N Y'}}</td>
+            <td class ="col-md-10">
 
               <table class="table table-bordered table-striped table-hover">
                 <tr>
@@ -145,11 +145,11 @@
                 </tr>
 
                 <tr>
-                  <td>{{evaluation.academic_score}}</td>
-                  <td>{{evaluation.study_score}}</td>
-                  <td>{{evaluation.personal_score}}</td>
-                  <td>{{evaluation.hygiene_score}}</td>
-                  <td>{{evaluation.faith_score}}</td>
+                  <td class="col-md-2">{{evaluation.academic_score}}%</td>
+                  <td class="col-md-2">{{evaluation.study_score}}%</td>
+                  <td class="col-md-2">{{evaluation.personal_score}}%</td>
+                  <td class="col-md-2">{{evaluation.hygiene_score}}%</td>
+                  <td class="col-md-2">{{evaluation.faith_score}}%</td>
                 </tr>
                 <tr>
                   <td colspan=5>
