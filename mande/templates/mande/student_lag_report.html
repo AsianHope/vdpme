@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load mandefilters %}
+{% block title %}
+Student Lag Report
+{% endblock %}
+
+{% block content %}
+<div class="col-md-9">
+      <table class="table table-bordered table-striped table-hover" id="attendanceReportTable">
+        <thead><tr>
+          <th>Site</th>
+          <th>Student</th>
+          <th>Current Grade</th>
+          <th>Age Appropriate Grade</th>
+          <th>Lag</th>
+
+        </tr></thead>
+        <tbody>
+          {% for student,lag in students_lag.items %}
+          <tr>
+              <td>{{ student.site }}</td>
+              <td><a href="{% url 'student_detail' student.student_id %}">{{ student }}</a></td>
+              <td>{{student.current_vdp_grade}}</td>
+              <td>{{student.age_appropriate_grade}}</td>
+              <td>{{lag}}</a></td>
+              </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+    </div>
+
+
+    <div class="col-md-3">
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+ <!-- DataTables JavaScript -->
+    <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+$('#datePicker').val('{{attendance_date}}');
+
+$(document).ready(function(){
+  $('#attendanceReportTable').DataTable({
+      responsive: true,
+      pageLength: 25,
+      order: [[0,'asc']],
+  });
+});
+</script>
+
+{% endblock %}

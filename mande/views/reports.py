@@ -59,6 +59,7 @@ from mande.utils import getEnrolledStudents
 from mande.utils import getStudentGradebyID
 from mande.utils import studentAtSchoolGradeLevel
 from mande.utils import studentAtAgeAppropriateGradeLevel
+from mande.utils import getStudentAgeAppropriateGradeLevel
 
 from django.contrib.auth.models import User
 
@@ -269,3 +270,22 @@ def student_absence_report(request):
 
     return render(request, 'mande/student_absence_report.html',
                                 {'attendance_by_sid':attendance_by_sid, 'attendancecodes':attendancecodes})
+
+
+'''
+*****************************************************************************
+Student Lag Report
+ - makes a summary of all students and lists their daily absences/presence
+*****************************************************************************
+'''
+def student_lag_report(request):
+    enrolled_students = getEnrolledStudents()
+    students_lag = {}
+    for student in enrolled_students:
+        #only students in the scope of grade levels
+        if student.current_vdp_grade() < 12:
+            students_lag[student] = student.age_appropriate_grade() - student.current_vdp_grade()
+            print student.current_vdp_grade()
+
+    return render(request, 'mande/student_lag_report.html',
+                                {'students_lag':students_lag})

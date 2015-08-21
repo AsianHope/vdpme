@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import datetime
 from datetime import date
+from django.core.exceptions import ObjectDoesNotExist
 
 GENDERS = (
 	('M', 'Male'),
@@ -16,8 +17,8 @@ YN = (
 
 SITES = (
 	(1,'PKPN'),
-	(2,'PPT'),
-	(3,'TK')
+	(2,'TK'),
+	(3,'PPT')
 
 )
 EMPLOYMENT = (
@@ -221,6 +222,36 @@ class IntakeSurvey(models.Model):
 			notes.append({'date':update.date,'note':update.notes})
 
 		return notes;
+
+	def current_vdp_grade(self):
+		academics = self.academic_set.all().filter().order_by('-test_level')
+		intake = self.intakeinternal_set.all().filter().order_by('-enrollment_date')
+		if len(intake) > 0:
+			recent_intake = intake[0]
+		else:
+			recent_intake = 'Not enrolled'
+
+		try:
+		    #their current grade is one more than that of the last test they passed
+			current_grade = (academics.filter(promote=True).latest('test_level').test_level)+1
+		except ObjectDoesNotExist:
+			current_grade = recent_intake.starting_grade if type(recent_intake) != str else 0
+
+		return current_grade
+
+	def age_appropriate_grade(self):
+		if self.dob == None:
+		    return 'DOB not entered'
+
+		#Look at calendar year child was born in to calculate their age
+		approximate_age = date.today().year - self.dob.year
+		#if today is before grades change in August
+		if date.today().month < 8:
+		    age_appropriate_grade = approximate_age - 6
+		else:
+		    age_appropriate_grade = approximate_age - 5
+
+		return age_appropriate_grade
 
 class IntakeInternal(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey,unique=True)

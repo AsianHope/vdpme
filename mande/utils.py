@@ -80,8 +80,7 @@ def studentAtSchoolGradeLevel(student_id):
     else:
         return False
 
-def studentAtAgeAppropriateGradeLevel(student_id):
-    # no record, no dice.
+def getStudentAgeAppropriateGradeLevel(student_id):
     try:
         survey = IntakeSurvey.objects.get(pk=student_id)
     except ObjectDoesNotExist:
@@ -101,6 +100,22 @@ def studentAtAgeAppropriateGradeLevel(student_id):
         age_appropriate_grade = approximate_age - 6
     else:
         age_appropriate_grade = approximate_age - 5
+
+    return age_appropriate_grade
+
+def studentAtAgeAppropriateGradeLevel(student_id):
+    # no record, no dice.
+    try:
+        survey = IntakeSurvey.objects.get(pk=student_id)
+    except ObjectDoesNotExist:
+        return False
+    # no DOB, no dice
+    if survey.dob == None:
+        return 'DOB not entered'
+
+    current_grade = getStudentGradebyID(student_id)
+    age_appropriate_grade = getStudentAgeAppropriateGradeLevel(student_id)
+
     if current_grade >= age_appropriate_grade:
         return True
     else:
