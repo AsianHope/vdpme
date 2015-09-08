@@ -55,6 +55,8 @@ def getStudentGradebyID(student_id):
     try:
         #their current grade is one more than that of the last test they passed
         current_grade = (academics.filter(promote=True).latest('test_level').test_level)+1
+        if current_grade > 6:
+            current_grade = 50 #magic numbers are bad. should pull this from models.py
     except ObjectDoesNotExist:
         current_grade = recent_intake.starting_grade if type(recent_intake) != str else 0
 
