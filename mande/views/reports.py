@@ -299,7 +299,11 @@ Student Evaluation Report
 *****************************************************************************
 '''
 def student_evaluation_report(request):
-    evaluations = StudentEvaluation.objects.all()
+    evaluations = StudentEvaluation.objects.all().exclude(  academic_score=None,
+                                                            study_score=None,
+                                                            personal_score=None,
+                                                            hygiene_score=None,
+                                                            faith_score=None)
 
     return render(request, 'mande/studentevaluationreport.html',
                                 {'evaluations':evaluations})
