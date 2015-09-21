@@ -35,6 +35,7 @@ from mande.models import NotificationLog
 from mande.models import Health
 from mande.models import AttendanceLog
 from mande.models import IntakeInternal
+from mande.models import StudentEvaluation
 
 from mande.models import GRADES
 from mande.models import ATTENDANCE_CODES
@@ -289,3 +290,16 @@ def student_lag_report(request):
 
     return render(request, 'mande/student_lag_report.html',
                                 {'students_lag':students_lag})
+
+
+'''
+*****************************************************************************
+Student Evaluation Report
+ - lists all student evaluations
+*****************************************************************************
+'''
+def student_evaluation_report(request):
+    evaluations = StudentEvaluation.objects.all()
+
+    return render(request, 'mande/studentevaluationreport.html',
+                                {'evaluations':evaluations})
