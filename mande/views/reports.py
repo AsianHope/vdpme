@@ -132,7 +132,7 @@ Data Audit
  - Generate a list of student records with missing or anomalous data
 *****************************************************************************
 '''
-def data_audit(request,type='ALL'):
+def data_audit(request,audit_type='ALL'):
     #modelfields = model_to_dict(IntakeSurvey.objects.all()[0])
 
     students = getEnrolledStudents()
@@ -146,13 +146,23 @@ def data_audit(request,type='ALL'):
         text = 'Missing '
         resolution = reverse('intake_update',kwargs={'student_id':student.student_id})
 
-        temp = IntakeSurveyForm(data=student.getRecentFields())
+        student_data = student.getRecentFields()
+        temp = IntakeSurveyForm(data=student_data)
         for field in temp:
             #blank fields
-            if field.data is None or len(unicode(field.data))==0:
-                if field.label!="Notes":
+            if ((field.data is None or len(unicode(field.data))==0) and
+                field.label!="Notes" and
+               (field.name=='reasons' and student_data['enrolled']=='N')): #students who aren't enrolled and have no reason
                     addAnomaly(anomalies, student, text+field.label, resolution)
                     filters.append(text+field.label)
+
+        '''students who have grade and enrollment status mismatched'''
+        if ((student_data['grade_last']<0 and student_data['enrolled']=='N') or #students who aren't enrolled and have no last grade
+            (student_data['grade_current']<0 and student_data['enrolled']=='Y')): #students who are enrolled but don't have a current grade
+            text = 'Enrollment status and grade data mismatch'
+            resolution = reverse('intake_survey',kwargs={'student_id':student.student_id})
+            addAnomaly(anomalies, student, text, resolution)
+            filters.append(text)
 
         '''students who are quite young or quite old'''
         if (student.dob.year > (datetime.now().year-TOO_YOUNG)) or (student.dob.year<datetime.now().year-TOO_OLD):
