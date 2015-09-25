@@ -51,7 +51,9 @@ GRADES = (
 	(12,'Grade 12'),
 	(50,'English'),
 	(60,'Computers'),
-	(70,'Vietnamese')
+	(70,'Vietnamese'),
+	(999,'No Grade / Never Studied')
+
 )
 
 SCORES = (
