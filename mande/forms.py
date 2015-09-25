@@ -40,6 +40,7 @@ class IntakeSurveyForm(forms.ModelForm):
         'minors_encouraged',
         'minors_training',
         'minors_training_type',
+        'grade_appropriate'
         ]
 
 class IntakeInternalForm(forms.ModelForm):
@@ -60,6 +61,7 @@ class IntakeUpdateForm(forms.ModelForm):
         'minors_encouraged',
         'minors_training',
         'minors_training_type',
+        'grade_appropriate'
         ]
 
 class ExitSurveyForm(forms.ModelForm):
