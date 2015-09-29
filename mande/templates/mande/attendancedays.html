@@ -21,8 +21,13 @@ Editing Attendance Calendar For {{classroom}}
       <div id="calendar">
         {{Calendar}}
       </div>
+
     </div>
     <div class="col-md-3"><h1><a href="#"><i id="increment" class="fa fa-arrow-right"></i></a></h1></div>
+  </div>
+  <div class="col-md-12">
+    <br/>
+    <div class="col-md-2 col-md-offset-4"><button id="autoapply" class="btn btn-lg btn-danger">Apply this calendar to all classes at {{classroom.school_id}}</button></div>
   </div>
 </div>
 {% endblock %}
@@ -61,6 +66,20 @@ $(document).ready( function() {
       $url[$url.length-2] = date.toISOString().split('T')[0]
       window.location.href = $url.join('/')
   });
+
+  $('#autoapply').click(function(e){
+    console.log('click!');
+    e.preventDefault();
+    if(confirm("ALL FUTURE DAYS IN ALL CALENDARS WILL BE DELETED!")){
+      $.get(window.location.href,{'autoapply':'True'}, function(data){
+        $('#autoapply').removeClass('btn-danger');
+        $('#autoapply').addClass('btn-success');
+        $('#autoapply').html('Applied this calendar to all classes at {{classroom.school_id}}!!');
+
+
+      });
+    }
+  })
 });
 </script>
 {% endblock %}

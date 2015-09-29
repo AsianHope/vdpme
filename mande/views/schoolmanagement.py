@@ -631,7 +631,7 @@ def studentevaluation_form_single(request, student_id=0):
                     'date':TODAY})
 
     if request.method == 'POST':
-        form = StudentEvaluationForm(request.POST,instance=instance)
+        form = StudentEvaluationForm(request.POST)
         if form.is_valid():
             #process
             instance = form.save()
