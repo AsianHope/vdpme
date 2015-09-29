@@ -51,7 +51,9 @@ GRADES = (
 	(12,'Grade 12'),
 	(50,'English'),
 	(60,'Computers'),
-	(70,'Vietnamese')
+	(70,'Vietnamese'),
+	(999,'No Grade / Never Studied')
+
 )
 
 SCORES = (
@@ -129,7 +131,7 @@ class Classroom(models.Model):
 	school_id = models.ForeignKey(School)
 	classroom_number = models.CharField('Description',max_length=16,blank=True)
 	classroom_location = models.CharField('Classroom Location',max_length=128,blank=True)
-	active = models.BooleanField('Takes Attendance',default=True)
+	active = models.BooleanField('Active',default=True)
 	def __unicode__(self):
 		return unicode(self.school_id)+ ' - '+ unicode(self.get_cohort_display())+' - '+unicode(self.classroom_number)
 

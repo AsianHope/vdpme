@@ -32,18 +32,26 @@
 {% endblock %}
 
 {% block script %}
- <!-- DataTables JavaScript -->
-    <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
-    <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
 
 <script type="text/javascript">
 $(document).ready(function(){
   var table = $('#studentDataTable').DataTable({
       responsive: true,
       pageLength: 25,
-      search: {caseInsensitive: false}
-  });
+      search: {caseInsensitive: false},
+      dom: 'frtipB',
+      buttons: [
+        {
+                 extend: 'csvHtml5',
+                 text: 'TSV export <i class="fa fa-download"></i>',
+                 className: 'btn btn-sm btn-success',
+                 fieldSeparator: '\t',
+                 extension: '.tsv',
+                 title: 'IntakeSurveys'
+             },
 
+    ]
+  });
 });
 </script>
 

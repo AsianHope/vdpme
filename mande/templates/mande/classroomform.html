@@ -13,7 +13,7 @@ Manage Classrooms
 <div class="col-md-9">
   <table id="classroomDataTable" class="table table-bordered table-hover">
     <thead>
-      <tr><th>Site</th><th>Grade</th><th>Description</th><th>Edit</th></tr>
+      <tr><th>Site</th><th>Grade</th><th>Description</th><th>Active</th><th>Edit</th></tr>
     </thead>
     <tbody>
       {% for classroom in current_classrooms %}
@@ -21,6 +21,7 @@ Manage Classrooms
           <td>{{ classroom.school_id }}</td>
           <td>{{ classroom.get_cohort_display }}</td>
           <td>{{ classroom.classroom_number }}</td>
+          <td>{{ classroom.active }}</td>
           <td><a href = "{% url 'classroom_form' %}{{classroom.classroom_id}}" role="button" class="btn btn-xs btn-success">Edit</a></td>
       {% endfor %}
       </tbody>

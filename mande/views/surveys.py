@@ -91,7 +91,10 @@ def intake_survey(request,student_id=None):
                                     text=message,
                                     font_awesome_icon=icon)
             log.save()
-            #then return
+            #then return, defaulting to an intake internal
+            if next_url is None:
+                next_url = reverse('intake_internal',kwargs={'student_id':instance.student_id})
+
             return HttpResponseRedirect(next_url)
 
     context = {'form': form, 'student':instance, 'next_url':next_url, 'limit':limit}

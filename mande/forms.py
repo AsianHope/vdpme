@@ -40,6 +40,7 @@ class IntakeSurveyForm(forms.ModelForm):
         'minors_encouraged',
         'minors_training',
         'minors_training_type',
+        'grade_appropriate'
         ]
 
 class IntakeInternalForm(forms.ModelForm):
@@ -60,6 +61,7 @@ class IntakeUpdateForm(forms.ModelForm):
         'minors_encouraged',
         'minors_training',
         'minors_training_type',
+        'grade_appropriate'
         ]
 
 class ExitSurveyForm(forms.ModelForm):
@@ -99,6 +101,9 @@ class ClassroomForm(forms.ModelForm):
         exclude=['classroom_location']
 
 class ClassroomTeacherForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+         super(ClassroomTeacherForm, self).__init__(*args, **kwargs)
+         self.fields['classroom_id'].queryset = Classroom.objects.filter(active=True)
     class Meta:
         model = ClassroomTeacher
         exclude=[]
@@ -116,12 +121,20 @@ class ClassroomEnrollmentForm(forms.ModelForm):
     student_id = forms.ModelMultipleChoiceField(widget=CheckboxSelectMultipleP,queryset=enrolled_students)
     enrollment_date = forms.DateField(label="Enrollment Date",widget=Html5DateInput,initial=date.today().isoformat())
 
+    def __init__(self, *args, **kwargs):
+         super(ClassroomEnrollmentForm, self).__init__(*args, **kwargs)
+         self.fields['classroom_id'].queryset = Classroom.objects.filter(active=True)
+
     class Meta:
         model = ClassroomEnrollment
         exclude=[]
 
 class IndividualClassroomEnrollmentForm(forms.ModelForm):
     drop_date = forms.DateField(label="Drop Date",widget=Html5DateInput,initial=date.today().isoformat())
+
+    def __init__(self, *args, **kwargs):
+         super(IndividualClassroomEnrollmentForm, self).__init__(*args, **kwargs)
+         self.fields['classroom_id'].queryset = Classroom.objects.filter(active=True)
 
     class Meta:
         model = ClassroomEnrollment

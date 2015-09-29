@@ -138,13 +138,7 @@ def student_detail(request, student_id):
     else:
         recent_intake = 'Not enrolled'
 
-    #is this a better approach?
-    try:
-        #their current grade is one more than that of the last test they passed
-        current_grade = (academics.filter(promote=True).latest('test_level').test_level)+1
-    except ObjectDoesNotExist:
-        current_grade = recent_intake.starting_grade if type(recent_intake) != str else None
-
+    current_grade = getStudentGradebyID(student_id)
     graduation = survey.dob +timedelta(days=365*12) if survey.dob is not None else "No birthday entered"
     context = {
         'survey': survey.getRecentFields(),
