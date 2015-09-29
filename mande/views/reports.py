@@ -317,3 +317,20 @@ def student_evaluation_report(request):
 
     return render(request, 'mande/studentevaluationreport.html',
                                 {'evaluations':evaluations})
+
+'''
+*****************************************************************************
+Student Medical Report
+ - lists all student medical visits
+*****************************************************************************
+'''
+def student_medical_report(request):
+    enrolled_students = getEnrolledStudents()
+    visits = {}
+    for student in enrolled_students:
+        try:
+            visits[student] = len(Health.objects.all().filter(student_id=student))
+        except ObjectDoesNotExist:
+            pass
+    return render(request, 'mande/studentmedicalreport.html',
+                                {'visits':visits})

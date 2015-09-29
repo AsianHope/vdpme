@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load mandefilters %}
+{% block title %}
+Student Medical Report
+{% endblock %}
+
+{% block content %}
+<div class="col-md-9">
+      <table class="table table-bordered table-striped table-hover" id="medicalReportTable">
+        <thead><tr>
+          <th>Site</th>
+          <th>Student</th>
+          <th>Medical Visits</th>
+
+        </tr></thead>
+        <tbody>
+            {% for student, num in visits.items %}
+          <tr>
+              <td>{{ student.site }}</td>
+              <td><a href="{% url 'student_detail' student.student_id %}">{{ student }}</a></td>
+              <td>{{num}}</td>
+              </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+    </div>
+
+
+    <div class="col-md-3">
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+ <!-- DataTables JavaScript -->
+<script type="text/javascript">
+$('#datePicker').val('{{attendance_date}}');
+$(function() {
+      $('#datePicker').change(function() {
+          //split on /
+          url = '{%url 'student_medical_report' %}' + $(this).val()
+          window.location.href = url
+      });
+    });
+$(document).ready(function(){
+  $('#medicalReportTable').DataTable({
+      responsive: true,
+      pageLength: 25,
+      order: [[0,'asc']],
+      dom: 'frtipB',
+      buttons: [
+        {
+                 extend: 'csvHtml5',
+                 text: 'TSV export <i class="fa fa-download"></i>',
+                 className: 'btn btn-sm btn-success',
+                 fieldSeparator: '\t',
+                 extension: '.tsv',
+                 title: 'StudentMedical'
+             },
+
+    ]
+  });
+});
+</script>
+
+{% endblock %}
