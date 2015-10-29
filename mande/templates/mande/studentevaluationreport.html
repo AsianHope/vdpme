@@ -5,43 +5,12 @@ Student Evaluation Report {% if selected_classroom %} {{selected_classroom}} {% 
 {% endblock %}
 
 {% block content %}
-<div class="col-md-9">
-      <table class="table table-bordered table-striped table-hover" id="evaluationReportTable">
-        <thead><tr>
-          <th>Site</th>
-          <th>Evaluation Date</th>
-          <th>Student</th>
-          <th>Study/Learning</th>
-          <th>Hygiene</th>
-          <th>Academic</th>
-          <th>Life/Personal</th>
-          <th>Christian Growth</th>
-          <th>Comments</th>
 
-        </tr></thead>
-        <tbody>
-          {% for evaluation in evaluations %}
-          <tr>
-              <td>{{ evaluation.student_id.site }}</td>
-              <td>{{ evaluation.date }}</td>
-              <td><a href="{% url 'student_detail' evaluation.student_id.student_id %}">{{ evaluation.student_id }}</a></td>
-              <td>{{evaluation.study_score}}</td>
-              <td>{{evaluation.hygiene_score}}</td>
-              <td>{{evaluation.academic_score}}</td>
-              <td>{{evaluation.personal_score}}</td>
-              <td>{{evaluation.faith_score}}</td>
-              <td>{{evaluation.comments}}</td>
-              </tr>
-          {% endfor %}
-        </tbody>
-
-      </table>
-    </div>
 
 
     <div class="col-md-3">
 
-      <table class="table" id="classlist">
+      <table class="table table-responsive" id="classlist">
         <thead><tr><th>Classroom</th></tr></thead>
         <tbody>
           <tr><td>
@@ -56,7 +25,38 @@ Student Evaluation Report {% if selected_classroom %} {{selected_classroom}} {% 
       </table>
 
     </div>
+    <div class="col-md-9">
+          <table class="table table-responsive table-bordered table-striped table-hover" id="evaluationReportTable">
+            <thead><tr>
+              <th>Site</th>
+              <th>Evaluation Date</th>
+              <th>Student</th>
+              <th>Study/Learning</th>
+              <th>Hygiene</th>
+              <th>Academic</th>
+              <th>Life/Personal</th>
+              <th>Christian Growth</th>
+              <th>Comments</th>
 
+            </tr></thead>
+            <tbody>
+              {% for evaluation in evaluations %}
+              <tr>
+                  <td>{{ evaluation.student_id.site }}</td>
+                  <td>{{ evaluation.date }}</td>
+                  <td><a href="{% url 'student_detail' evaluation.student_id.student_id %}">{{ evaluation.student_id }}</a></td>
+                  <td>{{evaluation.study_score}}</td>
+                  <td>{{evaluation.hygiene_score}}</td>
+                  <td>{{evaluation.academic_score}}</td>
+                  <td>{{evaluation.personal_score}}</td>
+                  <td>{{evaluation.faith_score}}</td>
+                  <td>{{evaluation.comments}}</td>
+                  </tr>
+              {% endfor %}
+            </tbody>
+
+          </table>
+        </div>
 
 {% endblock %}
 
