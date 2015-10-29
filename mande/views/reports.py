@@ -308,15 +308,25 @@ Student Evaluation Report
  - lists all student evaluations
 *****************************************************************************
 '''
-def student_evaluation_report(request):
+def student_evaluation_report(request,classroom_id=None):
     evaluations = StudentEvaluation.objects.all().exclude(  academic_score=None,
                                                             study_score=None,
                                                             personal_score=None,
                                                             hygiene_score=None,
                                                             faith_score=None)
+    active_classrooms = Classroom.objects.all().filter(active=True).order_by('classroom_location')
+    if classroom_id is not None:
+        selected_classroom = Classroom.objects.get(pk=classroom_id)
+        #select students who have not dropped the class, or have not dropped it yet.
+        enrolled_students = selected_classroom.classroomenrollment_set.all().filter(
+                                Q(drop_date__gte=TODAY) | Q(drop_date=None)).values_list('student_id',flat=True)
 
+
+        evaluations = evaluations.filter(student_id__in=enrolled_students)
+    else:
+        selected_classroom = None
     return render(request, 'mande/studentevaluationreport.html',
-                                {'evaluations':evaluations})
+                                {'evaluations':evaluations, 'selected_classroom':selected_classroom, 'active_classrooms':active_classrooms})
 
 '''
 *****************************************************************************
