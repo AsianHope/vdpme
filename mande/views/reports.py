@@ -296,7 +296,6 @@ def student_lag_report(request):
         #only students in the scope of grade levels
         if student.current_vdp_grade() < 12:
             students_lag[student] = student.age_appropriate_grade() - student.current_vdp_grade()
-            print student.current_vdp_grade()
 
     return render(request, 'mande/student_lag_report.html',
                                 {'students_lag':students_lag})
