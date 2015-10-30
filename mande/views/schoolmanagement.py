@@ -77,12 +77,15 @@ def student_list(request):
     exit_surveys = ExitSurvey.objects.all().filter(
                         exit_date__lte=TODAY
                         ).values_list('student_id',flat=True)
-    surveys = IntakeSurvey.objects.order_by('student_id'
+    active_surveys = IntakeSurvey.objects.order_by('student_id'
                                  ).exclude(student_id__in=exit_surveys)
+    surveys = []
+    for active_survey in active_surveys:
+        surveys.append(active_survey.getRecentFields())
     at_grade_level = {}
     for student in surveys:
-            at_grade_level[student.student_id] = (
-                            studentAtAgeAppropriateGradeLevel(student.student_id))
+            at_grade_level[student['student_id']] = (
+                            studentAtAgeAppropriateGradeLevel(student['student_id']))
     context = {'surveys': surveys, 'at_grade_level':at_grade_level}
     return render(request, 'mande/studentlist.html', context)
 
