@@ -1,11 +1,12 @@
 from django.conf.urls import patterns, url
+from django.views.decorators.cache import cache_page
 
 from mande import views
 urlpatterns = patterns('',
     # ex: /mande/
-    url(r'^$', views.dashboard, name='index'),
+    url(r'^$', cache_page(300)(views.dashboard), name='index'),
     # ex: /mande/students/
-    url(r'^students/$', views.student_list, name='student_list'),
+    url(r'^students/$', cache_page(120)(views.student_list), name='student_list'),
     # ex: /mande/students/4
     url(r'^students/(?P<student_id>\d+)/$', views.student_detail, name='student_detail'),
 
@@ -24,9 +25,9 @@ urlpatterns = patterns('',
 
     url(r'^attendance/report/student_absences/$', views.student_absence_report, name='student_absence_report'),
 
-    url(r'^reports/data_audit/$', views.data_audit, name='data_audit'),
-    url(r'^reports/class_list/$', views.class_list, name='class_list'),
-    url(r'^reports/lag/$', views.student_lag_report, name='student_lag_report'),
+    url(r'^reports/data_audit/$', cache_page(60)(views.data_audit), name='data_audit'),
+    url(r'^reports/class_list/$', cache_page(60)(views.class_list), name='class_list'),
+    url(r'^reports/lag/$', cache_page(60)(views.student_lag_report), name='student_lag_report'),
     url(r'^reports/student_evaluation/$', views.student_evaluation_report, name='student_evaluation_report'),
     url(r'^reports/student_evaluation/(?P<classroom_id>\d+)/$', views.student_evaluation_report, name='student_evaluation_report'),
     url(r'^reports/student_medical/$', views.student_medical_report, name='student_medical_report'),
