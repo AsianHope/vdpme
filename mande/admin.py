@@ -114,7 +114,9 @@ class AcademicAdmin(admin.ModelAdmin):
     search_fields = ['student_id__student_id']
 
 class HealthAdmin(admin.ModelAdmin):
-    list_display = ('appointment_date','appointment_type','student_id')
+    list_display = ('appointment_date','appointment_type','student_id', 'site')
+    def site(self, obj):
+        return obj.student_id.site
     list_filter = ('appointment_date','appointment_type')
     raw_id_fields = ('student_id',)
     search_fields = ['student_id__student_id']
