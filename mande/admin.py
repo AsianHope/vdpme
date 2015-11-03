@@ -69,7 +69,7 @@ class IntakeUpdateAdmin(admin.ModelAdmin):
     search_fields = ['student_id__student_id']
 
 class ExitSurveyAdmin(admin.ModelAdmin):
-    list_display = ('site','student_id','exit_date','last_grade','early_exit_reason')
+    list_display = ('site','student_id','exit_date','last_grade','early_exit_reason','early_exit_comment')
     def site(self, obj):
         return obj.student_id.site
     list_filter = ('exit_date','last_grade','early_exit_reason')
