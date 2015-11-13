@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import modelformset_factory
-from django.db.models import Q
+from django.db.models import Q,Sum
 from django.forms.models import model_to_dict
 
 from django.utils.html import conditional_escape as esc
@@ -343,3 +343,24 @@ def student_medical_report(request):
             pass
     return render(request, 'mande/studentmedicalreport.html',
                                 {'visits':visits})
+'''
+*****************************************************************************
+Student Dental Report
+ - lists all student Dental visits
+*****************************************************************************
+'''
+def student_dental_report(request):
+    dentals= Health.objects.all().filter(appointment_type='Dental')
+    year = datetime.now().year-2013
+    dentals_by_month_year=[]
+    for x in range(year):
+        dentals_by_month_year.extend([{'group_by_date':str(datetime.now().year-x)+'-'+format(i+1, '02d'),'dentals':[]} for i in range(12)])
+
+    for dental in dentals:
+        for dental_by_month_year in dentals_by_month_year:
+            generate_to_date=datetime.strptime(dental_by_month_year['group_by_date'], '%Y-%m')
+            if(generate_to_date.year==dental.appointment_date.year and generate_to_date.month==dental.appointment_date.month):
+                dental_by_month_year['dentals'].append(dental)
+
+    return render(request, 'mande/studentdentalreport.html',
+                            {'dentals_by_month_year':dentals_by_month_year})

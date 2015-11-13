@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load mandefilters %}
+{% block title %}
+Student Dental Report
+{% endblock %}
+
+{% block content %}
+<div class="col-md-9">
+      <table class="table table-bordered table-striped table-hover" id="medicalReportTable">
+        <thead><tr>
+          <th>Date</th>
+          <th>Number of Student</th>
+          <th>Extractions</th>
+          <th>Sealent</th>
+          <th>Fillings</th>
+          <th>Endo</th>
+          <th>Scaling</th>
+          <th>Pulped</th>
+          <th>Xray</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for dental in dentals_by_month_year %}
+          <tr>
+              <td>{{ dental.group_by_date }}</td>
+              <td>{{dental.dentals|length}}</td>
+              <td>
+                  {{dental.dentals|get_subtotal_of_dental:'extractions' }}
+              </td>
+              <td>
+                  {{dental.dentals|get_subtotal_of_dental:'sealent' }}
+              </td>
+              <td>
+                  {{dental.dentals|get_subtotal_of_dental:'filling' }}
+              </td>
+              <td>
+                  {{dental.dentals|get_subtotal_of_dental:'endo' }}
+              </td>
+              <td>
+                  {{dental.dentals|get_subtotal_of_dental:'scaling' }}
+              </td>
+              <td>
+                  {{dental.dentals|get_subtotal_of_dental:'pulped' }}
+              </td>
+              <td>
+                  {{dental.dentals|get_subtotal_of_dental:'xray' }}
+              </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfooter>
+          <tr>
+            <td>Total:</td>
+            <td>
+              {{dentals_by_month_year|get_total_of_dental:'None' }}
+            </td>
+            <td>
+              {{dentals_by_month_year|get_total_of_dental:'extractions' }}
+            </td>
+            <td>
+                {{dentals_by_month_year|get_total_of_dental:'sealent' }}
+            </td>
+            <td>
+                {{dentals_by_month_year|get_total_of_dental:'filling' }}
+            </td>
+            <td>
+                {{dentals_by_month_year|get_total_of_dental:'endo' }}
+            </td>
+            <td>
+                {{dentals_by_month_year|get_total_of_dental:'scaling' }}
+            </td>
+            <td>
+                {{dentals_by_month_year|get_total_of_dental:'pulped' }}
+            </td>
+            <td>
+                {{dentals_by_month_year|get_total_of_dental:'xray' }}
+            </td>
+          </tr>
+        </tfooter>
+      </table>
+    </div>
+
+
+    <div class="col-md-3">
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+ <!-- DataTables JavaScript -->
+<script type="text/javascript">
+$('#datePicker').val('{{attendance_date}}');
+$(function() {
+      $('#datePicker').change(function() {
+          //split on /
+          url = '{%url 'student_medical_report' %}' + $(this).val()
+          window.location.href = url
+      });
+    });
+$(document).ready(function(){
+  $('#medicalReportTable').DataTable({
+      responsive: true,
+      pageLength: 25,
+      order: [[0,'asc']],
+      dom: 'frtipB',
+      buttons: [
+        {
+                 extend: 'csvHtml5',
+                 text: 'TSV export <i class="fa fa-download"></i>',
+                 className: 'btn btn-sm btn-success',
+                 fieldSeparator: '\t',
+                 extension: '.tsv',
+                 title: 'StudentMedical'
+             },
+
+    ]
+  });
+});
+</script>
+
+{% endblock %}

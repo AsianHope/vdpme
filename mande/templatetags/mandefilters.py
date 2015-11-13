@@ -55,6 +55,26 @@ def getStudentGradebyID(student_id):
         current_grade = recent_intake.starting_grade if type(recent_intake) != str else 0
 
     return grade_dict.get(current_grade, None)
+# get subtotal of each field in dental that group by date (year, month)
+@register.filter(name='get_subtotal_of_dental')
+def get_subtotal_of_dental(dental,arg):
+    subtotal = 0
+    for student in dental:
+        if getattr(student, arg) is not None:
+            subtotal +=getattr(student, arg)
+    return subtotal
+# get total of dentals,extractions,etc
+@register.filter(name='get_total_of_dental')
+def get_total_of_dental(dentals,arg):
+    total = 0
+    for dental in dentals:
+        if arg == 'None':
+            total+=len(dental['dentals'])
+        else:
+            for student in dental['dentals']:
+                if getattr(student, arg) is not None:
+                    total +=getattr(student, arg)
+    return total
 
 #get dictionary items
 @register.filter
