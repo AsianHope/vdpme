@@ -18,7 +18,7 @@
         </tr>
         </thead>
         <tbody>
-            {% for exit_survey in exit_surveys %}
+          {% for exit_survey in exit_surveys %}
           <tr>
             <td>{{exit_survey.student_id.site}}</td>
             <td>{{exit_survey.student_id}}</td>
@@ -30,9 +30,15 @@
           </tr>
           {% endfor %}
         </tbody>
+        <tfooter>
+          <tr>
+            <td>Total</td>
+            <td colspan="6">{{exit_surveys|length}}</td>
+          </tr>
+        </tfooter>
       </table>
     </div>
-    
+
     <div class="col-md-3">
       <form action = "{% url 'exit_surveys_list' %}" method="post">
           {% csrf_token %}
