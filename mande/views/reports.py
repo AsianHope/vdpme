@@ -265,8 +265,10 @@ def exit_surveys_list(request):
         exit_surveys = ExitSurvey.objects.all().filter(exit_date__gte=from_exit_date , exit_date__lte=to_exit_date)
     else:
         exit_surveys = ExitSurvey.objects.all()
+    post_exit_surveys = PostExitSurvey.objects.all()
     return render(request, 'mande/exitsurveylist.html',
-                            {'exit_surveys':exit_surveys})
+                            {'exit_surveys':exit_surveys,'post_exit_surveys':post_exit_surveys})
+
 '''
 *****************************************************************************
 Student Absence Report

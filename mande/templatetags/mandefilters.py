@@ -75,6 +75,18 @@ def get_total_of_dental(dentals,arg):
                 if getattr(student, arg) is not None:
                     total +=getattr(student, arg)
     return total
+# check if student have already performed post exit survey
+@register.filter(name='check_if_already_perform_post_exit')
+def check_if_already_perform_post_exit(exit_survey_student_id,arg):
+    check_already_perform= False
+    post_exit_surveys = arg
+    for post_exit_survey in post_exit_surveys:
+        if(post_exit_survey.student_id.student_id==exit_survey_student_id.student_id):
+            check_already_perform = True
+            break
+        else:
+            check_already_perform = False
+    return check_already_perform
 
 #get dictionary items
 @register.filter
