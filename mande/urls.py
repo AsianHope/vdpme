@@ -27,6 +27,7 @@ urlpatterns = patterns('',
 
     url(r'^reports/data_audit/$', cache_page(60)(views.data_audit), name='data_audit'),
     url(r'^reports/class_list/$', cache_page(60)(views.class_list), name='class_list'),
+    url(r'^reports/exit_surveys_list/$', views.exit_surveys_list, name='exit_surveys_list'),
     url(r'^reports/lag/$', cache_page(60)(views.student_lag_report), name='student_lag_report'),
     url(r'^reports/student_evaluation/$', views.student_evaluation_report, name='student_evaluation_report'),
     url(r'^reports/student_evaluation/(?P<classroom_id>\d+)/$', views.student_evaluation_report, name='student_evaluation_report'),

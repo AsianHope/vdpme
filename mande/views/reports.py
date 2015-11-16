@@ -251,6 +251,22 @@ def class_list(request,site='ALL'):
 
     return render(request, 'mande/class_list.html',
                             {'class_list' : class_list,})
+
+'''
+*****************************************************************************
+Exit Surveys list
+ -filter exit Surveys by date range
+*****************************************************************************
+'''
+def exit_surveys_list(request):
+    if request.method == 'POST':
+        from_exit_date = request.POST['from_exit_date']
+        to_exit_date = request.POST['to_exit_date']
+        exit_surveys = ExitSurvey.objects.all().filter(exit_date__gte=from_exit_date , exit_date__lte=to_exit_date)
+    else:
+        exit_surveys = ExitSurvey.objects.all()
+    return render(request, 'mande/exitsurveylist.html',
+                            {'exit_surveys':exit_surveys})
 '''
 *****************************************************************************
 Student Absence Report
