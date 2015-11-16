@@ -1,24 +1,27 @@
 {% extends "base.html" %}
 {% load mandefilters %}
 {% block title %}
-Student Medical Report
+Student Medical Report {{startDate}} to {{endDate}}
 {% endblock %}
 
 {% block content %}
+{% if visits %}
 <div class="col-md-9">
       <table class="table table-bordered table-striped table-hover" id="medicalReportTable">
         <thead><tr>
           <th>Site</th>
           <th>Student</th>
-          <th>Medical Visits</th>
+          <th>Check-Ups</th>
+          <th>Dental Visits</th>
 
         </tr></thead>
         <tbody>
-            {% for student, num in visits.items %}
+            {% for student, key in visits.items %}
           <tr>
               <td>{{ student.site }}</td>
               <td><a href="{% url 'student_detail' student.student_id %}">{{ student }}</a></td>
-              <td>{{num}}</td>
+              <td>{{key.checkup}}</td>
+              <td>{{key.dental}}</td>
               </tr>
           {% endfor %}
         </tbody>
@@ -26,22 +29,32 @@ Student Medical Report
       </table>
     </div>
 
-
+{% endif %}
     <div class="col-md-3">
+        <form method="post" action="{% url 'student_medical_report' %}">
+          From:<br>
+          {% csrf_token %}
+          <input type="date" name="startDate" class="form-control" id="datePicker1">
+          <br>
+          To:<br>
+          {% csrf_token %}
+          <input type="date" name="endDate" class="form-control" id="datePicker2">
+          <br><br>
+          <input type="button" value="Submit" class="btn btn-xs btn-success" id="submit">
+        </form>
     </div>
-
 
 {% endblock %}
 
 {% block script %}
  <!-- DataTables JavaScript -->
 <script type="text/javascript">
-$('#datePicker').val('{{attendance_date}}');
+$('#datePicker1').val('{{startDate}}');
+$('#datePicker').val('{{endDate}}');
 $(function() {
-      $('#datePicker').change(function() {
-          //split on /
-          url = '{%url 'student_medical_report' %}' + $(this).val()
-          window.location.href = url
+  $('#submit').click(function() {
+      url = '{% url 'student_medical_report'%}' + $('#datePicker1').val() +"\\"+ $('#datePicker2').val()
+        window.location.href = url
       });
     });
 $(document).ready(function(){
@@ -64,5 +77,7 @@ $(document).ready(function(){
   });
 });
 </script>
-
+<link type="text/css" href="/media/jquery/css/smoothness/jquery-ui-1.8.18.custom.css" rel="Stylesheet" />
+<script type="text/javascript" src="/media/jquery/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="/media/jquery/js/jquery-ui-1.8.18.custom.min.js"></script>
 {% endblock %}

@@ -29,6 +29,7 @@ urlpatterns = patterns('',
     url(r'^reports/lag/$', views.student_lag_report, name='student_lag_report'),
     url(r'^reports/student_evaluation/$', views.student_evaluation_report, name='student_evaluation_report'),
     url(r'^reports/student_medical/$', views.student_medical_report, name='student_medical_report'),
+    url(r'^reports/student_medical/(?P<startDate>\d{4}-\d{1,2}-\d{1,2})/(?P<endDate>\d{4}-\d{1,2}-\d{1,2})/$', views.student_medical_report, name='student_medical_report'),
 
     url(r'^surveys/intake/$', views.intake_survey, name='intake_survey'),
     url(r'^surveys/intake/(?P<student_id>\d+)/$', views.intake_survey, name='intake_survey'),

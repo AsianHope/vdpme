@@ -324,13 +324,15 @@ Student Medical Report
  - lists all student medical visits
 *****************************************************************************
 '''
-def student_medical_report(request):
+def student_medical_report(request, startDate = None, endDate=None):
     enrolled_students = getEnrolledStudents()
     visits = {}
-    for student in enrolled_students:
-        try:
-            visits[student] = len(Health.objects.all().filter(student_id=student))
-        except ObjectDoesNotExist:
-            pass
+    temp = {'checkup':0,'dental':0}
+    if startDate and endDate:
+        for student in enrolled_students:
+                temp['checkup'] = len(Health.objects.all().filter(student_id=student,appointment_type='Check-up',appointment_date__range=[startDate,endDate]))
+                temp['dental'] = len(Health.objects.all().filter(student_id=student,appointment_type='Dental',appointment_date__range=[startDate,endDate]))
+                visits[student] = temp
+
     return render(request, 'mande/studentmedicalreport.html',
-                                {'visits':visits})
+                                {'visits':visits, 'startDate':startDate, 'endDate':endDate})
