@@ -314,13 +314,25 @@ Student Lag Report
 def student_lag_report(request):
     enrolled_students = getEnrolledStudents()
     students_lag = {}
+
+    if request.method == 'POST':
+        view_date = request.POST['view_date']
+    else:
+        # convert to correct format with html input type date
+        view_date = date.today().strftime("%Y-%m-%d")
+
     for student in enrolled_students:
         #only students in the scope of grade levels
-        if student.current_vdp_grade() < 12:
-            students_lag[student] = student.age_appropriate_grade() - student.current_vdp_grade()
+        if student.current_vdp_grade(view_date) < 12:
+            students_lag[student] = {
+                    'lag':student.age_appropriate_grade(view_date) - student.current_vdp_grade(view_date),
+                    'appropriate_grade':student.age_appropriate_grade(view_date),
+                    'vdp_grade':student.current_vdp_grade(view_date)
+
+            }
 
     return render(request, 'mande/student_lag_report.html',
-                                {'students_lag':students_lag})
+                                {'students_lag':students_lag,'view_date':view_date})
 
 
 '''
