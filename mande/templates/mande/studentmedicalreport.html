@@ -17,12 +17,12 @@ Student Medical Report {{startDate}} to {{endDate}}
         </tr></thead>
         <tbody>
             {% for student, key in visits.items %}
-          <tr>
-              <td>{{ student.site }}</td>
-              <td><a href="{% url 'student_detail' student.student_id %}">{{ student }}</a></td>
-              <td>{{key.checkup}}</td>
-              <td>{{key.dental}}</td>
-              </tr>
+              <tr>
+                  <td>{{ student.site }}</td>
+                  <td><a href="{% url 'student_detail' student.student_id %}">{{ student }}</a></td>
+                  <td>{{key.checkup}}</td>
+                  <td>{{key.dental}}</td>
+                  </tr>
           {% endfor %}
         </tbody>
 
@@ -30,14 +30,14 @@ Student Medical Report {{startDate}} to {{endDate}}
     </div>
 
 {% endif %}
+
+    {% csrf_token %}
     <div class="col-md-3">
         <form method="post" action="{% url 'student_medical_report' %}">
           From:<br>
-          {% csrf_token %}
           <input type="date" name="startDate" class="form-control" id="datePicker1">
           <br>
           To:<br>
-          {% csrf_token %}
           <input type="date" name="endDate" class="form-control" id="datePicker2">
           <br><br>
           <input type="button" value="Submit" class="btn btn-xs btn-success" id="submit">

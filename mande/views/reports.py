@@ -330,9 +330,10 @@ def student_medical_report(request, startDate = None, endDate=None):
     temp = {'checkup':0,'dental':0}
     if startDate and endDate:
         for student in enrolled_students:
-                temp['checkup'] = len(Health.objects.all().filter(student_id=student,appointment_type='Check-up',appointment_date__range=[startDate,endDate]))
-                temp['dental'] = len(Health.objects.all().filter(student_id=student,appointment_type='Dental',appointment_date__range=[startDate,endDate]))
-                visits[student] = temp
+                temp['checkup'] = len(Health.objects.all().filter(student_id=student,appointment_type='CHECKUP',appointment_date__range=(startDate,endDate)))
+                temp['dental'] = len(Health.objects.all().filter(student_id=student,appointment_type='DENTAL',appointment_date__range=(startDate,endDate)))
+                if temp['checkup'] != 0 or temp['dental'] != 0:
+                    visits[student] = dict(temp)
 
     return render(request, 'mande/studentmedicalreport.html',
                                 {'visits':visits, 'startDate':startDate, 'endDate':endDate})
