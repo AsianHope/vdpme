@@ -367,10 +367,8 @@ def student_medical_report(request, startDate = None, endDate=None):
                     visits[student] = dict(temp)
 
     return render(request, 'mande/studentmedicalreport.html',
-<<<<<<< HEAD
                                 {'visits':visits, 'startDate':startDate, 'endDate':endDate})
-=======
-                                {'visits':visits})
+
 '''
 *****************************************************************************
 Student Dental Report
@@ -392,4 +390,3 @@ def student_dental_report(request):
 
     return render(request, 'mande/studentdentalreport.html',
                             {'dentals_by_month_year':dentals_by_month_year})
->>>>>>> refs/remotes/AsianHope/master
