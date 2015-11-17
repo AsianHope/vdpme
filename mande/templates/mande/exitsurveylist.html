@@ -15,25 +15,37 @@
           <th>Public School Grade at Exit</th>
           <th>Reason</th>
           <th>Comment</th>
+          <th>Post Exit Survey</th>
         </tr>
         </thead>
         <tbody>
           {% for exit_survey in exit_surveys %}
           <tr>
             <td>{{exit_survey.student_id.site}}</td>
-            <td>{{exit_survey.student_id}}</td>
+            <td><a href="{% url 'student_detail' exit_survey.student_id.student_id %}">{{exit_survey.student_id}}</a></td>
             <td>{{exit_survey.exit_date}}</td>
             <td>{{exit_survey.student_id.current_vdp_grade|grade_by_id}}</td>
             <td>{{exit_survey.get_last_grade_display}}</td>
-            <td>{{exit_survey.early_exit_reason}}</td>
+            <td>{{exit_survey.get_early_exit_reason_display}}</td>
             <td>{{exit_survey.early_exit_comment}}</td>
+            <td>
+              {% if exit_survey.student_id|check_if_already_perform_post_exit:post_exit_surveys %}
+                <button class="btn btn-success btn-xs">
+                  Already Performed
+                </button>
+              {%else%}
+              <a href = "{% url 'post_exit_survey' exit_survey.student_id.student_id %}" class="btn btn-danger btn-xs" role="button">
+                Perform
+              </a>
+              {%endif%}
+            </td>
           </tr>
           {% endfor %}
         </tbody>
         <tfooter>
           <tr>
             <td>Total</td>
-            <td colspan="6">{{exit_surveys|length}}</td>
+            <td colspan="7">{{exit_surveys|length}}</td>
           </tr>
         </tfooter>
       </table>
@@ -44,10 +56,10 @@
           {% csrf_token %}
           <div class="col-md-12">
             <div class="form-group">
-              <input type="date" name="from_exit_date" class="form-control" required>
+              <input type="date" name="from_exit_date" class="form-control" id="from_exit_date" required>
             </div>
             <div class="form-group">
-              <input type="date" name="to_exit_date" class="form-control" required>
+              <input type="date" name="to_exit_date" class="form-control" id="to_exit_date" required>
             </div>
             <div class="form-group">
               <button type="submit" class="btn btn-primary form-control">Search</button>
@@ -62,25 +74,27 @@
 {% block script %}
  <!-- DataTables JavaScript -->
 <script type="text/javascript">
-$(document).ready(function(){
-  $('#medicalReportTable').DataTable({
-      responsive: true,
-      pageLength: 25,
-      order: [[0,'asc']],
-      dom: 'frtipB',
-      buttons: [
-        {
-                 extend: 'csvHtml5',
-                 text: 'TSV export <i class="fa fa-download"></i>',
-                 className: 'btn btn-sm btn-success',
-                 fieldSeparator: '\t',
-                 extension: '.tsv',
-                 title: 'StudentMedical'
-             },
+  $('#from_exit_date').val('{{from_exit_date}}');
+  $('#to_exit_date').val('{{to_exit_date}}');
+  $(document).ready(function(){
+    $('#medicalReportTable').DataTable({
+        responsive: true,
+        pageLength: 25,
+        order: [[0,'asc']],
+        dom: 'frtipB',
+        buttons: [
+          {
+                   extend: 'csvHtml5',
+                   text: 'TSV export <i class="fa fa-download"></i>',
+                   className: 'btn btn-sm btn-success',
+                   fieldSeparator: '\t',
+                   extension: '.tsv',
+                   title: 'StudentMedical'
+               },
 
-    ]
+      ]
+    });
   });
-});
 </script>
 
 {% endblock %}
