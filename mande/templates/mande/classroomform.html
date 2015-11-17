@@ -35,8 +35,10 @@ Manage Classrooms
     {% csrf_token %}
     <div class="col-md-12">
       <button type="submit" class="btn btn-primary">Submit</button>
-      <a href = "{% url 'classroom_form' %}" class="btn btn-success" role="button">Add a new classroom</a>
-    </div>
+      {% if classroom_id > 0 %}
+        <a href = "{% url 'classroom_form' %}" class="btn btn-success" role="button" id="add_new_class">Add a new classroom</a>
+      {%endif%}
+  </div>
 </form>
 </div>
 {% if enrollments != None %}
