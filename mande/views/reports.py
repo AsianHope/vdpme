@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import modelformset_factory
-from django.db.models import Q
+from django.db.models import Q,Sum
 from django.forms.models import model_to_dict
 
 from django.utils.html import conditional_escape as esc
@@ -251,6 +251,22 @@ def class_list(request,site='ALL'):
 
     return render(request, 'mande/class_list.html',
                             {'class_list' : class_list,})
+
+'''
+*****************************************************************************
+Exit Surveys list
+ -filter exit Surveys by date range
+*****************************************************************************
+'''
+def exit_surveys_list(request):
+    if request.method == 'POST':
+        from_exit_date = request.POST['from_exit_date']
+        to_exit_date = request.POST['to_exit_date']
+        exit_surveys = ExitSurvey.objects.all().filter(exit_date__gte=from_exit_date , exit_date__lte=to_exit_date)
+    else:
+        exit_surveys = ExitSurvey.objects.all()
+    return render(request, 'mande/exitsurveylist.html',
+                            {'exit_surveys':exit_surveys})
 '''
 *****************************************************************************
 Student Absence Report
@@ -296,7 +312,6 @@ def student_lag_report(request):
         #only students in the scope of grade levels
         if student.current_vdp_grade() < 12:
             students_lag[student] = student.age_appropriate_grade() - student.current_vdp_grade()
-            print student.current_vdp_grade()
 
     return render(request, 'mande/student_lag_report.html',
                                 {'students_lag':students_lag})
@@ -308,15 +323,25 @@ Student Evaluation Report
  - lists all student evaluations
 *****************************************************************************
 '''
-def student_evaluation_report(request):
+def student_evaluation_report(request,classroom_id=None):
     evaluations = StudentEvaluation.objects.all().exclude(  academic_score=None,
                                                             study_score=None,
                                                             personal_score=None,
                                                             hygiene_score=None,
                                                             faith_score=None)
+    active_classrooms = Classroom.objects.all().filter(active=True).order_by('classroom_location')
+    if classroom_id is not None:
+        selected_classroom = Classroom.objects.get(pk=classroom_id)
+        #select students who have not dropped the class, or have not dropped it yet.
+        enrolled_students = selected_classroom.classroomenrollment_set.all().filter(
+                                Q(drop_date__gte=TODAY) | Q(drop_date=None)).values_list('student_id',flat=True)
 
+
+        evaluations = evaluations.filter(student_id__in=enrolled_students)
+    else:
+        selected_classroom = None
     return render(request, 'mande/studentevaluationreport.html',
-                                {'evaluations':evaluations})
+                                {'evaluations':evaluations, 'selected_classroom':selected_classroom, 'active_classrooms':active_classrooms})
 
 '''
 *****************************************************************************
@@ -336,4 +361,29 @@ def student_medical_report(request, startDate = None, endDate=None):
                     visits[student] = dict(temp)
 
     return render(request, 'mande/studentmedicalreport.html',
+<<<<<<< HEAD
                                 {'visits':visits, 'startDate':startDate, 'endDate':endDate})
+=======
+                                {'visits':visits})
+'''
+*****************************************************************************
+Student Dental Report
+ - lists all student Dental visits
+*****************************************************************************
+'''
+def student_dental_report(request):
+    dentals= Health.objects.all().filter(appointment_type='Dental')
+    year = datetime.now().year-2013
+    dentals_by_month_year=[]
+    for x in range(year):
+        dentals_by_month_year.extend([{'group_by_date':str(datetime.now().year-x)+'-'+format(i+1, '02d'),'dentals':[]} for i in range(12)])
+
+    for dental in dentals:
+        for dental_by_month_year in dentals_by_month_year:
+            generate_to_date=datetime.strptime(dental_by_month_year['group_by_date'], '%Y-%m')
+            if(generate_to_date.year==dental.appointment_date.year and generate_to_date.month==dental.appointment_date.month):
+                dental_by_month_year['dentals'].append(dental)
+
+    return render(request, 'mande/studentdentalreport.html',
+                            {'dentals_by_month_year':dentals_by_month_year})
+>>>>>>> refs/remotes/AsianHope/master

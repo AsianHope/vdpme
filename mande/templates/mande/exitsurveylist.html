@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load mandefilters %}
+{% block title %}
+  Exit Surveys List
+{% endblock %}
+
+{% block content %}
+<div class="col-md-9">
+      <table class="table table-bordered table-striped table-hover" id="medicalReportTable">
+        <thead><tr>
+          <th>Site</th>
+          <th>Student ID</th>
+          <th>Exit Date</th>
+          <th>Grade In VDP When Exit</th>
+          <th>Public School Grade at Exit</th>
+          <th>Reason</th>
+          <th>Comment</th>
+        </tr>
+        </thead>
+        <tbody>
+          {% for exit_survey in exit_surveys %}
+          <tr>
+            <td>{{exit_survey.student_id.site}}</td>
+            <td>{{exit_survey.student_id}}</td>
+            <td>{{exit_survey.exit_date}}</td>
+            <td>{{exit_survey.student_id.current_vdp_grade|grade_by_id}}</td>
+            <td>{{exit_survey.get_last_grade_display}}</td>
+            <td>{{exit_survey.early_exit_reason}}</td>
+            <td>{{exit_survey.early_exit_comment}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfooter>
+          <tr>
+            <td>Total</td>
+            <td colspan="6">{{exit_surveys|length}}</td>
+          </tr>
+        </tfooter>
+      </table>
+    </div>
+
+    <div class="col-md-3">
+      <form action = "{% url 'exit_surveys_list' %}" method="post">
+          {% csrf_token %}
+          <div class="col-md-12">
+            <div class="form-group">
+              <input type="date" name="from_exit_date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <input type="date" name="to_exit_date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary form-control">Search</button>
+            </div>
+          </div>
+      </form>
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+ <!-- DataTables JavaScript -->
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#medicalReportTable').DataTable({
+      responsive: true,
+      pageLength: 25,
+      order: [[0,'asc']],
+      dom: 'frtipB',
+      buttons: [
+        {
+                 extend: 'csvHtml5',
+                 text: 'TSV export <i class="fa fa-download"></i>',
+                 className: 'btn btn-sm btn-success',
+                 fieldSeparator: '\t',
+                 extension: '.tsv',
+                 title: 'StudentMedical'
+             },
+
+    ]
+  });
+});
+</script>
+
+{% endblock %}
