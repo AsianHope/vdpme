@@ -225,8 +225,8 @@ class IntakeSurvey(models.Model):
 
 		return notes;
 
-	def current_vdp_grade(self):
-		academics = self.academic_set.all().filter().order_by('-test_level')
+	def current_vdp_grade(self,view_date=datetime.datetime.now()):
+		academics = self.academic_set.all().filter(test_date__lte=view_date).order_by('-test_level')
 		intake = self.intakeinternal_set.all().filter().order_by('-enrollment_date')
 		if len(intake) > 0:
 			recent_intake = intake[0]
@@ -241,12 +241,18 @@ class IntakeSurvey(models.Model):
 
 		return current_grade
 
-	def age_appropriate_grade(self):
+	def age_appropriate_grade(self,view_date=datetime.datetime.now()):
 		if self.dob == None:
 		    return 'DOB not entered'
+		# if view_date passed with date type or not
+		if isinstance(view_date, datetime.date) == False:
+			# convert to date
+			view_date = datetime.datetime.strptime(view_date, "%Y-%m-%d").date()
+		else:
+			view_date = view_date
 
 		#Look at calendar year child was born in to calculate their age
-		approximate_age = date.today().year - self.dob.year
+		approximate_age = view_date.year - self.dob.year
 		#if today is before grades change in August
 		if date.today().month < 8:
 		    age_appropriate_grade = approximate_age - 6
