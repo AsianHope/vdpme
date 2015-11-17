@@ -264,10 +264,14 @@ def exit_surveys_list(request):
         to_exit_date = request.POST['to_exit_date']
         exit_surveys = ExitSurvey.objects.all().filter(exit_date__gte=from_exit_date , exit_date__lte=to_exit_date)
     else:
-        exit_surveys = ExitSurvey.objects.all()
+        #get today date and subtract two months
+        from_exit_date=(datetime.now()- timedelta(days=2 * 365/12)).strftime("%Y-%m-%d")
+        to_exit_date=(datetime.now()).strftime("%Y-%m-%d")
+        exit_surveys = ExitSurvey.objects.all().filter(exit_date__gte=from_exit_date , exit_date__lte=to_exit_date)
+
     post_exit_surveys = PostExitSurvey.objects.all()
     return render(request, 'mande/exitsurveylist.html',
-                            {'exit_surveys':exit_surveys,'post_exit_surveys':post_exit_surveys})
+                            {'exit_surveys':exit_surveys,'post_exit_surveys':post_exit_surveys,'from_exit_date':from_exit_date,'to_exit_date':to_exit_date})
 
 '''
 *****************************************************************************

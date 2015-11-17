@@ -56,10 +56,10 @@
           {% csrf_token %}
           <div class="col-md-12">
             <div class="form-group">
-              <input type="date" name="from_exit_date" class="form-control" required>
+              <input type="date" name="from_exit_date" class="form-control" id="from_exit_date" required>
             </div>
             <div class="form-group">
-              <input type="date" name="to_exit_date" class="form-control" required>
+              <input type="date" name="to_exit_date" class="form-control" id="to_exit_date" required>
             </div>
             <div class="form-group">
               <button type="submit" class="btn btn-primary form-control">Search</button>
@@ -74,25 +74,27 @@
 {% block script %}
  <!-- DataTables JavaScript -->
 <script type="text/javascript">
-$(document).ready(function(){
-  $('#medicalReportTable').DataTable({
-      responsive: true,
-      pageLength: 25,
-      order: [[0,'asc']],
-      dom: 'frtipB',
-      buttons: [
-        {
-                 extend: 'csvHtml5',
-                 text: 'TSV export <i class="fa fa-download"></i>',
-                 className: 'btn btn-sm btn-success',
-                 fieldSeparator: '\t',
-                 extension: '.tsv',
-                 title: 'StudentMedical'
-             },
+  $('#from_exit_date').val('{{from_exit_date}}');
+  $('#to_exit_date').val('{{to_exit_date}}');
+  $(document).ready(function(){
+    $('#medicalReportTable').DataTable({
+        responsive: true,
+        pageLength: 25,
+        order: [[0,'asc']],
+        dom: 'frtipB',
+        buttons: [
+          {
+                   extend: 'csvHtml5',
+                   text: 'TSV export <i class="fa fa-download"></i>',
+                   className: 'btn btn-sm btn-success',
+                   fieldSeparator: '\t',
+                   extension: '.tsv',
+                   title: 'StudentMedical'
+               },
 
-    ]
+      ]
+    });
   });
-});
 </script>
 
 {% endblock %}
