@@ -55,9 +55,9 @@
                                       <span class="caret"></span>
                                   </button>
                                   <ul class="dropdown-menu pull-right" role="menu">
-                                      <li><a href="#">Unenrolled Students</a>
+                                      <li><a href="#" data-id="unenrolled_panel">Unenrolled Students</a>
                                       </li>
-                                      <li><a href="#">Another action</a>
+                                      <li><a href="#" data-id="absence_panel">Unapproved Absences</a>
                                       </li>
                                       <li><a href="#">Something else here</a>
                                       </li>
@@ -69,7 +69,7 @@
                           </div>
                       </div>
                       <!-- /.panel-heading -->
-                      <div class="panel-body">
+                      <div id="unenrolled_panel" class="panel-body">
                         <table class="table table-bordered table-striped table-hover" id="unenrolledStudentsTable">
                           <thead>
                             <tr>
@@ -87,18 +87,23 @@
                       <!--  <a href="{% url 'notification_log' %}" class="btn btn-default btn-block">View All Unenrolled Students</a> -->
                       </div>
 
-                      <div class="panel-body" style="display:none">
+                      <div id="absence_panel" class="panel-body" style="display:none">
                         <table class="table table-bordered table-striped table-hover" id="unapprovedAbsenceNoCommentTable" >
                           <thead>
                             <tr>
-                              <th>Date</th><th>Student</th>
+                              <th>Date</th><th>Student</th><th>Add Note</th>
                             </tr>
                           </thead>
                           {% for student in unapproved_absence_no_comment %}
                           <tr>
                               <td>{{student.date|date:"Y-m-d"}}</td>
                               <td>{{student.student_id}}</td>
-
+                              {% if student.classroom.classroom_id != None %}
+                              <td><a href="{% url 'take_class_attendance' student.classroom.classroom_id student.date|date:'Y-m-d' %}" role="button" class="btn btn-xsmall btn-success">Add Note</a></td>
+                              {% endif %}
+                              {% if student.classroom.classroom_id == None %}
+                              <td>No class to resolve</td>
+                              {% endif %}
                           </tr>
                           {% endfor %}
                         </table>
@@ -247,6 +252,16 @@
           pageLength: 5,
           searching: false,
           bLengthChange: false,
+      });
+      
+      <!-- Add custom js to toggle panels with action links -->
+      $('a').click(function() {
+    	  if ($(this).attr('data-id') != undefined) {
+    		  var panel = $(this).attr('data-id');
+    		  $(this).closest('.panel-default').find('.panel-body').hide();
+    		  $('#' + panel).show();
+    		  $(this).closest('.panel-default').find('button.dropdown-toggle').html($(this).html() + '<span class="caret"></span>');
+    	  }
       });
     });
 
