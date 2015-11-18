@@ -87,7 +87,24 @@
                       <!--  <a href="{% url 'notification_log' %}" class="btn btn-default btn-block">View All Unenrolled Students</a> -->
                       </div>
 
+                      <div class="panel-body">
+                        <table class="table table-bordered table-striped table-hover" id="unapprovedAbsenceNoCommentTable">
+                          <thead>
+                            <tr>
+                              <th>Date</th><th>Student</th>
+                            </tr>
+                          </thead>
+                          {% for student in unapproved_absence_no_comment %}
+                          <tr>
+                              <td>{{student.date|date:"Y-m-d"}}</td>
+                              <td>{{student.student_id}}</td>
+                           
+                          </tr>
+                          {% endfor %}
+                        </table>
+                      </div>
                   </div>
+
                   <!-- /.panel -->
                 </div>
                 <!-- /.col-lg-4 -->
@@ -220,6 +237,12 @@
 
     $(document).ready(function(){
       $('#unenrolledStudentsTable').DataTable({
+          responsive: true,
+          pageLength: 5,
+          searching: false,
+          bLengthChange: false,
+      });
+      $('#unapprovedAbsenceNoCommentTable').DataTable({
           responsive: true,
           pageLength: 5,
           searching: false,

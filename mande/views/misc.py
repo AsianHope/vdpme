@@ -146,6 +146,9 @@ def dashboard(request):
         if students_by_grade[key] == 0:
             del clean_students_by_grade_by_site[key]
 
+    #find students with unapproved absences and no notes
+    unapproved_absence_no_comment = Attendance.objects.all().filter(attendance__exact="UA").filter(notes=u"").order_by('-date')
+
     context = { 'surveys': surveys,
                 'females': tot_females,
                 'breakdown':breakdown,
@@ -155,7 +158,8 @@ def dashboard(request):
                 'students_at_gl_by_grade_by_site': students_at_gl_by_grade_by_site,
                 'schools':schools,
                 'notifications':notifications,
-                'unenrolled_students':unenrolled_students}
+                'unenrolled_students':unenrolled_students,
+                'unapproved_absence_no_comment':unapproved_absence_no_comment}
 
     return render(request, 'mande/index.html', context)
 
