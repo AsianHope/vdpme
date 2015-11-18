@@ -87,8 +87,8 @@
                       <!--  <a href="{% url 'notification_log' %}" class="btn btn-default btn-block">View All Unenrolled Students</a> -->
                       </div>
 
-                      <div class="panel-body">
-                        <table class="table table-bordered table-striped table-hover" id="unapprovedAbsenceNoCommentTable">
+                      <div class="panel-body" style="display:none">
+                        <table class="table table-bordered table-striped table-hover" id="unapprovedAbsenceNoCommentTable" >
                           <thead>
                             <tr>
                               <th>Date</th><th>Student</th>
@@ -98,7 +98,7 @@
                           <tr>
                               <td>{{student.date|date:"Y-m-d"}}</td>
                               <td>{{student.student_id}}</td>
-                           
+
                           </tr>
                           {% endfor %}
                         </table>

@@ -147,7 +147,7 @@ def dashboard(request):
             del clean_students_by_grade_by_site[key]
 
     #find students with unapproved absences and no notes
-    unapproved_absence_no_comment = Attendance.objects.all().filter(attendance__exact="UA").filter(notes=u"").order_by('-date')
+    unapproved_absence_no_comment = Attendance.objects.all().filter(attendance__exact="UA").filter(Q(notes=u"") |Q(notes=None)).order_by('-date')
 
     context = { 'surveys': surveys,
                 'females': tot_females,

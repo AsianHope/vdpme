@@ -189,6 +189,15 @@ def data_audit(request,audit_type='ALL'):
                 resolution = reverse('student_detail',kwargs={'student_id':student.student_id})
                 addAnomaly(anomalies, student, text, resolution)
                 filters.append(text)
+    ''' students who have unapproved absences with no comment '''
+    uastudents = Attendance.objects.all().filter(attendance__exact="UA").filter(Q(notes=u"")|Q(notes=None)).order_by('-date')
+    for uastudent in uastudents:
+        text = 'Unapproved absence with no comment'
+        attendance_date = uastudent.date
+        attendance_class = uastudent.classroom
+        resolution = reverse('take_class_attendance',kwargs={'attendance_date':attendance_date.strftime('%Y-%m-%d'), 'classroom_id':attendance_class.classroom_id})
+        addAnomaly(anomalies, uastudent.student_id, text, resolution)
+        filters.append(text)
 
     #remove duplicates in a now long array
     filters = set(filters)
