@@ -195,7 +195,12 @@ def data_audit(request,audit_type='ALL'):
         text = 'Unapproved absence with no comment'
         attendance_date = uastudent.date
         attendance_class = uastudent.classroom
-        resolution = reverse('take_class_attendance',kwargs={'attendance_date':attendance_date.strftime('%Y-%m-%d'), 'classroom_id':attendance_class.classroom_id})
+        ''' historical data has null classroom. need to determine how to resolve '''
+        if attendance_class is None:
+          resolution = ''
+          text = 'Unapproved abscence with no comment - missing class id'
+        if attendance_class is not None:
+          resolution = reverse('take_class_attendance',kwargs={'attendance_date':attendance_date.strftime('%Y-%m-%d'), 'classroom_id':attendance_class.classroom_id})
         addAnomaly(anomalies, uastudent.student_id, text, resolution)
         filters.append(text)
 
