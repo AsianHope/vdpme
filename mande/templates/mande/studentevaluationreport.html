@@ -31,10 +31,10 @@ Student Evaluation Report {% if selected_classroom %} {{selected_classroom}} {% 
               <th>Site</th>
               <th>Evaluation Date</th>
               <th>Student</th>
-              <th>Study/Learning</th>
-              <th>Hygiene</th>
               <th>Academic</th>
+              <th>Study/Learning</th>
               <th>Life/Personal</th>
+              <th>Hygiene</th>
               <th>Christian Growth</th>
               <th>Comments</th>
 
@@ -45,10 +45,10 @@ Student Evaluation Report {% if selected_classroom %} {{selected_classroom}} {% 
                   <td>{{ evaluation.student_id.site }}</td>
                   <td>{{ evaluation.date }}</td>
                   <td><a href="{% url 'student_detail' evaluation.student_id.student_id %}">{{ evaluation.student_id }}</a></td>
-                  <td>{{evaluation.study_score}}</td>
-                  <td>{{evaluation.hygiene_score}}</td>
                   <td>{{evaluation.academic_score}}</td>
+                  <td>{{evaluation.study_score}}</td>
                   <td>{{evaluation.personal_score}}</td>
+                  <td>{{evaluation.hygiene_score}}</td>
                   <td>{{evaluation.faith_score}}</td>
                   <td>{{evaluation.comments}}</td>
                   </tr>
