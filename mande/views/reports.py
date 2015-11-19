@@ -67,7 +67,7 @@ from django.contrib.auth.models import User
 
 TODAY = date.today().isoformat()
 TOO_YOUNG = 4
-TOO_OLD = 18
+TOO_OLD = 25
 '''
 *****************************************************************************
 Daily Attendance Report
