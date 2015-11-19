@@ -415,7 +415,7 @@ def academic_form(request, school_id, test_date=TODAY, grade_id=None):
     school = School.objects.get(pk=school_id)
     warning = ''
     message = ''
-    
+
     #find only currently enrolled students
     exit_surveys = ExitSurvey.objects.all().filter(
                         exit_date__lte=TODAY
@@ -614,10 +614,6 @@ Student Evaluation Form Single
 *****************************************************************************
 '''
 def studentevaluation_form_single(request, student_id=0):
-    # delete StudentEvaluation where academic_score, study_score... is None so we can add a new StudentEvaluation
-    StudentEvaluation.objects.filter(
-          Q(academic_score=None) & Q(study_score=None) & Q(personal_score=None) & Q(hygiene_score=None) & Q(faith_score=None)
-     ).delete()
     form = StudentEvaluationForm()
     date = request.POST.get('date') if request.method=='POST' else TODAY
 
@@ -632,6 +628,10 @@ def studentevaluation_form_single(request, student_id=0):
                     'date':TODAY})
 
     if request.method == 'POST':
+        # delete StudentEvaluation where academic_score, study_score... is None so we can add a new StudentEvaluation
+        StudentEvaluation.objects.filter(
+              Q(academic_score=None) & Q(study_score=None) & Q(personal_score=None) & Q(hygiene_score=None) & Q(faith_score=None)
+         ).delete()
         form = StudentEvaluationForm(request.POST)
         if form.is_valid():
             #process
