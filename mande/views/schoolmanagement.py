@@ -537,7 +537,10 @@ def studentevaluation_form(request, school_id, date=TODAY, grade_id=None):
     school = School.objects.get(pk=school_id)
     warning = ''
     message = ''
-    students = getEnrolledStudents(int(grade_id))
+    if grade_id is None:
+      students = getEnrolledStudents()
+    else:
+      students = getEnrolledStudents(int(grade_id))
     #pre instantiate data for this form so that we can update the whole queryset later
     students_at_school_id = []
     for student in students:
