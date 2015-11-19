@@ -544,9 +544,10 @@ def studentevaluation_form(request, school_id, date=TODAY, grade_id=None):
     warning = ''
     message = ''
     if grade_id is None:
-      students = getEnrolledStudents()
+       get_enrolled_student = getEnrolledStudents()
     else:
-      students = getEnrolledStudents(int(grade_id))
+       get_enrolled_student= getEnrolledStudents(int(grade_id))
+    students = get_enrolled_student
     #pre instantiate data for this form so that we can update the whole queryset later
     students_at_school_id = []
     for student in students:
@@ -580,6 +581,22 @@ def studentevaluation_form(request, school_id, date=TODAY, grade_id=None):
                                     text=message,
                                     font_awesome_icon='fa-calculator')
             log.save()
+        else:
+            warning = 'Cannot record student evaluations. Please try again.'
+            students = get_enrolled_student
+            students_at_school_id = []
+            for student in students:
+                if student.site == school:
+                    StudentEvaluation.objects.get_or_create(
+                                                    student_id=student,date=date)
+                    students_at_school_id.append(student.student_id)
+
+            #lets only work with the students at the specified school_id
+            students = students_at_school_id
+            student_evaluations = StudentEvaluation.objects.filter(student_id__in=students,
+                                                            date=date)
+
+            formset = StudentEvaluationFormSet(queryset = student_evaluations)
     else:
         formset = StudentEvaluationFormSet(queryset = student_evaluations)
     context= {  'school':school,
