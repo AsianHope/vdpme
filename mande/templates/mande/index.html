@@ -91,18 +91,18 @@
                         <table class="table table-bordered table-striped table-hover" id="unapprovedAbsenceNoCommentTable" >
                           <thead>
                             <tr>
-                              <th>Date</th><th>Student</th><th>Add Note</th>
+                              <th>Date</th><th>Site</th><th>Student</th>
                             </tr>
                           </thead>
                           {% for student in unapproved_absence_no_comment %}
                           <tr>
                               <td>{{student.date|date:"Y-m-d"}}</td>
-                              <td>{{student.student_id}}</td>
+                              <td>{{student.student_id.site}}</td>
                               {% if student.classroom.classroom_id != None %}
-                              <td><a href="{% url 'take_class_attendance' student.classroom.classroom_id student.date|date:'Y-m-d' %}" role="button" class="btn btn-xsmall btn-success">Add Note</a></td>
+                              <td><a href="{% url 'take_class_attendance' student.classroom.classroom_id student.date|date:'Y-m-d' %}" role="button" class="btn btn-xsmall btn-success">{{student.student_id.student_id}}</a></td>
                               {% endif %}
                               {% if student.classroom.classroom_id == None %}
-                              <td>No class to resolve</td>
+                              <td>{{student.student_id.student_id}}</td>
                               {% endif %}
                           </tr>
                           {% endfor %}
