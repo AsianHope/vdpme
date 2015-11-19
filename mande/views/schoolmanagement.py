@@ -561,14 +561,6 @@ def studentevaluation_form(request, school_id, date=TODAY, grade_id=None):
             print "yes!s"
             formset.save()
             message = "Saved."
-            #clean up the mess we created making blank rows to update.
-            StudentEvaluation.objects.filter(
-                                        Q(academic_score=None)&
-                                        Q(study_score=None)&
-                                        Q(personal_score=None)&
-                                        Q(hygiene_score=None)&
-                                        Q(faith_score=None)
-                                    ).delete()
             if grade_id is None:
                 message = 'Recorded student evaluations for '+str(school)
             else:
@@ -579,7 +571,6 @@ def studentevaluation_form(request, school_id, date=TODAY, grade_id=None):
                                     text=message,
                                     font_awesome_icon='fa-calculator')
             log.save()
-
     else:
         formset = StudentEvaluationFormSet(queryset = student_evaluations)
     context= {  'school':school,
@@ -614,6 +605,10 @@ Student Evaluation Form Single
 *****************************************************************************
 '''
 def studentevaluation_form_single(request, student_id=0):
+    # delete StudentEvaluation where academic_score, study_score... is None so we can add a new StudentEvaluation
+    StudentEvaluation.objects.filter(
+          Q(academic_score=None) & Q(study_score=None) & Q(personal_score=None) & Q(hygiene_score=None) & Q(faith_score=None)
+     ).delete()
     form = StudentEvaluationForm()
     date = request.POST.get('date') if request.method=='POST' else TODAY
 
