@@ -415,7 +415,13 @@ def academic_form(request, school_id, test_date=TODAY, grade_id=None):
     school = School.objects.get(pk=school_id)
     warning = ''
     message = ''
-    students = IntakeSurvey.objects.all().filter(site=school_id)
+    
+    #find only currently enrolled students
+    exit_surveys = ExitSurvey.objects.all().filter(
+                        exit_date__lte=TODAY
+                        ).values_list('student_id',flat=True)
+    students = IntakeSurvey.objects.all().order_by('student_id'
+                                 ).exclude(student_id__in=exit_surveys).filter(site=school_id)
 
     #find out if any student acadmics have been recorded
     student_academics = Academic.objects.filter(student_id=students, test_date=test_date)
