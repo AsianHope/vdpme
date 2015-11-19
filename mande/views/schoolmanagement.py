@@ -287,9 +287,8 @@ def classroomteacher_form(request, teacher_id=0):
     for classroom in current_assignments:
         classrooms_with_teachers.append(int(classroom.classroom_id.classroom_id))
 
-    unassigned_classrooms = Classroom.objects.all().exclude(
+    unassigned_classrooms = Classroom.objects.all().filter(active=True).exclude(
                                     classroom_id__in=classrooms_with_teachers)
-
     if int(teacher_id)>0:
         current_assignments = current_assignments.filter(teacher_id=teacher_id)
 
