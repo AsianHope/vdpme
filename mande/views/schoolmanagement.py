@@ -64,8 +64,6 @@ from mande.utils import studentAtAgeAppropriateGradeLevel
 
 from django.contrib.auth.models import User
 
-TODAY = date.today().isoformat()
-
 '''
 *****************************************************************************
 Student List
@@ -75,7 +73,7 @@ Student List
 def student_list(request):
     #get enrolled and accepted students
     exit_surveys = ExitSurvey.objects.all().filter(
-                        exit_date__lte=TODAY
+                        exit_date__lte=date.today().isoformat()
                         ).values_list('student_id',flat=True)
     active_surveys = IntakeSurvey.objects.order_by('student_id'
                                  ).exclude(student_id__in=exit_surveys)
@@ -161,7 +159,7 @@ def student_detail(request, student_id):
         'exit_survey':exit_survey,
         'post_exit_survey':post_exit_survey,
         'notes':notes,
-        'TODAY':TODAY}
+        'TODAY':date.today().isoformat()}
     return render(request, 'mande/detail.html', context)
 '''
 *****************************************************************************
@@ -245,7 +243,7 @@ def classroom_form(request, classroom_id=0):
         instance = Classroom.objects.get(pk=classroom_id)
         #select students who have not dropped the class, or have not dropped it yet.
         enrollments = instance.classroomenrollment_set.all().filter(
-                        Q(drop_date__gte=TODAY) | Q(drop_date=None))
+                        Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))
     else:
         instance = Classroom()
         enrollments = None
@@ -327,7 +325,7 @@ def classroomenrollment_form(request,classroom_id=0):
         instance = Classroom.objects.get(pk=classroom_id)
         #select students who have not dropped the class, or have not dropped it yet.
         enrolled_students = instance.classroomenrollment_set.all().filter(
-                                    Q(drop_date__gte=TODAY) | Q(drop_date=None))
+                                    Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))
     else:
         instance = None;
         enrolled_students = None
@@ -358,7 +356,7 @@ def classroomenrollment_form(request,classroom_id=0):
     else:
         if classroom_id > 0:
             form = ClassroomEnrollmentForm({'classroom_id':classroom_id,
-                                            'enrollment_date':TODAY})
+                                            'enrollment_date':date.today().isoformat()})
         else:
             form = ClassroomEnrollmentForm()
 
@@ -410,14 +408,14 @@ Academic Form
  - process a AcademicForm and log the action
 *****************************************************************************
 '''
-def academic_form(request, school_id, test_date=TODAY, grade_id=None):
+def academic_form(request, school_id, test_date=date.today().isoformat(), grade_id=None):
     school = School.objects.get(pk=school_id)
     warning = ''
     message = ''
 
     #find only currently enrolled students
     exit_surveys = ExitSurvey.objects.all().filter(
-                        exit_date__lte=TODAY
+                        exit_date__lte=date.today().isoformat()
                         ).values_list('student_id',flat=True)
     students = IntakeSurvey.objects.all().order_by('student_id'
                                  ).exclude(student_id__in=exit_surveys).filter(site=school_id)
@@ -493,7 +491,7 @@ def academic_select(request):
     schools = School.objects.all()
     context = { 'schools':schools,
                 'grades': dict(GRADES),
-                'today': TODAY,
+                'today': date.today().isoformat(),
     }
     return render(request, 'mande/academicselect.html',context)
 
@@ -522,7 +520,7 @@ def academic_form_single(request, student_id=0):
         if student_id > 0:
             form = AcademicForm({
                     'student_id':student_id,
-                    'test_date':TODAY,
+                    'test_date':date.today().isoformat(),
                     'test_level':getStudentGradebyID(student_id)})
         else:
             form = AcademicForm()
@@ -538,7 +536,7 @@ Student Evaluation Form
  - process a StudentEvaluationForm and log the action
 *****************************************************************************
 '''
-def studentevaluation_form(request, school_id, date=TODAY, grade_id=None):
+def studentevaluation_form(request, school_id, date=date.today().isoformat(), grade_id=None):
     school = School.objects.get(pk=school_id)
     warning = ''
     message = ''
@@ -619,7 +617,7 @@ def studentevaluation_select(request):
     schools = School.objects.all()
     context = { 'schools':schools,
                 'grades': dict(GRADES),
-                'today': TODAY,
+                'today': date.today().isoformat(),
     }
     return render(request, 'mande/studentevaluationselect.html',context)
 
@@ -631,7 +629,7 @@ Student Evaluation Form Single
 '''
 def studentevaluation_form_single(request, student_id=0):
     form = StudentEvaluationForm()
-    date = request.POST.get('date') if request.method=='POST' else TODAY
+    date = request.POST.get('date') if request.method=='POST' else date.today().isoformat()
 
     if student_id > 0:
         try:
@@ -641,7 +639,7 @@ def studentevaluation_form_single(request, student_id=0):
         except ObjectDoesNotExist:
             form = StudentEvaluationForm({
                     'student_id':student_id,
-                    'date':TODAY})
+                    'date':date.today().isoformat()})
 
     if request.method == 'POST':
         # delete StudentEvaluation where academic_score, study_score... is None so we can add a new StudentEvaluation

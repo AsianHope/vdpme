@@ -64,8 +64,6 @@ from mande.utils import getStudentAgeAppropriateGradeLevel
 
 from django.contrib.auth.models import User
 
-
-TODAY = date.today().isoformat()
 TOO_YOUNG = 4
 TOO_OLD = 25
 '''
@@ -74,7 +72,7 @@ Daily Attendance Report
  - lists all classrooms who take attendance and their attendance status
 *****************************************************************************
 '''
-def daily_attendance_report(request,attendance_date=TODAY):
+def daily_attendance_report(request,attendance_date=date.today().isoformat()):
     #only classrooms who take attendance, and who take attendance today.
     classrooms = Classroom.objects.all().filter(active=True)
     takesattendance = AttendanceDayOffering.objects.filter(
@@ -102,7 +100,7 @@ Daily Absence Report
  - lists all students with unexcuses absences for the day and their contact info
 *****************************************************************************
 '''
-def daily_absence_report(request,attendance_date=TODAY):
+def daily_absence_report(request,attendance_date=date.today().isoformat()):
     #only classrooms who take attendance, and who take attendance today.
     classrooms = Classroom.objects.all().filter(active=True)
     takesattendance = AttendanceDayOffering.objects.filter(
@@ -252,7 +250,7 @@ def class_list(request,site='ALL'):
             pass
         try:
             enrolled_students =  instance.classroomenrollment_set.all().filter(
-                                        Q(drop_date__gte=TODAY) | Q(drop_date=None))
+                                        Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))
             female_students = 0
             for student in enrolled_students:
                 if student.student_id.gender == 'F':
@@ -366,7 +364,7 @@ def student_evaluation_report(request,classroom_id=None):
         selected_classroom = Classroom.objects.get(pk=classroom_id)
         #select students who have not dropped the class, or have not dropped it yet.
         enrolled_students = selected_classroom.classroomenrollment_set.all().filter(
-                                Q(drop_date__gte=TODAY) | Q(drop_date=None)).values_list('student_id',flat=True)
+                                Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None)).values_list('student_id',flat=True)
 
 
         evaluations = evaluations.filter(student_id__in=enrolled_students)

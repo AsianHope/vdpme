@@ -61,8 +61,6 @@ from mande.utils import studentAtAgeAppropriateGradeLevel
 
 from django.contrib.auth.models import User
 
-TODAY = date.today().isoformat()
-
 '''
 *****************************************************************************
 Attendance
@@ -93,10 +91,10 @@ Take Class Attendance
  - process a AttendanceFormSet and log the action
 *****************************************************************************
 '''
-def take_class_attendance(request, classroom_id, attendance_date=TODAY):
+def take_class_attendance(request, classroom_id, attendance_date=date.today().isoformat()):
     message = ''
     submit_enabled = True
-    if attendance_date != TODAY:
+    if attendance_date != date.today().isoformat():
         warning = 'The selected date is not today!'
     else:
         warning = ''
@@ -229,7 +227,7 @@ Attendance Days
  - toggles the specified attendance day for the specified classroom
 *****************************************************************************
 '''
-def attendance_days(request,classroom_id,attendance_date=TODAY):
+def attendance_days(request,classroom_id,attendance_date=date.today().isoformat()):
 
     attendance_date = datetime.strptime(attendance_date,'%Y-%m-%d')
     classroom = Classroom.objects.get(pk=classroom_id)
@@ -260,13 +258,13 @@ def attendance_days(request,classroom_id,attendance_date=TODAY):
     #copy this calendar to all other calendars at the site from today forward
     elif request.method == 'GET' and request.GET.get('autoapply'):
 
-        attendance_days = AttendanceDayOffering.objects.all().filter(classroom_id=classroom).filter(date__gte=TODAY)
+        attendance_days = AttendanceDayOffering.objects.all().filter(classroom_id=classroom).filter(date__gte=date.today().isoformat())
         site_classrooms = Classroom.objects.all(
                     ).filter(school_id=classroom.school_id
                     ).exclude(classroom_id=classroom.classroom_id)
 
         for site_class in site_classrooms:
-            AttendanceDayOffering.objects.filter(classroom_id=site_class).filter(date__gte=TODAY).delete()
+            AttendanceDayOffering.objects.filter(classroom_id=site_class).filter(date__gte=date.today().isoformat()).delete()
             for attendance_day in attendance_days:
                 AttendanceDayOffering.objects.get_or_create(classroom_id=site_class,
                                                             date = attendance_day.date,

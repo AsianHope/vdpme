@@ -61,7 +61,6 @@ from mande.utils import studentAtAgeAppropriateGradeLevel
 
 from django.contrib.auth.models import User
 
-TODAY = date.today().isoformat()
 '''
 *****************************************************************************
 Dashboard
@@ -82,7 +81,7 @@ def dashboard(request):
     '''
     #get a flat list of student_ids to exclude
     exit_surveys = ExitSurvey.objects.all().filter(
-                        exit_date__lte=TODAY
+                        exit_date__lte=date.today().isoformat()
                         ).values_list('student_id',flat=True)
 
     #filter out students who have exit surveys

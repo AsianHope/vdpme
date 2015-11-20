@@ -62,7 +62,6 @@ from mande.utils import studentAtSchoolGradeLevel
 from mande.utils import studentAtAgeAppropriateGradeLevel
 
 from django.contrib.auth.models import User
-TODAY = date.today().isoformat()
 
 '''
 *****************************************************************************
@@ -159,7 +158,7 @@ def intake_update(request,student_id=0):
             return HttpResponseRedirect(next_url+'#'+next_tab)
     else:
         #change the date today, for convenience
-        most_recent['date'] = TODAY
+        most_recent['date'] = date.today().isoformat()
         form = IntakeUpdateForm(most_recent)
 
     context = {'form': form, 'survey':survey, 'student_id':student_id, 'next':next_url, 'tab':next_tab}
@@ -293,7 +292,7 @@ Health Form
  - process a HealthForm and log the action
 *****************************************************************************
 '''
-def health_form(request, student_id=0, appointment_date=TODAY, appointment_type=None):
+def health_form(request, student_id=0, appointment_date=date.today().isoformat(), appointment_type=None):
         next_url = request.GET.get('next')
         if request.method == 'POST':
             form = HealthForm(request.POST)
