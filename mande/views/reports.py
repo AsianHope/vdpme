@@ -397,16 +397,10 @@ Student Dental Report
 '''
 def student_dental_report(request,site_id=None):
     if site_id is not None:
-        if site_id == 'VDP-PKPN':
-            site = 1
-        elif site_id == 'VDP-TK':
-            site = 2
-        elif site_id == 'VDP-PPT':
-            site = 3
-        else:
-            site = 0
-        dentals= Health.objects.all().filter(appointment_type='Dental',student_id__site=site)
+        dentals= Health.objects.all().filter(appointment_type='Dental',student_id__site=site_id)
+        current_site =  School.objects.get(school_id=site_id)
     else:
+        current_site = 'All Site'
         dentals= Health.objects.all().filter(appointment_type='Dental')
 
     year = datetime.now().year-2013
@@ -419,5 +413,11 @@ def student_dental_report(request,site_id=None):
             generate_to_date=datetime.strptime(dental_by_month_year['group_by_date'], '%Y-%m')
             if(generate_to_date.year==dental.appointment_date.year and generate_to_date.month==dental.appointment_date.month):
                 dental_by_month_year['dentals'].append(dental)
+
+    sites = School.objects.all()
     return render(request, 'mande/studentdentalreport.html',
-                            {'dentals_by_month_year':dentals_by_month_year})
+                            {
+                                'dentals_by_month_year':dentals_by_month_year,
+                                'sites':sites,
+                                'current_site':current_site
+                            })

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load mandefilters %}
 {% block title %}
-Student Dental Report
+ Student Dental Report for {{ current_site }}
 {% endblock %}
 
 {% block content %}
@@ -86,15 +86,13 @@ Student Dental Report
         <div class="form-group">
           <a href = "{% url 'student_dental_report' %}" class="btn btn-xs btn-warning" style="width:100%;">All Site</a>
         </div>
-        <div class="form-group">
-          <a href = "{% url 'student_dental_report' 'VDP-PKPN' %}" class="btn btn-xs btn-success" style="width:100%;">VDP-PKPN</a>
-        </div>
-        <div class="form-group">
-          <a href = "{% url 'student_dental_report' 'VDP-PPT' %}" class="btn btn-xs btn-success" style="width:100%;">VDP-PPT</a>
-        </div>
-        <div class="form-group">
-          <a href = "{% url 'student_dental_report' 'VDP-TK' %}" class="btn btn-xs btn-success" style="width:100%;">VDP-TK</a>
-        </div>
+        {% for site in sites %}
+          <div class="form-group">
+            <a href = "{% url 'student_dental_report' site.school_id %}" class="btn btn-xs btn-success" style="width:100%;">
+              {{ site.school_name }}
+            </a>
+          </div>
+        {% endfor %}
       </div>
     </div>
 

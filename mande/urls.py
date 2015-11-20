@@ -33,7 +33,7 @@ urlpatterns = patterns('',
     url(r'^reports/student_evaluation/(?P<classroom_id>\d+)/$', views.student_evaluation_report, name='student_evaluation_report'),
     url(r'^reports/student_medical/$', views.student_medical_report, name='student_medical_report'),
     url(r'^reports/student_dental/$', views.student_dental_report, name='student_dental_report'),
-    url(r'^reports/student_dental/(?P<site_id>[-\w]+)/$', views.student_dental_report, name='student_dental_report'),
+    url(r'^reports/student_dental/(?P<site_id>\d+)/$', views.student_dental_report, name='student_dental_report'),
 
     url(r'^surveys/intake/$', views.intake_survey, name='intake_survey'),
     url(r'^surveys/intake/(?P<student_id>\d+)/$', views.intake_survey, name='intake_survey'),
