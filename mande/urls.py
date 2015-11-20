@@ -80,8 +80,8 @@ urlpatterns = patterns('',
 
     url(r'^school-management/student-evaluation/$', views.studentevaluation_select, name='studentevaluation_select'),
     url(r'^school-management/student-evaluation/(?P<student_id>\d+)/$', views.studentevaluation_form_single, name='studentevaluation_form_single'),
-    url(r'^school-management/student-evaluation/bulk/(?P<school_id>\d+)/(?P<date>\d{4}-\d{1,2}-\d{1,2})/$', views.studentevaluation_form, name='studentevaluation_form'),
-    url(r'^school-management/student-evaluation/bulk/(?P<school_id>\d+)/(?P<date>\d{4}-\d{1,2}-\d{1,2})/(?P<grade_id>\d+)/$', views.studentevaluation_form, name='studentevaluation_form'),
+    url(r'^school-management/student-evaluation/bulk/(?P<school_id>\d+)/(?P<get_date>\d{4}-\d{1,2}-\d{1,2})/$', views.studentevaluation_form, name='studentevaluation_form'),
+    url(r'^school-management/student-evaluation/bulk/(?P<school_id>\d+)/(?P<get_date>\d{4}-\d{1,2}-\d{1,2})/(?P<grade_id>\d+)/$', views.studentevaluation_form, name='studentevaluation_form'),
 
     url(r'^success/$', views.survey_success, name='success'),
     url(r'^log/$', views.notification_log, name='notification_log')

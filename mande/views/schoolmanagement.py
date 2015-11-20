@@ -536,7 +536,7 @@ Student Evaluation Form
  - process a StudentEvaluationForm and log the action
 *****************************************************************************
 '''
-def studentevaluation_form(request, school_id, date=date.today().isoformat(), grade_id=None):
+def studentevaluation_form(request, school_id, get_date=date.today().isoformat(), grade_id=None):
     school = School.objects.get(pk=school_id)
     warning = ''
     message = ''
@@ -550,13 +550,13 @@ def studentevaluation_form(request, school_id, date=date.today().isoformat(), gr
     for student in students:
         if student.site == school:
             StudentEvaluation.objects.get_or_create(
-                                            student_id=student,date=date)
+                                            student_id=student,date=get_date)
             students_at_school_id.append(student.student_id)
 
     #lets only work with the students at the specified school_id
     students = students_at_school_id
     student_evaluations = StudentEvaluation.objects.filter(student_id__in=students,
-                                                date=date)
+                                                date=get_date)
 
 
     StudentEvaluationFormSet = modelformset_factory(StudentEvaluation, form=StudentEvaluationForm, extra=0)
@@ -585,13 +585,13 @@ def studentevaluation_form(request, school_id, date=date.today().isoformat(), gr
             for student in students:
                 if student.site == school:
                     StudentEvaluation.objects.get_or_create(
-                                                    student_id=student,date=date)
+                                                    student_id=student,date=get_date)
                     students_at_school_id.append(student.student_id)
 
             #lets only work with the students at the specified school_id
             students = students_at_school_id
             student_evaluations = StudentEvaluation.objects.filter(student_id__in=students,
-                                                            date=date)
+                                                            date=get_date)
 
             formset = StudentEvaluationFormSet(queryset = student_evaluations)
     else:
@@ -599,7 +599,7 @@ def studentevaluation_form(request, school_id, date=date.today().isoformat(), gr
     context= {  'school':school,
                 'grade_id': grade_id,
                 'students':students,
-                'date':date,
+                'date':get_date,
                 'formset':formset,
                 'warning': mark_safe(warning),
                 'message': message,
@@ -629,12 +629,12 @@ Student Evaluation Form Single
 '''
 def studentevaluation_form_single(request, student_id=0):
     form = StudentEvaluationForm()
-    date = request.POST.get('date') if request.method=='POST' else date.today().isoformat()
+    get_date = request.POST.get('date') if request.method=='POST' else date.today().isoformat()
 
     if student_id > 0:
         try:
             instance = StudentEvaluation.objects.get(student_id=IntakeSurvey.objects.get(pk=student_id),
-                                  date=date)
+                                  date=get_date)
             form = StudentEvaluationForm(instance=instance)
         except ObjectDoesNotExist:
             form = StudentEvaluationForm({
