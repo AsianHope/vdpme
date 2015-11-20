@@ -395,7 +395,8 @@ Student Dental Report
  - lists all student Dental visits
 *****************************************************************************
 '''
-def student_dental_report(request):
+def student_dental_report(request,site_id=None):
+    print site_id
     dentals= Health.objects.all().filter(appointment_type='Dental')
     year = datetime.now().year-2013
     dentals_by_month_year=[]
