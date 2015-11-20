@@ -396,8 +396,19 @@ Student Dental Report
 *****************************************************************************
 '''
 def student_dental_report(request,site_id=None):
-    print site_id
-    dentals= Health.objects.all().filter(appointment_type='Dental')
+    if site_id is not None:
+        if site_id == 'VDP-PKPN':
+            site = 1
+        elif site_id == 'VDP-TK':
+            site = 2
+        elif site_id == 'VDP-PPT':
+            site = 3
+        else:
+            site = 0
+        dentals= Health.objects.all().filter(appointment_type='Dental',student_id__site=site)
+    else:
+        dentals= Health.objects.all().filter(appointment_type='Dental')
+
     year = datetime.now().year-2013
     dentals_by_month_year=[]
     for x in range(year):
@@ -408,6 +419,5 @@ def student_dental_report(request,site_id=None):
             generate_to_date=datetime.strptime(dental_by_month_year['group_by_date'], '%Y-%m')
             if(generate_to_date.year==dental.appointment_date.year and generate_to_date.month==dental.appointment_date.month):
                 dental_by_month_year['dentals'].append(dental)
-
     return render(request, 'mande/studentdentalreport.html',
                             {'dentals_by_month_year':dentals_by_month_year})

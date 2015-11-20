@@ -82,6 +82,20 @@ Student Dental Report
 
 
     <div class="col-md-3">
+      <div class="col-md-12">
+        <div class="form-group">
+          <a href = "{% url 'student_dental_report' %}" class="btn btn-xs btn-warning" style="width:100%;">All Site</a>
+        </div>
+        <div class="form-group">
+          <a href = "{% url 'student_dental_report' 'VDP-PKPN' %}" class="btn btn-xs btn-success" style="width:100%;">VDP-PKPN</a>
+        </div>
+        <div class="form-group">
+          <a href = "{% url 'student_dental_report' 'VDP-PPT' %}" class="btn btn-xs btn-success" style="width:100%;">VDP-PPT</a>
+        </div>
+        <div class="form-group">
+          <a href = "{% url 'student_dental_report' 'VDP-TK' %}" class="btn btn-xs btn-success" style="width:100%;">VDP-TK</a>
+        </div>
+      </div>
     </div>
 
 
