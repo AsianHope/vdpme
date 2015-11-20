@@ -107,6 +107,9 @@ def dashboard(request):
     students_at_gl_by_grade = dict(GRADES)
     students_by_grade_by_site  = dict(GRADES)
     students_at_gl_by_grade_by_site = dict(GRADES)
+    
+    program_breakdown = {}
+    total_skills = 0
 
     #zero things out for accurate counts
     for key,grade in students_by_grade.iteritems():
@@ -127,7 +130,7 @@ def dashboard(request):
          females = total.filter(gender='F').count()
          males = total.filter(gender='M').count()
          breakdown[name] = {'F':females, 'M':males}
-
+         program_breakdown[name] = {'Grades': 0, 'Skills': 0}
 
     #loop through students and figure out what grades they're currently in
     for student in surveys:
@@ -139,6 +142,12 @@ def dashboard(request):
             students_at_gl_by_grade[grade] +=1
             students_at_gl_by_grade_by_site[grade][unicode(student.site)] +=1
 
+        if grade >= 1 and grade <= 12:
+            program_breakdown[unicode(student.site)]['Grades'] +=1
+        if grade > 12 and grade < 999:
+            program_breakdown[unicode(student.site)]['Skills'] +=1
+            total_skills +=1
+            
     #clean up students_by_grade_by_site so we're not displaying a bunch of blank data
     clean_students_by_grade_by_site = dict(students_by_grade_by_site)
     for key,grade in students_by_grade_by_site.iteritems():
@@ -151,6 +160,8 @@ def dashboard(request):
     context = { 'surveys': surveys,
                 'females': tot_females,
                 'breakdown':breakdown,
+                'program_breakdown':program_breakdown,
+                'total_skills':total_skills,
                 'students_by_grade':students_by_grade,
                 'students_at_gl_by_grade': students_at_gl_by_grade,
                 'students_by_grade_by_site':clean_students_by_grade_by_site,
