@@ -8,6 +8,7 @@ Student Evaluations for {{school}} ({{ grade_id|grade_by_id }})
 {% block content %}
 
 <div class="col-md-9">
+    <p style="color:red">{{ warning }}</p>
   {% if grade_id %}
   <form method="post" action="{% url 'studentevaluation_form' school.school_id date grade_id %}">
   {% else %}
@@ -66,9 +67,6 @@ Student Evaluations for {{school}} ({{ grade_id|grade_by_id }})
 
 <div class="col-md-3">
       <input type="date" name="attendance_date" class="form-control" id="datePicker"/>
-      <p style="color:red">{{ warning }}
-
-      </p>
       <p style="color:green">{{ message }}</p>
 
       <ul class="buttonlist">
