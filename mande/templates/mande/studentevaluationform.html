@@ -2,18 +2,15 @@
 {% load mandefilters %}
 {% load bootstrap %}
 {% block title %}
-Student Evaluations for {{school}} ({{ grade_id|grade_by_id }})
+Student Evaluations for {{classroom.school_id}} ({{classroom.get_cohort_display}} - {{classroom.classroom_number}})
 {% endblock %}
 
 {% block content %}
 
 <div class="col-md-9">
-    <p style="color:red">{{ warning }}</p>
-  {% if grade_id %}
-  <form method="post" action="{% url 'studentevaluation_form' school.school_id date grade_id %}">
-  {% else %}
-  <form method="post" action="{% url 'studentevaluation_form' school.school_id date %}">
-  {% endif %}
+  <p style="color:red">{{ warning }}</p>
+
+  <form method="post" action="{% url 'studentevaluation_form' classroom.school_id.school_id date classroom.classroom_id %}">
     {% csrf_token %}
     {{ formset.management_form }}
 
@@ -54,25 +51,22 @@ Student Evaluations for {{school}} ({{ grade_id|grade_by_id }})
         </table>
       </div>
           {% endfor %}
-
-              <button class="btn btn-primary">Submit</button>
-
-
-
-
-
+      <button class="btn btn-primary">Submit</button>
   </form>
 </div>
-
 
 <div class="col-md-3">
       <input type="date" name="attendance_date" class="form-control" id="datePicker"/>
       <p style="color:green">{{ message }}</p>
+      <ul>
+        {% for classroom_by_school in classrooms_by_school %}
+        <li>
+          <a href="{% url 'studentevaluation_form' classroom_by_school.school_id.school_id date %}{{classroom_by_school.classroom_id}}/">{{classroom_by_school.get_cohort_display}} - {{classroom_by_school.classroom_number}}</a>
+        </li>
+        {% endfor %}
 
-      <ul class="buttonlist">
-      {% for grade_id,grade in grades.items %}
-      <li><a role="button" class="btn btn-small btn-info" href="{% url 'studentevaluation_form' school.school_id date %}{{grade_id}}/">{{grade}}</a></li>
-      {% endfor %}
+  </ul>
+
 </div>
 
 

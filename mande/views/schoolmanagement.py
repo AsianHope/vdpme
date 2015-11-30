@@ -536,28 +536,23 @@ Student Evaluation Form
  - process a StudentEvaluationForm and log the action
 *****************************************************************************
 '''
-def studentevaluation_form(request, school_id, get_date=date.today().isoformat(), grade_id=None):
-    school = School.objects.get(pk=school_id)
+def studentevaluation_form(request, school_id, get_date=date.today().isoformat(), classroom_id=None):
     warning = ''
     message = ''
-    if grade_id is None:
-       get_enrolled_student = getEnrolledStudents()
-    else:
-       get_enrolled_student= getEnrolledStudents(int(grade_id))
+    exit_surveys = ExitSurvey.objects.all().filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
+    get_enrolled_student = ClassroomEnrollment.objects.exclude(student_id__in=exit_surveys).filter(classroom_id=classroom_id)
     students = get_enrolled_student
+
     #pre instantiate data for this form so that we can update the whole queryset later
     students_at_school_id = []
     for student in students:
-        if student.site == school:
-            StudentEvaluation.objects.get_or_create(
-                                            student_id=student,date=get_date)
-            students_at_school_id.append(student.student_id)
-
+        StudentEvaluation.objects.get_or_create(
+                                            student_id=student.student_id,date=get_date)
+        students_at_school_id.append(student.student_id)
     #lets only work with the students at the specified school_id
     students = students_at_school_id
     student_evaluations = StudentEvaluation.objects.filter(student_id__in=students,
                                                 date=get_date)
-
 
     StudentEvaluationFormSet = modelformset_factory(StudentEvaluation, form=StudentEvaluationForm, extra=0)
 
@@ -568,12 +563,12 @@ def studentevaluation_form(request, school_id, get_date=date.today().isoformat()
             print "yes!s"
             formset.save()
             message = "Saved."
-            if grade_id is None:
-                message = 'Recorded student evaluations for '+str(school)
-            else:
-                message = ('Recorded student evaluations for '+
-                            str(dict(GRADES)[int(grade_id)])+
-                            ' at '+str(school))
+            message = ('Recorded student evaluations for '+
+                            str(Classroom.objects.get(pk=classroom_id).get_cohort_display())
+                            +' - '+
+                            str(Classroom.objects.get(pk=classroom_id).classroom_number)
+                            +' at '+
+                            str(Classroom.objects.get(pk=classroom_id).school_id))
             log = NotificationLog(  user=request.user,
                                     text=message,
                                     font_awesome_icon='fa-calculator')
@@ -583,9 +578,8 @@ def studentevaluation_form(request, school_id, get_date=date.today().isoformat()
             students = get_enrolled_student
             students_at_school_id = []
             for student in students:
-                if student.site == school:
                     StudentEvaluation.objects.get_or_create(
-                                                    student_id=student,date=get_date)
+                                                    student_id=student.student_id,date=get_date)
                     students_at_school_id.append(student.student_id)
 
             #lets only work with the students at the specified school_id
@@ -596,8 +590,9 @@ def studentevaluation_form(request, school_id, get_date=date.today().isoformat()
             formset = StudentEvaluationFormSet(queryset = student_evaluations)
     else:
         formset = StudentEvaluationFormSet(queryset = student_evaluations)
-    context= {  'school':school,
-                'grade_id': grade_id,
+    context= {
+                'classroom': Classroom.objects.get(pk=classroom_id),
+                'classrooms_by_school':Classroom.objects.filter(school_id=school_id),
                 'students':students,
                 'date':get_date,
                 'formset':formset,
@@ -614,9 +609,9 @@ Student Evaluation Select
 *****************************************************************************
 '''
 def studentevaluation_select(request):
-    schools = School.objects.all()
-    context = { 'schools':schools,
-                'grades': dict(GRADES),
+    classrooms = Classroom.objects.all()
+    context = {
+                'classrooms':classrooms,
                 'today': date.today().isoformat(),
     }
     return render(request, 'mande/studentevaluationselect.html',context)
