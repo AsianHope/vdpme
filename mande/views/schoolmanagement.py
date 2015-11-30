@@ -540,9 +540,9 @@ def studentevaluation_form(request, school_id, get_date=date.today().isoformat()
     warning = ''
     message = ''
     exit_surveys = ExitSurvey.objects.all().filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
-    get_enrolled_student = ClassroomEnrollment.objects.exclude(student_id__in=exit_surveys).filter(classroom_id=classroom_id)
+    get_enrolled_student = ClassroomEnrollment.objects.exclude(student_id__in=exit_surveys).exclude(drop_date__lt=date.today().isoformat()).filter(classroom_id=classroom_id)
     students = get_enrolled_student
-
+    
     #pre instantiate data for this form so that we can update the whole queryset later
     students_at_school_id = []
     for student in students:
