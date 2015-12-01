@@ -487,13 +487,18 @@ Academic Form Single
  - process a single AcademicForm for requested student and log the action
 *****************************************************************************
 '''
-def academic_form_single(request, student_id=0):
+def academic_form_single(request, student_id=0, test_date=date.today().isoformat(), test_level=None):
     if request.method == 'POST':
         form = AcademicForm(request.POST)
+        instance,created = Academic.objects.get_or_create(student_id=IntakeSurvey.objects.get(pk=form.data['student_id']),
+                                        test_date=form.data['test_date'],
+                                        test_level=form.data['test_level'])
+        form = AcademicForm(request.POST,instance=instance)
         if form.is_valid():
             #process
             instance = form.save()
-            message = 'Recorded semester test for '+instance.student_id.name
+            action = 'Recorded ' if created else 'Updated '
+            message = ( action+'semester test for '+instance.student_id.name)
             log = NotificationLog(user=request.user,
                                   text=message,
                                   font_awesome_icon='fa-calculator')
@@ -503,13 +508,32 @@ def academic_form_single(request, student_id=0):
                         reverse('student_detail',
                                 kwargs={'student_id':instance.student_id.student_id}))
     else:
-        if student_id > 0:
-            form = AcademicForm({
+        if student_id > 0 and test_level:
+            try:
+                instance = Academic.objects.get(student_id=IntakeSurvey.objects.get(pk=student_id),
+                                              test_date=test_date,
+                                              test_level=test_level)
+                form = AcademicForm(instance=instance)
+
+            except ObjectDoesNotExist:
+                form = AcademicForm({
                     'student_id':student_id,
                     'test_date':date.today().isoformat(),
                     'test_level':getStudentGradebyID(student_id)})
         else:
-            form = AcademicForm()
+            if student_id >0:
+                try:
+                    instance = Academic.objects.get(student_id=IntakeSurvey.objects.get(pk=student_id),
+                                              test_date=date.today().isoformat(),
+                                              test_level=getStudentGradebyID(student_id))
+                    form = AcademicForm(instance=instance)
+
+                except ObjectDoesNotExist:
+                    form = AcademicForm({'student_id':student_id,
+                                    'test_date':test_date,
+                                    'test_level':getStudentGradebyID(student_id)})
+            else:
+                form = AcademicForm()
 
     context = {'form': form,'student_id':student_id}
 
