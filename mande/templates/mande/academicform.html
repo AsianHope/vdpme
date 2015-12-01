@@ -1,29 +1,27 @@
 {% extends "base.html" %}
 {% load mandefilters %}
 {% block title %}
-Academic performace for {{school}} ({{ grade_id|grade_by_id }})
+Academic performace for {{classroom.school_id}} ({{ classroom.get_cohort_display }} - {{classroom.classroom_number}})
 {% endblock %}
 
 {% block content %}
 
 <div class="col-md-9">
-  {% if grade_id %}
-  <form method="post" action="{% url 'academic_form' school.school_id test_date grade_id %}">
-  {% else %}
-  <form method="post" action="{% url 'academic_form' school.school_id test_date %}">
-  {% endif %}
+  <form method="post" action="{% url 'academic_form' classroom.school_id.school_id test_date classroom.classroom_id %}">
     {% csrf_token %}
     {{ formset.management_form }}
     <div class="form-group table-responsive">
       <table class="table table-bordered table-striped table-hover" id="academicTable">
-        <thead><tr>
-          <th>SID</th>
-          <th>Name</th>
-          <th>Level</th>
-          <th>Math</th>
-          <th>Khmer</th>
-          <th>Promote?</th>
-          </tr></thead>
+        <thead>
+          <tr>
+            <th>SID</th>
+            <th>Name</th>
+            <th>Level</th>
+            <th>Math</th>
+            <th>Khmer</th>
+            <th>Promote?</th>
+          </tr>
+        </thead>
         <tbody>
           {% for form in formset %}
 
@@ -43,29 +41,29 @@ Academic performace for {{school}} ({{ grade_id|grade_by_id }})
             </tr>
           {% endfor %}
         </tbody>
-
         <tfoot>
-
           <tr><td colspan=6>
               <button class="btn btn-primary">Submit</button>
           </td></tr>
         </tfoot>
-
 
       </table>
     </div>
   </form>
 </div>
 
-
 <div class="col-md-3">
       <input type="date" name="attendance_date" class="form-control" id="datePicker"/>
       <p style="color:red">{{ warning }}</p>
       <p style="color:green">{{ message }}</p>
+      <ul>
+        {% for classroom_by_school in classrooms_by_school %}
+        <li>
+          <a href="{% url 'academic_form' classroom_by_school.school_id.school_id test_date %}{{classroom_by_school.classroom_id}}/">{{classroom_by_school.get_cohort_display}} - {{classroom_by_school.classroom_number}}</a>
+        </li>
+        {% endfor %}
 
-      {% for grade_id,grade in grades.items %}
-      <p><a href="{% url 'academic_form' school.school_id test_date %}{{grade_id}}/">{{grade}}</a></p>
-      {% endfor %}
+      </ul>
 </div>
 
 

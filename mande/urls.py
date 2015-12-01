@@ -76,7 +76,7 @@ urlpatterns = patterns('',
     url(r'^school-management/academics/$', views.academic_select, name='academic_select'),
     url(r'^school-management/academics/(?P<student_id>\d+)/$', views.academic_form_single, name='academic_form_single'),
     url(r'^school-management/academics/bulk/(?P<school_id>\d+)/(?P<test_date>\d{4}-\d{1,2}-\d{1,2})/$', views.academic_form, name='academic_form'),
-    url(r'^school-management/academics/bulk/(?P<school_id>\d+)/(?P<test_date>\d{4}-\d{1,2}-\d{1,2})/(?P<grade_id>\d+)/$', views.academic_form, name='academic_form'),
+    url(r'^school-management/academics/bulk/(?P<school_id>\d+)/(?P<test_date>\d{4}-\d{1,2}-\d{1,2})/(?P<classroom_id>\d+)/$', views.academic_form, name='academic_form'),
 
     url(r'^school-management/student-evaluation/$', views.studentevaluation_select, name='studentevaluation_select'),
     url(r'^school-management/student-evaluation/(?P<student_id>\d+)/$', views.studentevaluation_form_single, name='studentevaluation_form_single'),

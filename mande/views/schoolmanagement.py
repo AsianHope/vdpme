@@ -408,42 +408,26 @@ Academic Form
  - process a AcademicForm and log the action
 *****************************************************************************
 '''
-def academic_form(request, school_id, test_date=date.today().isoformat(), grade_id=None):
-    school = School.objects.get(pk=school_id)
+def academic_form(request, school_id, test_date=date.today().isoformat(), classroom_id=None):
+    classroom = Classroom.objects.get(pk=classroom_id)
     warning = ''
     message = ''
 
     #find only currently enrolled students
-    exit_surveys = ExitSurvey.objects.all().filter(
-                        exit_date__lte=date.today().isoformat()
-                        ).values_list('student_id',flat=True)
-    students = IntakeSurvey.objects.all().order_by('student_id'
-                                 ).exclude(student_id__in=exit_surveys).filter(site=school_id)
+    exit_surveys = ExitSurvey.objects.all().filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
+    students = ClassroomEnrollment.objects.exclude(student_id__in=exit_surveys).exclude(drop_date__lt=date.today().isoformat()).filter(classroom_id=classroom_id)
 
-    #find out if any student acadmics have been recorded
+    # find out if any student acadmics have been recorded
     student_academics = Academic.objects.filter(student_id=students, test_date=test_date)
-
     #pre instantiate data for this form so that we can update the whole queryset later
-    if grade_id is None:
-        for student in students:
-            Academic.objects.get_or_create(
-                                            student_id=student,
-                                            test_date=test_date,
-                                            test_level=getStudentGradebyID(student.student_id))
-        student_academics = Academic.objects.filter(student_id=students,
-                                                    test_date=test_date)
-
-    else:
-        for student in students:
-            if getStudentGradebyID(student.student_id) == int(grade_id):
-                Academic.objects.get_or_create( student_id=student,
+    for student in students:
+        Academic.objects.get_or_create( student_id=student.student_id,
                                                 test_date=test_date,
-                                                test_level=grade_id)
+                                                test_level=student.classroom_id.cohort)
 
-        student_academics = Academic.objects.filter(student_id=students,
+    student_academics = Academic.objects.filter(student_id=students,
                                                     test_date=test_date,
-                                                    test_level=grade_id)
-
+                                                    test_level=student.classroom_id.cohort)
     AcademicFormSet = modelformset_factory(Academic, form=AcademicForm, extra=0)
 
     if request.method == 'POST':
@@ -457,27 +441,28 @@ def academic_form(request, school_id, test_date=date.today().isoformat(), grade_
                                         Q(test_grade_khmer=None)&
                                         Q(test_grade_math=None)
                                     ).delete()
-            if grade_id is None:
-                message = 'Recorded semester tests for '+str(school)
-            else:
-                message = ('Recorded semester tests for '+
-                            str(dict(GRADES)[int(grade_id)])+
-                            ' at '+str(school))
+
+
+            message = ('Recorded semester tests for '+
+                            str(classroom.get_cohort_display())+' - '
+                            +str(classroom.classroom_number)+
+                            ' at '+str(classroom.school_id))
             log = NotificationLog(  user=request.user,
                                     text=message,
                                     font_awesome_icon='fa-calculator')
             log.save()
 
+
     else:
         formset = AcademicFormSet(queryset = student_academics)
-    context= {  'school':school,
-                'grade_id': grade_id,
+    context= {
+                'classroom':classroom,
+                'classrooms_by_school':Classroom.objects.filter(school_id=school_id,cohort__lt=50),
                 'students':students,
                 'test_date':test_date,
                 'formset':formset,
                 'warning': mark_safe(warning),
-                'message': message,
-                'grades': dict(GRADES)
+                'message': message
     }
 
     return render(request, 'mande/academicform.html', context)
@@ -489,8 +474,9 @@ Academic Select
 '''
 def academic_select(request):
     schools = School.objects.all()
-    context = { 'schools':schools,
-                'grades': dict(GRADES),
+    classrooms = Classroom.objects.filter(cohort__lt=50)
+    context = {
+                'classrooms':classrooms,
                 'today': date.today().isoformat(),
     }
     return render(request, 'mande/academicselect.html',context)
@@ -542,7 +528,7 @@ def studentevaluation_form(request, school_id, get_date=date.today().isoformat()
     exit_surveys = ExitSurvey.objects.all().filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
     get_enrolled_student = ClassroomEnrollment.objects.exclude(student_id__in=exit_surveys).exclude(drop_date__lt=date.today().isoformat()).filter(classroom_id=classroom_id)
     students = get_enrolled_student
-    
+
     #pre instantiate data for this form so that we can update the whole queryset later
     students_at_school_id = []
     for student in students:

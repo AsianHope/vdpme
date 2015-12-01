@@ -1,19 +1,50 @@
 {% extends "base.html" %}
 {% load mandefilters %}
 {% block title %}
-Please select a school.
+Please select a classroom.
 {% endblock %}
 
 {% block content %}
-{% for school in schools %}
-  <div class ="col-md-3">
-    <h1>{{school}}</h1>
-    <ul>
-      <li><a href = "{% url 'academic_form' school.school_id today %}">All Students</a></li>
-      {% for grade_id,grade in grades.items %}
-      <li><a href="{% url 'academic_form' school.school_id today %}{{grade_id}}/">{{grade}}</a></li>
-      {% endfor %}
-    </ul>
+
+  <div class="col-md-9">
+    <table id="classroomDataTable" class="table table-bordered table-hover">
+      <thead>
+        <tr><th>Site</th><th>Grade</th><th>Description</th><th>Evaluation</th></tr>
+      </thead>
+      <tbody>
+        {% for classroom in classrooms %}
+          <tr>
+            <td>{{ classroom.school_id }}</td>
+            <td>{{ classroom.get_cohort_display }}</td>
+            <td>{{ classroom.classroom_number }}</td>
+            <td>
+              <a href="{% url 'academic_form' classroom.school_id.school_id today %}{{classroom.classroom_id}}/" role="button" class="btn btn-xs btn-success">
+              Input Achievement Test
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+    </table>
   </div>
-{% endfor %}
+{% endblock %}
+{% block script %}
+ <!-- DataTables JavaScript -->
+    <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+    <script src="/static/mande/dist/js/jethro.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#classroomDataTable').DataTable({
+      responsive: true,
+      pageLength: 25,
+      order: [[0,'asc'],[1,'asc'],[2,'asc']],
+      columnDefs: [
+       { type: 'jethro', targets: 1 }
+     ]
+  });
+});
+</script>
+
 {% endblock %}
