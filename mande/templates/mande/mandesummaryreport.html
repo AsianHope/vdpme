@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load mandefilters %}
+{% block title %}
+M&E Summary Report
+{% endblock %}
+
+{% block content %}
+    <div class="col-md-9">
+      <h3>Catch-up school</h3>
+      <table>
+        <td>
+          <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
+            <tr><th>&nbsp;</th></tr>
+            <tr><td>&nbsp;</td></tr>
+            {% for grade_id,grade in grades.items %}
+              {% if grade_id >= 1 and grade_id <= 6 %}
+                <tr>
+                  <td>
+                    {{grade}}
+                  </td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+            <tr>
+              <td>Total:</td>
+            </tr>
+          </table>
+        </td>
+        {% for student_by_site_grade in students_by_site_grade %}
+        <td>
+          <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
+              <tr>
+                <th colspan="2">{{student_by_site_grade.school}}</th>
+              </tr>
+              <tr>
+                <td>Boys</td><td>Girls</td>
+              </tr>
+              {% for grade in student_by_site_grade.grades %}
+              <tr>
+                  {% for k, v in grade.items %}
+                  <!-- <td>{{ k }}</td> -->
+                  <td>{{v.students | get_students_length_by_gender:'M'}}</td>
+                  <td>{{v.students | get_students_length_by_gender:'F'}}</td>
+                  {% endfor %}
+              </tr>
+              {% endfor %}
+              <tr>
+                <td>{{student_by_site_grade.total | get_students_length_by_gender:'M'}}</td>
+                <td>{{student_by_site_grade.total | get_students_length_by_gender:'F'}}</td>
+              </tr>
+            </table>
+          </td>
+          {% endfor %}
+        </tr>
+      </table>
+    </div>
+    <div class="col-md-3">
+
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+ <!-- DataTables JavaScript -->
+<script type="text/javascript">
+$('#datePicker').val('{{view_date}}');
+$(function() {
+      $('#datePicker').change(function() {
+          //split on /
+          $("form").submit();
+      });
+    });
+
+</script>
+
+{% endblock %}

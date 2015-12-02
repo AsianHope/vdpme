@@ -421,3 +421,36 @@ def student_dental_report(request,site_id=None):
                                 'sites':sites,
                                 'current_site':current_site
                             })
+'''
+*****************************************************************************
+M&E summary Report
+ -
+*****************************************************************************
+'''
+def mande_summary_report(request):
+    schools = School.objects.all()
+    exit_surveys = ExitSurvey.objects.all().filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
+    students = IntakeSurvey.objects.exclude(student_id__in=exit_surveys)
+    students_by_site_grade =[]
+    # generate_list of students group by site and grade
+    for school in schools:
+        students_by_site_grade.extend([{'school':school,'total':[],'grades':[{'grade'+str(i+1)+'':{'grade':i+1,'students':[]}} for i in range(6)]} ])
+
+    for student in students:
+        for student_by_site_grade in students_by_site_grade:
+            if student_by_site_grade['school'] == student.getRecentFields()['site']:
+                for grade in  student_by_site_grade['grades']:
+                    for i in range(6):
+                        try:
+                            if grade['grade'+str(i+1)+'']['grade'] == student.current_vdp_grade():
+                                student_by_site_grade['total'].append(student)
+                                grade['grade'+str(i+1)+'']['students'].append(student)
+                        except:
+                            pass
+    return render(request, 'mande/mandesummaryreport.html',
+                            {
+                                'schools':schools,
+                                'grades':dict(GRADES),
+                                'students_by_site_grade' : students_by_site_grade
+
+                            })

@@ -88,6 +88,16 @@ def check_if_already_perform_post_exit(exit_survey_student_id,arg):
             check_already_perform = False
     return check_already_perform
 
+# get total of students by gender
+@register.filter(name='get_students_length_by_gender')
+def get_students_length_by_gender(students,arg):
+    gender = arg
+    students_by_gender=[]
+    for student in students:
+        if student.getRecentFields()['gender'] == gender:
+            students_by_gender.append(student)
+    return len(students_by_gender)
+
 #get dictionary items
 @register.filter
 def get_item(dictionary, key):

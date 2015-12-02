@@ -35,6 +35,8 @@ urlpatterns = patterns('',
     url(r'^reports/student_dental/$', views.student_dental_report, name='student_dental_report'),
     url(r'^reports/student_dental/(?P<site_id>\d+)/$', views.student_dental_report, name='student_dental_report'),
 
+    url(r'^reports/mande_summary_report/$', views.mande_summary_report, name='mande_summary_report'),
+
     url(r'^surveys/intake/$', views.intake_survey, name='intake_survey'),
     url(r'^surveys/intake/(?P<student_id>\d+)/$', views.intake_survey, name='intake_survey'),
     url(r'^surveys/intake/update/(?P<student_id>\d+)/$', views.intake_update, name='intake_update'),
