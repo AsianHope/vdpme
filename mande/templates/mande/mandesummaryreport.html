@@ -54,9 +54,83 @@ M&E Summary Report
         </tr>
       </table>
     </div>
-    <div class="col-md-3">
+
+      <!-- ---------------------------- -->
+
+  <div class="col-md-12">
+      <h3>Achieved age appropriate level</h3>
+      <table>
+        <td>
+          <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
+            <tr><th>&nbsp;</th></tr>
+            <tr><td>Grade<br/>&nbsp;</td></tr>
+            {% for grade_id,grade in grades.items %}
+              {% if grade_id >= 1 and grade_id <= 6 %}
+                <tr>
+                  <td>
+                    {{grade_id}}
+                  </td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+            <tr>
+              <td>Total:</td>
+            </tr>
+          </table>
+        </td>
+        {% for student_by_site_grade in students_by_site_grade %}
+        <td>
+          <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
+              <tr>
+                <th colspan="4">{{student_by_site_grade.school}}</th>
+              </tr>
+              <tr>
+                <td>Boys</td><td>% of total</td>
+                <td>Girls</td><td>% of total</td>
+              </tr>
+              {% for grade in student_by_site_grade.grades %}
+              <tr>
+                  {% for k, v in grade.items %}
+                  <!-- <td>{{ k }}</td> -->
+                  <td> {{v.students_appropriate_level | get_students_length_by_gender:'M'}} </td>
+                  <!--boys % of total  -->
+                  <td>
+                    {% widthratio v.students_appropriate_level|get_students_length_by_gender:'M' v.students|get_students_length_by_gender:'M' 100 %}
+                     %
+                  </td>
+                  <td> {{v.students_appropriate_level | get_students_length_by_gender:'F'}}</td>
+                  <!-- girls % of total -->
+                  <td>
+                    {% widthratio v.students_appropriate_level|get_students_length_by_gender:'F' v.students|get_students_length_by_gender:'F' 100 %}
+                     %
+                  </td>
+                  {% endfor %}
+              </tr>
+              {% endfor %}
+              <tr>
+                <td>{{student_by_site_grade.total_student_appropriate_level | get_students_length_by_gender:'M'}}</td>
+                <td>
+                  {% widthratio student_by_site_grade.total_student_appropriate_level|get_students_length_by_gender:'M' student_by_site_grade.total|get_students_length_by_gender:'M' 100 %}
+                   %
+                </td>
+                <td>{{student_by_site_grade.total_student_appropriate_level | get_students_length_by_gender:'F'}}</td>
+                <td>
+                  {% widthratio student_by_site_grade.total_student_appropriate_level|get_students_length_by_gender:'F' student_by_site_grade.total|get_students_length_by_gender:'F' 100 %}
+                   %
+                </td>
+              </tr>
+            </table>
+          </td>
+          {% endfor %}
+        </tr>
+      </table>
+
+
 
     </div>
+    <!-- <div class="col-md-3">
+
+    </div> -->
 
 
 {% endblock %}

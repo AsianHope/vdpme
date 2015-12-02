@@ -428,13 +428,23 @@ M&E summary Report
 *****************************************************************************
 '''
 def mande_summary_report(request):
+    # Catch-up school report
     schools = School.objects.all()
     exit_surveys = ExitSurvey.objects.all().filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
     students = IntakeSurvey.objects.exclude(student_id__in=exit_surveys)
     students_by_site_grade =[]
     # generate_list of students group by site and grade
     for school in schools:
-        students_by_site_grade.extend([{'school':school,'total':[],'grades':[{'grade'+str(i+1)+'':{'grade':i+1,'students':[]}} for i in range(6)]} ])
+        students_by_site_grade.extend(
+            [
+                {
+                'school':school,
+                'total':[],
+                'total_student_appropriate_level':[],
+                'grades':[{'grade'+str(i+1)+'':{'grade':i+1,'students':[],'students_appropriate_level':[],'not':[]}} for i in range(6)]
+                }
+            ]
+        )
 
     for student in students:
         for student_by_site_grade in students_by_site_grade:
@@ -443,10 +453,16 @@ def mande_summary_report(request):
                     for i in range(6):
                         try:
                             if grade['grade'+str(i+1)+'']['grade'] == student.current_vdp_grade():
+                                # Achieved age appropriate level
+                                if (student.age_appropriate_grade() - student.current_vdp_grade()) < 1:
+                                    grade['grade'+str(i+1)+'']['students_appropriate_level'].append(student)
+                                    student_by_site_grade['total_student_appropriate_level'].append(student)
                                 student_by_site_grade['total'].append(student)
                                 grade['grade'+str(i+1)+'']['students'].append(student)
                         except:
                             pass
+
+
     return render(request, 'mande/mandesummaryreport.html',
                             {
                                 'schools':schools,
