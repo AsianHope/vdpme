@@ -55,9 +55,9 @@
                                       <span class="caret"></span>
                                   </button>
                                   <ul class="dropdown-menu pull-right" role="menu">
-                                      <li><a href="#" data-id="unenrolled_panel">Unenrolled Students</a>
+                                      <li><a data-target="undenrolled_panel" data-id="unenrolled_panel" data-panel="anamolous">Unenrolled Students</a>
                                       </li>
-                                      <li><a href="#" data-id="absence_panel">Unapproved Absences</a>
+                                      <li><a data-target="absence_panel" data-id="absence_panel" data-panel="anamolous">Unapproved Absences</a>
                                       </li>
                                       <li><a href="#">Something else here</a>
                                       </li>
@@ -124,9 +124,9 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu pull-right" role="menu">
-                                        <li><a data-target="gender_panel" data-id="gender_panel">Overview</a>
+                                        <li><a data-target="gender_panel" data-id="gender_panel" data-panel="objectives">Overview</a>
                                         </li>
-                                        <li><a data-target="skills_panel" data-id="skills_panel">Objectives breakdown</a>
+                                        <li><a data-target="skills_panel" data-id="skills_panel" data-panel="objectives">Objectives breakdown</a>
                                         </li>
                                         <li><a href="#">Something else here</a>
                                         </li>
@@ -255,7 +255,8 @@
 <!-- DataTables JavaScript -->
    <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
    <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
-
+   <script src="/static/mande/js/js.cookie.js"></script>
+   
     <script type="text/javascript">
 
     $(document).ready(function(){
@@ -280,7 +281,28 @@
     		  $('#' + panel).show();
     		  $(window).trigger('resize');
     		  $(this).closest('.panel-default').find('button.dropdown-toggle').html($(this).html() + '<span class="caret"></span>');
+    		  
+    		  // Create cookie to save preference
+    		  if ($(this).attr('data-panel') != undefined) {
+            var cookie_name = $(this).attr('data-panel') + '_cookie';
+    		    Cookies.set(cookie_name, panel, { expires: 7 });
+    		  }
     	  }
+      });
+
+      // Check cookies for panel settings
+      var cookies_array = [];
+      $('a[data-panel]').each(function() {
+        var search_cookie_name = $(this).attr('data-panel') +'_cookie';
+        if ($.inArray(search_cookie_name, cookies_array) < 0) {
+          cookies_array.push(search_cookie_name);
+        }
+      });
+      $.each(cookies_array, function( index, value ) {
+        var cookie_value = Cookies.get(value);
+        if (cookie_value != undefined) {
+          $('a[data-id="'+cookie_value+'"]').click();
+        }
       });
     });
 

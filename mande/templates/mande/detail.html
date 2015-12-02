@@ -100,6 +100,7 @@
         <table class="table table-bordered table-striped table-hover" id="academicTable">
           <thead>
             <tr>
+              <th>Edit</th>
               <th>Test Date</th>
               <th>Test Grade</th>
               <th>Math</th>
@@ -109,7 +110,7 @@
           </thead>
           <tbody>
             {% for test in academics %}
-            <tr>
+            <tr><td><a href="{% url 'academic_form_single' survey.student_id test.test_date|date:'Y-m-d' test.test_level %}?next={% url 'student_detail' survey.student_id %}#academic" role="button" class="btn btn-xs btn-warning">Edit</a></td>
               <td>{{test.test_date|date:'d N Y'}}</td>
               <td>{{test.get_test_level_display}}</td>
               <td>{{test.test_grade_math}}</td>
@@ -223,7 +224,7 @@
             <tr>
               <th>Date Enrolled</th>
               <th>Date Dropped</th>
-              <th>Course</th
+              <th>Course</th>
 
             </tr>
           </thead>

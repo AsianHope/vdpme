@@ -6,9 +6,8 @@ Adding a Semester Test for {{student_id|name_by_sid}}
 {% endblock %}
 
 {% block content %}
-<div class="col-md-2"></div>
-<div class="col-md-8">
-<form action = "{% url 'academic_form_single' student_id %}" method="post">
+<div class="col-lg-10">
+<form action = "{% url 'academic_form_single' student_id %}?next={{next_url}}" method="post">
 
   <div class="form-group table-responsive">
     <table class="table table-bordered table-striped table-hover" id="academicTable">
