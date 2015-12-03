@@ -23,7 +23,7 @@
             {% for dental in dentals_by_month_year %}
           <tr>
               <td>{{ dental.group_by_date }}</td>
-              <td>{{dental.dentals|length}}</td>
+              <td>{{dental.unique}}</td>
               <td>
                   {{dental.dentals|get_subtotal_of_dental:'extractions' }}
               </td>
@@ -52,7 +52,7 @@
           <tr>
             <td>Total:</td>
             <td>
-              {{dentals_by_month_year|get_total_of_dental:'None' }}
+              {{unique_students}}
             </td>
             <td>
               {{dentals_by_month_year|get_total_of_dental:'extractions' }}
