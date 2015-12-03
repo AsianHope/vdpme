@@ -55,8 +55,6 @@ M&E Summary Report
       </table>
     </div>
 
-      <!-- ---------------------------- -->
-
   <div class="col-md-12">
       <h3>Achieved age appropriate level</h3>
       <table>
@@ -124,9 +122,30 @@ M&E Summary Report
           {% endfor %}
         </tr>
       </table>
-
-
-
+  </div>
+  <div class="col-md-12">
+      <h3>Total Students</h3>
+      <table>
+        <tr>
+          {% for student_by_site in students_by_site %}
+          <td>
+            <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
+                <tr>
+                  <th colspan="2">{{student_by_site.school}}</th>
+                </tr>
+                <tr>
+                  <td>Boys</td>
+                  <td>Girls</td>
+                </tr>
+                <tr>
+                  <td>{{student_by_site.students | get_students_length_by_gender:'M'}}</td>
+                  <td>{{student_by_site.students | get_students_length_by_gender:'F'}}</td>
+                </tr>
+            </table>
+          </td>
+          {% endfor %}
+        </tr>
+      </table>
     </div>
     <!-- <div class="col-md-3">
 
