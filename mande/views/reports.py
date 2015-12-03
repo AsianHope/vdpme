@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import modelformset_factory
-from django.db.models import Q,Sum
+from django.db.models import Q,Sum,Count
 from django.forms.models import model_to_dict
 
 from django.utils.html import conditional_escape as esc
@@ -402,24 +402,29 @@ def student_dental_report(request,site_id=None):
     else:
         current_site = 'All Site'
         dentals= Health.objects.all().filter(appointment_type='Dental')
-
+    
+    unique_students = dentals.values('student_id').annotate(dcount=Count('student_id')).count()
+    
     year = datetime.now().year-2013
     dentals_by_month_year=[]
     for x in range(year):
-        dentals_by_month_year.extend([{'group_by_date':str(datetime.now().year-x)+'-'+format(i+1, '02d'),'dentals':[]} for i in range(12)])
+        dentals_by_month_year.extend([{'group_by_date':str(datetime.now().year-x)+'-'+format(i+1, '02d'),'dentals':[], 'unique':0} for i in range(12)])
 
     for dental in dentals:
         for dental_by_month_year in dentals_by_month_year:
             generate_to_date=datetime.strptime(dental_by_month_year['group_by_date'], '%Y-%m')
             if(generate_to_date.year==dental.appointment_date.year and generate_to_date.month==dental.appointment_date.month):
                 dental_by_month_year['dentals'].append(dental)
+                unique_students_by_month = dentals.filter(appointment_date__year=generate_to_date.year, appointment_date__month=generate_to_date.month).values('student_id').annotate(dcount=Count('student_id')).count()
+                dental_by_month_year['unique'] = unique_students_by_month
 
     sites = School.objects.all()
     return render(request, 'mande/studentdentalreport.html',
                             {
                                 'dentals_by_month_year':dentals_by_month_year,
                                 'sites':sites,
-                                'current_site':current_site
+                                'current_site':current_site,
+                                'unique_students':unique_students
                             })
 '''
 *****************************************************************************
