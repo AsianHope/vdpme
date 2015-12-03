@@ -584,7 +584,7 @@ def studentevaluation_form(request, school_id, get_date=date.today().isoformat()
                                     font_awesome_icon='fa-calculator')
             log.save()
         else:
-            warning = 'Cannot record student evaluation. Please try again.'
+            warning = 'Cannot record student evaluations. Please refresh the page and try again.'
             students = get_enrolled_student
             students_at_school_id = []
             for student in students:
