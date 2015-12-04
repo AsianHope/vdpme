@@ -437,9 +437,11 @@ def mande_summary_report(request):
     schools = School.objects.all()
     exit_surveys = ExitSurvey.objects.all().filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
     students = IntakeSurvey.objects.exclude(student_id__in=exit_surveys)
+    enrolled_students = ClassroomEnrollment.objects.filter(Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None)))
     students_by_site_grade =[]
     students_by_site=[]
     students_by_site_grade_plus_skill_vietnamese = []
+    students_enrolled_in_english_by_level = []
     # generate_list of students group by site and grade
     for school in schools:
         students_by_site_grade.extend(
@@ -462,11 +464,20 @@ def mande_summary_report(request):
                 'school':school,
                 'vietnamese_only':[],
                 'total':[],
-                'grades':[{'grade'+str(i+1)+'':{'grade':i+1,'students':[],'students_appropriate_level':[],'not':[]}} for i in range(6)],
+                'grades':[{'grade'+str(i+1)+'':{'grade':i+1,'students':[]}} for i in range(6)],
                 }
             ]
         )
 
+        students_enrolled_in_english_by_level.extend(
+            [
+                {
+                    'school':school,
+                    'total':[],
+                    'english_classes':[{'english_level'+str(i+1)+'':{'level':'Level '+str(i+1),'students':[]}} for i in range(6)],
+                }
+            ]
+        )
 
     for student in students:
         # get student by site and grade
@@ -517,12 +528,29 @@ def mande_summary_report(request):
             if student_by_site['school'] == student.getRecentFields()['site']:
                 student_by_site['students'].append(student)
 
+
+    # get students enrolled in english by level
+    for enrolled_student in enrolled_students:
+        # if enrolled student is english class
+        if enrolled_student.classroom_id.cohort == 50:
+            for student_enrolled_in_english_by_level in students_enrolled_in_english_by_level:
+                if student_enrolled_in_english_by_level['school'] == enrolled_student.classroom_id.school_id:
+                    for english_class in  student_enrolled_in_english_by_level['english_classes']:
+                        for i in range(6):
+                            try:
+                                if(english_class['english_level'+str(i+1)+'']['level'] == enrolled_student.classroom_id.classroom_number):
+                                    english_class['english_level'+str(i+1)+'']['students'].append(enrolled_student.student_id)
+                                    student_enrolled_in_english_by_level['total'].append(enrolled_student.student_id)
+                            except:
+                                pass
+
     return render(request, 'mande/mandesummaryreport.html',
                             {
                                 'schools':schools,
                                 'grades':dict(GRADES),
                                 'students_by_site_grade' : students_by_site_grade,
                                 'students_by_site' : students_by_site,
-                                'students_by_site_grade_plus_skill_vietnamese':students_by_site_grade_plus_skill_vietnamese
-
+                                'students_by_site_grade_plus_skill_vietnamese':students_by_site_grade_plus_skill_vietnamese,
+                                'students_enrolled_in_english_by_level':students_enrolled_in_english_by_level,
+                                'level':range(1,7)
                             })

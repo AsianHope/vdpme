@@ -148,7 +148,7 @@ M&E Summary Report
       </table>
   </div>
   <div class="col-md-9">
-      <h3>Students enrolled in grade plus vietnamese</h3>
+      <h3>Students enrolled in grade plus Vietnamese</h3>
       <table>
         <td>
           <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
@@ -200,6 +200,52 @@ M&E Summary Report
               <tr>
                 <td>{{student_by_site_grade_plus_skill_vietnamese.total | get_students_length_by_gender:'M'}}</td>
                 <td>{{student_by_site_grade_plus_skill_vietnamese.total | get_students_length_by_gender:'F'}}</td>
+              </tr>
+            </table>
+          </td>
+          {% endfor %}
+        </tr>
+      </table>
+    </div>
+    <div class="col-md-9">
+      <h3>Students enrolled in English</h3>
+      <table>
+        <td>
+          <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
+            <tr><th>&nbsp;</th></tr>
+            <tr><td>&nbsp;</td></tr>
+            {% for i in level %}
+                <tr>
+                  <td>
+                    English level {{i}}
+                  </td>
+                </tr>
+            {% endfor %}
+            <tr>
+              <td>Total:</td>
+            </tr>
+          </table>
+        </td>
+        {% for student_enrolled_in_english_by_level in students_enrolled_in_english_by_level %}
+        <td>
+          <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
+              <tr>
+                <th colspan="2">{{student_enrolled_in_english_by_level.school}}</th>
+              </tr>
+              <tr>
+                <td>Boys</td><td>Girls</td>
+              </tr>
+              {% for english_class in student_enrolled_in_english_by_level.english_classes %}
+              <tr>
+                  {% for k, v in english_class.items %}
+                  <td>{{v.students | get_students_length_by_gender:'M'}}</td>
+                  <td>{{v.students | get_students_length_by_gender:'F'}}</td>
+                  {% endfor %}
+              </tr>
+              {% endfor %}
+              <tr>
+                <td>{{student_enrolled_in_english_by_level.total | get_students_length_by_gender:'M'}}</td>
+                <td>{{student_enrolled_in_english_by_level.total | get_students_length_by_gender:'F'}}</td>
               </tr>
             </table>
           </td>
