@@ -402,9 +402,9 @@ def student_dental_report(request,site_id=None):
     else:
         current_site = 'All Site'
         dentals= Health.objects.all().filter(appointment_type='Dental')
-    
+
     unique_students = dentals.values('student_id').annotate(dcount=Count('student_id')).count()
-    
+
     year = datetime.now().year-2013
     dentals_by_month_year=[]
     for x in range(year):
@@ -439,6 +439,7 @@ def mande_summary_report(request):
     students = IntakeSurvey.objects.exclude(student_id__in=exit_surveys)
     students_by_site_grade =[]
     students_by_site=[]
+    students_by_site_grade_plus_skill_vietnamese = []
     # generate_list of students group by site and grade
     for school in schools:
         students_by_site_grade.extend(
@@ -447,14 +448,28 @@ def mande_summary_report(request):
                 'school':school,
                 'total':[],
                 'total_student_appropriate_level':[],
-                'grades':[{'grade'+str(i+1)+'':{'grade':i+1,'students':[],'students_appropriate_level':[],'not':[]}} for i in range(6)]
+                'grades':[{'grade'+str(i+1)+'':{'grade':i+1,'students':[],'students_appropriate_level':[],'not':[]}} for i in range(6)],
                 }
             ]
         )
+
         # students by site
         students_by_site.extend([{'school':school,'students':[]}])
+        # student by site grade plus vietnamese
+        students_by_site_grade_plus_skill_vietnamese.extend(
+            [
+                {
+                'school':school,
+                'vietnamese_only':[],
+                'total':[],
+                'grades':[{'grade'+str(i+1)+'':{'grade':i+1,'students':[],'students_appropriate_level':[],'not':[]}} for i in range(6)],
+                }
+            ]
+        )
+
 
     for student in students:
+        # get student by site and grade
         for student_by_site_grade in students_by_site_grade:
             if student_by_site_grade['school'] == student.getRecentFields()['site']:
                 for grade in  student_by_site_grade['grades']:
@@ -469,6 +484,34 @@ def mande_summary_report(request):
                                 grade['grade'+str(i+1)+'']['students'].append(student)
                         except:
                             pass
+
+        # get student enrolleds plus skill vietnamese
+        for student_by_site_grade_plus_skill in students_by_site_grade_plus_skill_vietnamese:
+            if student_by_site_grade_plus_skill['school'] == student.getRecentFields()['site']:
+                for grade in  student_by_site_grade_plus_skill['grades']:
+                    only_vietnamese = []
+                    for i in range(6):
+                        try:
+                            if grade['grade'+str(i+1)+'']['grade'] == student.current_vdp_grade():
+                                enrolleds = ClassroomEnrollment.objects.filter(Q(student_id=student) & Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))).order_by('classroom_id__cohort')
+                                # if student enrolled two class room
+                                if len(enrolleds)>1:
+                                    if(enrolleds[0].classroom_id.cohort==grade['grade'+str(i+1)+'']['grade']):
+                                        if(enrolleds[1].classroom_id.cohort==70):
+                                            student_by_site_grade_plus_skill['total'].append(student)
+                                            grade['grade'+str(i+1)+'']['students'].append(student)
+                            else:
+                                enrolleds = ClassroomEnrollment.objects.filter(Q(student_id=student) & Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))).order_by('classroom_id__cohort')
+                                # student enrolled only vietnamese class
+                                if len(enrolleds)==1:
+                                    if enrolleds[0].classroom_id.cohort==70:
+                                        # it will loop 6 times (rang(6)), so we append only one time when the end of loop
+                                        if i == 5:
+                                            student_by_site_grade_plus_skill['total'].append(student)
+                                            student_by_site_grade_plus_skill['vietnamese_only'].append(student)
+                        except:
+                            pass
+
         # get all students by site
         for student_by_site in students_by_site:
             if student_by_site['school'] == student.getRecentFields()['site']:
@@ -479,6 +522,7 @@ def mande_summary_report(request):
                                 'schools':schools,
                                 'grades':dict(GRADES),
                                 'students_by_site_grade' : students_by_site_grade,
-                                'students_by_site' : students_by_site
+                                'students_by_site' : students_by_site,
+                                'students_by_site_grade_plus_skill_vietnamese':students_by_site_grade_plus_skill_vietnamese
 
                             })
