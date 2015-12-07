@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load mandefilters %}
 {% block title %}
-M&E Summary Report
+M&E Summary Report in {{view_date}}
 {% endblock %}
 
 {% block content %}
@@ -53,6 +53,16 @@ M&E Summary Report
           {% endfor %}
         </tr>
       </table>
+    </div>
+    <div class="col-md-3">
+      <form action = "" method="post">
+          {% csrf_token %}
+          <div class="col-md-12">
+            <div class="form-group">
+              <input type="date" name="view_date" class="form-control" id="view_date" required>
+            </div>
+          </div>
+      </form>
     </div>
 
   <div class="col-md-12">
@@ -253,9 +263,6 @@ M&E Summary Report
         </tr>
       </table>
     </div>
-    <!-- <div class="col-md-3">
-
-    </div> -->
 
 
 {% endblock %}
@@ -263,11 +270,12 @@ M&E Summary Report
 {% block script %}
  <!-- DataTables JavaScript -->
 <script type="text/javascript">
-$('#datePicker').val('{{view_date}}');
+  $('#view_date').val('{{view_date}}');
 $(function() {
-      $('#datePicker').change(function() {
+      $('#view_date').change(function() {
           //split on /
-          $("form").submit();
+          url = '{%url 'mande_summary_report' %}' + $(this).val()
+          window.location.href = url
       });
     });
 

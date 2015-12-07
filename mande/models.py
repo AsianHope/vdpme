@@ -190,13 +190,17 @@ class IntakeSurvey(models.Model):
 	   return unicode(self.student_id)+' - '+self.name
 
 	#return the most up to date information
-	def getRecentFields(self):
+	def getRecentFields(self,view_date=None):
+
 		recent = {}
 		#seed recent with the intake survey
 		for field in self._meta.fields:
 			recent[field.name] = getattr(self,field.name)
 		#loop through all updates, oldest to most recent
-		updates = IntakeUpdate.objects.all().filter(student_id=self.student_id).filter().order_by('date')
+		if view_date != None:
+			updates = IntakeUpdate.objects.all().filter(student_id=self.student_id).filter(date__lte=view_date).order_by('date')
+		else:
+			updates = IntakeUpdate.objects.all().filter(student_id=self.student_id).filter().order_by('date')
 		for update in updates:
 			for field in self._meta.fields:
 				try:
