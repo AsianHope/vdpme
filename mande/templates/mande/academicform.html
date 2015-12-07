@@ -83,7 +83,7 @@ $(document).ready( function() {
           //split on /
           $url = window.location.href.split('/')
           //replace the final value (the date)
-          $url[$url.length-2] = $(this).val()
+          $url[$url.length-3] = $(this).val()
           //rewrite the url with the new date in place
           window.location.href = $url.join('/')
       });
