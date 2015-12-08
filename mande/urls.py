@@ -38,6 +38,8 @@ urlpatterns = patterns('',
     url(r'^reports/mande_summary_report/(?P<view_date>\d{4}-\d{1,2}-\d{1,2})/$', views.mande_summary_report, name='mande_summary_report'),
     url(r'^reports/mande_summary_report/$', views.mande_summary_report, name='mande_summary_report'),
 
+    url(r'^reports/student_promoted_report/$', views.student_promoted_report, name='student_promoted_report'),
+
 
     url(r'^surveys/intake/$', views.intake_survey, name='intake_survey'),
     url(r'^surveys/intake/(?P<student_id>\d+)/$', views.intake_survey, name='intake_survey'),

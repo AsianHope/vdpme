@@ -603,3 +603,43 @@ def mande_summary_report(request,view_date=(date.today().replace(day=1)-timedelt
                                 'students_enrolled_in_english_by_level':students_enrolled_in_english_by_level,
                                 'level':range(1,7)
                             })
+
+'''
+*****************************************************************************
+Student Promoted Report
+ - lists all student Promoted
+*****************************************************************************
+'''
+def student_promoted_report(request,start_date=None,view_date=None):
+    if request.method == 'POST':
+        from_view_date = request.POST['from_view_date']
+        to_view_date = request.POST['to_view_date']
+    else:
+        from_view_date = (date.today().replace(day=1)-timedelta(days=1 * 365/12)).isoformat()
+        to_view_date = (date.today().replace(day=1)-timedelta(days=1)).isoformat()
+
+    academics = Academic.objects.filter(promote = True,test_date__lte=to_view_date,test_date__gte=from_view_date)
+    schools = School.objects.all()
+    break_promoted_student_by_sites =[]
+    # generate_list of students group by site
+    for school in schools:
+        break_promoted_student_by_sites.extend(
+            [
+                {
+                'school':school,
+                'total':[],
+                'students':[],
+                }
+            ]
+        )
+    for academic in academics:
+        for break_promoted_student_by_site in break_promoted_student_by_sites:
+            if break_promoted_student_by_site['school'] == academic.student_id.site:
+                break_promoted_student_by_site['students'].append(academic.student_id)
+
+    return render(request, 'mande/student_promoted_report.html',
+                            {
+                                'break_promoted_student_by_sites':break_promoted_student_by_sites,
+                                'from_view_date':from_view_date,
+                                'to_view_date' : to_view_date
+                            })
