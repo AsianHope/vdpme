@@ -433,16 +433,23 @@ M&E summary Report
 *****************************************************************************
 '''
 def mande_summary_report(request,view_date=(date.today().replace(day=1)-timedelta(days=1)).isoformat()):
+    if request.method == 'POST':
+        start_view_date = request.POST['start_view_date']
+        view_date = request.POST['view_date']
+    else:
+        start_view_date = (date.today().replace(day=1)-timedelta(days=1 * 365/12)).isoformat()
+        view_date=(date.today().replace(day=1)-timedelta(days=1)).isoformat()
     # Catch-up school report
     schools = School.objects.all()
     exit_surveys = ExitSurvey.objects.filter(exit_date__lte=view_date).values_list('student_id',flat=True)
     students = IntakeSurvey.objects.exclude(student_id__in=exit_surveys).filter(date__lte=view_date)
-    enrolled_students = ClassroomEnrollment.objects.filter(Q(Q(Q(drop_date__gte=view_date) & Q(enrollment_date__lte=view_date)) | Q(drop_date=None)))
+    enrolled_students = ClassroomEnrollment.objects.filter( Q( Q( Q(drop_date__gte=view_date) | Q(drop_date__gte=start_view_date) ) | Q(drop_date=None)) & Q(enrollment_date__lte=view_date) ).order_by('student_id')
 
     students_by_site_grade =[]
     students_by_site=[]
     students_by_site_grade_plus_skill_vietnamese = []
     students_enrolled_in_english_by_level = []
+    all_students = []
     # generate_list of students group by site and grade
     for school in schools:
         students_by_site_grade.extend(
@@ -481,6 +488,22 @@ def mande_summary_report(request,view_date=(date.today().replace(day=1)-timedelt
         )
     for student in students:
         # get student by site and grade
+        # for student_by_site_grade in students_by_site_grade:
+        #     if student_by_site_grade['school'] == student.getRecentFields(view_date)['site']:
+        #         for grade in  student_by_site_grade['grades']:
+        #             for i in range(6):
+        #                 try:
+        #                     if grade['grade'+str(i+1)+'']['grade'] == student.current_vdp_grade(view_date):
+        #                         # Achieved age appropriate level
+        #                         if (student.age_appropriate_grade(view_date) - student.current_vdp_grade(view_date)) < 1:
+        #                             grade['grade'+str(i+1)+'']['students_appropriate_level'].append(student)
+        #                             student_by_site_grade['total_student_appropriate_level'].append(student)
+        #                         student_by_site_grade['total'].append(student)
+        #                         grade['grade'+str(i+1)+'']['students'].append(student)
+        #                 except:
+        #                     pass
+
+        # get age appropriate grade
         for student_by_site_grade in students_by_site_grade:
             if student_by_site_grade['school'] == student.getRecentFields(view_date)['site']:
                 for grade in  student_by_site_grade['grades']:
@@ -491,8 +514,6 @@ def mande_summary_report(request,view_date=(date.today().replace(day=1)-timedelt
                                 if (student.age_appropriate_grade(view_date) - student.current_vdp_grade(view_date)) < 1:
                                     grade['grade'+str(i+1)+'']['students_appropriate_level'].append(student)
                                     student_by_site_grade['total_student_appropriate_level'].append(student)
-                                student_by_site_grade['total'].append(student)
-                                grade['grade'+str(i+1)+'']['students'].append(student)
                         except:
                             pass
 
@@ -504,15 +525,16 @@ def mande_summary_report(request,view_date=(date.today().replace(day=1)-timedelt
                     for i in range(6):
                         try:
                             if grade['grade'+str(i+1)+'']['grade'] == student.current_vdp_grade(view_date):
-                                enrolleds = ClassroomEnrollment.objects.filter(Q(student_id=student) & Q(Q(Q(drop_date__gte=view_date) & Q(enrollment_date__lte=view_date)) | Q(drop_date=None))).order_by('classroom_id__cohort')
+                                enrolleds = ClassroomEnrollment.objects.filter(Q(student_id=student) & Q(Q(drop_date__gte=view_date) | Q(drop_date=None)) & Q(enrollment_date__lte=view_date)).order_by('classroom_id__cohort')
                                 # if student enrolled two class room
                                 if len(enrolleds)>1:
                                     if(enrolleds[0].classroom_id.cohort==grade['grade'+str(i+1)+'']['grade']):
                                         if(enrolleds[1].classroom_id.cohort==70):
                                             student_by_site_grade_plus_skill['total'].append(student)
                                             grade['grade'+str(i+1)+'']['students'].append(student)
+                                            all_students.append(student)
                             else:
-                                enrolleds = ClassroomEnrollment.objects.filter(Q(student_id=student) & Q(Q(Q(drop_date__gte=view_date) & Q(enrollment_date__lte=view_date)) | Q(drop_date=None))).order_by('classroom_id__cohort')
+                                enrolleds = ClassroomEnrollment.objects.filter(Q(student_id=student) & Q(Q(drop_date__gte=view_date) | Q(drop_date=None)) & Q(enrollment_date__lte=view_date)).order_by('classroom_id__cohort')
                                 # student enrolled only vietnamese class
                                 if len(enrolleds)==1:
                                     if enrolleds[0].classroom_id.cohort==70:
@@ -520,16 +542,19 @@ def mande_summary_report(request,view_date=(date.today().replace(day=1)-timedelt
                                         if i == 5:
                                             student_by_site_grade_plus_skill['total'].append(student)
                                             student_by_site_grade_plus_skill['vietnamese_only'].append(student)
+                                            all_students.append(student)
                         except:
                             pass
-
-        # get all students by site
-        for student_by_site in students_by_site:
-            if student_by_site['school'] == student.getRecentFields(view_date)['site']:
-                student_by_site['students'].append(student)
-
+        #
+        # # get all students by site
+        # for student_by_site in students_by_site:
+        #     if student_by_site['school'] == student.getRecentFields(view_date)['site']:
+        #         student_by_site['students'].append(student)
     # get students enrolled in english by level
+
+
     for enrolled_student in enrolled_students:
+
         # if enrolled student is english class
         if enrolled_student.classroom_id.cohort == 50:
             for student_enrolled_in_english_by_level in students_enrolled_in_english_by_level:
@@ -540,12 +565,36 @@ def mande_summary_report(request,view_date=(date.today().replace(day=1)-timedelt
                                 if(english_class['english_level'+str(i+1)+'']['level'] == enrolled_student.classroom_id.classroom_number):
                                     english_class['english_level'+str(i+1)+'']['students'].append(enrolled_student.student_id)
                                     student_enrolled_in_english_by_level['total'].append(enrolled_student.student_id)
+                                    all_students.append(enrolled_student.student_id)
                             except:
                                 pass
+
+        # get student by site and grade
+        if enrolled_student.classroom_id.cohort != 50 :
+            #  get student by site and grade
+                for student_by_site_grade in students_by_site_grade:
+                    if student_by_site_grade['school'] == enrolled_student.classroom_id.school_id:
+                        for grade in  student_by_site_grade['grades']:
+                            for i in range(6):
+                                try:
+                                    if grade['grade'+str(i+1)+'']['grade'] == enrolled_student.classroom_id.cohort:
+                                        student_by_site_grade['total'].append(enrolled_student.student_id)
+                                        grade['grade'+str(i+1)+'']['students'].append(enrolled_student.student_id)
+                                        all_students.append(enrolled_student.student_id)
+
+                                except:
+                                    pass
+    # get all students by site
+    # grade + english + vietnamese
+    for student in all_students:
+        for student_by_site in students_by_site:
+            if student_by_site['school'] == student.getRecentFields(view_date)['site']:
+                student_by_site['students'].append(student)
 
     return render(request, 'mande/mandesummaryreport.html',
                             {
                                 'view_date':view_date,
+                                'start_view_date':start_view_date,
                                 'schools':schools,
                                 'grades':dict(GRADES),
                                 'students_by_site_grade' : students_by_site_grade,

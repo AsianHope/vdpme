@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load mandefilters %}
 {% block title %}
-M&E Summary Report in {{view_date}}
+M&E Summary Report in {{start_view_date}} to {{view_date}}
 {% endblock %}
 
 {% block content %}
@@ -59,7 +59,13 @@ M&E Summary Report in {{view_date}}
           {% csrf_token %}
           <div class="col-md-12">
             <div class="form-group">
+              <input type="date" name="start_view_date" class="form-control" id="start_view_date" required>
+            </div>
+            <div class="form-group">
               <input type="date" name="view_date" class="form-control" id="view_date" required>
+            </div>
+            <div class="form-group">
+              <input type="submit" class="form-control btn btn-primary">
             </div>
           </div>
       </form>
@@ -271,13 +277,14 @@ M&E Summary Report in {{view_date}}
  <!-- DataTables JavaScript -->
 <script type="text/javascript">
   $('#view_date').val('{{view_date}}');
-$(function() {
-      $('#view_date').change(function() {
-          //split on /
-          url = '{%url 'mande_summary_report' %}' + $(this).val()
-          window.location.href = url
-      });
-    });
+  $('#start_view_date').val('{{start_view_date}}');
+// $(function() {
+//       $('#view_date').change(function() {
+//           //split on /
+//           url = '{%url 'mande_summary_report' %}' + $(this).val()
+//           window.location.href = url
+//       });
+//     });
 
 </script>
 
