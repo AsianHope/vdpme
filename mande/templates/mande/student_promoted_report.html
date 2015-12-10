@@ -1,57 +1,61 @@
 {% extends "base.html" %}
 {% load mandefilters %}
 {% block title %}
-Student Promoted Report
+Students Promoted Report
 {% endblock %}
 
 {% block content %}
 <div class="col-md-9">
-    <table>
-      <tr>
-        {% for break_promoted_student_by_site in break_promoted_student_by_sites %}
-        <td>
-          <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
-              <tr>
-                <th colspan="2">{{break_promoted_student_by_site.school}}</th>
-              </tr>
-              <tr>
-                <td>Boys</td>
-                <td>Girls</td>
-              </tr>
-              <tr>
-                <td>{{break_promoted_student_by_site.students | get_students_length_by_gender:'M'}}</td>
-                <td>{{break_promoted_student_by_site.students | get_students_length_by_gender:'F'}}</td>
-              </tr>
-          </table>
-        </td>
+  <table>
+    <td>
+      <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
+        <tr><th>&nbsp;</th></tr>
+        <tr><td>&nbsp;</td></tr>
+        {% for list_of_year in list_of_years %}
+            <tr>
+              <td>
+                {{list_of_year}}
+              </td>
+            </tr>
         {% endfor %}
-      </tr>
-    </table>
+        <tr>
+          <td>Total:</td>
+        </tr>
+      </table>
+    </td>
+    {% for promoted in promoted_years %}
+    <td>
+      <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
+          <tr>
+            <th colspan="2">{{promoted.school}}</th>
+          </tr>
+          <tr>
+            <td>Boys</td><td>Girls</td>
+          </tr>
+          {% for year in promoted.years %}
+          <tr>
+              {% for k, v in year.items %}
+              <!-- <td>{{ k }}</td> -->
+              <td>{{v.students | get_students_length_by_gender:'M'}}</td>
+              <td>{{v.students | get_students_length_by_gender:'F'}}</td>
+              {% endfor %}
+          </tr>
+          {% endfor %}
+          <tr>
+            <td>{{promoted.total | get_students_length_by_gender:'M'}}</td>
+            <td>{{promoted.total | get_students_length_by_gender:'F'}}</td>
+          </tr>
+        </table>
+      </td>
+      {% endfor %}
+    </tr>
+  </table>
+  {{promoted_years}}
 </div>
-<div class="col-md-3">
-  <form action = "" method="post">
-      {% csrf_token %}
-      <div class="col-md-12">
-        <div class="form-group">
-          <input type="date" name="from_view_date" class="form-control" id="from_view_date" required>
-        </div>
-        <div class="form-group">
-          <input type="date" name="to_view_date" class="form-control" id="to_view_date" required>
-        </div>
-        <div class="form-group">
-          <input type="submit" class="form-control btn btn-primary">
-        </div>
-      </div>
-  </form>
-</div>
-
-
 {% endblock %}
 
 {% block script %}
 <script type="text/javascript">
-  $('#from_view_date').val('{{from_view_date}}');
-  $('#to_view_date').val('{{to_view_date}}');
 
 </script>
 {% endblock %}

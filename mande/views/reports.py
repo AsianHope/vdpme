@@ -622,36 +622,40 @@ Student Promoted Report
  - lists all student Promoted
 *****************************************************************************
 '''
-def student_promoted_report(request,start_date=None,view_date=None):
-    if request.method == 'POST':
-        from_view_date = request.POST['from_view_date']
-        to_view_date = request.POST['to_view_date']
-    else:
-        from_view_date = (date.today().replace(day=1)-timedelta(days=1 * 365/12)).isoformat()
-        to_view_date = (date.today().replace(day=1)-timedelta(days=1)).isoformat()
-
-    academics = Academic.objects.filter(promote = True,test_date__lte=to_view_date,test_date__gte=from_view_date)
+def student_promoted_report(request):
+    academics = Academic.objects.filter(promote = True)
     schools = School.objects.all()
-    break_promoted_student_by_sites =[]
-    # generate_list of students group by site
+    promoted_years = []
+    years = datetime.now().year-2013
+    list_of_years = []
+    # generate list of year
+    for r in range(years):
+        list_of_years.append(datetime.now().year-r)
+    # generate list of student break down by site and year
     for school in schools:
-        break_promoted_student_by_sites.extend(
+        promoted_years.extend(
             [
                 {
                 'school':school,
                 'total':[],
-                'students':[],
+                'years':[{'year'+str(i):{'years':str(i),'students':[]}} for i in list_of_years],
+
                 }
             ]
         )
     for academic in academics:
-        for break_promoted_student_by_site in break_promoted_student_by_sites:
-            if break_promoted_student_by_site['school'] == academic.student_id.site:
-                break_promoted_student_by_site['students'].append(academic.student_id)
-
+        for promoted_year in promoted_years:
+            if promoted_year['school'] == academic.student_id.site:
+                for each_year in  promoted_year['years']:
+                    for i in range(years):
+                            try:
+                                if each_year['year'+str(datetime.now().year-i)]['years'] == str(academic.test_date.year):
+                                    each_year['year'+str(datetime.now().year-i)]['students'].append(academic.student_id)
+                                    promoted_year['total'].append(academic.student_id)
+                            except:
+                                pass
     return render(request, 'mande/student_promoted_report.html',
                             {
-                                'break_promoted_student_by_sites':break_promoted_student_by_sites,
-                                'from_view_date':from_view_date,
-                                'to_view_date' : to_view_date
+                                'promoted_years':promoted_years,
+                                'list_of_years':list_of_years
                             })
