@@ -684,3 +684,16 @@ def students_promoted_times_report(request):
                             {
                                 'students_promoted':students_promoted
                             })
+
+'''
+*****************************************************************************
+Students not enrolled in public school Report
+ - lists all students not enrolled in public school
+*****************************************************************************
+'''
+def students_not_enrolled_in_public_school_report(request):
+    students_not_enrolled_in_public_school = IntakeSurvey.objects.filter(enrolled='N')
+    return render(request, 'mande/students_not_enrolled_in_public_school_report.html',
+                            {
+                                'students_not_enrolled_in_public_school' : students_not_enrolled_in_public_school
+                            })
