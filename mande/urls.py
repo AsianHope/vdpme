@@ -42,6 +42,7 @@ urlpatterns = patterns('',
     url(r'^reports/students_promoted_times_report/$', views.students_promoted_times_report, name='students_promoted_times_report'),
 
     url(r'^reports/students_not_enrolled_in_public_school_report/$', views.students_not_enrolled_in_public_school_report, name='students_not_enrolled_in_public_school_report'),
+    url(r'^reports/students_intergrated_in_public_school/$', views.students_intergrated_in_public_school, name='students_intergrated_in_public_school'),
 
 
     url(r'^surveys/intake/$', views.intake_survey, name='intake_survey'),

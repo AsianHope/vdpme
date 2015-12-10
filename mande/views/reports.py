@@ -698,3 +698,21 @@ def students_not_enrolled_in_public_school_report(request):
                             {
                                 'students_not_enrolled_in_public_school' : students_not_enrolled_in_public_school
                             })
+
+'''
+*****************************************************************************
+Students intergrated in public school Report
+ - lists all students intergrated in public school
+*****************************************************************************
+'''
+def students_intergrated_in_public_school(request):
+    students = IntakeSurvey.objects.all()
+    intergrated_students = []
+    for student in students:
+        if student.enrolled == 'N' :
+            if student.getRecentFields()['enrolled'] == 'Y':
+                intergrated_students.append(student)
+    return render(request, 'mande/students_intergrated_in_public_school_report.html',
+                            {
+                                'intergrated_students' : intergrated_students
+                            })
