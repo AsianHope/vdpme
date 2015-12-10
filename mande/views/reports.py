@@ -624,6 +624,7 @@ Student Promoted Report
 '''
 def student_promoted_report(request):
     academics = Academic.objects.filter(promote = True)
+    students = IntakeSurvey.objects.all()
     schools = School.objects.all()
     promoted_years = []
     years = datetime.now().year-2013
@@ -643,17 +644,21 @@ def student_promoted_report(request):
                 }
             ]
         )
-    for academic in academics:
+    for student in students:
+        academics = Academic.objects.filter(student_id=student,promote=True)
         for promoted_year in promoted_years:
-            if promoted_year['school'] == academic.student_id.site:
-                for each_year in  promoted_year['years']:
-                    for i in range(years):
-                            try:
-                                if each_year['year'+str(datetime.now().year-i)]['years'] == str(academic.test_date.year):
-                                    each_year['year'+str(datetime.now().year-i)]['students'].append(academic.student_id)
-                                    promoted_year['total'].append(academic.student_id)
-                            except:
-                                pass
+                if promoted_year['school'] == student.site:
+                    for each_year in  promoted_year['years']:
+                        for i in range(years):
+                                try:
+                                    if len(academics) != 0:
+                                        for academic in academics:
+                                            if each_year['year'+str(datetime.now().year-i)]['years'] == str(academic.test_date.year):
+                                                each_year['year'+str(datetime.now().year-i)]['students'].append(academic.student_id)
+                                                promoted_year['total'].append(academic.student_id)
+                                                break
+                                except:
+                                    pass
     return render(request, 'mande/student_promoted_report.html',
                             {
                                 'promoted_years':promoted_years,
