@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load mandefilters %}
+{% block title %}
+Students Promoted Times Report
+{% endblock %}
+
+{% block content %}
+<div class="col-md-9">
+      <table class="table table-bordered table-striped table-hover" id="attendanceReportTable">
+        <thead><tr>
+          <th>Site</th>
+          <th>Student</th>
+          <th>Promoted Times</th>
+        </tr></thead>
+        <tbody>
+          {% for student,promoted in students_promoted.items %}
+          <tr>
+              <td>{{ student.site }}</td>
+              <td><a href="{% url 'student_detail' student.student_id %}">{{ student }}</a></td>
+              <td>{{promoted.promoted_times}}</td>
+              </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+    </div>
+{% endblock %}
+
+{% block script %}
+ <!-- DataTables JavaScript -->
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#attendanceReportTable').DataTable({
+      responsive: true,
+      pageLength: 25,
+      order: [[0,'asc']],
+      dom: 'frtipB',
+      buttons: [
+        {
+                 extend: 'csvHtml5',
+                 text: 'TSV export <i class="fa fa-download"></i>',
+                 className: 'btn btn-sm btn-success',
+                 fieldSeparator: '\t',
+                 extension: '.tsv',
+                 title: 'StudentLag'
+             },
+
+    ]
+  });
+});
+</script>
+
+{% endblock %}

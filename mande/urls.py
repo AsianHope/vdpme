@@ -39,6 +39,7 @@ urlpatterns = patterns('',
     url(r'^reports/mande_summary_report/$', views.mande_summary_report, name='mande_summary_report'),
 
     url(r'^reports/student_promoted_report/$', views.student_promoted_report, name='student_promoted_report'),
+    url(r'^reports/students_promoted_times_report/$', views.students_promoted_times_report, name='students_promoted_times_report'),
 
 
     url(r'^surveys/intake/$', views.intake_survey, name='intake_survey'),

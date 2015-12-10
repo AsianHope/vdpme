@@ -659,3 +659,23 @@ def student_promoted_report(request):
                                 'promoted_years':promoted_years,
                                 'list_of_years':list_of_years
                             })
+
+
+'''
+*****************************************************************************
+Students Promoted Times Report
+ - lists all number of times student has been promoted
+*****************************************************************************
+'''
+def students_promoted_times_report(request):
+    students = IntakeSurvey.objects.all()
+    students_promoted = {}
+    for student in students:
+        if student.current_vdp_grade() < 12:
+            students_promoted[student] = {
+                    'promoted_times':len(Academic.objects.filter(student_id=student,promote=True))
+            }
+    return render(request, 'mande/students_promoted_times_report.html',
+                            {
+                                'students_promoted':students_promoted
+                            })
