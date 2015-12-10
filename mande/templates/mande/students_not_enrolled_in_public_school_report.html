@@ -10,15 +10,19 @@ Students Not Enrolled In Public School Report
         <thead><tr>
           <th>Site</th>
           <th>Student</th>
+          <th>Current VDP Grade</th>
           <th>Reason</th>
         </tr></thead>
         <tbody>
           {% for student in students_not_enrolled_in_public_school %}
+          {% if student.current_vdp_grade != 70 and student.current_vdp_grade != 50%}
           <tr>
               <td>{{ student.site }}</td>
               <td><a href="{% url 'student_detail' student.student_id %}">{{ student }}</a></td>
+              <td>{{ student.current_vdp_grade | grade_by_id}}</td>
               <td>{{ student.reasons }}</td>
-              </tr>
+          </tr>
+          {% endif %}
           {% endfor %}
         </tbody>
 

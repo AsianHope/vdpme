@@ -692,7 +692,8 @@ Students not enrolled in public school Report
 *****************************************************************************
 '''
 def students_not_enrolled_in_public_school_report(request):
-    students_not_enrolled_in_public_school = IntakeSurvey.objects.filter(enrolled='N')
+    exit_surveys = ExitSurvey.objects.filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
+    students_not_enrolled_in_public_school = IntakeSurvey.objects.exclude(student_id__in=exit_surveys).filter(enrolled='N')
     return render(request, 'mande/students_not_enrolled_in_public_school_report.html',
                             {
                                 'students_not_enrolled_in_public_school' : students_not_enrolled_in_public_school
