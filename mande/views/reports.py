@@ -458,7 +458,7 @@ def mande_summary_report(request,view_date=(date.today().replace(day=1)-timedelt
                 'school':school,
                 'total':[],
                 'total_student_appropriate_level':[],
-                'grades':[{'grade'+str(i+1)+'':{'grade':i+1,'students':[],'students_appropriate_level':[],'not':[]}} for i in range(6)],
+                'grades':[{'grade'+str(i+1)+'':{'grade':i+1,'students':[],'students_appropriate_level':[],'not':[]}} for i in range(12)],
                 }
             ]
         )
@@ -472,7 +472,7 @@ def mande_summary_report(request,view_date=(date.today().replace(day=1)-timedelt
                 'school':school,
                 'vietnamese_only':[],
                 'total':[],
-                'grades':[{'grade'+str(i+1)+'':{'grade':i+1,'students':[]}} for i in range(6)],
+                'grades':[{'grade'+str(i+1)+'':{'grade':i+1,'students':[]}} for i in range(12)],
                 }
             ]
         )
@@ -492,7 +492,7 @@ def mande_summary_report(request,view_date=(date.today().replace(day=1)-timedelt
             for student_by_site_grade in students_by_site_grade:
                 if student_by_site_grade['school'] == student.getRecentFields(view_date)['site']:
                     for grade in  student_by_site_grade['grades']:
-                        for i in range(6):
+                        for i in range(12):
                             try:
                                 if grade['grade'+str(i+1)+'']['grade'] == student.current_vdp_grade(view_date):
                                     # Achieved age appropriate level
@@ -509,7 +509,7 @@ def mande_summary_report(request,view_date=(date.today().replace(day=1)-timedelt
                 if student_by_site_grade_plus_skill['school'] == student.getRecentFields(view_date)['site']:
                     for grade in  student_by_site_grade_plus_skill['grades']:
                         only_vietnamese = []
-                        for i in range(6):
+                        for i in range(12):
                             try:
                                 if grade['grade'+str(i+1)+'']['grade'] == student.current_vdp_grade(view_date):
                                     enrolleds = ClassroomEnrollment.objects.filter(Q(student_id=student) & Q(Q(classroom_id__cohort=student.current_vdp_grade(view_date)) | Q(classroom_id__cohort=70)) & Q( Q( Q(drop_date__gte=start_view_date) | Q(drop_date__gte=view_date)) | Q(drop_date=None)) &Q(enrollment_date__lte=view_date)
@@ -559,7 +559,7 @@ def mande_summary_report(request,view_date=(date.today().replace(day=1)-timedelt
                                 except:
                                     pass
 
-                                    
+
         # get all students by site
         for student_by_site in students_by_site:
             if student_by_site['school'] == student.getRecentFields(view_date)['site']:

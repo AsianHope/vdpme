@@ -13,7 +13,7 @@ M&E Summary Report in {{start_view_date}} to {{view_date}}
             <tr><th>&nbsp;</th></tr>
             <tr><td>&nbsp;</td></tr>
             {% for grade_id,grade in grades.items %}
-              {% if grade_id >= 1 and grade_id <= 6 %}
+              {% if grade_id >= 1 and grade_id <= 12 %}
                 <tr>
                   <td>
                     {{grade}}
@@ -79,7 +79,7 @@ M&E Summary Report in {{start_view_date}} to {{view_date}}
             <tr><th>&nbsp;</th></tr>
             <tr><td>&nbsp;</td></tr>
             {% for grade_id,grade in grades.items %}
-              {% if grade_id >= 1 and grade_id <= 6 %}
+              {% if grade_id >= 1 and grade_id <= 12 %}
                 <tr>
                   <td>
                     {{grade}} + Vietnamese
@@ -209,7 +209,7 @@ M&E Summary Report in {{start_view_date}} to {{view_date}}
               <tr><th>&nbsp;</th></tr>
               <tr><td>Grade<br/>&nbsp;</td></tr>
               {% for grade_id,grade in grades.items %}
-                {% if grade_id >= 1 and grade_id <= 6 %}
+                {% if grade_id >= 1 and grade_id <= 12 %}
                   <tr>
                     <td>
                       {{grade_id}}
