@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load mandefilters %}
+{% block title %}
+Students Lag Summary Report
+{% endblock %}
+
+{% block content %}
+<div class="col-md-12">
+    <table>
+      <tr>
+        {% for student_lag_by_site in students_lag_by_site %}
+        <td>
+          <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
+              <tr>
+                <th colspan="4" style="text-align:center;">{{student_lag_by_site.school}}</th>
+              </tr>
+              <tr>
+                <td>Boys</td><td>% of Total</td>
+                <td>Girls</td><td>% of Total</td>
+              </tr>
+              <tr>
+                <td>{{ student_lag_by_site.students_age_not_appropriate_grade_level | get_students_length_by_gender:'M' }}</td>
+                <td>
+                  {% widthratio student_lag_by_site.students_age_not_appropriate_grade_level|get_students_length_by_gender:'M' student_lag_by_site.all_students|get_students_length_by_gender:'M' 100 %}
+                   %
+                </td>
+                <td>{{student_lag_by_site.students_age_not_appropriate_grade_level | get_students_length_by_gender:'F'}}</td>
+                <td>
+                  {% widthratio student_lag_by_site.students_age_not_appropriate_grade_level|get_students_length_by_gender:'F' student_lag_by_site.all_students|get_students_length_by_gender:'F' 100 %}
+                   %
+                </td>
+              </tr>
+          </table>
+        </td>
+        {% endfor %}
+      </tr>
+    </table>
+  </div>
+  <div class="col-md-12">
+    <table>
+      <tr>
+        <td>
+          <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
+              <tr>
+                <th colspan="4" style="text-align:center;">All Site</th>
+              </tr>
+              <tr>
+                <td>Boys</td><td>% of Total</td>
+                <td>Girls</td><td>% of Total</td>
+              </tr>
+              <tr>
+                <td>{{ students_all_site.students_age_not_appropriate_grade_level | get_students_length_by_gender:'M' }}</td>
+                <td>
+                  {% widthratio students_all_site.students_age_not_appropriate_grade_level|get_students_length_by_gender:'M' students_all_site.total|get_students_length_by_gender:'M' 100 %}
+                   %
+                </td>
+                <td>{{students_all_site.students_age_not_appropriate_grade_level | get_students_length_by_gender:'F'}}</td>
+                <td>
+                  {% widthratio students_all_site.students_age_not_appropriate_grade_level|get_students_length_by_gender:'F' students_all_site.total|get_students_length_by_gender:'F' 100 %}
+                   %
+                </td>
+              </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+{% endblock %}

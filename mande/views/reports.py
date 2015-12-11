@@ -716,3 +716,48 @@ def students_intergrated_in_public_school(request):
                             {
                                 'intergrated_students' : intergrated_students
                             })
+
+'''
+*****************************************************************************
+Students Lag Summary Report
+ - Summary of student Lag
+*****************************************************************************
+'''
+def students_lag_summary(request):
+    enrolled_students = getEnrolledStudents()
+    schools = School.objects.all()
+    students_lag_by_site = []
+    students_all_site ={
+        'students_age_not_appropriate_grade_level':[],
+        'total':[]
+    }
+    for school in schools:
+        students_lag_by_site.extend(
+            [
+                {
+                'school':school,
+                'students_age_not_appropriate_grade_level':[],
+                'all_students':[]
+                }
+            ]
+        )
+    for student in enrolled_students:
+        if student.current_vdp_grade() != 70:
+            if student.current_vdp_grade() != 50:
+                # for each site
+                for student_lag_by_site in students_lag_by_site :
+                    if student.site == student_lag_by_site['school']:
+                        if (student.age_appropriate_grade() - student.current_vdp_grade()) > 0:
+                            student_lag_by_site['students_age_not_appropriate_grade_level'].append(student)
+                        student_lag_by_site['all_students'].append(student)
+                # for all site
+                if (student.age_appropriate_grade() - student.current_vdp_grade()) > 0:
+                    students_all_site['students_age_not_appropriate_grade_level'].append(student)
+                students_all_site['total'].append(student)
+
+
+    return render(request, 'mande/students_lag_summary.html',
+                            {
+                                'students_lag_by_site' : students_lag_by_site,
+                                'students_all_site' : students_all_site
+                            })
