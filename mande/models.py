@@ -43,12 +43,6 @@ GRADES = (
 	(4,'Grade 4'),
 	(5,'Grade 5'),
 	(6,'Grade 6'),
-	(7,'Grade 7'),
-	(8,'Grade 8'),
-	(9,'Grade 9'),
-	(10,'Grade 10'),
-	(11,'Grade 11'),
-	(12,'Grade 12'),
 	(50,'English'),
 	(60,'Computers'),
 	(70,'Vietnamese'),
@@ -240,6 +234,8 @@ class IntakeSurvey(models.Model):
 		try:
 		    #their current grade is one more than that of the last test they passed
 			current_grade = (academics.filter(promote=True).latest('test_level').test_level)+1
+			if current_grade > 6:
+				current_grade = 50 #magic numbers are bad. should pull this from models.py
 		except ObjectDoesNotExist:
 			current_grade = recent_intake.starting_grade if type(recent_intake) != str else 0
 
