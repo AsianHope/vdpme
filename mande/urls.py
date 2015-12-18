@@ -40,6 +40,8 @@ urlpatterns = patterns('',
 
     url(r'^reports/student_promoted_report/$', views.student_promoted_report, name='student_promoted_report'),
     url(r'^reports/students_promoted_times_report/$', views.students_promoted_times_report, name='students_promoted_times_report'),
+    url(r'^reports/students_promoted_times_report/(?P<filter_seach>[\w-]+)/$', views.students_promoted_times_report, name='students_promoted_times_report'),
+
 
     url(r'^reports/students_not_enrolled_in_public_school_report/$', views.students_not_enrolled_in_public_school_report, name='students_not_enrolled_in_public_school_report'),
     url(r'^reports/students_intergrated_in_public_school/$', views.students_intergrated_in_public_school, name='students_intergrated_in_public_school'),

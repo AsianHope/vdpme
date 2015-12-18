@@ -642,8 +642,12 @@ Students Promoted Times Report
  - lists all number of times student has been promoted
 *****************************************************************************
 '''
-def students_promoted_times_report(request):
-    students = IntakeSurvey.objects.all()
+def students_promoted_times_report(request,filter_seach=None):
+    if filter_seach is not None:
+        students = IntakeSurvey.objects.all()
+    else:
+        exit_surveys = ExitSurvey.objects.filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
+        students = IntakeSurvey.objects.exclude(student_id__in=exit_surveys)
     students_promoted = {}
     for student in students:
         if student.current_vdp_grade() < 12:

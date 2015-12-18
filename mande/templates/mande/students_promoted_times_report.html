@@ -23,7 +23,23 @@ Students Promoted Times Report
         </tbody>
 
       </table>
-    </div>
+</div>
+<div class="col-md-3">
+  <h3>Filter</h3>
+  <ul class="buttonlist">
+    <li>
+      <a href="{% url 'students_promoted_times_report' 'ALL' %}" class="btn btn-info btn-sm">
+        All Students
+      </a>
+    </li>
+    <li>
+    <a href="{% url 'students_promoted_times_report' %}" class="btn btn-info btn-sm">
+        Current Students
+    </a>
+    </li>
+  </ul>
+</div>
+
 {% endblock %}
 
 {% block script %}
