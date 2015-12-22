@@ -2,13 +2,16 @@
 {% load bootstrap %}
 {% load mandefilters %}
 {% block title %}
-Adding a Semester Test for {{student_id|name_by_sid}}
+{{action}} a Semester Test for {{student_id|name_by_sid}}
 {% endblock %}
 
 {% block content %}
 <div class="col-lg-10">
+{% if test_id %}
+<form action = "{% url 'academic_form_single' student_id test_id%}?next={{next_url}}" method="post">
+{% else %}
 <form action = "{% url 'academic_form_single' student_id %}?next={{next_url}}" method="post">
-
+{% endif %}
   <div class="form-group table-responsive">
     <table class="table table-bordered table-striped table-hover" id="academicTable">
       <thead><tr>
@@ -50,5 +53,10 @@ Adding a Semester Test for {{student_id|name_by_sid}}
     {% csrf_token %}
 </form>
 </div>
-<div class="col-md-2"></div>
+</div>
+<div style="color:red;" class="col-md-2">
+  {% if form.errors%}
+    {{form_error_message}}
+  {%endif%}
+</div>
 {% endblock %}
