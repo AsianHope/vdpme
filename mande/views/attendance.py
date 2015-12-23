@@ -120,8 +120,11 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
                                                    'classroom':classroom})
 
     try:
-        offered = AttendanceDayOffering.objects.get(classroom_id=classroom_id,
+        offered = AttendanceDayOffering.objects.filter(classroom_id=classroom_id,
                                                     date=attendance_date)
+        if len(offered) < 1 :
+            submit_enabled = False
+            Attendance.objects.filter(attendance=None).delete()
     except ObjectDoesNotExist:
         submit_enabled = False
         Attendance.objects.filter(attendance=None).delete()
