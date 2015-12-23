@@ -381,6 +381,8 @@ class AttendanceDayOffering(models.Model):
 	offered = models.CharField(max_length=2,choices=YN,default='Y')
 	def __unicode__(self):
 		return unicode(self.classroom_id)+' - '+unicode(self.date)
+	class Meta:
+		unique_together = (('classroom_id','date'))	
 
 class Attendance(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
