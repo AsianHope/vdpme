@@ -605,12 +605,13 @@ Student Promoted Report
  - lists all student Promoted
 *****************************************************************************
 '''
+
 def student_promoted_report(request):
     academics = Academic.objects.filter(promote = True)
     students = IntakeSurvey.objects.all()
     schools = School.objects.all()
     promoted_years = []
-    years = datetime.now().year-2013
+    years = datetime.now().year-2012
     list_of_years = []
     # generate list of year
     for r in range(years):
@@ -636,10 +637,20 @@ def student_promoted_report(request):
                                 try:
                                     if len(academics) != 0:
                                         for academic in academics:
-                                            if each_year['year'+str(datetime.now().year-i)]['years'] == str(academic.test_date.year):
-                                                each_year['year'+str(datetime.now().year-i)]['students'].append(academic.student_id)
-                                                promoted_year['total'].append(academic.student_id)
-                                                break
+                                            # get academic by school year
+                                            # the 2014 school year is 1 Aug 2014 - 31 July 2015
+                                            # the 2015 school year is 1 Aug 2015 - 31 July 2016
+                                            if each_year['year'+str(datetime.now().year-i)]['years'] == str(academic.test_date.year) or int(each_year['year'+str(datetime.now().year-i)]['years'])+1 == academic.test_date.year:
+                                                beginning = str(each_year['year'+str(datetime.now().year-i)]['years'])+"-08-01"
+                                                end = str(int(each_year['year'+str(datetime.now().year-i)]['years'])+1)+"-07-31"
+
+                                                beginning_of_school_year = datetime.strptime(beginning, "%Y-%m-%d").date()
+                                                end_of_school_year = datetime.strptime(end, "%Y-%m-%d").date()
+
+                                                if academic.test_date >= beginning_of_school_year and academic.test_date <= end_of_school_year:
+                                                    each_year['year'+str(datetime.now().year-i)]['students'].append(academic.student_id)
+                                                    promoted_year['total'].append(academic.student_id)
+
                                 except:
                                     pass
     return render(request, 'mande/student_promoted_report.html',
