@@ -22,6 +22,9 @@ M&E Summary Report in {{start_view_date}} to {{view_date}}
               {% endif %}
             {% endfor %}
             <tr>
+              <td>Vietnamese only</td>
+            </tr>
+            <tr>
               <td>Total:</td>
             </tr>
           </table>
@@ -44,6 +47,10 @@ M&E Summary Report in {{start_view_date}} to {{view_date}}
                   {% endfor %}
               </tr>
               {% endfor %}
+              <tr>
+                <td>{{student_by_site_grade.vietnamese_only | get_students_length_by_gender:'M'}}</td>
+                <td>{{student_by_site_grade.vietnamese_only | get_students_length_by_gender:'F'}}</td>
+              </tr>
               <tr>
                 <td>{{student_by_site_grade.total | get_students_length_by_gender:'M'}}</td>
                 <td>{{student_by_site_grade.total | get_students_length_by_gender:'F'}}</td>

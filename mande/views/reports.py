@@ -465,6 +465,7 @@ def mande_summary_report(request,view_date=(date.today().replace(day=1)-timedelt
                     'total':[],
                     'total_student_appropriate_level':[],
                     'grades':[{'grade'+str(i+1)+'':{'grade':i+1,'students':[],'students_appropriate_level':[],'not':[]}} for i in range(get_grade)],
+                    'vietnamese_only':[],
                     }
                 ]
             )
@@ -508,6 +509,11 @@ def mande_summary_report(request,view_date=(date.today().replace(day=1)-timedelt
                                             student_by_site_grade['total_student_appropriate_level'].append(student)
                                         student_by_site_grade['total'].append(student)
                                         grade['grade'+str(i+1)+'']['students'].append(student)
+                                    else:
+                                        if student.current_vdp_grade(view_date) == 70:
+                                            if i == get_grade-1:
+                                                student_by_site_grade['total'].append(student)
+                                                student_by_site_grade['vietnamese_only'].append(student)
                                 except:
                                     pass
 
@@ -530,7 +536,7 @@ def mande_summary_report(request,view_date=(date.today().replace(day=1)-timedelt
 
                                     else:
                                         if student.current_vdp_grade(view_date) == 70:
-                                            if i == 5:
+                                            if i == get_grade-1:
                                                 student_by_site_grade_plus_skill['total'].append(student)
                                                 student_by_site_grade_plus_skill['vietnamese_only'].append(student)
                                 except:
