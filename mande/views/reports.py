@@ -251,8 +251,7 @@ def class_list(request,site='ALL'):
         except ObjectDoesNotExist:
             pass
         try:
-            enrolled_students =  instance.classroomenrollment_set.all().filter(
-                                        Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))
+            enrolled_students =  instance.classroomenrollment_set.all().filter(Q(student_id__date__lte=date.today().isoformat()) & Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None)))
             female_students = 0
             for student in enrolled_students:
                 if student.student_id.gender == 'F':
@@ -365,8 +364,7 @@ def student_evaluation_report(request,classroom_id=None):
     if classroom_id is not None:
         selected_classroom = Classroom.objects.get(pk=classroom_id)
         #select students who have not dropped the class, or have not dropped it yet.
-        enrolled_students = selected_classroom.classroomenrollment_set.all().filter(
-                                Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None)).values_list('student_id',flat=True)
+        enrolled_students = selected_classroom.classroomenrollment_set.all().filter(Q(student_id__date__lte=date.today().isoformat()) & Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))).values_list('student_id',flat=True)
 
 
         evaluations = evaluations.filter(student_id__in=enrolled_students)
@@ -614,7 +612,7 @@ Student Promoted Report
 
 def student_promoted_report(request):
     academics = Academic.objects.filter(promote = True)
-    students = IntakeSurvey.objects.all()
+    students = IntakeSurvey.objects.all().filter(date__lte=date.today().isoformat())
     schools = School.objects.all()
     promoted_years = []
     years = datetime.now().year-2012
@@ -674,10 +672,10 @@ Students Promoted Times Report
 '''
 def students_promoted_times_report(request,filter_seach=None):
     if filter_seach is not None:
-        students = IntakeSurvey.objects.all()
+        students = IntakeSurvey.objects.all().filter(date__lte=date.today().isoformat())
     else:
         exit_surveys = ExitSurvey.objects.filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
-        students = IntakeSurvey.objects.exclude(student_id__in=exit_surveys)
+        students = IntakeSurvey.objects.exclude(student_id__in=exit_surveys).filter(date__lte=date.today().isoformat())
     students_promoted = {}
     for student in students:
         if student.current_vdp_grade() < 12:
@@ -697,7 +695,7 @@ Students not enrolled in public school Report
 '''
 def students_not_enrolled_in_public_school_report(request):
     exit_surveys = ExitSurvey.objects.filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
-    students_not_enrolled_in_public_school = IntakeSurvey.objects.exclude(student_id__in=exit_surveys).filter(enrolled='N')
+    students_not_enrolled_in_public_school = IntakeSurvey.objects.exclude(student_id__in=exit_surveys).filter(enrolled='N',date__lte=date.today().isoformat())
     return render(request, 'mande/students_not_enrolled_in_public_school_report.html',
                             {
                                 'students_not_enrolled_in_public_school' : students_not_enrolled_in_public_school
@@ -710,7 +708,7 @@ Students intergrated in public school Report
 *****************************************************************************
 '''
 def students_intergrated_in_public_school(request):
-    students = IntakeSurvey.objects.all()
+    students = IntakeSurvey.objects.all().filter(date__lte=date.today().isoformat())
     intergrated_students = []
     for student in students:
         if student.enrolled == 'N' :

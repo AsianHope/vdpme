@@ -100,7 +100,7 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
         warning = ''
 
     classroom = Classroom.objects.get(pk=classroom_id)
-    students = ClassroomEnrollment.objects.filter(classroom_id=classroom_id
+    students = ClassroomEnrollment.objects.filter(classroom_id=classroom_id,student_id__date__lte=date.today().isoformat()
                                                  ).exclude(
                                                   drop_date__lte=attendance_date
                                                  )

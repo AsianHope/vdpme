@@ -19,7 +19,7 @@ def getEnrolledStudents(grade_id=None):
     exit_surveys = ExitSurvey.objects.all().filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
 
     #filter out students who have exit surveys
-    surveys = IntakeSurvey.objects.order_by('student_id').exclude(student_id__in=exit_surveys)
+    surveys = IntakeSurvey.objects.all().filter(date__lte=date.today().isoformat()).order_by('student_id').exclude(student_id__in=exit_surveys)
 
     #figure out students who have internal intakes
     enrolled_students = IntakeInternal.objects.all().values_list('student_id',flat=True)

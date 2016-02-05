@@ -75,7 +75,7 @@ def student_list(request):
     exit_surveys = ExitSurvey.objects.all().filter(
                         exit_date__lte=date.today().isoformat()
                         ).values_list('student_id',flat=True)
-    active_surveys = IntakeSurvey.objects.order_by('student_id'
+    active_surveys = IntakeSurvey.objects.filter(date__lte=date.today().isoformat()).order_by('student_id'
                                  ).exclude(student_id__in=exit_surveys)
     surveys = []
     for active_survey in active_surveys:
@@ -324,8 +324,7 @@ def classroomenrollment_form(request,classroom_id=0):
     if int(classroom_id)>0:
         instance = Classroom.objects.get(pk=classroom_id)
         #select students who have not dropped the class, or have not dropped it yet.
-        enrolled_students = instance.classroomenrollment_set.all().filter(
-                                    Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))
+        enrolled_students = instance.classroomenrollment_set.all().filter(Q(student_id__date__lte=date.today().isoformat()) & Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None)))
     else:
         instance = None;
         enrolled_students = None
@@ -359,7 +358,6 @@ def classroomenrollment_form(request,classroom_id=0):
                                             'enrollment_date':date.today().isoformat()})
         else:
             form = ClassroomEnrollmentForm()
-
     context = { 'form': form,
                 'classroom':instance,
                 'enrolled_students':enrolled_students}
@@ -415,7 +413,7 @@ def academic_form(request, school_id, test_date=date.today().isoformat(), classr
 
     #find only currently enrolled students
     exit_surveys = ExitSurvey.objects.all().filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
-    students = ClassroomEnrollment.objects.exclude(student_id__in=exit_surveys).exclude(drop_date__lt=date.today().isoformat()).filter(classroom_id=classroom_id)
+    students = ClassroomEnrollment.objects.exclude(student_id__in=exit_surveys).exclude(drop_date__lt=date.today().isoformat()).filter(classroom_id=classroom_id,student_id__date__lte=date.today().isoformat())
 
     # find out if any student acadmics have been recorded
     student_academics = Academic.objects.filter(student_id=students, test_date=test_date)
@@ -557,7 +555,7 @@ def studentevaluation_form(request, school_id, get_date=date.today().isoformat()
     warning = ''
     message = ''
     exit_surveys = ExitSurvey.objects.all().filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
-    get_enrolled_student = ClassroomEnrollment.objects.exclude(student_id__in=exit_surveys).exclude(drop_date__lt=date.today().isoformat()).filter(classroom_id=classroom_id)
+    get_enrolled_student = ClassroomEnrollment.objects.exclude(student_id__in=exit_surveys).exclude(drop_date__lt=date.today().isoformat()).filter(classroom_id=classroom_id,student_id__date__lte=date.today().isoformat())
     students = get_enrolled_student
 
     #pre instantiate data for this form so that we can update the whole queryset later

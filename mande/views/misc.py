@@ -85,7 +85,7 @@ def dashboard(request):
                         ).values_list('student_id',flat=True)
 
     #filter out students who have exit surveys
-    surveys = IntakeSurvey.objects.order_by('student_id'
+    surveys = IntakeSurvey.objects.all().filter(date__lte=date.today().isoformat()).order_by('student_id'
                                  ).exclude(student_id__in=exit_surveys)
 
     #figure out students who have internal intakes with enrollment dates before today
@@ -107,7 +107,7 @@ def dashboard(request):
     students_at_gl_by_grade = dict(GRADES)
     students_by_grade_by_site  = dict(GRADES)
     students_at_gl_by_grade_by_site = dict(GRADES)
-    
+
     program_breakdown = {}
     total_skills = 0
 
@@ -147,7 +147,7 @@ def dashboard(request):
         if grade > 12 and grade < 999:
             program_breakdown[unicode(student.site)]['Skills'] +=1
             total_skills +=1
-            
+
     #clean up students_by_grade_by_site so we're not displaying a bunch of blank data
     clean_students_by_grade_by_site = dict(students_by_grade_by_site)
     for key,grade in students_by_grade_by_site.iteritems():
