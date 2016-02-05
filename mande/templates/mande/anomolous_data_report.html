@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load mathfilters %}
+{% load mandefilters %}
+{% block title %}Anomolous Data{% endblock %}
+
+{% block content %}
+<div class="dataTable_wrapper">
+  <table class="table table-striped table-hover" id="studentDataTable">
+    <thead><tr><th>Site</th><th>SID</th><th>Name</th><th>Gender</th><th>DOB</th><th>Grade</th><th>Intake Date</th></thead>
+    <tbody>
+      {% for student in future_students %}
+      <tr>
+        <td>{{student.site}}</td>
+        <td><a href ="{% url 'student_detail' student.student_id %}">{{ student.student_id }}</a></td>
+        <td>{{student.name}}</td>
+        <td>{{student.gender}}</td>
+        <td>{{student.dob}}</td>
+        <td>{{student.student_id | student_current_grade_by_id}}</td>
+        <td style="color:red;">{{student.date}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+
+{% block script %}
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var table = $('#studentDataTable').DataTable({
+      responsive: true,
+      pageLength: 25,
+      search: {caseInsensitive: false},
+      dom: 'frtipB',
+      buttons: [
+        {
+                 extend: 'csvHtml5',
+                 text: 'TSV export <i class="fa fa-download"></i>',
+                 className: 'btn btn-sm btn-success',
+                 fieldSeparator: '\t',
+                 extension: '.tsv',
+                 title: 'IntakeSurveys'
+             },
+
+    ]
+  });
+});
+</script>
+
+{% endblock %}

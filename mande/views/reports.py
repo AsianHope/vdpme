@@ -765,3 +765,17 @@ def students_lag_summary(request):
                                 'students_lag_by_site' : students_lag_by_site,
                                 'students_all_site' : students_all_site
                             })
+
+'''
+*****************************************************************************
+Anamolous data report
+ - get students have intake survey date in future
+*****************************************************************************
+'''
+def anomolous_data(request):
+    future_students = IntakeSurvey.objects.all().filter(date__gte=date.today().isoformat()).order_by('student_id')
+
+    return render(request, 'mande/anomolous_data_report.html',
+                            {
+                                'future_students' : future_students,
+                            })
