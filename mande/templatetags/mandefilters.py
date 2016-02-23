@@ -97,6 +97,10 @@ def get_students_length_by_gender(students,arg):
         if student.getRecentFields()['gender'] == gender:
             students_by_gender.append(student)
     return len(students_by_gender)
+# increase one year 
+@register.filter(name='add_year')
+def add_year(year):
+    return year+1
 
 #get dictionary items
 @register.filter
