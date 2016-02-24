@@ -181,6 +181,10 @@ def exit_survey(request,student_id=0):
                                     text=message,
                                     font_awesome_icon='fa-user-times')
             log.save()
+
+            # drop student from classroom enrollment
+            ClassroomEnrollment.objects.filter(student_id=instance.student_id,drop_date=None).update(drop_date=instance.exit_date)
+
             #then return
             return HttpResponseRedirect(reverse('student_detail', kwargs=
                                 {'student_id':instance.student_id.student_id}))
