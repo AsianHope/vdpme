@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load mandefilters %}
 {% block title %}
-Students Promoted Times Report
+Students Promoted Times Report {% if site %}for {{site}} {% endif %} {% if grade %}- {{grade}} {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -33,19 +33,40 @@ Students Promoted Times Report
       </table>
 </div>
 <div class="col-md-3">
-  <h3>Filter</h3>
   <ul class="buttonlist">
     <li>
-      <a href="{% url 'students_promoted_times_report' 'ALL' %}" class="btn btn-info btn-sm">
+      <a href="{% url 'students_promoted_times_report' 'ALL' %}" class="btn {% if filter_seach != None %} btn-warning {% else %} btn-info {% endif %} btn-sm">
         All Students
       </a>
     </li>
     <li>
-    <a href="{% url 'students_promoted_times_report' %}" class="btn btn-info btn-sm">
+    <a href="{% url 'students_promoted_times_report' %}" class="btn {% if filter_seach == None %} btn-warning {% else %} btn-info {% endif %} btn-sm">
         Current Students
     </a>
     </li>
   </ul>
+  <form action="" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <select name="site" class="form-control">
+        <option value="All Site">ALL Site</option>
+        {% for site in sites %}
+          <option value="{{ site.school_id }}">{{ site.school_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <select name="grade" class="form-control">
+        <option value="All Grade">All Grade</option>
+        {% for grade_id,grade in grades.items %}
+          {% if grade_id >= 1 and grade_id < 50 %}
+          <option value="{{grade_id}}">{{grade}}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+    <input type="submit" class="btn btn-primary"/>
+  </form>
 </div>
 
 {% endblock %}
