@@ -3,6 +3,7 @@ from datetime import date
 from mande.models import ExitSurvey
 from mande.models import IntakeSurvey
 from mande.models import IntakeInternal
+from mande.permissions import perms_required
 
 from django.core.exceptions import ObjectDoesNotExist
 def getEnrolledStudents(grade_id=None):
@@ -122,3 +123,12 @@ def studentAtAgeAppropriateGradeLevel(student_id):
         return True
     else:
         return False
+
+#returns true if user has required permissions
+def user_permissions(method_name, user):
+    user_perms = user.get_all_permissions()
+    allow_access = True
+    for perm in perms_required[method_name]:
+        if perm not in user_perms:
+            allow_access = False
+    return allow_access

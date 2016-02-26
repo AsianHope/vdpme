@@ -60,6 +60,9 @@ from mande.utils import getEnrolledStudents
 from mande.utils import getStudentGradebyID
 from mande.utils import studentAtSchoolGradeLevel
 from mande.utils import studentAtAgeAppropriateGradeLevel
+from mande.utils import user_permissions
+
+import inspect
 
 from django.contrib.auth.models import User
 
@@ -70,34 +73,39 @@ Intake Survey
 *****************************************************************************
 '''
 def intake_survey(request,student_id=None):
-    next_url = request.GET.get('next') #where we're going next
-    limit = request.GET.get('limit') #limit to a single field
-    instance = IntakeSurvey.objects.get(pk=student_id) if student_id else None
-    form = IntakeSurveyForm(request.POST or None,
-                            instance=instance)
-    if request.method == 'POST':
-        if form.is_valid():
-            instance = form.save()
-            icon = 'fa-female' if instance.gender == 'F' else 'fa-male'
-            if student_id:
-                action = 'Updated'
-                if limit:
-                    action = action+' '+limit+ 'on' #Updated dob on intake...
-            else:
-                action='Performed'
-            message = action+' intake survey for '+unicode(instance.name)
-            log = NotificationLog(  user=request.user,
-                                    text=message,
-                                    font_awesome_icon=icon)
-            log.save()
-            #then return, defaulting to an intake internal
-            if next_url is None:
-                next_url = reverse('intake_internal',kwargs={'student_id':instance.student_id})
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+        next_url = request.GET.get('next') #where we're going next
+        limit = request.GET.get('limit') #limit to a single field
+        instance = IntakeSurvey.objects.get(pk=student_id) if student_id else None
+        form = IntakeSurveyForm(request.POST or None,
+                                instance=instance)
+        if request.method == 'POST':
+            if form.is_valid():
+                instance = form.save()
+                icon = 'fa-female' if instance.gender == 'F' else 'fa-male'
+                if student_id:
+                    action = 'Updated'
+                    if limit:
+                        action = action+' '+limit+ 'on' #Updated dob on intake...
+                else:
+                    action='Performed'
+                message = action+' intake survey for '+unicode(instance.name)
+                log = NotificationLog(  user=request.user,
+                                        text=message,
+                                        font_awesome_icon=icon)
+                log.save()
+                #then return, defaulting to an intake internal
+                if next_url is None:
+                    next_url = reverse('intake_internal',kwargs={'student_id':instance.student_id})
 
-            return HttpResponseRedirect(next_url)
+                return HttpResponseRedirect(next_url)
 
-    context = {'form': form, 'student':instance, 'next_url':next_url, 'limit':limit}
-    return render(request, 'mande/intakesurvey.html', context)
+        context = {'form': form, 'student':instance, 'next_url':next_url, 'limit':limit}
+        return render(request, 'mande/intakesurvey.html', context)
+    else:
+        return render(request, 'mande/errors/permissiondenied.html')
 
 '''
 *****************************************************************************

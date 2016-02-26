@@ -1,3 +1,4 @@
+{% load mandefilters %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -86,127 +87,23 @@
                             </div>
                             <!-- /input-group -->
                         </li>
+
                         <li>
                             <a href="{% url 'index' %}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
-                        <li>
-                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Reports<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="{% url 'daily_attendance_report' %}">Classroom Attendance</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'daily_absence_report' %}">Daily Absences</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'data_audit' %}">Data Audit</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'class_list' %}">Class List</a>
-                                </li>
-                                <li>
-                                  <a href="{% url 'exit_surveys_list' %}">Exit Surveys List </a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'student_lag_report' %}">Student Lag Report</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'student_evaluation_report' %}">Student Evaluation Report</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'student_medical_report' %}">Student Medical Report</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'student_dental_report' %}">Student Dental Report</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'student_promoted_report' %}">Student Promoted Report</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'students_promoted_times_report' %}">Students Promoted Times Report</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'students_not_enrolled_in_public_school_report' %}">Students Not Enrolled In Public School Report</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'students_intergrated_in_public_school' %}">Students Intergrated In Public School Report</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'mande_summary_report' %}">M&E Summary Report</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'students_lag_summary' %}">Students Lag Summary Report</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'anomolous_data' %}">Anomolous Data</a>
-                                </li>
-                            </ul>
-                            <!-- /.nav-second-level -->
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-table fa-fw"></i>Attendance<span class="fa arrow"></span></a>
-                              <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="{% url 'take_attendance' %}">Take Attendance</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'attendance_calendar' %}">Modify Attendance Calendars</a>
-                                </li>
-                              </ul>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-edit fa-fw"></i>Surveys<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="{% url 'intake_survey' %}">Intake Survey</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'exit_survey' %}">Exit Survey</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'post_exit_survey' %}">Post-Exit Survey</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'spiritualactivities_survey' %}">Spiritual Activities</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'health_form' %}">Health Form</a>
-                                </li>
 
-                            </ul>
-                            <!-- /.nav-second-level -->
-                        </li>
+                        {% for heading in menu %}
                         <li>
-                            <a href="#"><i class="fa fa-sitemap fa-fw"></i>School Management<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                  <a href="{% url 'student_list' %}">Student Information</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'classroomenrollment_form' %}">Enrolment</a>
-                                </li>
-
-                                <li>
-                                    <a href="{% url 'discipline_form' %}">Discipline</a>
-                                </li>
-                                <li>
-                                  <a href="{% url 'teacher_form' %}">Manage Teachers</a>
-                                </li>
-                                <li>
-                                  <a href="{% url 'classroom_form' %}">Manage Classrooms</a>
-                                </li>
-                                <li>
-                                  <a href="{% url 'classroomteacher_form' %}">Manage Classroom Assignments</a>
-                                </li>
-                                <li>
-                                  <a href="{% url 'academic_select' %}">Input Achievement Tests</a>
-                                </li>
-                                <li>
-                                  <a href="{% url 'studentevaluation_select' %}">Input Student Evaluations </a>
-                                </li>
-                            </ul>
-                            <!-- /.nav-second-level -->
+                          <a href="#"><i class="fa {{heading.icon}} fa-fw"></i>{{heading.display}}<span class="fa arrow"></span></a>
+                          <ul class="nav nav-second-level">
+                            {% for item in heading.items %}
+                              <li>
+                                <a href="{% url item.name %}">{{item.display}}</a>
+                              </li>
+                            {% endfor %}
+                          </ul>
                         </li>
+                        {% endfor %}
 
                     </ul>
                 </div>

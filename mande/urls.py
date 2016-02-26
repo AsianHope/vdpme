@@ -2,6 +2,8 @@ from django.conf.urls import patterns, url
 from django.views.decorators.cache import cache_page
 
 from mande import views
+#to add a new item to the side menu, map the URL in urlpatterns, assign permissions
+# in perms_required (permissions.py) and add its name and display name to the activity map below
 urlpatterns = patterns('',
     # ex: /mande/
     url(r'^$', cache_page(300)(views.dashboard), name='index'),
@@ -107,3 +109,63 @@ urlpatterns = patterns('',
 
 
 )
+
+#map out where activities should show up in the menus
+activity_map = [
+    {
+        'display':'Reports',
+        'icon':'fa-bar-chart-o',
+        'items':[
+            {'name':'daily_attendance_report','display':'Classroom Attendance'},
+            {'name':'daily_absence_report','display':'Daily Absences'},
+            {'name':'data_audit','display':'Data Audit'},
+            {'name':'class_list','display':'Class List'},
+            {'name':'exit_surveys_list','display':'Exit Surveys List '},
+            {'name':'student_lag_report','display':'Student Lag Report'},
+            {'name':'student_evaluation_report','display':'Student Evaluation Report'},
+            {'name':'student_medical_report','display':'Student Medical Report'},
+            {'name':'student_dental_report','display':'Student Dental Report'},
+            {'name':'student_promoted_report','display':'Student Promoted Report'},
+            {'name':'students_promoted_times_report','display':'Students Promoted Times Report'},
+            {'name':'students_not_enrolled_in_public_school_report','display':'Students Not Enrolled In Public School Report'},
+            {'name':'students_intergrated_in_public_school','display':'Students Intergrated In Public School Report'},
+            {'name':'mande_summary_report','display':'M&E Summary Report'},
+            {'name':'students_lag_summary','display':'Students Lag Summary Report'},
+            {'name':'anomolous_data','display':'Anomolous Data'}
+        ],
+    },
+    {
+        'display':'Attendance',
+        'icon':'fa-table',
+        'items':[
+            {'name':'take_attendance','display':'Take Attendance'},
+            {'name':'attendance_calendar','display':'Modify Attendance Calendars'}
+        ]
+    },
+    {
+        'display':'Surveys',
+        'icon':'fa-edit',
+        'items':[
+            {'name':'intake_survey','display':'Intake Survey'},
+            {'name':'exit_survey','display':'Exit Survey'},
+            {'name':'post_exit_survey','display':'Post-Exit Survey'},
+            {'name':'spiritualactivities_survey','display':'Spiritual Activities'},
+            {'name':'health_form','display':'Health Form'}
+
+        ]
+    },
+    {
+        'display':'School Management',
+        'icon':'fa-sitemap',
+        'items':[
+            {'name':'student_list','display':'Student Information'},
+            {'name':'classroomenrollment_form','display':'Enrolment'},
+            {'name':'discipline_form','display':'Discipline'},
+            {'name':'teacher_form','display':'Manage Teachers'},
+            {'name':'classroom_form','display':'Manage Classrooms'},
+            {'name':'classroomteacher_form','display':'Manage Classroom Assignments'},
+            {'name':'academic_select','display':'Input Achievement Tests'},
+            {'name':'studentevaluation_select','display':'Input Student Evaluations '}
+        ]
+    }
+]
