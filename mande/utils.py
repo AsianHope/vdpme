@@ -118,8 +118,7 @@ def studentAtAgeAppropriateGradeLevel(student_id):
 
     current_grade = getStudentGradebyID(student_id)
     age_appropriate_grade = getStudentAgeAppropriateGradeLevel(student_id)
-
-    if current_grade >= age_appropriate_grade:
+    if (current_grade >= age_appropriate_grade) and current_grade is not 0:
         return True
     else:
         return False
