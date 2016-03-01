@@ -1,0 +1,35 @@
+[
+  {
+      "fields": {
+          "active": true,
+          "cohort": 1,
+          "classroom_location": "",
+          "school_id": 1,
+          "classroom_number": "Grade 1"
+      },
+      "model": "mande.classroom",
+      "pk": 1
+  },
+  {
+      "fields": {
+          "active": true,
+          "cohort": 2,
+          "classroom_location": "",
+          "school_id": 2,
+          "classroom_number": "Grade 2"
+      },
+      "model": "mande.classroom",
+      "pk": 2
+  },
+  {
+      "fields": {
+          "active": true,
+          "cohort": 3,
+          "classroom_location": "",
+          "school_id": 3,
+          "classroom_number": "Grade 3"
+      },
+      "model": "mande.classroom",
+      "pk": 2
+  }
+]

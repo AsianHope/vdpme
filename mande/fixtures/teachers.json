@@ -1,0 +1,16 @@
+[
+  {
+      "fields": {
+          "name": "Test Teacher 1"
+      },
+      "model": "mande.teacher",
+      "pk": 1
+  },
+  {
+      "fields": {
+          "name": "Test Teacher 2"
+      },
+      "model": "mande.teacher",
+      "pk": 2
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "fields": {
+    "student_id": "10",
+    "survey_date": "2000-01-01",
+    "exit_date": "2000-01-01",
+    "early_exit": "Y",
+    "last_grade": "1",
+    "early_exit_reason": "MOVING",
+    "early_exit_comment": "Moved away",
+    "secondary_enrollment": "N"
+    },
+  "model":"mande.exitsurvey",
+  "pk":1
+},
+{
+  "fields": {
+  "student_id": "9",
+  "survey_date": "2000-01-01",
+  "exit_date": "2000-01-01",
+  "early_exit": "N",
+  "last_grade": "1",
+  "early_exit_reason": "MOVING",
+  "early_exit_comment": "Moved away",
+  "secondary_enrollment": "N"
+  },
+"model":"mande.exitsurvey",
+"pk":2
+}
+]

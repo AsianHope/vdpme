@@ -1,0 +1,26 @@
+[
+  {
+      "fields": {
+          "school_location": "Location 1",
+          "school_name": "VDP-1"
+      },
+      "model": "mande.school",
+      "pk": 1
+  },
+  {
+      "fields": {
+          "school_location": "Location 2",
+          "school_name": "VDP-2"
+      },
+      "model": "mande.school",
+      "pk": 2
+  },
+  {
+      "fields": {
+          "school_location": "Location 3",
+          "school_name": "VDP-3"
+      },
+      "model": "mande.school",
+      "pk": 3
+  }
+]
