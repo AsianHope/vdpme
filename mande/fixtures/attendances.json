@@ -1,0 +1,13 @@
+[
+  {
+    "fields":{
+      "student_id":"1",
+      "classroom":"1",
+      "date":"2015-07-01",
+      "attendance":"UA",
+      "notes":""
+    },
+    "model":"mande.attendance",
+    "pk":1
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "fields": {
+        "student_id":"1",
+        "enrollment_date":"2005-07-01",
+        "starting_grade":"50"
+    },
+    "model":"mande.intakeinternal",
+    "pk":1
+  },
+  {
+    "fields": {
+        "student_id":"2",
+        "enrollment_date":"2005-07-01",
+        "starting_grade":"1"
+    },
+    "model":"mande.intakeinternal",
+    "pk":2
+  },
+  {
+    "fields": {
+        "student_id":"3",
+        "enrollment_date":"2005-07-01",
+        "starting_grade":"50"
+    },
+    "model":"mande.intakeinternal",
+    "pk":3
+  },
+  {
+    "fields": {
+        "student_id":"4",
+        "enrollment_date":"2005-07-01",
+        "starting_grade":"2"
+    },
+    "model":"mande.intakeinternal",
+    "pk":4
+  },
+  {
+    "fields": {
+        "student_id":"5",
+        "enrollment_date":"2005-07-01",
+        "starting_grade":"3"
+    },
+    "model":"mande.intakeinternal",
+    "pk":5
+  },
+  {
+    "fields": {
+        "student_id":"6",
+        "enrollment_date":"2005-07-01",
+        "starting_grade":"4"
+    },
+    "model":"mande.intakeinternal",
+    "pk":6
+  },
+  {
+    "fields": {
+        "student_id":"7",
+        "enrollment_date":"2005-07-01",
+        "starting_grade":"5"
+    },
+    "model":"mande.intakeinternal",
+    "pk":7
+  },
+  {
+    "fields": {
+        "student_id":"8",
+        "enrollment_date":"2005-07-01",
+        "starting_grade":"6"
+    },
+    "model":"mande.intakeinternal",
+    "pk":8
+  }
+]

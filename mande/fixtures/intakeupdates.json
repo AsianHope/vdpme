@@ -1,0 +1,34 @@
+[
+{
+  "fields":{
+      "student_id":"1",
+      "date":"2015-07-15",
+      "address":"456",
+      "guardian1_name":"",
+      "guardian1_relationship":"",
+      "guardian1_phone":"",
+      "guardian1_profession":"",
+      "guardian1_employment":"",
+      "guardian2_name":"",
+      "guardian2_relationship":"GRANDFATHER",
+      "guardian2_phone":"456",
+      "guardian2_profession":"456",
+      "guardian2_employment":"456",
+      "minors":"",
+      "minors_in_public_school":"",
+      "minors_in_other_school":"",
+      "minors_working":"",
+      "minors_profession":"",
+      "minors_encouraged":"",
+      "minors_training":"",
+      "minors_training_type":"",
+      "enrolled":"",
+      "grade_current":"",
+      "grade_last":"",
+      "reasons":"",
+      "notes":"test notes update"
+    },
+    "model":"mande.intakeupdate",
+    "pk":1
+}
+]

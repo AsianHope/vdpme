@@ -1,0 +1,13 @@
+[
+  {
+    "fields":{
+      "date":"2015-06-30 17:00:00+00:00",
+      "user":1,
+      "user_generated":true,
+      "text":"test notification",
+      "font_awesome_icon":"fa-bolt"
+    },
+    "model": "mande.notificationlog",
+    "pk":1
+  }
+]
