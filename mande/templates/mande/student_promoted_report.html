@@ -14,7 +14,7 @@ Students Promoted Report
         {% for list_of_year in list_of_years %}
             <tr>
               <td>
-                {{list_of_year}} - {{list_of_year | add_year}}
+                {{list_of_year}} - {{ list_of_year | add:1 }}
               </td>
             </tr>
         {% endfor %}
