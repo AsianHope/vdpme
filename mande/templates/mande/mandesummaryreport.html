@@ -62,7 +62,7 @@ M&E Summary Report in {{start_view_date}} to {{view_date}}
       </table>
     </div>
     <div class="col-md-3">
-      <form action = "" method="post">
+      <form method="post" action="{% url 'mande_summary_report' %}">
           {% csrf_token %}
           <div class="col-md-12">
             <div class="form-group">
@@ -72,7 +72,7 @@ M&E Summary Report in {{start_view_date}} to {{view_date}}
               <input type="date" name="view_date" class="form-control" id="view_date" required>
             </div>
             <div class="form-group">
-              <input type="submit" class="form-control btn btn-primary">
+              <button id="submit" class="form-control btn btn-primary">Submit</button>
             </div>
           </div>
       </form>
@@ -280,18 +280,16 @@ M&E Summary Report in {{start_view_date}} to {{view_date}}
 {% endblock %}
 
 {% block script %}
- <!-- DataTables JavaScript -->
 <script type="text/javascript">
-  $('#view_date').val('{{view_date}}');
-  $('#start_view_date').val('{{start_view_date}}');
-// $(function() {
-//       $('#view_date').change(function() {
-//           //split on /
-//           url = '{%url 'mande_summary_report' %}' + $(this).val()
-//           window.location.href = url
-//       });
-//     });
-
+    $('#view_date').val('{{view_date}}');
+    $('#start_view_date').val('{{start_view_date}}');
+    $(function() {
+          $('#submit').click(function() {
+              //split on /
+              url = '{%url 'mande_summary_report' %}' + $('#start_view_date').val() + '/' +$('#view_date').val();
+              window.location.href = url;
+              return false;
+          });
+        });
 </script>
-
 {% endblock %}

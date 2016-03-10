@@ -17,6 +17,7 @@ from datetime import date
 from datetime import datetime
 from datetime import timedelta
 
+
 from django.views.generic import ListView
 from mande.models import IntakeSurvey
 from mande.models import IntakeUpdate
@@ -432,9 +433,7 @@ M&E summary Report
  -
 *****************************************************************************
 '''
-
-def mande_summary_report(request,view_date=(date.today().replace(day=1)-timedelta(days=1)).isoformat()):
-    def heavy_report():
+def mande_summary_report(request,start_view_date=(date.today().replace(day=1)-timedelta(days=1 * 365/12)).isoformat(),view_date=(date.today().replace(day=1)-timedelta(days=1)).isoformat()):
         # Catch-up school report
         schools = School.objects.all()
         exit_surveys = ExitSurvey.objects.filter(exit_date__lte=start_view_date).values_list('student_id',flat=True)
@@ -587,21 +586,6 @@ def mande_summary_report(request,view_date=(date.today().replace(day=1)-timedelt
                                     'students_enrolled_in_english_by_level':students_enrolled_in_english_by_level,
                                     'level':range(1,english_biggest_level+1)
                                 })
-    # -------------------------end heavy_report() function------------------------
-    if request.method == 'POST':
-        start_view_date = request.POST['start_view_date']
-        view_date = request.POST['view_date']
-        return heavy_report()
-    else:
-        start_view_date = (date.today().replace(day=1)-timedelta(days=1 * 365/12)).isoformat()
-        view_date=(date.today().replace(day=1)-timedelta(days=1)).isoformat()
-        cache_key = 'mande_heavy_report'
-        cache_time = 7200 # time to live in seconds
-        result = cache.get(cache_key)
-        if not result:
-            result = heavy_report()
-            cache.set(cache_key, result, cache_time)
-        return result
 
 '''
 *****************************************************************************
