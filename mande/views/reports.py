@@ -654,51 +654,27 @@ Students Promoted Times Report
  - lists all number of times student has been promoted
 *****************************************************************************
 '''
-def students_promoted_times_report(request,filter_seach=None,site=None,grade=None):
+def students_promoted_times_report(request,filter_seach=None):
     sites = School.objects.all()
-    if request.method == 'POST':
-        site = request.POST['site']
-        grade = request.POST['grade']
+
     #  get all student include student in ExitSurvey
     if filter_seach is not None:
-        # filter student by site
-        if site is not None and site != 'All Site':
-            site = School.objects.get(school_id=site)
-            students = IntakeSurvey.objects.all().filter(date__lte=date.today().isoformat(),site=site)
-        else:
-            students = IntakeSurvey.objects.all().filter(date__lte=date.today().isoformat())
-
+        students = IntakeSurvey.objects.all().filter(date__lte=date.today().isoformat())
     else:
-        # filter student by site
-        if site is not None and site != 'All Site':
-            site = School.objects.get(school_id=site)
-            exit_surveys = ExitSurvey.objects.filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
-            students = IntakeSurvey.objects.exclude(student_id__in=exit_surveys).filter(date__lte=date.today().isoformat(),site=site)
-        else:
-            exit_surveys = ExitSurvey.objects.filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
-            students = IntakeSurvey.objects.exclude(student_id__in=exit_surveys).filter(date__lte=date.today().isoformat())
+        exit_surveys = ExitSurvey.objects.filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
+        students = IntakeSurvey.objects.exclude(student_id__in=exit_surveys).filter(date__lte=date.today().isoformat())
 
     students_promoted = {}
     for student in students:
         if student.current_vdp_grade() < 12:
-            if grade is not None and grade != 'All Grade':
-                # filter student by grade
-                if student.current_vdp_grade() == int(grade):
-                    students_promoted[student] = {
-                            'promoted_times':len(Academic.objects.filter(student_id=student,promote=True)),
-                            'lastest_promoted_date':Academic.objects.filter(student_id=student,promote=True).latest('test_date').test_date if len(Academic.objects.filter(student_id=student,promote=True)) > 0 else None,
-                    }
-            else:
-                students_promoted[student] = {
-                        'promoted_times':len(Academic.objects.filter(student_id=student,promote=True)),
-                        'lastest_promoted_date':Academic.objects.filter(student_id=student,promote=True).latest('test_date').test_date if len(Academic.objects.filter(student_id=student,promote=True)) > 0 else None,
-                }
+            students_promoted[student] = {
+                'promoted_times':len(Academic.objects.filter(student_id=student,promote=True)),
+                'lastest_promoted_date':Academic.objects.filter(student_id=student,promote=True).latest('test_date').test_date if len(Academic.objects.filter(student_id=student,promote=True)) > 0 else None,
+            }
     return render(request, 'mande/students_promoted_times_report.html',
                             {
                                 'students_promoted':students_promoted,
                                 'filter_seach':filter_seach,
-                                'site':site,
-                                'grade':dict(GRADES)[int(grade)] if grade is not None and grade != 'All Grade' else grade,
                                 'sites':sites,
                                 'grades':dict(GRADES)
                             })
