@@ -37,8 +37,8 @@ urlpatterns = patterns('',
     url(r'^reports/student_dental/$', views.student_dental_report, name='student_dental_report'),
     url(r'^reports/student_dental/(?P<site_id>\d+)/$', views.student_dental_report, name='student_dental_report'),
 
-    url(r'^reports/mande_summary_report/(?P<view_date>\d{4}-\d{1,2}-\d{1,2})/$', views.mande_summary_report, name='mande_summary_report'),
-    url(r'^reports/mande_summary_report/$', views.mande_summary_report, name='mande_summary_report'),
+    url(r'^reports/mande_summary_report/(?P<start_view_date>\d{4}-\d{1,2}-\d{1,2})/(?P<view_date>\d{4}-\d{1,2}-\d{1,2})$',cache_page(1800)(views.mande_summary_report), name='mande_summary_report'),
+    url(r'^reports/mande_summary_report/$',cache_page(1800)(views.mande_summary_report), name='mande_summary_report'),
 
     url(r'^reports/student_promoted_report/$', views.student_promoted_report, name='student_promoted_report'),
     url(r'^reports/students_promoted_times_report/$', views.students_promoted_times_report, name='students_promoted_times_report'),
