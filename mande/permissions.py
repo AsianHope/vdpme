@@ -27,7 +27,7 @@ perms_required={
     'attendance_calendar':{
         'mande.view_classroom',
         'mande.add_attendancedayoffering',
-        'mande.modify_attendancedayoffering'
+        'mande.change_attendancedayoffering'
     },
     'take_attendance':{
         'mande.add_attendance',
@@ -125,7 +125,7 @@ perms_required={
     'anomolous_data':{},
     'intake_survey':{
         'mande.add_intakesurvey',
-        'madne.add_intakeinternal'
+        'mande.add_intakeinternal'
     },
     'intake_update':{
         'mande.add_intakeupdate'
@@ -140,7 +140,7 @@ perms_required={
         'mande.add_postexitsurvey'
     },
     'spiritualactivities_survey':{
-        'mande.add_spiritualactivities'
+        'mande.add_spiritualactivitiessurvey'
     },
     'health_form':{
         'mande.add_health'
@@ -150,21 +150,21 @@ perms_required={
     },
     'teacher_form':{
         'mande.add_teacher',
-        'mande.modify_teacher'
+        'mande.change_teacher'
     },
     'classroom_form':{
         'mande.add_classroom',
-        'mande.modify_classroom'
+        'mande.change_classroom'
     },
     'classroomteacher_form':{
         'mande.add_classroomteacher',
-        'mande.modify_classroomteacher'
+        'mande.change_classroomteacher'
     },
     'classroomenrollment_form':{
         'mande.view_classroom',
-        'mande.view_school ',
+        'mande.view_school',
         'mande.add_classroomenrollment',
-        'mande.modify_classroomenrollment'
+        'mande.change_classroomenrollment'
     },
     'academic_select':{
         'mande.add_academic'

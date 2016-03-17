@@ -21,11 +21,11 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name='attendancedayoffering',
-            options={'permissions': (('view_attendanceDayOffering', 'Can view attendance day offering'),)},
+            options={'permissions': (('view_attendancedayoffering', 'Can view attendance day offering'),)},
         ),
         migrations.AlterModelOptions(
             name='attendancelog',
-            options={'permissions': (('view_attendanceLog', 'Can view attendance log'),)},
+            options={'permissions': (('view_attendancelog', 'Can view attendance log'),)},
         ),
         migrations.AlterModelOptions(
             name='classroom',
@@ -33,11 +33,11 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name='classroomenrollment',
-            options={'permissions': (('view_classroomEnrollment', 'Can view classroom enrollment'),)},
+            options={'permissions': (('view_classroomenrollment', 'Can view classroom enrollment'),)},
         ),
         migrations.AlterModelOptions(
             name='classroomteacher',
-            options={'permissions': (('view_classroomTeacher', 'Can view classroom teacher'),)},
+            options={'permissions': (('view_classroomteacher', 'Can view classroom teacher'),)},
         ),
         migrations.AlterModelOptions(
             name='discipline',
@@ -45,7 +45,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name='exitsurvey',
-            options={'permissions': (('view_exitSurvey', 'Can view exit survey'),)},
+            options={'permissions': (('view_exitsurvey', 'Can view exit survey'),)},
         ),
         migrations.AlterModelOptions(
             name='health',
@@ -53,23 +53,23 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name='intakeinternal',
-            options={'permissions': (('view_intakeInternal', 'Can view intake internal'),)},
+            options={'permissions': (('view_intakeinternal', 'Can view intake internal'),)},
         ),
         migrations.AlterModelOptions(
             name='intakesurvey',
-            options={'permissions': (('view_intakeSurvey', 'Can view intake survey'),)},
+            options={'permissions': (('view_intakesurvey', 'Can view intake survey'),)},
         ),
         migrations.AlterModelOptions(
             name='intakeupdate',
-            options={'permissions': (('view_intakeUpdate', 'Can view intake update'),)},
+            options={'permissions': (('view_intakeupdate', 'Can view intake update'),)},
         ),
         migrations.AlterModelOptions(
             name='notificationlog',
-            options={'get_latest_by': 'date', 'permissions': (('view_notificationLog', 'Can view notification log'),)},
+            options={'get_latest_by': 'date', 'permissions': (('view_notificationlog', 'Can view notification log'),)},
         ),
         migrations.AlterModelOptions(
             name='postexitsurvey',
-            options={'permissions': (('view_postExitSurvey', 'Can view post exit survey'),)},
+            options={'permissions': (('view_postexitsurvey', 'Can view post exit survey'),)},
         ),
         migrations.AlterModelOptions(
             name='school',
@@ -77,11 +77,11 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name='spiritualactivitiessurvey',
-            options={'permissions': (('view_spiritualActivitiesSurvey', 'Can view spiritual activities survey'),)},
+            options={'permissions': (('view_spiritualactivitiessurvey', 'Can view spiritual activities survey'),)},
         ),
         migrations.AlterModelOptions(
             name='studentevaluation',
-            options={'permissions': (('view_studentEvaluation', 'Can view student evaluation'),)},
+            options={'permissions': (('view_studentevaluation', 'Can view student evaluation'),)},
         ),
         migrations.AlterModelOptions(
             name='teacher',

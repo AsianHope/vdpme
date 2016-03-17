@@ -196,7 +196,7 @@ class IntakeSurvey(models.Model):
 	   return unicode(self.student_id)+' - '+self.name
 	class Meta:
 		 permissions = (
-            ('view_intakeSurvey', 'Can view intake survey'),
+            ('view_intakesurvey', 'Can view intake survey'),
         )
 
 	#return the most up to date information
@@ -286,7 +286,7 @@ class IntakeInternal(models.Model):
 		return unicode(self.student_id)
 	class Meta:
 		 permissions = (
-            ('view_intakeInternal', 'Can view intake internal'),
+            ('view_intakeinternal', 'Can view intake internal'),
         )
 
 class IntakeUpdate(models.Model):
@@ -327,7 +327,7 @@ class IntakeUpdate(models.Model):
 		return unicode(self.date)+' - '+unicode(self.student_id)
 	class Meta:
 		 permissions = (
-            ('view_intakeUpdate', 'Can view intake update'),
+            ('view_intakeupdate', 'Can view intake update'),
         )
 
 class StudentEvaluation(models.Model):
@@ -351,7 +351,7 @@ class StudentEvaluation(models.Model):
 	class Meta:
 		unique_together = (('student_id', 'date'),)
 		permissions = (
-            ('view_studentEvaluation', 'Can view student evaluation'),
+            ('view_studentevaluation', 'Can view student evaluation'),
         )
 
 
@@ -368,7 +368,7 @@ class SpiritualActivitiesSurvey(models.Model):
 		return unicode(self.date)+' - '+unicode(self.student_id)
 	class Meta:
 		 permissions = (
-            ('view_spiritualActivitiesSurvey', 'Can view spiritual activities survey'),
+            ('view_spiritualactivitiessurvey', 'Can view spiritual activities survey'),
         )
 
 
@@ -385,7 +385,7 @@ class ExitSurvey(models.Model):
 		return unicode(self.exit_date)+' - '+unicode(self.student_id)
 	class Meta:
 		 permissions = (
-            ('view_exitSurvey', 'Can view exit survey'),
+            ('view_exitsurvey', 'Can view exit survey'),
         )
 
 class PostExitSurvey(models.Model):
@@ -411,7 +411,7 @@ class PostExitSurvey(models.Model):
 		return unicode(self.exit_date)+' - '+unicode(self.student_id)
 	class Meta:
 		 permissions = (
-            ('view_postExitSurvey', 'Can view post exit survey'),
+            ('view_postexitsurvey', 'Can view post exit survey'),
         )
 
 class AttendanceDayOffering(models.Model):
@@ -423,7 +423,7 @@ class AttendanceDayOffering(models.Model):
 	class Meta:
 		unique_together = (('classroom_id','date'))
 		permissions = (
-			('view_attendanceDayOffering', 'Can view attendance day offering'),
+			('view_attendancedayoffering', 'Can view attendance day offering'),
 		)
 
 
@@ -506,7 +506,7 @@ class ClassroomEnrollment(models.Model):
 	class Meta:
 		unique_together = (('student_id','classroom_id'))
 		permissions = (
-			('view_classroomEnrollment', 'Can view classroom enrollment'),
+			('view_classroomenrollment', 'Can view classroom enrollment'),
 		)
 
 class ClassroomTeacher(models.Model):
@@ -516,7 +516,7 @@ class ClassroomTeacher(models.Model):
 		return unicode(self.teacher_id)+unicode(self.classroom_id)
 	class Meta:
 		permissions = (
-			('view_classroomTeacher', 'Can view classroom teacher'),
+			('view_classroomteacher', 'Can view classroom teacher'),
 		)
 
 class NotificationLog(models.Model):
@@ -532,7 +532,7 @@ class NotificationLog(models.Model):
 	class Meta:
 		get_latest_by = 'date'
 		permissions = (
-			('view_notificationLog', 'Can view notification log'),
+			('view_notificationlog', 'Can view notification log'),
 		)
 
 class AttendanceLog(models.Model):
@@ -546,5 +546,5 @@ class AttendanceLog(models.Model):
 	class Meta:
 			unique_together = (('classroom','date'))
 			permissions = (
-				('view_attendanceLog', 'Can view attendance log'),
+				('view_attendancelog', 'Can view attendance log'),
 			)
