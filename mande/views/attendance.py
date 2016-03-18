@@ -60,6 +60,9 @@ from mande.utils import studentAtSchoolGradeLevel
 from mande.utils import studentAtAgeAppropriateGradeLevel
 
 from django.contrib.auth.models import User
+from mande.utils import user_permissions
+
+import inspect
 
 '''
 *****************************************************************************
@@ -68,8 +71,13 @@ Attendance
 *****************************************************************************
 '''
 def attendance(request):
-    context= {}
-    return render(request, 'mande/attendance.html', context)
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      context= {}
+      return render(request, 'mande/attendance.html', context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 
 '''
@@ -79,10 +87,15 @@ Attendance Calendar
 *****************************************************************************
 '''
 def attendance_calendar(request):
-    classrooms = Classroom.objects.all()
-    attendance_date = date.today().replace(day=1).isoformat()
-    context= {'classrooms':classrooms, 'attendance_date':attendance_date}
-    return render(request, 'mande/attendancecalendar.html', context)
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      classrooms = Classroom.objects.all()
+      attendance_date = date.today().replace(day=1).isoformat()
+      context= {'classrooms':classrooms, 'attendance_date':attendance_date}
+      return render(request, 'mande/attendancecalendar.html', context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 '''
 *****************************************************************************
@@ -92,51 +105,54 @@ Take Class Attendance
 *****************************************************************************
 '''
 def take_class_attendance(request, classroom_id, attendance_date=date.today().isoformat()):
-    message = ''
-    submit_enabled = True
-    if attendance_date != date.today().isoformat():
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      message = ''
+      submit_enabled = True
+      if attendance_date != date.today().isoformat():
         warning = 'The selected date is not today!'
-    else:
+      else:
         warning = ''
 
-    classroom = Classroom.objects.get(pk=classroom_id)
-    students = ClassroomEnrollment.objects.filter(classroom_id=classroom_id,student_id__date__lte=date.today().isoformat()
+      classroom = Classroom.objects.get(pk=classroom_id)
+      students = ClassroomEnrollment.objects.filter(classroom_id=classroom_id,student_id__date__lte=date.today().isoformat()
                                                  ).exclude(
                                                   drop_date__lte=attendance_date
                                                  )
 
-    #find out if any student attendance has been taken, excluding placeholder attendance
-    student_attendance = Attendance.objects.filter(student_id=students,
+      #find out if any student attendance has been taken, excluding placeholder attendance
+      student_attendance = Attendance.objects.filter(student_id=students,
                                                    date=attendance_date
                                                    ).exclude(attendance=None)
-    if len(student_attendance) > 0:
+      if len(student_attendance) > 0:
         message = 'Attendance for one or more students has been taken'
 
-    #pre instantiate data for this form so that we can update the whole queryset later
-    for student in students:
+      #pre instantiate data for this form so that we can update the whole queryset later
+      for student in students:
         Attendance.objects.get_or_create(student_id=student.student_id,
                                          date=attendance_date,
                                          defaults={'attendance':None,
                                                    'classroom':classroom})
 
-    try:
+      try:
         offered = AttendanceDayOffering.objects.filter(classroom_id=classroom_id,
                                                     date=attendance_date)
         if len(offered) < 1 :
             submit_enabled = False
             Attendance.objects.filter(attendance=None).delete()
-    except ObjectDoesNotExist:
+      except ObjectDoesNotExist:
         submit_enabled = False
         Attendance.objects.filter(attendance=None).delete()
 
-    #now get the whole set of attendance objects and create the formset
-    student_attendance = Attendance.objects.filter(student_id=students,
+      #now get the whole set of attendance objects and create the formset
+      student_attendance = Attendance.objects.filter(student_id=students,
                                                    date=attendance_date)
-    AttendanceFormSet = modelformset_factory(Attendance,
+      AttendanceFormSet = modelformset_factory(Attendance,
                                              form=AttendanceForm,
                                              extra=0)
 
-    if request.method == 'POST':
+      if request.method == 'POST':
 
         formset = AttendanceFormSet(request.POST)
         if formset.is_valid():
@@ -174,9 +190,9 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
             #clean up the mess we created making blank rows to update.
             Attendance.objects.filter(attendance=None).delete()
 
-    else:
+      else:
         formset = AttendanceFormSet(queryset = student_attendance)
-    context= {  'classroom':classroom,
+      context= {  'classroom':classroom,
                 'students':students,
                 'attendance_date':attendance_date,
                 'formset':formset,
@@ -184,8 +200,10 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
                 'message': message,
                 'submit_enabled': submit_enabled}
 
-    return render(request, 'mande/takeclassattendanceformset.html', context)
+      return render(request, 'mande/takeclassattendanceformset.html', context)
 
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 '''
 *****************************************************************************
 AttendanceCalendar
@@ -231,13 +249,15 @@ Attendance Days
 *****************************************************************************
 '''
 def attendance_days(request,classroom_id,attendance_date=date.today().isoformat()):
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      attendance_date = datetime.strptime(attendance_date,'%Y-%m-%d')
+      classroom = Classroom.objects.get(pk=classroom_id)
 
-    attendance_date = datetime.strptime(attendance_date,'%Y-%m-%d')
-    classroom = Classroom.objects.get(pk=classroom_id)
 
-
-    #submitting a day to be added or removed
-    if request.method == 'GET' and request.GET.get('day'):
+      #submitting a day to be added or removed
+      if request.method == 'GET' and request.GET.get('day'):
         day = request.GET.get('day')
         #if we don't get an exception, we want to delete this object
         try:
@@ -258,8 +278,8 @@ def attendance_days(request,classroom_id,attendance_date=date.today().isoformat(
         #TODO: figure out a way to not group requests for slimmer logging
         return render(request,'mande/attendancedays.html','')
 
-    #copy this calendar to all other calendars at the site from today forward
-    elif request.method == 'GET' and request.GET.get('autoapply'):
+      #copy this calendar to all other calendars at the site from today forward
+      elif request.method == 'GET' and request.GET.get('autoapply'):
 
         attendance_days = AttendanceDayOffering.objects.all().filter(classroom_id=classroom).filter(date__gte=date.today().isoformat())
         site_classrooms = Classroom.objects.all(
@@ -276,8 +296,8 @@ def attendance_days(request,classroom_id,attendance_date=date.today().isoformat(
 
 
         return render(request,'mande/attendancedays.html','')
-    #otherwise display the calendar
-    else:
+      #otherwise display the calendar
+      else:
         attendance_days = AttendanceDayOffering.objects.filter(
                                                           classroom_id=classroom
                                                       ).filter(
@@ -291,3 +311,6 @@ def attendance_days(request,classroom_id,attendance_date=date.today().isoformat(
         return render(request, 'mande/attendancedays.html', {'Calendar' : mark_safe(lCalendar),
                                                        'classroom': classroom,
                                                    })
+        
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')

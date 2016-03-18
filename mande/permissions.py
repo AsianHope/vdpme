@@ -29,7 +29,21 @@ perms_required={
         'mande.add_attendancedayoffering',
         'mande.change_attendancedayoffering'
     },
+    'attendance_days':{
+        'mande.view_classroom',
+        'mande.add_attendancedayoffering',
+        'mande.change_attendancedayoffering',
+        'mande.delete_attendancedayoffering'
+    },
     'take_attendance':{
+        'mande.add_attendance',
+        'mande.view_classroom',
+        'mande.view_classroomenrollment',
+        'mande.view_attendance',
+        'mande.view_attendancedayoffering',
+        'mande.view_attendancelog'
+    },
+    'take_class_attendance':{
         'mande.add_attendance',
         'mande.view_classroom',
         'mande.view_classroomenrollment',
@@ -45,6 +59,9 @@ perms_required={
     'daily_absence_report':{
         'mande.view_classroom',
         'mande.view_attendancedayoffering',
+        'mande.view_attendance'
+    },
+    'student_absence_report':{
         'mande.view_attendance'
     },
     'data_audit':{
@@ -139,6 +156,9 @@ perms_required={
     'post_exit_survey':{
         'mande.add_postexitsurvey'
     },
+    'post_exit_survey_list':{
+        'mande.view_postexitsurvey'
+    },
     'spiritualactivities_survey':{
         'mande.add_spiritualactivitiessurvey'
     },
@@ -166,11 +186,34 @@ perms_required={
         'mande.add_classroomenrollment',
         'mande.change_classroomenrollment'
     },
+    'classroomenrollment_individual':{
+        'mande.view_classroom',
+        'mande.view_school',
+        'mande.add_classroomenrollment',
+        'mande.change_classroomenrollment'
+    },
     'academic_select':{
+        'mande.add_academic'
+    },
+    'academic_form':{
+        'mande.add_academic'
+    },
+    'academic_form_single':{
         'mande.add_academic'
     },
     'studentevaluation_select':{
         'mande.add_studentevaluation'
+    },
+    'studentevaluation_form':{
+        'mande.add_studentevaluation'
+    },
+    'studentevaluation_form_single':{
+        'mande.add_studentevaluation'
+    },
+    'dashboard':{
+        'mande.view_intakesurvey'
+    },
+    'notification_log':{
+        'mande.view_notificationlog'
     }
-
 }

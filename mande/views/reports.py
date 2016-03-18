@@ -65,6 +65,9 @@ from mande.utils import getStudentAgeAppropriateGradeLevel
 
 from django.contrib.auth.models import User
 from django.core.cache import cache
+from mande.utils import user_permissions
+
+import inspect
 
 
 TOO_YOUNG = 4
@@ -76,16 +79,19 @@ Daily Attendance Report
 *****************************************************************************
 '''
 def daily_attendance_report(request,attendance_date=date.today().isoformat()):
-    #only classrooms who take attendance, and who take attendance today.
-    classrooms = Classroom.objects.all().filter(active=True)
-    takesattendance = AttendanceDayOffering.objects.filter(
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      #only classrooms who take attendance, and who take attendance today.
+      classrooms = Classroom.objects.all().filter(active=True)
+      takesattendance = AttendanceDayOffering.objects.filter(
                                                         date=attendance_date
                                                   ).values_list(
                                                        'classroom_id',flat=True)
-    classrooms = classrooms.filter(classroom_id__in=takesattendance)
+      classrooms = classrooms.filter(classroom_id__in=takesattendance)
 
-    classroomattendance = {}
-    for classroom in classrooms:
+      classroomattendance = {}
+      for classroom in classrooms:
         try:
             classroomattendance[classroom] = AttendanceLog.objects.get(
                                                            classroom=classroom,
@@ -93,10 +99,12 @@ def daily_attendance_report(request,attendance_date=date.today().isoformat()):
         except ObjectDoesNotExist:
             classroomattendance[classroom] = None
 
-    return render(request, 'mande/attendancereport.html',
+      return render(request, 'mande/attendancereport.html',
                             {'classroomattendance' : classroomattendance,
                              'attendance_date': attendance_date
                                                                         })
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 '''
 *****************************************************************************
 Daily Absence Report
@@ -104,16 +112,19 @@ Daily Absence Report
 *****************************************************************************
 '''
 def daily_absence_report(request,attendance_date=date.today().isoformat()):
-    #only classrooms who take attendance, and who take attendance today.
-    classrooms = Classroom.objects.all().filter(active=True)
-    takesattendance = AttendanceDayOffering.objects.filter(
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      #only classrooms who take attendance, and who take attendance today.
+      classrooms = Classroom.objects.all().filter(active=True)
+      takesattendance = AttendanceDayOffering.objects.filter(
                                                         date=attendance_date
                                                   ).values_list(
                                                        'classroom_id',flat=True)
-    classrooms = classrooms.filter(classroom_id__in=takesattendance)
+      classrooms = classrooms.filter(classroom_id__in=takesattendance)
 
-    classroomattendance = {}
-    for classroom in classrooms:
+      classroomattendance = {}
+      for classroom in classrooms:
         try:
             #only displays unexcused absences
             classroomattendance[classroom] = Attendance.objects.filter(
@@ -123,10 +134,12 @@ def daily_absence_report(request,attendance_date=date.today().isoformat()):
         except ObjectDoesNotExist:
             classroomattendance[classroom] = None
 
-    return render(request, 'mande/absencereport.html',
+      return render(request, 'mande/absencereport.html',
                             {'classroomattendance' : classroomattendance,
                              'attendance_date': attendance_date
                                                                         })
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 '''
 *****************************************************************************
 Data Audit
@@ -134,15 +147,18 @@ Data Audit
 *****************************************************************************
 '''
 def data_audit(request,audit_type='ALL'):
-    #modelfields = model_to_dict(IntakeSurvey.objects.all()[0])
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      #modelfields = model_to_dict(IntakeSurvey.objects.all()[0])
 
-    students = getEnrolledStudents()
-    filters = []
+      students = getEnrolledStudents()
+      filters = []
 
-    #a
-    anomalies = {}
+      #a
+      anomalies = {}
 
-    for student in students:
+      for student in students:
         '''students with missing information'''
         text = 'Missing '
         resolution = reverse('intake_update',kwargs={'student_id':student.student_id})
@@ -190,9 +206,9 @@ def data_audit(request,audit_type='ALL'):
                 resolution = reverse('student_detail',kwargs={'student_id':student.student_id})
                 addAnomaly(anomalies, student, text, resolution)
                 filters.append(text)
-    ''' students who have unapproved absences with no comment '''
-    uastudents = Attendance.objects.all().filter(attendance__exact="UA").filter(Q(notes=u"")|Q(notes=None)).order_by('-date')
-    for uastudent in uastudents:
+      ''' students who have unapproved absences with no comment '''
+      uastudents = Attendance.objects.all().filter(attendance__exact="UA").filter(Q(notes=u"")|Q(notes=None)).order_by('-date')
+      for uastudent in uastudents:
         text = 'Unapproved absence with no comment'
         attendance_date = uastudent.date
         attendance_class = uastudent.classroom
@@ -205,11 +221,13 @@ def data_audit(request,audit_type='ALL'):
         addAnomaly(anomalies, uastudent.student_id, text, resolution)
         filters.append(text)
 
-    #remove duplicates in a now long array
-    filters = set(filters)
-    filters = sorted(filters)
-    return render(request, 'mande/data_audit.html',
+      #remove duplicates in a now long array
+      filters = set(filters)
+      filters = sorted(filters)
+      return render(request, 'mande/data_audit.html',
                             {'students' : anomalies,'filters':filters})
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 
 def addAnomaly(anomalies, student, text, resolution, limit=None):
@@ -235,9 +253,12 @@ Class List
 *****************************************************************************
 '''
 def class_list(request,site='ALL'):
-    class_list={}
-    classrooms = Classroom.objects.all()
-    for classroom in classrooms:
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      class_list={}
+      classrooms = Classroom.objects.all()
+      for classroom in classrooms:
         instance = Classroom.objects.get(classroom_id=classroom.pk)
         class_list[classroom]={
             'site':classroom.school_id,
@@ -263,8 +284,10 @@ def class_list(request,site='ALL'):
             pass
 
 
-    return render(request, 'mande/class_list.html',
+      return render(request, 'mande/class_list.html',
                             {'class_list' : class_list,})
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 '''
 *****************************************************************************
@@ -273,20 +296,24 @@ Exit Surveys list
 *****************************************************************************
 '''
 def exit_surveys_list(request):
-    if request.method == 'POST':
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      if request.method == 'POST':
         from_exit_date = request.POST['from_exit_date']
         to_exit_date = request.POST['to_exit_date']
         exit_surveys = ExitSurvey.objects.all().filter(exit_date__gte=from_exit_date , exit_date__lte=to_exit_date)
-    else:
+      else:
         #get today date and subtract two months
         from_exit_date=(datetime.now()- timedelta(days=2 * 365/12)).strftime("%Y-%m-%d")
         to_exit_date=(datetime.now()).strftime("%Y-%m-%d")
         exit_surveys = ExitSurvey.objects.all().filter(exit_date__gte=from_exit_date , exit_date__lte=to_exit_date)
 
-    post_exit_surveys = PostExitSurvey.objects.all()
-    return render(request, 'mande/exitsurveylist.html',
+      post_exit_surveys = PostExitSurvey.objects.all()
+      return render(request, 'mande/exitsurveylist.html',
                             {'exit_surveys':exit_surveys,'post_exit_surveys':post_exit_surveys,'from_exit_date':from_exit_date,'to_exit_date':to_exit_date})
-
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 '''
 *****************************************************************************
 Student Absence Report
@@ -294,31 +321,34 @@ Student Absence Report
 *****************************************************************************
 '''
 def student_absence_report(request):
-    attendances = Attendance.objects.all()
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      attendances = Attendance.objects.all()
 
-    #set up dict of attendance codes with zero values
-    default_attendance ={}
-    attendancecodes = dict(ATTENDANCE_CODES)
-    for key,code in attendancecodes.iteritems():
+      #set up dict of attendance codes with zero values
+      default_attendance ={}
+      attendancecodes = dict(ATTENDANCE_CODES)
+      for key,code in attendancecodes.iteritems():
         default_attendance[key]=0
 
-    #default out all current students
-    attendance_by_sid = {}
-    currently_enrolled_students = getEnrolledStudents()
-    for student in currently_enrolled_students:
+      #default out all current students
+      attendance_by_sid = {}
+      currently_enrolled_students = getEnrolledStudents()
+      for student in currently_enrolled_students:
         attendance_by_sid[student]=dict(default_attendance)
 
 
-    for attendance in attendances:
+      for attendance in attendances:
         try:
             attendance_by_sid[attendance.student_id][attendance.attendance] +=1
         except KeyError:
             pass; #students no longer in attendance that have attendance
 
-    return render(request, 'mande/student_absence_report.html',
+      return render(request, 'mande/student_absence_report.html',
                                 {'attendance_by_sid':attendance_by_sid, 'attendancecodes':attendancecodes})
-
-
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 '''
 *****************************************************************************
 Student Lag Report
@@ -326,16 +356,19 @@ Student Lag Report
 *****************************************************************************
 '''
 def student_lag_report(request):
-    enrolled_students = getEnrolledStudents()
-    students_lag = {}
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      enrolled_students = getEnrolledStudents()
+      students_lag = {}
 
-    if request.method == 'POST':
+      if request.method == 'POST':
         view_date = request.POST['view_date']
-    else:
+      else:
         # convert to correct format with html input type date
         view_date = date.today().strftime("%Y-%m-%d")
 
-    for student in enrolled_students:
+      for student in enrolled_students:
         #only students in the scope of grade levels
         if student.current_vdp_grade(view_date) < 12:
             students_lag[student] = {
@@ -345,8 +378,10 @@ def student_lag_report(request):
 
             }
 
-    return render(request, 'mande/student_lag_report.html',
+      return render(request, 'mande/student_lag_report.html',
                                 {'students_lag':students_lag,'view_date':view_date})
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 
 '''
@@ -356,24 +391,28 @@ Student Evaluation Report
 *****************************************************************************
 '''
 def student_evaluation_report(request,classroom_id=None):
-    evaluations = StudentEvaluation.objects.all().exclude(  academic_score=None,
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      evaluations = StudentEvaluation.objects.all().exclude(  academic_score=None,
                                                             study_score=None,
                                                             personal_score=None,
                                                             hygiene_score=None,
                                                             faith_score=None)
-    active_classrooms = Classroom.objects.all().filter(active=True).order_by('classroom_location')
-    if classroom_id is not None:
+      active_classrooms = Classroom.objects.all().filter(active=True).order_by('classroom_location')
+      if classroom_id is not None:
         selected_classroom = Classroom.objects.get(pk=classroom_id)
         #select students who have not dropped the class, or have not dropped it yet.
         enrolled_students = selected_classroom.classroomenrollment_set.all().filter(Q(student_id__date__lte=date.today().isoformat()) & Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))).values_list('student_id',flat=True)
 
 
         evaluations = evaluations.filter(student_id__in=enrolled_students)
-    else:
+      else:
         selected_classroom = None
-    return render(request, 'mande/studentevaluationreport.html',
+      return render(request, 'mande/studentevaluationreport.html',
                                 {'evaluations':evaluations, 'selected_classroom':selected_classroom, 'active_classrooms':active_classrooms})
-
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 '''
 *****************************************************************************
 Student Medical Report
@@ -381,15 +420,20 @@ Student Medical Report
 *****************************************************************************
 '''
 def student_medical_report(request):
-    enrolled_students = getEnrolledStudents()
-    visits = {}
-    for student in enrolled_students:
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      enrolled_students = getEnrolledStudents()
+      visits = {}
+      for student in enrolled_students:
         try:
             visits[student] = len(Health.objects.all().filter(student_id=student))
         except ObjectDoesNotExist:
             pass
-    return render(request, 'mande/studentmedicalreport.html',
+      return render(request, 'mande/studentmedicalreport.html',
                                 {'visits':visits})
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 '''
 *****************************************************************************
 Student Dental Report
@@ -397,21 +441,24 @@ Student Dental Report
 *****************************************************************************
 '''
 def student_dental_report(request,site_id=None):
-    if site_id is not None:
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      if site_id is not None:
         dentals= Health.objects.all().filter(appointment_type='Dental',student_id__site=site_id)
         current_site =  School.objects.get(school_id=site_id)
-    else:
+      else:
         current_site = 'All Site'
         dentals= Health.objects.all().filter(appointment_type='Dental')
 
-    unique_students = dentals.values('student_id').annotate(dcount=Count('student_id')).count()
+      unique_students = dentals.values('student_id').annotate(dcount=Count('student_id')).count()
 
-    year = datetime.now().year-2013
-    dentals_by_month_year=[]
-    for x in range(year):
+      year = datetime.now().year-2013
+      dentals_by_month_year=[]
+      for x in range(year):
         dentals_by_month_year.extend([{'group_by_date':str(datetime.now().year-x)+'-'+format(i+1, '02d'),'dentals':[], 'unique':0} for i in range(12)])
 
-    for dental in dentals:
+      for dental in dentals:
         for dental_by_month_year in dentals_by_month_year:
             generate_to_date=datetime.strptime(dental_by_month_year['group_by_date'], '%Y-%m')
             if(generate_to_date.year==dental.appointment_date.year and generate_to_date.month==dental.appointment_date.month):
@@ -419,14 +466,16 @@ def student_dental_report(request,site_id=None):
                 unique_students_by_month = dentals.filter(appointment_date__year=generate_to_date.year, appointment_date__month=generate_to_date.month).values('student_id').annotate(dcount=Count('student_id')).count()
                 dental_by_month_year['unique'] = unique_students_by_month
 
-    sites = School.objects.all()
-    return render(request, 'mande/studentdentalreport.html',
+      sites = School.objects.all()
+      return render(request, 'mande/studentdentalreport.html',
                             {
                                 'dentals_by_month_year':dentals_by_month_year,
                                 'sites':sites,
                                 'current_site':current_site,
                                 'unique_students':unique_students
                             })
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 '''
 *****************************************************************************
 M&E summary Report
@@ -434,6 +483,9 @@ M&E summary Report
 *****************************************************************************
 '''
 def mande_summary_report(request,start_view_date=(date.today().replace(day=1)-timedelta(days=1 * 365/12)).isoformat(),view_date=(date.today().replace(day=1)-timedelta(days=1)).isoformat()):
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
         # Catch-up school report
         schools = School.objects.all()
         exit_surveys = ExitSurvey.objects.filter(exit_date__lte=start_view_date).values_list('student_id',flat=True)
@@ -586,6 +638,8 @@ def mande_summary_report(request,start_view_date=(date.today().replace(day=1)-ti
                                     'students_enrolled_in_english_by_level':students_enrolled_in_english_by_level,
                                     'level':range(1,english_biggest_level+1)
                                 })
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 '''
 *****************************************************************************
@@ -595,17 +649,20 @@ Student Promoted Report
 '''
 
 def student_promoted_report(request):
-    academics = Academic.objects.filter(promote = True)
-    students = IntakeSurvey.objects.all().filter(date__lte=date.today().isoformat())
-    schools = School.objects.all()
-    promoted_years = []
-    years = datetime.now().year-2012
-    list_of_years = []
-    # generate list of year
-    for r in range(years):
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      academics = Academic.objects.filter(promote = True)
+      students = IntakeSurvey.objects.all().filter(date__lte=date.today().isoformat())
+      schools = School.objects.all()
+      promoted_years = []
+      years = datetime.now().year-2012
+      list_of_years = []
+      # generate list of year
+      for r in range(years):
         list_of_years.append(datetime.now().year-r)
-    # generate list of student break down by site and year
-    for school in schools:
+      # generate list of student break down by site and year
+      for school in schools:
         promoted_years.extend(
             [
                 {
@@ -616,7 +673,7 @@ def student_promoted_report(request):
                 }
             ]
         )
-    for student in students:
+      for student in students:
         academics = Academic.objects.filter(student_id=student,promote=True)
         for promoted_year in promoted_years:
                 if promoted_year['school'] == student.site:
@@ -641,11 +698,13 @@ def student_promoted_report(request):
 
                                 except:
                                     pass
-    return render(request, 'mande/student_promoted_report.html',
+      return render(request, 'mande/student_promoted_report.html',
                             {
                                 'promoted_years':promoted_years,
                                 'list_of_years':list_of_years
                             })
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 
 '''
@@ -655,29 +714,34 @@ Students Promoted Times Report
 *****************************************************************************
 '''
 def students_promoted_times_report(request,filter_seach=None):
-    sites = School.objects.all()
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      sites = School.objects.all()
 
-    #  get all student include student in ExitSurvey
-    if filter_seach is not None:
+      #  get all student include student in ExitSurvey
+      if filter_seach is not None:
         students = IntakeSurvey.objects.all().filter(date__lte=date.today().isoformat())
-    else:
+      else:
         exit_surveys = ExitSurvey.objects.filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
         students = IntakeSurvey.objects.exclude(student_id__in=exit_surveys).filter(date__lte=date.today().isoformat())
 
-    students_promoted = {}
-    for student in students:
+      students_promoted = {}
+      for student in students:
         if student.current_vdp_grade() < 12:
             students_promoted[student] = {
                 'promoted_times':len(Academic.objects.filter(student_id=student,promote=True)),
                 'lastest_promoted_date':Academic.objects.filter(student_id=student,promote=True).latest('test_date').test_date if len(Academic.objects.filter(student_id=student,promote=True)) > 0 else None,
             }
-    return render(request, 'mande/students_promoted_times_report.html',
+      return render(request, 'mande/students_promoted_times_report.html',
                             {
                                 'students_promoted':students_promoted,
                                 'filter_seach':filter_seach,
                                 'sites':sites,
                                 'grades':dict(GRADES)
                             })
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 '''
 *****************************************************************************
@@ -686,12 +750,17 @@ Students not enrolled in public school Report
 *****************************************************************************
 '''
 def students_not_enrolled_in_public_school_report(request):
-    exit_surveys = ExitSurvey.objects.filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
-    students_not_enrolled_in_public_school = IntakeSurvey.objects.exclude(student_id__in=exit_surveys).filter(enrolled='N',date__lte=date.today().isoformat())
-    return render(request, 'mande/students_not_enrolled_in_public_school_report.html',
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      exit_surveys = ExitSurvey.objects.filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
+      students_not_enrolled_in_public_school = IntakeSurvey.objects.exclude(student_id__in=exit_surveys).filter(enrolled='N',date__lte=date.today().isoformat())
+      return render(request, 'mande/students_not_enrolled_in_public_school_report.html',
                             {
                                 'students_not_enrolled_in_public_school' : students_not_enrolled_in_public_school
                             })
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 '''
 *****************************************************************************
@@ -700,16 +769,21 @@ Students intergrated in public school Report
 *****************************************************************************
 '''
 def students_intergrated_in_public_school(request):
-    students = IntakeSurvey.objects.all().filter(date__lte=date.today().isoformat())
-    intergrated_students = []
-    for student in students:
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      students = IntakeSurvey.objects.all().filter(date__lte=date.today().isoformat())
+      intergrated_students = []
+      for student in students:
         if student.enrolled == 'N' :
             if student.getRecentFields()['enrolled'] == 'Y':
                 intergrated_students.append(student)
-    return render(request, 'mande/students_intergrated_in_public_school_report.html',
+      return render(request, 'mande/students_intergrated_in_public_school_report.html',
                             {
                                 'intergrated_students' : intergrated_students
                             })
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 '''
 *****************************************************************************
@@ -718,14 +792,17 @@ Students Lag Summary Report
 *****************************************************************************
 '''
 def students_lag_summary(request):
-    enrolled_students = getEnrolledStudents()
-    schools = School.objects.all()
-    students_lag_by_site = []
-    students_all_site ={
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      enrolled_students = getEnrolledStudents()
+      schools = School.objects.all()
+      students_lag_by_site = []
+      students_all_site ={
         'students_age_not_appropriate_grade_level':[],
         'total':[]
-    }
-    for school in schools:
+      }
+      for school in schools:
         students_lag_by_site.extend(
             [
                 {
@@ -735,7 +812,7 @@ def students_lag_summary(request):
                 }
             ]
         )
-    for student in enrolled_students:
+      for student in enrolled_students:
         if student.current_vdp_grade() != 70:
             if student.current_vdp_grade() != 50:
                 # for each site
@@ -750,11 +827,13 @@ def students_lag_summary(request):
                 students_all_site['total'].append(student)
 
 
-    return render(request, 'mande/students_lag_summary.html',
+      return render(request, 'mande/students_lag_summary.html',
                             {
                                 'students_lag_by_site' : students_lag_by_site,
                                 'students_all_site' : students_all_site
                             })
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 '''
 *****************************************************************************
@@ -763,9 +842,14 @@ Anamolous data report
 *****************************************************************************
 '''
 def anomolous_data(request):
-    future_students = IntakeSurvey.objects.all().filter(date__gte=date.today().isoformat()).order_by('student_id')
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      future_students = IntakeSurvey.objects.all().filter(date__gte=date.today().isoformat()).order_by('student_id')
 
-    return render(request, 'mande/anomolous_data_report.html',
+      return render(request, 'mande/anomolous_data_report.html',
                             {
                                 'future_students' : future_students,
                             })
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')

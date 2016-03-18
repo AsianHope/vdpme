@@ -65,6 +65,9 @@ from mande.utils import user_permissions
 import inspect
 
 from django.contrib.auth.models import User
+from mande.utils import user_permissions
+
+import inspect
 
 '''
 *****************************************************************************
@@ -114,8 +117,11 @@ Internal Intake
 *****************************************************************************
 '''
 def intake_internal(request, student_id=0):
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
 
-    if request.method == 'POST':
+      if request.method == 'POST':
         form = IntakeInternalForm(request.POST)
         if form.is_valid():
             instance = form.save()
@@ -128,14 +134,16 @@ def intake_internal(request, student_id=0):
             #then return
             return HttpResponseRedirect(reverse('student_detail',kwargs=
                                 {'student_id':instance.student_id.student_id}))
-    else:
+      else:
         if student_id > 0:
             form = IntakeInternalForm({'student_id':student_id})
         else:
             form = IntakeInternalForm()
 
-    context = {'form': form,}
-    return render(request, 'mande/intakeinternal.html', context)
+      context = {'form': form,}
+      return render(request, 'mande/intakeinternal.html', context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 '''
 *****************************************************************************
@@ -144,16 +152,19 @@ Intake Update
 *****************************************************************************
 '''
 def intake_update(request,student_id=0):
-    next_url = request.GET.get('next')
-    next_tab = request.GET.get('tab')
-    try:
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      next_url = request.GET.get('next')
+      next_tab = request.GET.get('tab')
+      try:
         survey = IntakeSurvey.objects.get(pk=student_id)
         most_recent = survey.getRecentFields()
-    except ObjectDoesNotExist:
+      except ObjectDoesNotExist:
         survey = None
         most_recent = {}
 
-    if request.method == 'POST':
+      if request.method == 'POST':
         form = IntakeUpdateForm(request.POST)
         if form.is_valid():
             instance = form.save()
@@ -164,13 +175,15 @@ def intake_update(request,student_id=0):
             log.save()
             #then return
             return HttpResponseRedirect(next_url+'#'+next_tab)
-    else:
+      else:
         #change the date today, for convenience
         most_recent['date'] = date.today().isoformat()
         form = IntakeUpdateForm(most_recent)
 
-    context = {'form': form, 'survey':survey, 'student_id':student_id, 'next':next_url, 'tab':next_tab}
-    return render(request, 'mande/intakeupdate.html', context)
+      context = {'form': form, 'survey':survey, 'student_id':student_id, 'next':next_url, 'tab':next_tab}
+      return render(request, 'mande/intakeupdate.html', context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 '''
 *****************************************************************************
 Exit Survey
@@ -178,8 +191,11 @@ Exit Survey
 *****************************************************************************
 '''
 def exit_survey(request,student_id=0):
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
 
-    if request.method == 'POST':
+      if request.method == 'POST':
         form = ExitSurveyForm(request.POST)
 
         if form.is_valid():
@@ -196,14 +212,16 @@ def exit_survey(request,student_id=0):
             #then return
             return HttpResponseRedirect(reverse('student_detail', kwargs=
                                 {'student_id':instance.student_id.student_id}))
-    else:
+      else:
         if student_id > 0:
             form = ExitSurveyForm({'student_id':student_id})
         else:
             form = ExitSurveyForm()
 
-    context = {'form': form,'student_id':student_id}
-    return render(request, 'mande/exitsurvey.html', context)
+      context = {'form': form,'student_id':student_id}
+      return render(request, 'mande/exitsurvey.html', context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 '''
 *****************************************************************************
 Post Exit Survey
@@ -211,23 +229,26 @@ Post Exit Survey
 *****************************************************************************
 '''
 def post_exit_survey(request,student_id):
-    #if the student hasn't had an exit survey performed alert the user
-    try:
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      #if the student hasn't had an exit survey performed alert the user
+      try:
         exit = ExitSurvey.objects.get(student_id=student_id)
-    except ObjectDoesNotExist:
+      except ObjectDoesNotExist:
         return render(
                         request,'mande/errors/noexitsurvey.html',
                         {'student_id':student_id})
 
-    #get students current info for pre-filling the survey
-    try:
+      #get students current info for pre-filling the survey
+      try:
         survey = IntakeSurvey.objects.get(pk=student_id)
         most_recent = survey.getRecentFields()
-    except ObjectDoesNotExist:
+      except ObjectDoesNotExist:
         survey = None
         most_recent = None
 
-    if request.method == 'POST':
+      if request.method == 'POST':
         form = PostExitSurveyForm(request.POST)
         if form.is_valid():
             instance = form.save()
@@ -238,11 +259,13 @@ def post_exit_survey(request,student_id):
             log.save()
             #then return
             return HttpResponseRedirect(reverse('post_exit_survey'))
-    else:
+      else:
         form = PostExitSurveyForm(most_recent)
 
-    context = {'form': form,'student_id':student_id }
-    return render(request, 'mande/postexitsurvey.html', context)
+      context = {'form': form,'student_id':student_id }
+      return render(request, 'mande/postexitsurvey.html', context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 '''
 *****************************************************************************
@@ -251,13 +274,18 @@ Post Exit Survey List
 *****************************************************************************
 '''
 def post_exit_survey_list(request):
-    exitsurveys = ExitSurvey.objects.exclude(
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      exitsurveys = ExitSurvey.objects.exclude(
                                         student_id__in=
                                         [x.student_id.student_id for x in PostExitSurvey.objects.all()]
                                    ).order_by('-exit_date')
 
-    context = {'exitsurveys':exitsurveys}
-    return render(request, 'mande/postexitsurveylist.html',context)
+      context = {'exitsurveys':exitsurveys}
+      return render(request, 'mande/postexitsurveylist.html',context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 '''
 *****************************************************************************
@@ -266,8 +294,11 @@ Spiritual Acitivies Survey
 *****************************************************************************
 '''
 def spiritualactivities_survey(request,student_id=0):
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
 
-    if request.method == 'POST':
+      if request.method == 'POST':
         form = SpiritualActivitiesSurveyForm(request.POST)
 
         if form.is_valid():
@@ -280,14 +311,16 @@ def spiritualactivities_survey(request,student_id=0):
             log.save()
             #then return
             return HttpResponseRedirect(reverse('success'))
-    else:
+      else:
         if student_id > 0:
             form = SpiritualActivitiesSurveyForm({'student_id':student_id})
         else:
             form = SpiritualActivitiesSurveyForm()
 
-    context = {'form': form,'student_id':student_id}
-    return render(request, 'mande/spiritualactivitiessurvey.html', context)
+      context = {'form': form,'student_id':student_id}
+      return render(request, 'mande/spiritualactivitiessurvey.html', context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 '''
 *****************************************************************************
@@ -305,6 +338,9 @@ Health Form
 *****************************************************************************
 '''
 def health_form(request, student_id=0, appointment_date=date.today().isoformat(), appointment_type=None):
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
         next_url = request.GET.get('next')
         if request.method == 'POST':
             form = HealthForm(request.POST)
@@ -350,3 +386,5 @@ def health_form(request, student_id=0, appointment_date=date.today().isoformat()
         context = {'form': form,'student_id':student_id,'next_url':next_url}
 
         return render(request, 'mande/healthform.html',context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')

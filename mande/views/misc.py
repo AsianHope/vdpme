@@ -60,6 +60,9 @@ from mande.utils import studentAtSchoolGradeLevel
 from mande.utils import studentAtAgeAppropriateGradeLevel
 
 from django.contrib.auth.models import User
+from mande.utils import user_permissions
+
+import inspect
 
 '''
 *****************************************************************************
@@ -68,9 +71,12 @@ Dashboard
 *****************************************************************************
 '''
 def dashboard(request):
-    notifications = NotificationLog.objects.order_by('-date')[:10]
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      notifications = NotificationLog.objects.order_by('-date')[:10]
 
-    ''' enrolled students are those who have:
+      ''' enrolled students are those who have:
           - completed an intake survey
           - have completed an internal intake
           AND
@@ -78,41 +84,41 @@ def dashboard(request):
               OR
               - have an exit survey with an exit date after today
 
-    '''
-    #get a flat list of student_ids to exclude
-    exit_surveys = ExitSurvey.objects.all().filter(
+      '''
+      #get a flat list of student_ids to exclude
+      exit_surveys = ExitSurvey.objects.all().filter(
                         exit_date__lte=date.today().isoformat()
                         ).values_list('student_id',flat=True)
 
-    #filter out students who have exit surveys
-    surveys = IntakeSurvey.objects.all().filter(date__lte=date.today().isoformat()).order_by('student_id'
+      #filter out students who have exit surveys
+      surveys = IntakeSurvey.objects.all().filter(date__lte=date.today().isoformat()).order_by('student_id'
                                  ).exclude(student_id__in=exit_surveys)
 
-    #figure out students who have internal intakes with enrollment dates before today
-    enrolled_students = IntakeInternal.objects.all(
+      #figure out students who have internal intakes with enrollment dates before today
+      enrolled_students = IntakeInternal.objects.all(
                                              ).values_list('student_id',flat=True)
-    #figure out which students don't have internal intakes
-    unenrolled_students = surveys.exclude(student_id__in=enrolled_students) #pass this queryset on
-    not_enrolled = unenrolled_students.values_list('student_id',flat=True)
-    #filter out students who aren't enrolled, as detailed above
-    surveys = surveys.exclude(student_id__in=not_enrolled)
+      #figure out which students don't have internal intakes
+      unenrolled_students = surveys.exclude(student_id__in=enrolled_students) #pass this queryset on
+      not_enrolled = unenrolled_students.values_list('student_id',flat=True)
+      #filter out students who aren't enrolled, as detailed above
+      surveys = surveys.exclude(student_id__in=not_enrolled)
 
-    tot_females = surveys.filter(gender='F').count()
+      tot_females = surveys.filter(gender='F').count()
 
-    #set up for collecting school breakdowns
-    schools = School.objects.all()
-    breakdown = {}
+      #set up for collecting school breakdowns
+      schools = School.objects.all()
+      breakdown = {}
 
-    students_by_grade = dict(GRADES)
-    students_at_gl_by_grade = dict(GRADES)
-    students_by_grade_by_site  = dict(GRADES)
-    students_at_gl_by_grade_by_site = dict(GRADES)
+      students_by_grade = dict(GRADES)
+      students_at_gl_by_grade = dict(GRADES)
+      students_by_grade_by_site  = dict(GRADES)
+      students_at_gl_by_grade_by_site = dict(GRADES)
 
-    program_breakdown = {}
-    total_skills = 0
+      program_breakdown = {}
+      total_skills = 0
 
-    #zero things out for accurate counts
-    for key,grade in students_by_grade.iteritems():
+      #zero things out for accurate counts
+      for key,grade in students_by_grade.iteritems():
         students_by_grade[key] = 0
         students_at_gl_by_grade[key] = 0
         students_by_grade_by_site[key] = {}
@@ -123,8 +129,8 @@ def dashboard(request):
             students_by_grade_by_site[key][unicode(name)] = 0
             students_at_gl_by_grade_by_site[key][unicode(name)] = 0
 
-    #get information for morris donut charts
-    for school in schools:
+      #get information for morris donut charts
+      for school in schools:
          name = school.school_name
          total = surveys.filter(site=school)
          females = total.filter(gender='F').count()
@@ -132,8 +138,8 @@ def dashboard(request):
          breakdown[name] = {'F':females, 'M':males}
          program_breakdown[name] = {'Grades': 0, 'Skills': 0}
 
-    #loop through students and figure out what grades they're currently in
-    for student in surveys:
+      #loop through students and figure out what grades they're currently in
+      for student in surveys:
         grade = getStudentGradebyID(student.student_id)
         students_by_grade[grade] += 1
         students_by_grade_by_site[grade][unicode(student.site)] +=1
@@ -148,16 +154,16 @@ def dashboard(request):
             program_breakdown[unicode(student.site)]['Skills'] +=1
             total_skills +=1
 
-    #clean up students_by_grade_by_site so we're not displaying a bunch of blank data
-    clean_students_by_grade_by_site = dict(students_by_grade_by_site)
-    for key,grade in students_by_grade_by_site.iteritems():
+      #clean up students_by_grade_by_site so we're not displaying a bunch of blank data
+      clean_students_by_grade_by_site = dict(students_by_grade_by_site)
+      for key,grade in students_by_grade_by_site.iteritems():
         if students_by_grade[key] == 0:
             del clean_students_by_grade_by_site[key]
 
-    #find students with unapproved absences and no notes
-    unapproved_absence_no_comment = Attendance.objects.all().filter(attendance__exact="UA").filter(Q(notes=u"") |Q(notes=None)).order_by('-date')
+      #find students with unapproved absences and no notes
+      unapproved_absence_no_comment = Attendance.objects.all().filter(attendance__exact="UA").filter(Q(notes=u"") |Q(notes=None)).order_by('-date')
 
-    context = { 'surveys': surveys,
+      context = { 'surveys': surveys,
                 'females': tot_females,
                 'breakdown':breakdown,
                 'program_breakdown':program_breakdown,
@@ -171,7 +177,9 @@ def dashboard(request):
                 'unenrolled_students':unenrolled_students,
                 'unapproved_absence_no_comment':unapproved_absence_no_comment}
 
-    return render(request, 'mande/index.html', context)
+      return render(request, 'mande/index.html', context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 
 '''
@@ -181,6 +189,11 @@ Notification Log
 *****************************************************************************
 '''
 def notification_log(request):
-    notifications = NotificationLog.objects.order_by('-date')[:500]
-    context = {'notifications':notifications}
-    return render(request, 'mande/notificationlog.html',context)
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      notifications = NotificationLog.objects.order_by('-date')[:500]
+      context = {'notifications':notifications}
+      return render(request, 'mande/notificationlog.html',context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')

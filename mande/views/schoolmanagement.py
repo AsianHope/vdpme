@@ -63,6 +63,9 @@ from mande.utils import studentAtSchoolGradeLevel
 from mande.utils import studentAtAgeAppropriateGradeLevel
 
 from django.contrib.auth.models import User
+from mande.utils import user_permissions
+
+import inspect
 
 '''
 *****************************************************************************
@@ -71,21 +74,26 @@ Student List
 *****************************************************************************
 '''
 def student_list(request):
-    #get enrolled and accepted students
-    exit_surveys = ExitSurvey.objects.all().filter(
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      #get enrolled and accepted students
+      exit_surveys = ExitSurvey.objects.all().filter(
                         exit_date__lte=date.today().isoformat()
                         ).values_list('student_id',flat=True)
-    active_surveys = IntakeSurvey.objects.filter(date__lte=date.today().isoformat()).order_by('student_id'
+      active_surveys = IntakeSurvey.objects.filter(date__lte=date.today().isoformat()).order_by('student_id'
                                  ).exclude(student_id__in=exit_surveys)
-    surveys = []
-    for active_survey in active_surveys:
+      surveys = []
+      for active_survey in active_surveys:
         surveys.append(active_survey.getRecentFields())
-    at_grade_level = {}
-    for student in surveys:
+      at_grade_level = {}
+      for student in surveys:
             at_grade_level[student['student_id']] = (
                             studentAtAgeAppropriateGradeLevel(student['student_id']))
-    context = {'surveys': surveys, 'at_grade_level':at_grade_level}
-    return render(request, 'mande/studentlist.html', context)
+      context = {'surveys': surveys, 'at_grade_level':at_grade_level}
+      return render(request, 'mande/studentlist.html', context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 '''
 *****************************************************************************
@@ -94,54 +102,57 @@ Student Detail
 *****************************************************************************
 '''
 def student_detail(request, student_id):
-    survey = IntakeSurvey.objects.get(pk=student_id)
-    intake = survey.intakeinternal_set.all().filter().order_by(
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      survey = IntakeSurvey.objects.get(pk=student_id)
+      intake = survey.intakeinternal_set.all().filter().order_by(
                                                         '-enrollment_date'
                                                     )
-    try:
+      try:
         exit_survey = survey.exitsurvey_set.all()[0]
-    except IndexError:
+      except IndexError:
         exit_survey = None
-    try:
+      try:
         post_exit_survey = survey.postexitsurvey_set.all()[0]
-    except IndexError:
+      except IndexError:
         post_exit_survey = None
 
-    #select only semester tests which have grades in them
-    academics = survey.academic_set.all().filter(
+      #select only semester tests which have grades in them
+      academics = survey.academic_set.all().filter(
         Q(test_grade_khmer__isnull=False) &
         Q(test_grade_math__isnull=False)).order_by('-test_level')
 
-    evaluations = survey.studentevaluation_set.all().order_by('-date').exclude(
+      evaluations = survey.studentevaluation_set.all().order_by('-date').exclude(
                                                         Q(academic_score=None)&
                                                         Q(study_score=None)&
                                                         Q(personal_score=None)&
                                                         Q(hygiene_score=None)&
                                                         Q(faith_score=None)
-    )
+      )
 
-    notes = survey.getNotes()
-    discipline = survey.discipline_set.all().filter().order_by('-incident_date')
-    dental = survey.health_set.all().filter(
+      notes = survey.getNotes()
+      discipline = survey.discipline_set.all().filter().order_by('-incident_date')
+      dental = survey.health_set.all().filter(
                                         appointment_type='DENTAL'
                                     ).order_by('-appointment_date')
-    checkups = survey.health_set.all().filter(
+      checkups = survey.health_set.all().filter(
                                         appointment_type='CHECKUP'
                                         ).order_by('-appointment_date')
 
-    classroomenrollment = survey.classroomenrollment_set.all().filter().order_by('drop_date')
-    attendance_present = survey.attendance_set.all().filter(attendance='P').count()
-    attendance_approved_absence = survey.attendance_set.all().filter(attendance='AA').count()
-    attendance_unapproved_absence = survey.attendance_set.all().filter(attendance='UA').count()
+      classroomenrollment = survey.classroomenrollment_set.all().filter().order_by('drop_date')
+      attendance_present = survey.attendance_set.all().filter(attendance='P').count()
+      attendance_approved_absence = survey.attendance_set.all().filter(attendance='AA').count()
+      attendance_unapproved_absence = survey.attendance_set.all().filter(attendance='UA').count()
 
-    if len(intake) > 0:
+      if len(intake) > 0:
         recent_intake = intake[0]
-    else:
+      else:
         recent_intake = 'Not enrolled'
 
-    current_grade = getStudentGradebyID(student_id)
-    graduation = survey.dob +timedelta(days=365*12) if survey.dob is not None else "No birthday entered"
-    context = {
+      current_grade = getStudentGradebyID(student_id)
+      graduation = survey.dob +timedelta(days=365*12) if survey.dob is not None else "No birthday entered"
+      context = {
         'survey': survey.getRecentFields(),
         'recent_intake':recent_intake,
         'academics':academics,
@@ -160,7 +171,9 @@ def student_detail(request, student_id):
         'post_exit_survey':post_exit_survey,
         'notes':notes,
         'TODAY':date.today().isoformat()}
-    return render(request, 'mande/detail.html', context)
+      return render(request, 'mande/detail.html', context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 '''
 *****************************************************************************
 Discipline Form
@@ -168,8 +181,10 @@ Discipline Form
 *****************************************************************************
 '''
 def discipline_form(request,student_id=0):
-
-    if request.method == 'POST':
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      if request.method == 'POST':
         form = DisciplineForm(request.POST)
 
         if form.is_valid():
@@ -183,14 +198,16 @@ def discipline_form(request,student_id=0):
             #then return
             return HttpResponseRedirect(reverse('student_detail',kwargs=
                                 {'student_id':instance.student_id.student_id}))
-    else:
+      else:
         if student_id > 0:
             form = DisciplineForm({'student_id':student_id})
         else:
             form = DisciplineForm()
 
-    context = {'form': form,'student_id':student_id}
-    return render(request, 'mande/disciplineform.html', context)
+      context = {'form': form,'student_id':student_id}
+      return render(request, 'mande/disciplineform.html', context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 '''
 *****************************************************************************
@@ -199,17 +216,20 @@ Teacher Form
 *****************************************************************************
 '''
 def teacher_form(request, teacher_id=0):
-    current_teachers = Teacher.objects.all()
-    action = None
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      current_teachers = Teacher.objects.all()
+      action = None
 
-    if int(teacher_id)>0:
+      if int(teacher_id)>0:
         instance = Teacher.objects.get(pk=teacher_id)
         action = 'editing '+str(instance)
-    else:
+      else:
         instance = Teacher()
         action = None
 
-    if request.method == 'POST':
+      if request.method == 'POST':
         form = TeacherForm(request.POST, instance=instance)
         if form.is_valid():
             instance = form.save()
@@ -221,14 +241,16 @@ def teacher_form(request, teacher_id=0):
             log.save()
             #then return
             return HttpResponseRedirect(reverse('teacher_form'))
-    else:
+      else:
             form = TeacherForm(instance=instance)
 
-    context = { 'form': form,
+      context = { 'form': form,
                 'teacher_id':teacher_id,
                 'current_teachers':current_teachers,
                 'action':action}
-    return render(request, 'mande/teacherform.html', context)
+      return render(request, 'mande/teacherform.html', context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 '''
 *****************************************************************************
@@ -237,19 +259,22 @@ Classroom Form
 *****************************************************************************
 '''
 def classroom_form(request, classroom_id=0):
-    current_classrooms = Classroom.objects.all()
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      current_classrooms = Classroom.objects.all()
 
-    if int(classroom_id)>0:
+      if int(classroom_id)>0:
         instance = Classroom.objects.get(pk=classroom_id)
         #select students who have not dropped the class, or have not dropped it yet.
         enrollments = instance.classroomenrollment_set.all().filter(
                         Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))
-    else:
+      else:
         instance = Classroom()
         enrollments = None
 
 
-    if request.method == 'POST':
+      if request.method == 'POST':
         form = ClassroomForm(request.POST, instance=instance)
         if form.is_valid():
             instance = form.save()
@@ -262,16 +287,18 @@ def classroom_form(request, classroom_id=0):
             #then return
             return HttpResponseRedirect(reverse('classroom_form', kwargs=
                                         {'classroom_id':instance.classroom_id}))
-    else:
+      else:
         form = ClassroomForm(instance=instance)
 
 
-    context = { 'form': form,
+      context = { 'form': form,
                 'classroom_id': classroom_id,
                 'selected_classroom':instance,
                 'current_classrooms':current_classrooms,
                 'enrollments':enrollments}
-    return render(request, 'mande/classroomform.html', context)
+      return render(request, 'mande/classroomform.html', context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 '''
 *****************************************************************************
 Discipline Form
@@ -279,18 +306,21 @@ Discipline Form
 *****************************************************************************
 '''
 def classroomteacher_form(request, teacher_id=0):
-    current_assignments = ClassroomTeacher.objects.all()
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      current_assignments = ClassroomTeacher.objects.all()
 
-    classrooms_with_teachers = []
-    for classroom in current_assignments:
+      classrooms_with_teachers = []
+      for classroom in current_assignments:
         classrooms_with_teachers.append(int(classroom.classroom_id.classroom_id))
 
-    unassigned_classrooms = Classroom.objects.all().filter(active=True).exclude(
+      unassigned_classrooms = Classroom.objects.all().filter(active=True).exclude(
                                     classroom_id__in=classrooms_with_teachers)
-    if int(teacher_id)>0:
+      if int(teacher_id)>0:
         current_assignments = current_assignments.filter(teacher_id=teacher_id)
 
-    if request.method == 'POST':
+      if request.method == 'POST':
         form = ClassroomTeacherForm(request.POST)
         if form.is_valid():
             instance = form.save()
@@ -303,15 +333,17 @@ def classroomteacher_form(request, teacher_id=0):
             #then return
             return HttpResponseRedirect(reverse(classroomteacher_form, kwargs=
                                                      {'teacher_id':teacher_id}))
-    else:
+      else:
         form = ClassroomTeacherForm()
 
 
-    context = { 'form': form,
+      context = { 'form': form,
                 'teacher_id':teacher_id,
                 'current_assignments':current_assignments,
                 'unassigned_classrooms':unassigned_classrooms}
-    return render(request, 'mande/classroomteacherform.html', context)
+      return render(request, 'mande/classroomteacherform.html', context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 '''
 *****************************************************************************
@@ -321,16 +353,19 @@ Classroom Enrollment Form
 '''
 def classroomenrollment_form(request,classroom_id=0):
 
-    if int(classroom_id)>0:
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      if int(classroom_id)>0:
         instance = Classroom.objects.get(pk=classroom_id)
         #select students who have not dropped the class, or have not dropped it yet.
         enrolled_students = instance.classroomenrollment_set.all().filter(Q(student_id__date__lte=date.today().isoformat()) & Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None)))
-    else:
+      else:
         instance = None;
         enrolled_students = None
 
 
-    if request.method == 'POST':
+      if request.method == 'POST':
         #can't rely on classroom_id set by url - it may have been changed by the user.
         classroom_id = Classroom.objects.get(pk=request.POST.get('classroom_id'))
         enrollment_date = request.POST.get('enrollment_date')
@@ -352,17 +387,19 @@ def classroomenrollment_form(request,classroom_id=0):
         log.save()
         return HttpResponseRedirect(reverse('classroomenrollment_form', kwargs=
                                     {'classroom_id':classroom_id.classroom_id}))
-    else:
+      else:
         if classroom_id > 0:
             form = ClassroomEnrollmentForm({'classroom_id':classroom_id,
                                             'enrollment_date':date.today().isoformat()})
         else:
             form = ClassroomEnrollmentForm()
-    context = { 'form': form,
+      context = { 'form': form,
                 'classroom':instance,
                 'enrolled_students':enrolled_students}
 
-    return render(request, 'mande/classroomenrollmentform.html', context)
+      return render(request, 'mande/classroomenrollmentform.html', context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 '''
 *****************************************************************************
@@ -372,7 +409,10 @@ Classroom Enrollment Individual
 '''
 def classroomenrollment_individual(request,student_id=0,classroom_id=0):
 
-    if request.method == 'POST':
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      if request.method == 'POST':
         next_url = request.GET.get('next')
         #get_or_create returns a tuple with the object and its status
         instance = ClassroomEnrollment.objects.get(classroom_id=classroom_id,
@@ -389,7 +429,7 @@ def classroomenrollment_individual(request,student_id=0,classroom_id=0):
         log.save()
         #then return
         return HttpResponseRedirect(next_url)
-    else:
+      else:
         if student_id > 0:
             instance = ClassroomEnrollment.objects.get( classroom_id=classroom_id,
                                                         student_id=student_id)
@@ -397,8 +437,10 @@ def classroomenrollment_individual(request,student_id=0,classroom_id=0):
         else:
             form = IndividualClassroomEnrollmentForm()
 
-    context = {'form': form,'student_id':student_id, 'classroom_id':classroom_id}
-    return render(request, 'mande/classroomenrollmentindividual.html', context)
+      context = {'form': form,'student_id':student_id, 'classroom_id':classroom_id}
+      return render(request, 'mande/classroomenrollmentindividual.html', context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 '''
 *****************************************************************************
@@ -407,28 +449,31 @@ Academic Form
 *****************************************************************************
 '''
 def academic_form(request, school_id, test_date=date.today().isoformat(), classroom_id=None):
-    classroom = Classroom.objects.get(pk=classroom_id)
-    warning = ''
-    message = ''
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      classroom = Classroom.objects.get(pk=classroom_id)
+      warning = ''
+      message = ''
 
-    #find only currently enrolled students
-    exit_surveys = ExitSurvey.objects.all().filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
-    students = ClassroomEnrollment.objects.exclude(student_id__in=exit_surveys).exclude(drop_date__lt=date.today().isoformat()).filter(classroom_id=classroom_id,student_id__date__lte=date.today().isoformat())
+      #find only currently enrolled students
+      exit_surveys = ExitSurvey.objects.all().filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
+      students = ClassroomEnrollment.objects.exclude(student_id__in=exit_surveys).exclude(drop_date__lt=date.today().isoformat()).filter(classroom_id=classroom_id,student_id__date__lte=date.today().isoformat())
 
-    # find out if any student acadmics have been recorded
-    student_academics = Academic.objects.filter(student_id=students, test_date=test_date)
-    #pre instantiate data for this form so that we can update the whole queryset later
-    for student in students:
+      # find out if any student acadmics have been recorded
+      student_academics = Academic.objects.filter(student_id=students, test_date=test_date)
+      #pre instantiate data for this form so that we can update the whole queryset later
+      for student in students:
         Academic.objects.get_or_create( student_id=student.student_id,
                                                 test_date=test_date,
                                                 test_level=student.classroom_id.cohort)
 
-    student_academics = Academic.objects.filter(student_id=students,
+      student_academics = Academic.objects.filter(student_id=students,
                                                     test_date=test_date,
                                                     test_level=student.classroom_id.cohort)
-    AcademicFormSet = modelformset_factory(Academic, form=AcademicForm, extra=0)
+      AcademicFormSet = modelformset_factory(Academic, form=AcademicForm, extra=0)
 
-    if request.method == 'POST':
+      if request.method == 'POST':
         formset = AcademicFormSet(request.POST)
 
         if formset.is_valid():
@@ -451,9 +496,9 @@ def academic_form(request, school_id, test_date=date.today().isoformat(), classr
             log.save()
 
 
-    else:
+      else:
         formset = AcademicFormSet(queryset = student_academics)
-    context= {
+      context= {
                 'classroom':classroom,
                 'classrooms_by_school':Classroom.objects.filter(school_id=school_id,cohort__lt=50),
                 'students':students,
@@ -461,9 +506,11 @@ def academic_form(request, school_id, test_date=date.today().isoformat(), classr
                 'formset':formset,
                 'warning': mark_safe(warning),
                 'message': message
-    }
+      }
 
-    return render(request, 'mande/academicform.html', context)
+      return render(request, 'mande/academicform.html', context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 '''
 *****************************************************************************
 Academic Select
@@ -471,13 +518,18 @@ Academic Select
 *****************************************************************************
 '''
 def academic_select(request):
-    schools = School.objects.all()
-    classrooms = Classroom.objects.filter(cohort__lt=50)
-    context = {
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      schools = School.objects.all()
+      classrooms = Classroom.objects.filter(cohort__lt=50)
+      context = {
                 'classrooms':classrooms,
                 'today': date.today().isoformat(),
-    }
-    return render(request, 'mande/academicselect.html',context)
+      }
+      return render(request, 'mande/academicselect.html',context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 '''
 *****************************************************************************
@@ -487,8 +539,11 @@ Academic Form Single
 '''
 from django.contrib import messages
 def academic_form_single(request, student_id=0,test_id=None):
-    form_error_message= {}
-    if request.method == 'POST':
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      form_error_message= {}
+      if request.method == 'POST':
         if test_id == None:
             form = AcademicForm(request.POST)
             instance,created = Academic.objects.get_or_create(student_id=IntakeSurvey.objects.get(pk=form.data['student_id']),
@@ -517,7 +572,7 @@ def academic_form_single(request, student_id=0,test_id=None):
         else:
             action = 'Adding ' if created else 'Editing '
             form_error_message= form.errors.as_text()
-    else:
+      else:
         if student_id and test_id:
             instance = Academic.objects.get(id=test_id)
             form = AcademicForm(instance=instance)
@@ -540,9 +595,11 @@ def academic_form_single(request, student_id=0,test_id=None):
                 action = 'Adding'
                 form = AcademicForm()
 
-    context = {'form': form,'student_id':student_id,'test_id':test_id,'action':action,'form_error_message':form_error_message}
+      context = {'form': form,'student_id':student_id,'test_id':test_id,'action':action,'form_error_message':form_error_message}
 
-    return render(request, 'mande/academicformsingle.html',context)
+      return render(request, 'mande/academicformsingle.html',context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 
 '''
@@ -552,26 +609,29 @@ Student Evaluation Form
 *****************************************************************************
 '''
 def studentevaluation_form(request, school_id, get_date=date.today().isoformat(), classroom_id=None):
-    warning = ''
-    message = ''
-    exit_surveys = ExitSurvey.objects.all().filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
-    get_enrolled_student = ClassroomEnrollment.objects.exclude(student_id__in=exit_surveys).exclude(drop_date__lt=date.today().isoformat()).filter(classroom_id=classroom_id,student_id__date__lte=date.today().isoformat())
-    students = get_enrolled_student
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      warning = ''
+      message = ''
+      exit_surveys = ExitSurvey.objects.all().filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
+      get_enrolled_student = ClassroomEnrollment.objects.exclude(student_id__in=exit_surveys).exclude(drop_date__lt=date.today().isoformat()).filter(classroom_id=classroom_id,student_id__date__lte=date.today().isoformat())
+      students = get_enrolled_student
 
-    #pre instantiate data for this form so that we can update the whole queryset later
-    students_at_school_id = []
-    for student in students:
+      #pre instantiate data for this form so that we can update the whole queryset later
+      students_at_school_id = []
+      for student in students:
         StudentEvaluation.objects.get_or_create(
                                             student_id=student.student_id,date=get_date)
         students_at_school_id.append(student.student_id)
-    #lets only work with the students at the specified school_id
-    students = students_at_school_id
-    student_evaluations = StudentEvaluation.objects.filter(student_id__in=students,
+      #lets only work with the students at the specified school_id
+      students = students_at_school_id
+      student_evaluations = StudentEvaluation.objects.filter(student_id__in=students,
                                                 date=get_date)
 
-    StudentEvaluationFormSet = modelformset_factory(StudentEvaluation, form=StudentEvaluationForm, extra=0)
+      StudentEvaluationFormSet = modelformset_factory(StudentEvaluation, form=StudentEvaluationForm, extra=0)
 
-    if request.method == 'POST':
+      if request.method == 'POST':
         formset = StudentEvaluationFormSet(request.POST)
         print "Is formset valid?"
         if formset.is_valid():
@@ -603,9 +663,9 @@ def studentevaluation_form(request, school_id, get_date=date.today().isoformat()
                                                             date=get_date)
 
             formset = StudentEvaluationFormSet(queryset = student_evaluations)
-    else:
+      else:
         formset = StudentEvaluationFormSet(queryset = student_evaluations)
-    context= {
+      context= {
                 'classroom': Classroom.objects.get(pk=classroom_id),
                 'classrooms_by_school':Classroom.objects.filter(school_id=school_id),
                 'students':students,
@@ -614,9 +674,11 @@ def studentevaluation_form(request, school_id, get_date=date.today().isoformat()
                 'warning': mark_safe(warning),
                 'message': message,
                 'grades': dict(GRADES)
-    }
+      }
 
-    return render(request, 'mande/studentevaluationform.html', context)
+      return render(request, 'mande/studentevaluationform.html', context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 '''
 *****************************************************************************
 Student Evaluation Select
@@ -624,12 +686,17 @@ Student Evaluation Select
 *****************************************************************************
 '''
 def studentevaluation_select(request):
-    classrooms = Classroom.objects.all()
-    context = {
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      classrooms = Classroom.objects.all()
+      context = {
                 'classrooms':classrooms,
                 'today': date.today().isoformat(),
-    }
-    return render(request, 'mande/studentevaluationselect.html',context)
+      }
+      return render(request, 'mande/studentevaluationselect.html',context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
 
 '''
 *****************************************************************************
@@ -638,10 +705,13 @@ Student Evaluation Form Single
 *****************************************************************************
 '''
 def studentevaluation_form_single(request, student_id=0):
-    form = StudentEvaluationForm()
-    get_date = request.POST.get('date') if request.method=='POST' else date.today().isoformat()
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      form = StudentEvaluationForm()
+      get_date = request.POST.get('date') if request.method=='POST' else date.today().isoformat()
 
-    if student_id > 0:
+      if student_id > 0:
         try:
             instance = StudentEvaluation.objects.get(student_id=IntakeSurvey.objects.get(pk=student_id),
                                   date=get_date)
@@ -651,7 +721,7 @@ def studentevaluation_form_single(request, student_id=0):
                     'student_id':student_id,
                     'date':date.today().isoformat()})
 
-    if request.method == 'POST':
+      if request.method == 'POST':
         # delete StudentEvaluation where academic_score, study_score... is None so we can add a new StudentEvaluation
         StudentEvaluation.objects.filter(
               Q(academic_score=None) & Q(study_score=None) & Q(personal_score=None) & Q(hygiene_score=None) & Q(faith_score=None)
@@ -670,6 +740,8 @@ def studentevaluation_form_single(request, student_id=0):
                         reverse('student_detail',
                                 kwargs={'student_id':instance.student_id.student_id}))
 
-    context = {'form': form,'student_id':student_id}
+      context = {'form': form,'student_id':student_id}
 
-    return render(request, 'mande/studentevaluationformsingle.html',context)
+      return render(request, 'mande/studentevaluationformsingle.html',context)
+    else:
+      return render(request, 'mande/errors/permissiondenied.html')
