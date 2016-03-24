@@ -28,7 +28,7 @@ class UserLoginTestCase(TestCase):
 
     def test_good_login(self):
         #attempt to log in with good credentials
-        self.client.login(username='admin',password='admin')
+        self.client.login(username='admin',password='test')
         resp = self.client.get('/')
         #redirect to root now that we're logged in
         self.assertEqual(resp.status_code,200)
@@ -36,7 +36,7 @@ class UserLoginTestCase(TestCase):
 
     def test_index(self):
         #log in
-        self.client.login(username='admin',password='admin')
+        self.client.login(username='admin',password='test')
 
         #get the index
         resp = self.client.get('/')
@@ -58,7 +58,7 @@ class UserLoginTestCase(TestCase):
     def test_logged_out(self):
 
         #log in and verify
-        self.client.login(username='admin',password='admin')
+        self.client.login(username='admin',password='test')
         resp = self.client.get('/')
         self.assertEqual(str(resp.context['user']),'admin')
 
@@ -79,7 +79,7 @@ class IndexViewTestCase(TestCase):
                 'classrooms.json','attendances.json']
     def setUp(self):
         self.client = Client()
-        self.client.login(username='admin',password='admin')
+        self.client.login(username='admin',password='test')
         #generate a student who is at grade level no matter what grade they're in
         glstudent = IntakeSurvey.objects.create(
             minors_training= "NA",
@@ -289,7 +289,7 @@ class StudentListTestCase(TestCase):
     fixtures = ['users.json','schools.json','intakesurveys.json','exitsurveys.json']
     def setUp(self):
         self.client = Client()
-        self.client.login(username='admin',password='admin')
+        self.client.login(username='admin',password='test')
         # generate a student who is at grade level
         glstudent = IntakeSurvey.objects.create(
             minors_training= "NA",
@@ -353,7 +353,7 @@ class StudentDetailTestCase(TestCase):
     fixtures = ['users.json','schools.json','intakesurveys.json','exitsurveys.json']
     def setUp(self):
         self.client = Client()
-        self.client.login(username='admin',password='admin')
+        self.client.login(username='admin',password='test')
 
 #should be a new class
     #TESTING SUCCESSFUL REDIRECTION TO REPORTS
