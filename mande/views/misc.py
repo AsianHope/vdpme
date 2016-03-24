@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import PermissionDenied
 from django.forms.models import modelformset_factory
 from django.db.models import Q
 
@@ -179,7 +180,7 @@ def dashboard(request):
 
       return render(request, 'mande/index.html', context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 
 '''
@@ -196,4 +197,4 @@ def notification_log(request):
       context = {'notifications':notifications}
       return render(request, 'mande/notificationlog.html',context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied

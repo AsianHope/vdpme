@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
+from django.http import HttpResponseForbidden
+from django.core.exceptions import PermissionDenied
 from django.template import RequestContext, loader
 from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import modelformset_factory
@@ -62,6 +64,8 @@ from mande.utils import studentAtAgeAppropriateGradeLevel
 from django.contrib.auth.models import User
 from mande.utils import user_permissions
 
+
+
 import inspect
 
 '''
@@ -77,7 +81,7 @@ def attendance(request):
       context= {}
       return render(request, 'mande/attendance.html', context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 
 '''
@@ -95,7 +99,7 @@ def attendance_calendar(request):
       context= {'classrooms':classrooms, 'attendance_date':attendance_date}
       return render(request, 'mande/attendancecalendar.html', context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 '''
 *****************************************************************************
@@ -203,7 +207,7 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
       return render(request, 'mande/takeclassattendanceformset.html', context)
 
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 '''
 *****************************************************************************
 AttendanceCalendar
@@ -311,6 +315,6 @@ def attendance_days(request,classroom_id,attendance_date=date.today().isoformat(
         return render(request, 'mande/attendancedays.html', {'Calendar' : mark_safe(lCalendar),
                                                        'classroom': classroom,
                                                    })
-        
+
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied

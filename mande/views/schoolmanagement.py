@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import PermissionDenied
 from django.forms.models import modelformset_factory
 from django.db.models import Q
 
@@ -93,7 +94,7 @@ def student_list(request):
       context = {'surveys': surveys, 'at_grade_level':at_grade_level}
       return render(request, 'mande/studentlist.html', context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 '''
 *****************************************************************************
@@ -173,7 +174,7 @@ def student_detail(request, student_id):
         'TODAY':date.today().isoformat()}
       return render(request, 'mande/detail.html', context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 '''
 *****************************************************************************
 Discipline Form
@@ -207,7 +208,7 @@ def discipline_form(request,student_id=0):
       context = {'form': form,'student_id':student_id}
       return render(request, 'mande/disciplineform.html', context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 '''
 *****************************************************************************
@@ -250,7 +251,7 @@ def teacher_form(request, teacher_id=0):
                 'action':action}
       return render(request, 'mande/teacherform.html', context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 '''
 *****************************************************************************
@@ -298,7 +299,7 @@ def classroom_form(request, classroom_id=0):
                 'enrollments':enrollments}
       return render(request, 'mande/classroomform.html', context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 '''
 *****************************************************************************
 Discipline Form
@@ -343,7 +344,7 @@ def classroomteacher_form(request, teacher_id=0):
                 'unassigned_classrooms':unassigned_classrooms}
       return render(request, 'mande/classroomteacherform.html', context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 '''
 *****************************************************************************
@@ -399,7 +400,7 @@ def classroomenrollment_form(request,classroom_id=0):
 
       return render(request, 'mande/classroomenrollmentform.html', context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 '''
 *****************************************************************************
@@ -440,7 +441,7 @@ def classroomenrollment_individual(request,student_id=0,classroom_id=0):
       context = {'form': form,'student_id':student_id, 'classroom_id':classroom_id}
       return render(request, 'mande/classroomenrollmentindividual.html', context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 '''
 *****************************************************************************
@@ -510,7 +511,7 @@ def academic_form(request, school_id, test_date=date.today().isoformat(), classr
 
       return render(request, 'mande/academicform.html', context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 '''
 *****************************************************************************
 Academic Select
@@ -529,7 +530,7 @@ def academic_select(request):
       }
       return render(request, 'mande/academicselect.html',context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 '''
 *****************************************************************************
@@ -599,7 +600,7 @@ def academic_form_single(request, student_id=0,test_id=None):
 
       return render(request, 'mande/academicformsingle.html',context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 
 '''
@@ -678,7 +679,7 @@ def studentevaluation_form(request, school_id, get_date=date.today().isoformat()
 
       return render(request, 'mande/studentevaluationform.html', context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 '''
 *****************************************************************************
 Student Evaluation Select
@@ -696,7 +697,7 @@ def studentevaluation_select(request):
       }
       return render(request, 'mande/studentevaluationselect.html',context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 '''
 *****************************************************************************
@@ -744,4 +745,4 @@ def studentevaluation_form_single(request, student_id=0):
 
       return render(request, 'mande/studentevaluationformsingle.html',context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied

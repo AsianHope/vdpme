@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import PermissionDenied
 from django.forms.models import modelformset_factory
 from django.db.models import Q,Sum,Count
 from django.forms.models import model_to_dict
@@ -104,7 +105,7 @@ def daily_attendance_report(request,attendance_date=date.today().isoformat()):
                              'attendance_date': attendance_date
                                                                         })
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 '''
 *****************************************************************************
 Daily Absence Report
@@ -139,7 +140,7 @@ def daily_absence_report(request,attendance_date=date.today().isoformat()):
                              'attendance_date': attendance_date
                                                                         })
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 '''
 *****************************************************************************
 Data Audit
@@ -227,7 +228,7 @@ def data_audit(request,audit_type='ALL'):
       return render(request, 'mande/data_audit.html',
                             {'students' : anomalies,'filters':filters})
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 
 def addAnomaly(anomalies, student, text, resolution, limit=None):
@@ -287,7 +288,7 @@ def class_list(request,site='ALL'):
       return render(request, 'mande/class_list.html',
                             {'class_list' : class_list,})
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 '''
 *****************************************************************************
@@ -313,7 +314,7 @@ def exit_surveys_list(request):
       return render(request, 'mande/exitsurveylist.html',
                             {'exit_surveys':exit_surveys,'post_exit_surveys':post_exit_surveys,'from_exit_date':from_exit_date,'to_exit_date':to_exit_date})
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 '''
 *****************************************************************************
 Student Absence Report
@@ -348,7 +349,7 @@ def student_absence_report(request):
       return render(request, 'mande/student_absence_report.html',
                                 {'attendance_by_sid':attendance_by_sid, 'attendancecodes':attendancecodes})
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 '''
 *****************************************************************************
 Student Lag Report
@@ -381,7 +382,7 @@ def student_lag_report(request):
       return render(request, 'mande/student_lag_report.html',
                                 {'students_lag':students_lag,'view_date':view_date})
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 
 '''
@@ -412,7 +413,7 @@ def student_evaluation_report(request,classroom_id=None):
       return render(request, 'mande/studentevaluationreport.html',
                                 {'evaluations':evaluations, 'selected_classroom':selected_classroom, 'active_classrooms':active_classrooms})
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 '''
 *****************************************************************************
 Student Medical Report
@@ -433,7 +434,7 @@ def student_medical_report(request):
       return render(request, 'mande/studentmedicalreport.html',
                                 {'visits':visits})
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 '''
 *****************************************************************************
 Student Dental Report
@@ -475,7 +476,7 @@ def student_dental_report(request,site_id=None):
                                 'unique_students':unique_students
                             })
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 '''
 *****************************************************************************
 M&E summary Report
@@ -639,7 +640,7 @@ def mande_summary_report(request,start_view_date=(date.today().replace(day=1)-ti
                                     'level':range(1,english_biggest_level+1)
                                 })
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 '''
 *****************************************************************************
@@ -704,7 +705,7 @@ def student_promoted_report(request):
                                 'list_of_years':list_of_years
                             })
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 
 '''
@@ -741,7 +742,7 @@ def students_promoted_times_report(request,filter_seach=None):
                                 'grades':dict(GRADES)
                             })
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 '''
 *****************************************************************************
@@ -760,7 +761,7 @@ def students_not_enrolled_in_public_school_report(request):
                                 'students_not_enrolled_in_public_school' : students_not_enrolled_in_public_school
                             })
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 '''
 *****************************************************************************
@@ -783,7 +784,7 @@ def students_intergrated_in_public_school(request):
                                 'intergrated_students' : intergrated_students
                             })
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 '''
 *****************************************************************************
@@ -833,7 +834,7 @@ def students_lag_summary(request):
                                 'students_all_site' : students_all_site
                             })
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 '''
 *****************************************************************************
@@ -852,4 +853,4 @@ def anomolous_data(request):
                                 'future_students' : future_students,
                             })
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied

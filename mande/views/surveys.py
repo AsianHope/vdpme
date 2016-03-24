@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import PermissionDenied
 from django.forms.models import modelformset_factory
 from django.db.models import Q
 
@@ -108,7 +109,7 @@ def intake_survey(request,student_id=None):
         context = {'form': form, 'student':instance, 'next_url':next_url, 'limit':limit}
         return render(request, 'mande/intakesurvey.html', context)
     else:
-        return render(request, 'mande/errors/permissiondenied.html')
+        raise PermissionDenied
 
 '''
 *****************************************************************************
@@ -143,7 +144,7 @@ def intake_internal(request, student_id=0):
       context = {'form': form,}
       return render(request, 'mande/intakeinternal.html', context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 '''
 *****************************************************************************
@@ -183,7 +184,7 @@ def intake_update(request,student_id=0):
       context = {'form': form, 'survey':survey, 'student_id':student_id, 'next':next_url, 'tab':next_tab}
       return render(request, 'mande/intakeupdate.html', context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 '''
 *****************************************************************************
 Exit Survey
@@ -221,7 +222,7 @@ def exit_survey(request,student_id=0):
       context = {'form': form,'student_id':student_id}
       return render(request, 'mande/exitsurvey.html', context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 '''
 *****************************************************************************
 Post Exit Survey
@@ -265,7 +266,7 @@ def post_exit_survey(request,student_id):
       context = {'form': form,'student_id':student_id }
       return render(request, 'mande/postexitsurvey.html', context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 '''
 *****************************************************************************
@@ -285,7 +286,7 @@ def post_exit_survey_list(request):
       context = {'exitsurveys':exitsurveys}
       return render(request, 'mande/postexitsurveylist.html',context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 '''
 *****************************************************************************
@@ -320,7 +321,7 @@ def spiritualactivities_survey(request,student_id=0):
       context = {'form': form,'student_id':student_id}
       return render(request, 'mande/spiritualactivitiessurvey.html', context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
 
 '''
 *****************************************************************************
@@ -387,4 +388,4 @@ def health_form(request, student_id=0, appointment_date=date.today().isoformat()
 
         return render(request, 'mande/healthform.html',context)
     else:
-      return render(request, 'mande/errors/permissiondenied.html')
+      raise PermissionDenied
