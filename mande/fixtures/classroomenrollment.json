@@ -1,0 +1,12 @@
+[
+  {
+    "fields":{
+      "student_id": 1,
+      "classroom_id": 1,
+      "enrollment_date": "2014-01-01",
+      "drop_date": null
+    },
+    "model":"mande.classroomenrollment",
+    "pk": 1
+  }
+]

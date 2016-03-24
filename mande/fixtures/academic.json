@@ -1,0 +1,14 @@
+[
+  {
+    "fields":{
+      "student_id": 1,
+      "test_date": "2014-06-01",
+      "test_level": 6,
+      "test_grade_math": 90,
+      "test_grade_khmer": 90,
+      "promote": true
+    },
+    "model":"mande.academic",
+    "pk": 1
+  }
+]
