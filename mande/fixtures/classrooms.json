@@ -31,5 +31,16 @@
       },
       "model": "mande.classroom",
       "pk": 3
+  },
+  {
+      "fields": {
+          "active": true,
+          "cohort": 50,
+          "classroom_location": "",
+          "school_id": 3,
+          "classroom_number": "English 3"
+      },
+      "model": "mande.classroom",
+      "pk": 4
   }
 ]

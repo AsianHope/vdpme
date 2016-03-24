@@ -10,11 +10,65 @@
             "last_login": "2015-07-08T07:31:22Z",
             "groups": [],
             "user_permissions": [],
-            "password": "pbkdf2_sha256$12000$wA9Nnui3H78c$hO8ie0K92sWzbbWYQx5ecB1AawR3PU5jBQ0FHRPEKLY=",
+            "password": "pbkdf2_sha256$10000$vkRy7QauoLLj$ry+3xm3YX+YrSXbri8s3EcXDIrx5ceM+xQjtpLdw2oE=",
             "email": "admin@admin.com",
             "date_joined": "2015-07-08T07:29:34Z"
         },
         "model": "auth.user",
         "pk": 1
+    },
+    {
+        "fields": {
+            "username": "site_coordinator",
+            "first_name": "",
+            "last_name": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": true,
+            "last_login": "2015-07-08T07:31:22Z",
+            "groups": [],
+            "user_permissions": [],
+            "password": "pbkdf2_sha256$10000$vkRy7QauoLLj$ry+3xm3YX+YrSXbri8s3EcXDIrx5ceM+xQjtpLdw2oE=",
+            "email": "sc@admin.com",
+            "date_joined": "2015-07-08T07:29:34Z"
+        },
+        "model": "auth.user",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "username": "community_worker",
+            "first_name": "",
+            "last_name": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": true,
+            "last_login": "2015-07-08T07:31:22Z",
+            "groups": [],
+            "user_permissions": [],
+            "password": "pbkdf2_sha256$10000$vkRy7QauoLLj$ry+3xm3YX+YrSXbri8s3EcXDIrx5ceM+xQjtpLdw2oE=",
+            "email": "sc@admin.com",
+            "date_joined": "2015-07-08T07:29:34Z"
+        },
+        "model": "auth.user",
+        "pk": 3
+    },
+    {
+        "fields": {
+            "username": "teacher",
+            "first_name": "",
+            "last_name": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": true,
+            "last_login": "2015-07-08T07:31:22Z",
+            "groups": [],
+            "user_permissions": [],
+            "password": "pbkdf2_sha256$10000$vkRy7QauoLLj$ry+3xm3YX+YrSXbri8s3EcXDIrx5ceM+xQjtpLdw2oE=",
+            "email": "sc@admin.com",
+            "date_joined": "2015-07-08T07:29:34Z"
+        },
+        "model": "auth.user",
+        "pk": 4
     }
 ]
