@@ -23,7 +23,7 @@ Students Promoted Times Report
               <td>{{ student.site }}</td>
               <td><a href="{% url 'student_detail' student.student_id %}">{{ student }}</a></td>
               <td>{{student.current_vdp_grade}}</td>
-              <td>{{student.date|timesince}}</td>
+              <td>{{promoted.enrolled_date|timesince}}</td>
               <td>{{promoted.lastest_promoted_date}}</td>
               <td>{{promoted.promoted_times}}</td>
           </tr>

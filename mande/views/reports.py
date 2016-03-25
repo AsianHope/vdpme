@@ -733,6 +733,9 @@ def students_promoted_times_report(request,filter_seach=None):
             students_promoted[student] = {
                 'promoted_times':len(Academic.objects.filter(student_id=student,promote=True)),
                 'lastest_promoted_date':Academic.objects.filter(student_id=student,promote=True).latest('test_date').test_date if len(Academic.objects.filter(student_id=student,promote=True)) > 0 else None,
+                'enrolled_date' : student.intakeinternal_set.all().filter().order_by(
+                                                                    '-enrollment_date'
+                                                                )[0].enrollment_date
             }
       return render(request, 'mande/students_promoted_times_report.html',
                             {
