@@ -1,13 +1,51 @@
-[
-  {
-    "fields":{
-      "student_id":"1",
-      "classroom":"1",
-      "date":"2015-07-01",
-      "attendance":"UA",
-      "notes":""
-    },
-    "model":"mande.attendance",
-    "pk":1
-  }
-]
+[{
+	"fields": {
+		"classroom": 1,
+		"student_id": 1,
+		"notes": "",
+		"attendance": "UA",
+		"date": "2015-07-01"
+	},
+	"model": "mande.attendance",
+	"pk": 1
+}, {
+	"fields": {
+		"classroom": 1,
+		"student_id": 1,
+		"notes": "",
+		"attendance": "P",
+		"date": "2016-03-01"
+	},
+	"model": "mande.attendance",
+	"pk": 3
+}, {
+	"fields": {
+		"classroom": 1,
+		"student_id": 1,
+		"notes": "",
+		"attendance": "UA",
+		"date": "2016-03-02"
+	},
+	"model": "mande.attendance",
+	"pk": 4
+}, {
+	"fields": {
+		"classroom": 1,
+		"student_id": 1,
+		"notes": "malaria",
+		"attendance": "AA",
+		"date": "2016-03-03"
+	},
+	"model": "mande.attendance",
+	"pk": 5
+}, {
+	"fields": {
+		"classroom": 1,
+		"student_id": 1,
+		"notes": "",
+		"attendance": "UA",
+		"date": "2016-03-04"
+	},
+	"model": "mande.attendance",
+	"pk": 6
+}]

@@ -1,0 +1,37 @@
+[{
+	"fields": {
+		"classroom": 1,
+		"date": "2016-03-01",
+		"present": 1,
+		"absent": 0
+	},
+	"model": "mande.attendancelog",
+	"pk": 1
+}, {
+	"fields": {
+		"classroom": 1,
+		"date": "2016-03-02",
+		"present": 0,
+		"absent": 1
+	},
+	"model": "mande.attendancelog",
+	"pk": 2
+}, {
+	"fields": {
+		"classroom": 1,
+		"date": "2016-03-03",
+		"present": 0,
+		"absent": 1
+	},
+	"model": "mande.attendancelog",
+	"pk": 3
+}, {
+	"fields": {
+		"classroom": 1,
+		"date": "2016-03-04",
+		"present": 0,
+		"absent": 1
+	},
+	"model": "mande.attendancelog",
+	"pk": 4
+}]

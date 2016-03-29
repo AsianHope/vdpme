@@ -1,0 +1,11 @@
+[{
+	"fields": {
+		"incident_date": "2016-03-01",
+		"student_id": 1,
+		"incident_description": "said she was a dinosaur",
+		"incident_code": 3,
+		"classroom_id": 1
+	},
+	"model": "mande.discipline",
+	"pk": 1
+}]

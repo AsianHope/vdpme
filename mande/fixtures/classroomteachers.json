@@ -1,0 +1,22 @@
+[{
+	"fields": {
+		"teacher_id": 1,
+		"classroom_id": 1
+	},
+	"model": "mande.classroomteacher",
+	"pk": 3
+}, {
+	"fields": {
+		"teacher_id": 2,
+		"classroom_id": 2
+	},
+	"model": "mande.classroomteacher",
+	"pk": 4
+}, {
+	"fields": {
+		"teacher_id": 1,
+		"classroom_id": 3
+	},
+	"model": "mande.classroomteacher",
+	"pk": 5
+}]

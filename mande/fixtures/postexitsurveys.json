@@ -1,0 +1,21 @@
+[{
+	"fields": {
+		"post_exit_survey_date": "2016-03-29",
+		"grade_previous": 1,
+		"exit_date": "2016-03-01",
+		"minors": 0,
+		"guardian2_employment": "1",
+		"reasons": "123",
+		"student_id": 11,
+		"enrolled": "N",
+		"grade_current": -1,
+		"guardian2_profession": "NA",
+		"guardian1_relationship": "FATHER",
+		"guardian1_employment": "1",
+		"guardian2_relationship": "MOTHER",
+		"early_exit": "Y",
+		"guardian1_profession": "123"
+	},
+	"model": "mande.postexitsurvey",
+	"pk": 1
+}]
