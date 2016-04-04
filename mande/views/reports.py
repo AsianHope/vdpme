@@ -501,7 +501,7 @@ def mande_summary_report(request,start_view_date=(date.today().replace(day=1)-ti
         # get grades
         get_grade = 0;
         for grade in dict(GRADES):
-            if grade> 0 and grade<50:
+            if grade> 0 and grade<=6:
                 get_grade+=1
         # get biggest english levle
         english_class_latest_level = Classroom.objects.filter(cohort=50).latest('classroom_number');

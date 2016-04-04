@@ -53,7 +53,7 @@ Students Promoted Times Report
         {{ site.school_name }}
         <ul style="list-style:none; padding:0;">
           {% for grade_id,grade in grades.items %}
-            {% if grade_id >= 1 and grade_id < 50 %}
+            {% if grade_id >= 1 and grade_id <= 6 %}
             <li style="margin-bottom:5px;"><a role="button" class="btn btn-xs btn-info" onclick="table.column(0).search('{{site.school_name|escapejs}}').column(2).search('{{grade_id|escapejs}}').draw();" href="#">{{grade}}</a></li>
             {% endif %}
           {% endfor %}
