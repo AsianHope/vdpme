@@ -435,13 +435,14 @@ def student_medical_report(request):
                                 {'visits':visits})
     else:
       raise PermissionDenied
+
 '''
 *****************************************************************************
-Student Dental Report
+Student Dental Summary Report
  - lists all student Dental visits
 *****************************************************************************
 '''
-def student_dental_report(request,site_id=None):
+def student_dental_summary_report(request,site_id=None):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
@@ -477,6 +478,32 @@ def student_dental_report(request,site_id=None):
                             })
     else:
       raise PermissionDenied
+'''
+*****************************************************************************
+Student Dental Report
+ - lists all student Dental visits
+*****************************************************************************
+'''
+def student_dental_report(request,start_date=None,end_date=None):
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+        if request.method == 'POST':
+          start_date = request.POST['start_date']
+          end_date = request.POST['end_date']
+          dentals = Health.objects.filter( Q( Q( Q(appointment_date__gte=start_date) & Q(appointment_date__lte=end_date) ) & Q(appointment_type='Dental')) )
+        else:
+          dentals = Health.objects.filter(appointment_type='Dental')
+
+        return render(request, 'mande/studentdental.html',
+                            {
+                                'dentals':dentals,
+                                'start_date':start_date,
+                                'end_date' : end_date
+                            })
+    else:
+      raise PermissionDenied
+
 '''
 *****************************************************************************
 M&E summary Report

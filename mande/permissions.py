@@ -106,6 +106,13 @@ perms_required={
         'mande.view_intakeupdate',
         'mande.view_health'
     },
+    'student_dental_summary_report':{
+        'mande.view_exitsurvey',
+        'mande.view_intakesurvey',
+        'mande.view_intakeinternal',
+        'mande.view_intakeupdate',
+        'mande.view_health'
+    },
     'mande_summary_report':{
         'mande.view_school',
         'mande.view_exitsurvey',
@@ -236,7 +243,7 @@ def generate_group_perms():
 
     #hws is a made up role - just a sanity check with a single permission.
     group_perms['health_worker'] = __addperms(perms_required['health_form'],group_perms['health_worker'])
-    
+
     #community workers can:
     #view classroom Attendance
     group_perms['community_worker'] = __addperms(perms_required['daily_attendance_report'],group_perms['community_worker'])
@@ -248,6 +255,8 @@ def generate_group_perms():
     group_perms['community_worker'] = __addperms(perms_required['student_medical_report'],group_perms['community_worker'])
     #view student dental report
     group_perms['community_worker'] = __addperms(perms_required['student_dental_report'],group_perms['community_worker'])
+    #view student dental summary report
+    group_perms['community_worker'] = __addperms(perms_required['student_dental_summary_report'],group_perms['community_worker'])
     #view students not enrolled in public school
     group_perms['community_worker'] = __addperms(perms_required['students_not_enrolled_in_public_school_report'],group_perms['community_worker'])
     #view students integrated in publich school report
