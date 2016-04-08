@@ -112,32 +112,36 @@ Daily Absence Report
  - lists all students with unexcuses absences for the day and their contact info
 *****************************************************************************
 '''
-def daily_absence_report(request,attendance_date=date.today().isoformat()):
+def daily_absence_report(request,attendance_date=date.today().isoformat(),attendance_end_date=date.today().isoformat()):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
+      if request.method == 'POST':
+        attendance_date = request.POST['attendance_date']
+        attendance_end_date = request.POST['attendance_end_date']
       #only classrooms who take attendance, and who take attendance today.
       classrooms = Classroom.objects.all().filter(active=True)
       takesattendance = AttendanceDayOffering.objects.filter(
-                                                        date=attendance_date
-                                                  ).values_list(
-                                                       'classroom_id',flat=True)
-      classrooms = classrooms.filter(classroom_id__in=takesattendance)
+                                                        Q(date__gte=attendance_date) & Q(date__lte=attendance_end_date)
+                                                  ).values_list('classroom_id',flat=True)
 
+      classrooms = classrooms.filter(classroom_id__in=takesattendance)
       classroomattendance = {}
       for classroom in classrooms:
         try:
             #only displays unexcused absences
             classroomattendance[classroom] = Attendance.objects.filter(
-                                                           classroom=classroom,
-                                                           date=attendance_date,
-                                                           attendance='UA')
+                                                           Q(Q(date__gte=attendance_date) & Q(date__lte=attendance_end_date))
+                                                           & Q(classroom=classroom)
+                                                           & Q(attendance='UA')
+                                                           )
         except ObjectDoesNotExist:
             classroomattendance[classroom] = None
-
+      print classroomattendance
       return render(request, 'mande/absencereport.html',
                             {'classroomattendance' : classroomattendance,
-                             'attendance_date': attendance_date
+                             'attendance_date': attendance_date,
+                             'attendance_end_date':attendance_end_date
                                                                         })
     else:
       raise PermissionDenied
