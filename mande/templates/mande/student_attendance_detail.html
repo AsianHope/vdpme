@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load mandefilters %}
+{% block title %}
+  Student Attendance Detail Report {% if start_date and end_date %} {{start_date}} to {{end_date}} {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="col-md-9">
+      <table class="table table-bordered table-striped table-hover" id="attendanceReportTable">
+        <thead>
+          <tr>
+            <th>Site</th>
+            <th>Student</th>
+            <th>Date</th>
+            <th>Grade</th>
+            <th>Description</th>
+            <th>Absence code</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for attendance in attendances %}
+          <tr>
+              <td>{{ attendance.student_id.site }}</td>
+              <td>{{ attendance.student_id }}</td>
+              <td>{{ attendance.date }}</td>
+              <td>{{ attendance.classroom.get_cohort_display }}</td>
+              <td>{{ attendance.classroom.classroom_number }}</td>
+              <td>{{ attendance.attendance }}</td>
+              <td>{{ attendance.notes }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+  </div>
+
+  <div class="col-md-3">
+        <form method="post" action="{% url 'student_attendance_detail' student_id %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <input type="date" name="start_date" class="form-control" required/>
+          </div>
+          <div class="form-group">
+            <input type="date" name="end_date" class="form-control" required/>
+          </div>
+          <div class="form-group">
+            <input type="submit" class="btn btn-primary form-control"/>
+          </div>
+        </form>
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+ <!-- DataTables JavaScript -->
+    <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+    <script src="/static/mande/dist/js/jethro.js"></script>
+
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#attendanceReportTable').DataTable({
+        responsive: true,
+        pageLength: 25,
+        order: [[0,'asc'],[1,'asc'],[2,'asc']],
+        columnDefs: [
+         { type: 'jethro', targets: 1 }
+       ],
+       dom: 'frtipB',
+       buttons: [
+         {
+                  extend: 'csvHtml5',
+                  text: 'TSV export <i class="fa fa-download"></i>',
+                  className: 'btn btn-sm btn-success',
+                  fieldSeparator: '\t',
+                  extension: '.tsv',
+                  title: 'Attendance'
+              },
+
+     ]
+    });
+  });
+</script>
+
+{% endblock %}

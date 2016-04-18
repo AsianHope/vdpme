@@ -61,6 +61,10 @@ perms_required={
         'mande.view_attendancedayoffering',
         'mande.view_attendance'
     },
+    'student_attendance_detail':{
+        'mande.view_attendance'
+    },
+
     'student_absence_report':{
         'mande.view_attendance'
     },
@@ -245,6 +249,8 @@ def generate_group_perms():
     group_perms['health_worker'] = __addperms(perms_required['health_form'],group_perms['health_worker'])
 
     #community workers can:
+    #view attendance detail
+    group_perms['community_worker'] = __addperms(perms_required['student_attendance_detail'],group_perms['community_worker'])
     #view classroom Attendance
     group_perms['community_worker'] = __addperms(perms_required['daily_attendance_report'],group_perms['community_worker'])
     #view class list
@@ -283,6 +289,8 @@ def generate_group_perms():
     group_perms['community_worker'] = __addperms(perms_required['student_detail'],group_perms['community_worker'])
 
     #teachers can:
+    #view attendance detail
+    group_perms['teacher'] = __addperms(perms_required['student_attendance_detail'],group_perms['teacher'])
     #view dailiy absences
     group_perms['teacher'] = __addperms(perms_required['daily_absence_report'],group_perms['teacher'])
     #view class list

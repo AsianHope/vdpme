@@ -106,6 +106,33 @@ def daily_attendance_report(request,attendance_date=date.today().isoformat()):
                                                                         })
     else:
       raise PermissionDenied
+
+'''
+*****************************************************************************
+Student Attendance Detail Report
+ - list attendance detail of student
+*****************************************************************************
+'''
+def student_attendance_detail(request,student_id=None,start_date=None,end_date=None):
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+        if request.method == 'POST':
+            start_date = request.POST['start_date']
+            end_date = request.POST['end_date']
+            attendances = Attendance.objects.all().filter(Q(student_id=student_id) & Q(Q(date__gte=start_date) & Q(date__lte=end_date))).order_by('-date')
+        else:
+            attendances = Attendance.objects.all().filter(student_id=student_id).order_by('-date')
+        return render(request, 'mande/student_attendance_detail.html',
+                            {
+                                'attendances' : attendances,
+                                'student_id' : student_id,
+                                'start_date' : start_date,
+                                'end_date' : end_date
+                            })
+    else:
+      raise PermissionDenied
+
 '''
 *****************************************************************************
 Daily Absence Report
