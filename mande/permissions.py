@@ -1,221 +1,51 @@
 #set minimum permissions for access of each view (maybe more required for write access!)
-perms_required={
-    'student_list':{
-        'mande.view_intakesurvey',
-        'mande.view_intakeinternal',
-        'mande.view_exitsurvey'
-    },
-    'student_detail':{
-        'mande.view_intakesurvey',
-        'mande.view_exitsurvey',
-        'mande.view_postexitsurvey',
-        'mande.view_academic',
-        'mande.view_studentevaluation',
-        'mande.view_discipline',
-        'mande.view_health',
-        'mande.view_classroomenrollment',
-        'mande.view_attendance'
-    },
-    'attendance':{
-        'mande.add_attendance',
-        'mande.view_classroom',
-        'mande.view_classroomenrollment',
-        'mande.view_attendance',
-        'mande.view_attendancedayoffering',
-        'mande.view_attendancelog'
-    },
-    'attendance_calendar':{
-        'mande.view_classroom',
-        'mande.add_attendancedayoffering',
-        'mande.change_attendancedayoffering'
-    },
-    'attendance_days':{
-        'mande.view_classroom',
-        'mande.add_attendancedayoffering',
-        'mande.change_attendancedayoffering',
-        'mande.delete_attendancedayoffering'
-    },
-    'take_attendance':{
-        'mande.add_attendance',
-        'mande.view_classroom',
-        'mande.view_classroomenrollment',
-        'mande.view_attendance',
-        'mande.view_attendancedayoffering',
-        'mande.view_attendancelog'
-    },
-    'take_class_attendance':{
-        'mande.add_attendance',
-        'mande.view_classroom',
-        'mande.view_classroomenrollment',
-        'mande.view_attendance',
-        'mande.view_attendancedayoffering',
-        'mande.view_attendancelog'
-    },
-    'daily_attendance_report':{
-        'mande.view_classroom',
-        'mande.view_attendancedayoffering',
-        'mande.view_attendance'
-    },
-    'daily_absence_report':{
-        'mande.view_classroom',
-        'mande.view_attendancedayoffering',
-        'mande.view_attendance'
-    },
-    'student_absence_report':{
-        'mande.view_attendance'
-    },
-    'data_audit':{
-        'mande.view_exitsurvey',
-        'mande.view_intakesurvey',
-        'mande.view_intakeinternal',
-        'mande.view_intakeupdate',
-        'mande.view_academic',
-        'mande.view_intakeupdate',
-        'mande.view_attendance',
-        'mande.view_classroomenrollment'
-    },
-    'class_list':{
-        'mande.view_classroom',
-        'mande.view_classroomteacher'
-    },
-    'exit_surveys_list':{
-        'mande.view_exitsurvey',
-        'mande.view_postexitsurvey'
-    },
-    'student_lag_report':{
-        'mande.view_exitsurvey',
-        'mande.view_intakesurvey',
-        'mande.view_intakeinternal',
-        'mande.view_intakeupdate'
-    },
-    'student_evaluation_report':{
-        'mande.view_studentevaluation',
-        'mande.view_classroom'
-    },
-    'student_medical_report':{
-        'mande.view_exitsurvey',
-        'mande.view_intakesurvey',
-        'mande.view_intakeinternal',
-        'mande.view_intakeupdate',
-        'mande.view_health'
-    },
-    'student_dental_report':{
-        'mande.view_exitsurvey',
-        'mande.view_intakesurvey',
-        'mande.view_intakeinternal',
-        'mande.view_intakeupdate',
-        'mande.view_health'
-    },
-    'mande_summary_report':{
-        'mande.view_school',
-        'mande.view_exitsurvey',
-        'mande.view_intakesurvey',
-        'mande.view_intakeupdate',
-        'mande.view_classroomenrollment',
-        'mande.view_classroom'
-    },
-    'student_promoted_report':{
-        'mande.view_academic',
-        'mande.view_intakesurvey',
-        'mande.view_school'
-    },
-    'students_promoted_times_report':{
-        'mande.view_school',
-        'mande.view_intakesurvey',
-        'mande.view_exitsurvey',
-        'mande.view_academic'
-    },
-    'students_not_enrolled_in_public_school_report':{
-        'mande.view_intakesurvey',
-        'mande.view_exitsurvey'
-    },
-    'students_intergrated_in_public_school':{
-        'mande.view_intakesurvey',
-        'mande.view_intakeupdate'
-    },
-    'students_lag_summary':{
-        'mande.view_intakesurvey',
-        'mande.view_intakeinternal',
-        'mande.view_exitsurvey',
-        'mande.view_school'
-    },
-    'anomolous_data':{},
-    'intake_survey':{
-        'mande.add_intakesurvey',
-        'mande.add_intakeinternal'
-    },
-    'intake_update':{
-        'mande.add_intakeupdate'
-    },
-    'intake_internal':{
-        'mande.add_intakeinternal'
-    },
-    'exit_survey':{
-        'mande.add_exitsurvey'
-    },
-    'post_exit_survey':{
-        'mande.add_postexitsurvey'
-    },
-    'post_exit_survey_list':{
-        'mande.view_postexitsurvey'
-    },
-    'spiritualactivities_survey':{
-        'mande.add_spiritualactivitiessurvey'
-    },
-    'health_form':{
-        'mande.add_health'
-    },
-    'discipline_form':{
-        'mande.add_discipline'
-    },
-    'teacher_form':{
-        'mande.add_teacher',
-        'mande.change_teacher'
-    },
-    'classroom_form':{
-        'mande.add_classroom',
-        'mande.change_classroom'
-    },
-    'classroomteacher_form':{
-        'mande.add_classroomteacher',
-        'mande.change_classroomteacher'
-    },
-    'classroomenrollment_form':{
-        'mande.view_classroom',
-        'mande.view_school',
-        'mande.add_classroomenrollment',
-        'mande.change_classroomenrollment'
-    },
-    'classroomenrollment_individual':{
-        'mande.view_classroom',
-        'mande.view_school',
-        'mande.add_classroomenrollment',
-        'mande.change_classroomenrollment'
-    },
-    'academic_select':{
-        'mande.add_academic'
-    },
-    'academic_form':{
-        'mande.add_academic'
-    },
-    'academic_form_single':{
-        'mande.add_academic'
-    },
-    'studentevaluation_select':{
-        'mande.add_studentevaluation'
-    },
-    'studentevaluation_form':{
-        'mande.add_studentevaluation'
-    },
-    'studentevaluation_form_single':{
-        'mande.add_studentevaluation'
-    },
-    'dashboard':{
-        'mande.view_intakesurvey'
-    },
-    'notification_log':{
-        'mande.view_notificationlog'
-    }
+perms_required = {
+	'classroom_form': {'mande.view_classroom_form'},
+	'academic_select': {'mande.view_academic_select'},
+	'student_lag_report': {'mande.view_student_lag_report'},
+	'health_form': {'mande.view_health_form'},
+	'studentevaluation_form_single': {'mande.view_studentevaluation_form_single'},
+	'intake_internal': {'mande.view_intake_internal'},
+	'discipline_form': {'mande.view_discipline_form'},
+	'classroomenrollment_form': {'mande.view_classroomenrollment_form'},
+	'take_class_attendance': {'mande.view_take_class_attendance'},
+	'attendance': {'mande.view_attendance'},
+	'student_dental_report': {'mande.view_student_dental_report'},
+	'intake_update': {'mande.view_intake_update'},
+	'notification_log': {'mande.view_notification_log'},
+	'student_detail': {'mande.view_student_detail'},
+	'intake_survey': {'mande.view_intake_survey'},
+	'take_attendance': {'mande.view_daily_attendance_report'},#take_attendance is just a link the the daily_attendance report
+	'classroomteacher_form': {'mande.view_classroomteacher_form'},
+	'class_list': {'mande.view_class_list'},
+	'students_promoted_times_report': {'mande.view_students_promoted_times_report'},
+	'post_exit_survey_list': {'mande.view_post_exit_survey_list'},
+	'daily_absence_report': {'mande.view_daily_absence_report'},
+	'mande_summary_report': {'mande.view_mande_summary_report'},
+	'exit_survey': {'mande.view_exit_survey'},
+	'student_absence_report': {'mande.view_student_absence_report'},
+	'student_evaluation_report': {'mande.view_student_evaluation_report'},
+	'academic_form_single': {'mande.view_academic_form_single'},
+	'attendance_days': {'mande.view_attendance_days'},
+	'classroomenrollment_individual': {'mande.view_classroomenrollment_individual'},
+	'anomolous_data': {'mande.view_anomolous_data'},
+	'students_lag_summary': {'mande.view_students_lag_summary'},
+	'data_audit': {'mande.view_data_audit'},
+	'studentevaluation_select': {'mande.view_studentevaluation_select'},
+	'exit_surveys_list': {'mande.view_exit_surveys_list'},
+	'daily_attendance_report': {'mande.view_daily_attendance_report'},
+	'spiritualactivities_survey': {'mande.view_spiritualactivities_survey'},
+	'student_medical_report': {'mande.view_student_medical_report'},
+	'attendance_calendar': {'mande.view_attendance_calendar'},
+	'teacher_form': {'mande.view_teacher_form'},
+	'student_promoted_report': {'mande.view_student_promoted_report'},
+	'students_intergrated_in_public_school': {'mande.view_students_intergrated_in_public_school'},
+	'students_not_enrolled_in_public_school_report': {'mande.view_students_not_enrolled_in_public_school_report'},
+	'post_exit_survey': {'mande.view_post_exit_survey'},
+	'academic_form': {'mande.view_academic_form'},
+	'dashboard': {'mande.view_dashboard'},
+	'student_list': {'mande.view_student_list'},
+	'studentevaluation_form': {'mande.view_studentevaluation_form'}
 }
 #this is a function to help test that the permissions above are
 #correctly implemented in the views
@@ -236,7 +66,7 @@ def generate_group_perms():
 
     #hws is a made up role - just a sanity check with a single permission.
     group_perms['health_worker'] = __addperms(perms_required['health_form'],group_perms['health_worker'])
-    
+
     #community workers can:
     #view classroom Attendance
     group_perms['community_worker'] = __addperms(perms_required['daily_attendance_report'],group_perms['community_worker'])
@@ -254,6 +84,8 @@ def generate_group_perms():
     group_perms['community_worker'] = __addperms(perms_required['students_intergrated_in_public_school'],group_perms['community_worker'])
     #take Attendance
     group_perms['community_worker'] = __addperms(perms_required['take_attendance'],group_perms['community_worker'])
+    group_perms['community_worker'] = __addperms(perms_required['take_class_attendance'],group_perms['community_worker'])
+    group_perms['community_worker'] = __addperms(perms_required['attendance'],group_perms['community_worker'])
     #add intake Surveys
     group_perms['community_worker'] = __addperms(perms_required['intake_survey'],group_perms['community_worker'])
     #add exit Surveys
@@ -306,6 +138,9 @@ def generate_group_perms():
     group_perms['teacher'] = __addperms(perms_required['studentevaluation_select'],group_perms['teacher'])
     group_perms['teacher'] = __addperms(perms_required['studentevaluation_form'],group_perms['teacher'])
     group_perms['teacher'] = __addperms(perms_required['studentevaluation_form_single'],group_perms['teacher'])
+    #take attendance
+    group_perms['teacher'] = __addperms(perms_required['take_class_attendance'],group_perms['teacher'])
+    group_perms['teacher'] = __addperms(perms_required['attendance'],group_perms['teacher'])
 
     return group_perms
 

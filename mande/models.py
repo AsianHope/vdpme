@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 import datetime
 from datetime import date
 from django.core.exceptions import ObjectDoesNotExist
+from mande.permissions import perms_required
 
 GENDERS = (
 	('M', 'Male'),
@@ -111,6 +112,17 @@ RELATIONSHIPS = (
 	('OTHER','Other'),
 	('NONE','No guardian')
 )
+def generate_activity_permissions(perms_required):
+	perms = []
+	for key,activity in perms_required.iteritems():
+		perms.append(('view_'+key,('Can view '+key)[:30]))
+	perms = tuple(perms)
+	return perms
+testperm = generate_activity_permissions(perms_required)
+
+class JethroPerms(models.Model):
+	class Meta:
+		permissions = testperm
 
 class School(models.Model):
 	school_id = models.AutoField(primary_key=True)
@@ -118,10 +130,6 @@ class School(models.Model):
 	school_location = models.CharField('Location',max_length=128)
 	def __unicode__(self):
 		return self.school_name
-	class Meta:
-		 permissions = (
-            ('view_school', 'Can view school'),
-        )
 
 class Classroom(models.Model):
 	classroom_id = models.AutoField(primary_key=True)
@@ -132,20 +140,12 @@ class Classroom(models.Model):
 	active = models.BooleanField('Active',default=True)
 	def __unicode__(self):
 		return unicode(self.school_id)+ ' - '+ unicode(self.get_cohort_display())+' - '+unicode(self.classroom_number)
-	class Meta:
-		 permissions = (
-            ('view_classroom', 'Can view classroom'),
-        )
 
 class Teacher(models.Model):
 	teacher_id = models.AutoField(primary_key=True)
 	name = models.CharField(max_length=32,default='')
 	def __unicode__(self):
 		return unicode(self.teacher_id)+ ' - '+ unicode(self.name)
-	class Meta:
-		 permissions = (
-            ('view_teacher', 'Can view teacher'),
-        )
 
 class IntakeSurvey(models.Model):
 
@@ -194,10 +194,6 @@ class IntakeSurvey(models.Model):
 
 	def __unicode__(self):
 	   return unicode(self.student_id)+' - '+self.name
-	class Meta:
-		 permissions = (
-            ('view_intakesurvey', 'Can view intake survey'),
-        )
 
 	#return the most up to date information
 	def getRecentFields(self,view_date=None):
@@ -284,10 +280,6 @@ class IntakeInternal(models.Model):
 
 	def __unicode__(self):
 		return unicode(self.student_id)
-	class Meta:
-		 permissions = (
-            ('view_intakeinternal', 'Can view intake internal'),
-        )
 
 class IntakeUpdate(models.Model):
 
@@ -325,10 +317,6 @@ class IntakeUpdate(models.Model):
 
 	def __unicode__(self):
 		return unicode(self.date)+' - '+unicode(self.student_id)
-	class Meta:
-		 permissions = (
-            ('view_intakeupdate', 'Can view intake update'),
-        )
 
 class StudentEvaluation(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
@@ -350,9 +338,6 @@ class StudentEvaluation(models.Model):
 		return unicode(self.date)+' - '+unicode(self.student_id)
 	class Meta:
 		unique_together = (('student_id', 'date'),)
-		permissions = (
-            ('view_studentevaluation', 'Can view student evaluation'),
-        )
 
 
 class SpiritualActivitiesSurvey(models.Model):
@@ -366,10 +351,6 @@ class SpiritualActivitiesSurvey(models.Model):
 	personal_prayer_aloud = models.CharField('Have you prayed aloud in the last week?',max_length=2,choices=YN,default='NA')
 	def __unicode__(self):
 		return unicode(self.date)+' - '+unicode(self.student_id)
-	class Meta:
-		 permissions = (
-            ('view_spiritualactivitiessurvey', 'Can view spiritual activities survey'),
-        )
 
 
 class ExitSurvey(models.Model):
@@ -383,10 +364,6 @@ class ExitSurvey(models.Model):
 	secondary_enrollment = models.CharField('Plan to enroll in secondary school?',max_length=2,choices=YN,default='NA')
 	def __unicode__(self):
 		return unicode(self.exit_date)+' - '+unicode(self.student_id)
-	class Meta:
-		 permissions = (
-            ('view_exitsurvey', 'Can view exit survey'),
-        )
 
 class PostExitSurvey(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
@@ -409,10 +386,6 @@ class PostExitSurvey(models.Model):
 	reasons = models.TextField('Reasons for not attending',blank=True)
 	def __unicode__(self):
 		return unicode(self.exit_date)+' - '+unicode(self.student_id)
-	class Meta:
-		 permissions = (
-            ('view_postexitsurvey', 'Can view post exit survey'),
-        )
 
 class AttendanceDayOffering(models.Model):
 	classroom_id = models.ForeignKey(Classroom)
@@ -422,9 +395,6 @@ class AttendanceDayOffering(models.Model):
 		return unicode(self.classroom_id)+' - '+unicode(self.date)
 	class Meta:
 		unique_together = (('classroom_id','date'))
-		permissions = (
-			('view_attendancedayoffering', 'Can view attendance day offering'),
-		)
 
 
 class Attendance(models.Model):
@@ -437,9 +407,6 @@ class Attendance(models.Model):
 		return unicode(self.date) + ': '+ self.attendance + ' - ' + unicode(self.student_id)
 	class Meta:
 		unique_together = (('student_id', 'date'),)
-		permissions = (
-			('view_attendance', 'Can view attendance'),
-		)
 
 class Discipline(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
@@ -450,10 +417,6 @@ class Discipline(models.Model):
 
 	def __unicode__(self):
 			return unicode(self.incident_date)+ ':'+unicode(self.student_id)
-	class Meta:
-		 permissions = (
-            ('view_discipline', 'Can view discipline'),
-        )
 
 class Academic(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
@@ -467,9 +430,6 @@ class Academic(models.Model):
 		return unicode(self.test_date)+ ':'+unicode(self.student_id)
 	class Meta:
 		unique_together = (('student_id','test_date','test_level','promote'))
-		permissions = (
-			('view_academic', 'Can view academic'),
-		)
 
 class Health(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
@@ -491,9 +451,6 @@ class Health(models.Model):
 
 	class Meta:
 		unique_together = (('student_id','appointment_date','appointment_type'))
-		permissions = (
-			('view_health', 'Can view health'),
-		)
 
 class ClassroomEnrollment(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey)
@@ -505,19 +462,12 @@ class ClassroomEnrollment(models.Model):
 		return unicode(self.student_id)+unicode(self.classroom_id)
 	class Meta:
 		unique_together = (('student_id','classroom_id'))
-		permissions = (
-			('view_classroomenrollment', 'Can view classroom enrollment'),
-		)
 
 class ClassroomTeacher(models.Model):
 	classroom_id = models.ForeignKey(Classroom)
 	teacher_id = models.ForeignKey(Teacher)
 	def __unicode__(self):
 		return unicode(self.teacher_id)+unicode(self.classroom_id)
-	class Meta:
-		permissions = (
-			('view_classroomteacher', 'Can view classroom teacher'),
-		)
 
 class NotificationLog(models.Model):
 	date = models.DateTimeField(auto_now=True)
@@ -531,9 +481,6 @@ class NotificationLog(models.Model):
 
 	class Meta:
 		get_latest_by = 'date'
-		permissions = (
-			('view_notificationlog', 'Can view notification log'),
-		)
 
 class AttendanceLog(models.Model):
 	classroom = models.ForeignKey(Classroom)
@@ -545,6 +492,3 @@ class AttendanceLog(models.Model):
 		return unicode(self.classroom) + ': '+ unicode(self.date)
 	class Meta:
 			unique_together = (('classroom','date'))
-			permissions = (
-				('view_attendancelog', 'Can view attendance log'),
-			)

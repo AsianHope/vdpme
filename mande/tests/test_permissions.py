@@ -84,6 +84,10 @@ class PermissionsTestCase(TestCase):
             newuser = User.objects.create_user(username=group,password='test')
             for perm in perms:
                 #remove the mande. before the permission
+                objects = Permission.objects.filter(codename=perm[6:])
+                if len(objects)>1:
+                        print 'Trying to get '+perm[6:]+ ' got: ',
+                        print objects
                 newgroup.permissions.add(Permission.objects.get(codename=perm[6:]))
             newuser.groups.add(newgroup)
 
@@ -103,41 +107,28 @@ class PermissionsTestCase(TestCase):
             'student_promoted_report',
             'students_promoted_times_report',
             'take_attendance',
+            'attendance',
+            'take_class_attendance',
             'attendance_calendar',
+            'daily_attendance_report',
             'student_list',
             'student_detail',
             'intake_update',
             'classroomenrollment_form',
             'discipline_form',
             'academic_select',
-            'studentevaluation_select',
-            ###implied permissions###
-            'classroomenrollment_individual',
-            'student_absence_report',
-            'anomolous_data',
-            'students_lag_summary',
-            'data_audit',
-            'student_dental_report',
-            'exit_surveys_list',
-            'take_class_attendance',
-            'index',
-            'attendance',
-            'student_medical_report',
-            'students_not_enrolled_in_public_school_report',
-            'academic_form_single',
-            'students_intergrated_in_public_school',
-            'daily_attendance_report',
-            'mande_summary_report',
-            'academic_form'
+            'studentevaluation_select'
         ]
 
         for url,args in permissions_test_data.iteritems():
             resp = self.client.get(reverse(url,kwargs=args))
             if url not in site_coordinators_can_access:
-                if resp.status_code == 200:
-                    print url
-                #self.assertEqual(resp.status_code,403)
+                if resp.status_code != 403:
+                    print 'sc accessing '+url+str(resp.status_code)+'[expected: 403 ]'
+                self.assertEqual(resp.status_code,403)
             else:
+                if resp.status_code !=200:
+                    print 'sc accessing '+url+str(resp.status_code)+'[expected: 200 ]'
                 self.assertEqual(resp.status_code,200)
 
     def test_teacher_permissions(self):
@@ -150,39 +141,29 @@ class PermissionsTestCase(TestCase):
             'student_promoted_report',
             'students_promoted_times_report',
             'take_attendance',
+            'take_class_attendance',
             'attendance_calendar',
+            'daily_attendance_report',
+            'attendance',
             'student_list',
             'student_detail',
             'intake_update',
             'classroomenrollment_form',
             'discipline_form',
             'academic_select',
-            'studentevaluation_select',
-            ###implied permissions###
-            'classroomenrollment_individual',
-            'student_absence_report',
-            'anomolous_data',
-            'students_lag_summary',
-            'data_audit',
-            'student_dental_report',
-            'exit_surveys_list',
-            'take_class_attendance',
-            'index',
-            'attendance',
-            'student_medical_report',
-            'students_not_enrolled_in_public_school_report',
-            'academic_form_single',
-            'students_intergrated_in_public_school',
-            'daily_attendance_report',
-            'mande_summary_report',
-            'academic_form'
+            'studentevaluation_select'
         ]
 
         for url,args in permissions_test_data.iteritems():
             resp = self.client.get(reverse(url,kwargs=args))
             if url not in teachers_can_access:
+                if resp.status_code != 403:
+                    print 't accessing '+url+str(resp.status_code)+'[expected: 403 ]'
                 self.assertEqual(resp.status_code,403)
             else:
+                if resp.status_code !=200:
+                    print 't accessing '+url+str(resp.status_code)+'[expected: 200 ]'
+
                 self.assertEqual(resp.status_code,200)
 
     def test_community_worker_permissions(self):
@@ -195,7 +176,10 @@ class PermissionsTestCase(TestCase):
             'student_dental_report',
             'students_not_enrolled_in_public_school_report',
             'students_intergrated_in_public_school',
+            'attendance',
             'take_attendance',
+            'take_class_attendance',
+            'daily_attendance_report',
             'intake_survey',
             'exit_survey',
             'post_exit_survey',
@@ -204,39 +188,24 @@ class PermissionsTestCase(TestCase):
             'student_list',
             'classroomenrollment_form',
             'discipline_form',
-            'student_detail',
-            ##implied permissions##
-            'classroomenrollment_individual',
-            'student_absence_report',
-            'student_evaluation_report',
-            'student_lag_report',
-            'intake_internal',
-            'anomolous_data',
-            'students_lag_summary',
-            'daily_absence_report',
-            'data_audit',
-            'take_class_attendance',
-            'index',
-            'attendance',
-            'student_promoted_report',
-            'students_promoted_times_report',
-            'mande_summary_report'
-
+            'student_detail'
         ]
 
         for url,args in permissions_test_data.iteritems():
             resp = self.client.get(reverse(url,kwargs=args))
             if url not in community_worker_can_access:
+                if resp.status_code != 403:
+                    print 'cw accessing '+url+str(resp.status_code)+'[expected: 403 ]'
                 self.assertEqual(resp.status_code,403)
             else:
+                if resp.status_code !=200:
+                    print 'cw accessing '+url+str(resp.status_code)+'[expected: 200 ]'
                 self.assertEqual(resp.status_code,200)
     #just a sanity check
     def test_health_worker_permissions(self):
         self.client.login(username='health_worker',password='test')
         community_worker_can_access = [
-            'health_form',
-            ##implied permissions ##
-            'anomolous_data'
+            'health_form'
         ]
 
         for url,args in permissions_test_data.iteritems():
