@@ -10,6 +10,7 @@
   <table class="table table-bordered table-striped table-hover" id="student_dental">
     <thead>
         <tr>
+          <th>Site</th>
           <th>Student</th>
           <th>Date</th>
           <th>Extractions</th>
@@ -25,6 +26,7 @@
     <tbody>
         {% for dental in dentals %}
         <tr>
+          <td>{{dental.student_id.site}}</td>
           <td>{{dental.student_id}}</td>
           <td>{{dental.appointment_date}}</td>
           <td>{{dental.extractions}}</td>
