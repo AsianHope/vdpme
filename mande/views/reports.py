@@ -106,38 +106,69 @@ def daily_attendance_report(request,attendance_date=date.today().isoformat()):
                                                                         })
     else:
       raise PermissionDenied
+
+'''
+*****************************************************************************
+Student Attendance Detail Report
+ - list attendance detail of student
+*****************************************************************************
+'''
+def student_attendance_detail(request,student_id=None,start_date=None,end_date=None):
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+        if request.method == 'POST':
+            start_date = request.POST['start_date']
+            end_date = request.POST['end_date']
+            attendances = Attendance.objects.all().filter(Q(student_id=student_id) & Q(Q(date__gte=start_date) & Q(date__lte=end_date))).order_by('-date')
+        else:
+            attendances = Attendance.objects.all().filter(student_id=student_id).order_by('-date')
+        return render(request, 'mande/student_attendance_detail.html',
+                            {
+                                'attendances' : attendances,
+                                'student_id' : student_id,
+                                'start_date' : start_date,
+                                'end_date' : end_date
+                            })
+    else:
+      raise PermissionDenied
+
 '''
 *****************************************************************************
 Daily Absence Report
  - lists all students with unexcuses absences for the day and their contact info
 *****************************************************************************
 '''
-def daily_absence_report(request,attendance_date=date.today().isoformat()):
+def daily_absence_report(request,attendance_date=date.today().isoformat(),attendance_end_date=date.today().isoformat()):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
+      if request.method == 'POST':
+        attendance_date = request.POST['attendance_date']
+        attendance_end_date = request.POST['attendance_end_date']
       #only classrooms who take attendance, and who take attendance today.
       classrooms = Classroom.objects.all().filter(active=True)
       takesattendance = AttendanceDayOffering.objects.filter(
-                                                        date=attendance_date
-                                                  ).values_list(
-                                                       'classroom_id',flat=True)
-      classrooms = classrooms.filter(classroom_id__in=takesattendance)
+                                                        Q(date__gte=attendance_date) & Q(date__lte=attendance_end_date)
+                                                  ).values_list('classroom_id',flat=True)
 
+      classrooms = classrooms.filter(classroom_id__in=takesattendance)
       classroomattendance = {}
       for classroom in classrooms:
         try:
             #only displays unexcused absences
             classroomattendance[classroom] = Attendance.objects.filter(
-                                                           classroom=classroom,
-                                                           date=attendance_date,
-                                                           attendance='UA')
+                                                           Q(Q(date__gte=attendance_date) & Q(date__lte=attendance_end_date))
+                                                           & Q(classroom=classroom)
+                                                           & Q(attendance='UA')
+                                                           )
         except ObjectDoesNotExist:
             classroomattendance[classroom] = None
-
+      print classroomattendance
       return render(request, 'mande/absencereport.html',
                             {'classroomattendance' : classroomattendance,
-                             'attendance_date': attendance_date
+                             'attendance_date': attendance_date,
+                             'attendance_end_date':attendance_end_date
                                                                         })
     else:
       raise PermissionDenied
@@ -435,13 +466,14 @@ def student_medical_report(request):
                                 {'visits':visits})
     else:
       raise PermissionDenied
+
 '''
 *****************************************************************************
-Student Dental Report
+Student Dental Summary Report
  - lists all student Dental visits
 *****************************************************************************
 '''
-def student_dental_report(request,site_id=None):
+def student_dental_summary_report(request,site_id=None):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
@@ -479,6 +511,32 @@ def student_dental_report(request,site_id=None):
       raise PermissionDenied
 '''
 *****************************************************************************
+Student Dental Report
+ - lists all student Dental visits
+*****************************************************************************
+'''
+def student_dental_report(request,start_date=None,end_date=None):
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+        if request.method == 'POST':
+          start_date = request.POST['start_date']
+          end_date = request.POST['end_date']
+          dentals = Health.objects.filter( Q( Q( Q(appointment_date__gte=start_date) & Q(appointment_date__lte=end_date) ) & Q(appointment_type='Dental')) )
+        else:
+          dentals = Health.objects.filter(appointment_type='Dental')
+
+        return render(request, 'mande/studentdental.html',
+                            {
+                                'dentals':dentals,
+                                'start_date':start_date,
+                                'end_date' : end_date
+                            })
+    else:
+      raise PermissionDenied
+
+'''
+*****************************************************************************
 M&E summary Report
  -
 *****************************************************************************
@@ -501,7 +559,7 @@ def mande_summary_report(request,start_view_date=(date.today().replace(day=1)-ti
         # get grades
         get_grade = 0;
         for grade in dict(GRADES):
-            if grade> 0 and grade<50:
+            if grade> 0 and grade<=6:
                 get_grade+=1
         # get biggest english levle
         english_class_latest_level = Classroom.objects.filter(cohort=50).latest('classroom_number');
@@ -729,10 +787,14 @@ def students_promoted_times_report(request,filter_seach=None):
 
       students_promoted = {}
       for student in students:
-        if student.current_vdp_grade() < 12:
+        #if the student has a valid current grade
+        if 0 < student.current_vdp_grade() < 12:
             students_promoted[student] = {
                 'promoted_times':len(Academic.objects.filter(student_id=student,promote=True)),
                 'lastest_promoted_date':Academic.objects.filter(student_id=student,promote=True).latest('test_date').test_date if len(Academic.objects.filter(student_id=student,promote=True)) > 0 else None,
+                'enrolled_date' : student.intakeinternal_set.all().filter().order_by(
+                                                                    '-enrollment_date'
+                                                                )[0].enrollment_date
             }
       return render(request, 'mande/students_promoted_times_report.html',
                             {

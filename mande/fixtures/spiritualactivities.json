@@ -1,0 +1,14 @@
+[{
+	"fields": {
+		"student_id": 2,
+		"personal_baptism": "N",
+		"personal_attend_church": "Y",
+		"personal_bible_reading": "Y",
+		"date": "2016-03-01",
+		"personal_prayer": "N",
+		"family_attend_church": "N",
+		"personal_prayer_aloud": "N"
+	},
+	"model": "mande.spiritualactivitiessurvey",
+	"pk": 1
+}]

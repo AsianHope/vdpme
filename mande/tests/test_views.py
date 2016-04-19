@@ -197,7 +197,7 @@ class IndexViewTestCase(TestCase):
         self.assertEqual(len(resp.context['unenrolled_students']),1)
 
         #check that we just have one attendance with no comment
-        self.assertEqual(len(resp.context['unapproved_absence_no_comment']),1)
+        self.assertEqual(len(resp.context['unapproved_absence_no_comment']),3)
 
     #this tests to make sure that additional sites will be shown in the dashboard
     def test_addding_school(self):

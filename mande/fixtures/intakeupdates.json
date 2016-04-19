@@ -1,34 +1,32 @@
-[
-{
-  "fields":{
-      "student_id":"1",
-      "date":"2015-07-15",
-      "address":"456",
-      "guardian1_name":"",
-      "guardian1_relationship":"",
-      "guardian1_phone":"",
-      "guardian1_profession":"",
-      "guardian1_employment":"",
-      "guardian2_name":"",
-      "guardian2_relationship":"GRANDFATHER",
-      "guardian2_phone":"456",
-      "guardian2_profession":"456",
-      "guardian2_employment":"456",
-      "minors":"",
-      "minors_in_public_school":"",
-      "minors_in_other_school":"",
-      "minors_working":"",
-      "minors_profession":"",
-      "minors_encouraged":"",
-      "minors_training":"",
-      "minors_training_type":"",
-      "enrolled":"",
-      "grade_current":"",
-      "grade_last":"",
-      "reasons":"",
-      "notes":"test notes update"
-    },
-    "model":"mande.intakeupdate",
-    "pk":1
-}
-]
+[{
+	"fields": {
+		"minors_training": "NA",
+		"grade_current": 1,
+		"minors": 0,
+		"reasons": "123",
+		"minors_in_public_school": 0,
+		"date": "2016-03-29T17:00:00Z",
+		"minors_in_other_school": 0,
+		"guardian1_phone": "456",
+		"student_id": 1,
+		"guardian2_phone": "",
+		"guardian1_relationship": "FATHER",
+		"guardian1_profession": "456",
+		"minors_working": 0,
+		"enrolled": "Y",
+		"guardian2_profession": "NA",
+		"address": "456",
+		"guardian2_relationship": "MOTHER",
+		"guardian2_name": "",
+		"grade_last": -1,
+		"minors_encouraged": "NA",
+		"guardian2_employment": "1",
+		"minors_profession": "NA",
+		"guardian1_name": "456",
+		"minors_training_type": "NA",
+		"guardian1_employment": "1",
+		"notes": ""
+	},
+	"model": "mande.intakeupdate",
+	"pk": 1
+}]

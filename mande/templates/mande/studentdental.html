@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load mandefilters %}
+{% block title %}
+ Student Dental Report {% if start_date and end_date %} for {{start_date}} to {{end_date}} {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="col-md-9">
+  <!-- {{dentals}} -->
+  <table class="table table-bordered table-striped table-hover" id="student_dental">
+    <thead>
+        <tr>
+          <th>Site</th>
+          <th>Student</th>
+          <th>Date</th>
+          <th>Extractions</th>
+          <th>Sealent</th>
+          <th>Filling</th>
+          <th>Endo</th>
+          <th>Scaling</th>
+          <th>Pulped</th>
+          <th>Xray</th>
+          <th>Notes</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for dental in dentals %}
+        <tr>
+          <td>{{dental.student_id.site}}</td>
+          <td>{{dental.student_id}}</td>
+          <td>{{dental.appointment_date}}</td>
+          <td>{{dental.extractions}}</td>
+          <td>{{dental.sealent}}</td>
+          <td>{{dental.filling}}</td>
+          <td>{{dental.endo}}</td>
+          <td>{{dental.scaling}}</td>
+          <td>{{dental.pulped}}</td>
+          <td>{{dental.xray}}</td>
+          <td>{{dental.notes}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="col-md-3">
+  <div class="col-md-12">
+    <form method="post" action="{% url 'student_dental_report' %}">
+        {% csrf_token %}
+          <div class="form-group">
+            <input type="date" name="start_date" class="form-control" id="start_date" required>
+          </div>
+          <div class="form-group">
+            <input type="date" name="end_date" class="form-control" id="end_date" required>
+          </div>
+          <div class="form-group">
+            <button id="submit" type="submit" class="form-control btn btn-primary">Submit</button>
+          </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+{% block script %}
+ <!-- DataTables JavaScript -->
+<script type="text/javascript">
+var table = null;
+$(document).ready(function(){
+  table = $('#student_dental').DataTable({
+      responsive: true,
+      pageLength: 25,
+      order: [[0,'asc']],
+      dom: 'frtipB',
+      buttons: [
+        {
+                 extend: 'csvHtml5',
+                 text: 'TSV export <i class="fa fa-download"></i>',
+                 className: 'btn btn-sm btn-success',
+                 fieldSeparator: '\t',
+                 extension: '.tsv',
+                 title: 'StudentLag'
+             },
+
+      ]
+  });
+});
+</script>
+{% endblock %}

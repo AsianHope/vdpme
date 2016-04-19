@@ -1,0 +1,14 @@
+[{
+	"fields": {
+		"faith_score": 100,
+		"personal_score": 100,
+		"student_id": 1,
+		"comments": "fantastic!",
+		"study_score": 100,
+		"date": "2016-03-30",
+		"hygiene_score": 100,
+		"academic_score": 100
+	},
+	"model": "mande.studentevaluation",
+	"pk": 1
+}]

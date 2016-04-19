@@ -27,8 +27,8 @@ permissions_test_data = {
     'student_evaluation_report':{},
     'student_evaluation_report':{'classroom_id':1},
     'student_medical_report':{},
-    'student_dental_report':{},
-    'student_dental_report':{'site_id':1},
+    'student_dental_summary_report':{},
+    'student_dental_summary_report':{'site_id':1},
     'mande_summary_report':{},
     'mande_summary_report':{},
     'student_promoted_report':{},
@@ -85,10 +85,10 @@ class PermissionsTestCase(TestCase):
             for perm in perms:
                 #remove the mande. before the permission
                 objects = Permission.objects.filter(codename=perm[6:])
-                if len(objects)>1:
-                        print 'Trying to get '+perm[6:]+ ' got: ',
-                        print objects
-                newgroup.permissions.add(Permission.objects.get(codename=perm[6:]))
+                try:
+                    newgroup.permissions.add(Permission.objects.get(codename=perm[6:]))
+                except:
+                    print 'oh crap! Tried to add: '+perm[6:]
             newuser.groups.add(newgroup)
 
     def test_admin_permissions(self):
@@ -188,7 +188,8 @@ class PermissionsTestCase(TestCase):
             'student_list',
             'classroomenrollment_form',
             'discipline_form',
-            'student_detail'
+            'student_detail',
+            'student_dental_summary_report'
         ]
 
         for url,args in permissions_test_data.iteritems():

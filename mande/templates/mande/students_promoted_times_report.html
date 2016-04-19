@@ -14,6 +14,7 @@ Students Promoted Times Report
             <th>Current Grade</th>
             <th>How long in VDP Program</th>
             <th>The Last Promoted Date</th>
+            <th>The Last Promoted Date and Now</th>
             <th>Promoted Times</th>
           </tr>
         </thead>
@@ -23,9 +24,11 @@ Students Promoted Times Report
               <td>{{ student.site }}</td>
               <td><a href="{% url 'student_detail' student.student_id %}">{{ student }}</a></td>
               <td>{{student.current_vdp_grade}}</td>
-              <td>{{student.date|timesince}}</td>
+              <td>{{promoted.enrolled_date|timesince}}</td>
               <td>{{promoted.lastest_promoted_date}}</td>
+              <td>{{promoted.lastest_promoted_date|timesince}}</td>
               <td>{{promoted.promoted_times}}</td>
+
           </tr>
           {% endfor %}
         </tbody>
@@ -50,7 +53,7 @@ Students Promoted Times Report
         {{ site.school_name }}
         <ul style="list-style:none; padding:0;">
           {% for grade_id,grade in grades.items %}
-            {% if grade_id >= 1 and grade_id < 50 %}
+            {% if grade_id >= 1 and grade_id <= 6 %}
             <li style="margin-bottom:5px;"><a role="button" class="btn btn-xs btn-info" onclick="table.column(0).search('{{site.school_name|escapejs}}').column(2).search('{{grade_id|escapejs}}').draw();" href="#">{{grade}}</a></li>
             {% endif %}
           {% endfor %}

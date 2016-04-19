@@ -84,11 +84,11 @@
     <div class="col-md-3">
       <div class="col-md-12">
         <div class="form-group">
-          <a href = "{% url 'student_dental_report' %}" class="btn btn-xs btn-warning" style="width:100%;">All Site</a>
+          <a href = "{% url 'student_dental_summary_report' %}" class="btn btn-xs btn-warning" style="width:100%;">All Site</a>
         </div>
         {% for site in sites %}
           <div class="form-group">
-            <a href = "{% url 'student_dental_report' site.school_id %}" class="btn btn-xs btn-success" style="width:100%;">
+            <a href = "{% url 'student_dental_summary_report' site.school_id %}" class="btn btn-xs btn-success" style="width:100%;">
               {{ site.school_name }}
             </a>
           </div>

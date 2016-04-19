@@ -1,0 +1,249 @@
+[{
+	"fields": {
+		"date": "2016-03-01",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 48
+}, {
+	"fields": {
+		"date": "2016-03-02",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 49
+}, {
+	"fields": {
+		"date": "2016-03-03",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 50
+}, {
+	"fields": {
+		"date": "2016-03-04",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 51
+}, {
+	"fields": {
+		"date": "2016-03-05",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 52
+}, {
+	"fields": {
+		"date": "2016-03-06",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 53
+}, {
+	"fields": {
+		"date": "2016-03-07",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 54
+}, {
+	"fields": {
+		"date": "2016-03-08",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 55
+}, {
+	"fields": {
+		"date": "2016-03-09",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 56
+}, {
+	"fields": {
+		"date": "2016-03-10",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 57
+}, {
+	"fields": {
+		"date": "2016-03-11",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 58
+}, {
+	"fields": {
+		"date": "2016-03-12",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 59
+}, {
+	"fields": {
+		"date": "2016-03-13",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 60
+}, {
+	"fields": {
+		"date": "2016-03-14",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 61
+}, {
+	"fields": {
+		"date": "2016-03-15",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 62
+}, {
+	"fields": {
+		"date": "2016-03-16",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 63
+}, {
+	"fields": {
+		"date": "2016-03-17",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 64
+}, {
+	"fields": {
+		"date": "2016-03-18",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 65
+}, {
+	"fields": {
+		"date": "2016-03-19",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 66
+}, {
+	"fields": {
+		"date": "2016-03-20",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 67
+}, {
+	"fields": {
+		"date": "2016-03-21",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 68
+}, {
+	"fields": {
+		"date": "2016-03-22",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 69
+}, {
+	"fields": {
+		"date": "2016-03-23",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 70
+}, {
+	"fields": {
+		"date": "2016-03-24",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 71
+}, {
+	"fields": {
+		"date": "2016-03-25",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 72
+}, {
+	"fields": {
+		"date": "2016-03-26",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 73
+}, {
+	"fields": {
+		"date": "2016-03-27",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 74
+}, {
+	"fields": {
+		"date": "2016-03-28",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 75
+}, {
+	"fields": {
+		"date": "2016-03-29",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 76
+}, {
+	"fields": {
+		"date": "2016-03-30",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 77
+}, {
+	"fields": {
+		"date": "2016-03-31",
+		"offered": "Y",
+		"classroom_id": 1
+	},
+	"model": "mande.attendancedayoffering",
+	"pk": 78
+}]
