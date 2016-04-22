@@ -27,6 +27,10 @@ urlpatterns = patterns('',
 
     url(r'^attendance/report/student_absences/$', views.student_absence_report, name='student_absence_report'),
 
+    url(r'^attendance/report/attendance_summary/$', views.attendance_summary_report, name='attendance_summary_report'),
+    url(r'^attendance/report/attendance_summary/(?P<id>\d+)/(?P<select_type>[\w-]+)/$', views.attendance_summary_report, name='attendance_summary_report'),
+
+
     url(r'^reports/data_audit/$', cache_page(60)(views.data_audit), name='data_audit'),
     url(r'^reports/class_list/$', cache_page(60)(views.class_list), name='class_list'),
     url(r'^reports/exit_surveys_list/$', views.exit_surveys_list, name='exit_surveys_list'),
@@ -121,6 +125,7 @@ activity_map = [
         'items':[
             {'name':'daily_attendance_report','display':'Classroom Attendance'},
             {'name':'daily_absence_report','display':'Daily Absences'},
+            {'name':'attendance_summary_report','display':'Attendance Summary'},
             {'name':'data_audit','display':'Data Audit'},
             {'name':'class_list','display':'Class List'},
             {'name':'exit_surveys_list','display':'Exit Surveys List '},

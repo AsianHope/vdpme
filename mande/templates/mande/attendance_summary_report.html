@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% load mandefilters %}
+{% block title %}
+Attendance Summary Report {% if current_selected %} {{ current_selected }} {% endif %} {% if start_date and end_date %} {{ start_date }} to {{ end_date }}{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="col-md-9">
+      <table class="table table-bordered table-striped table-hover" id="attendanceReportTable">
+        <thead>
+          <tr>
+            <th>Site</th>
+            <th>Grade</th>
+            <th>Description</th>
+            <th>Student</th>
+            <th>Gender</th>
+            <th>Present</th>
+            <th>Unapproved</th>
+            <th>Approved</th>
+            <th>Total</th>
+          </tr>
+          </thead>
+        <tbody>
+          {% for student,attendance in studentattendance.items %}
+          <tr>
+              <td>{{ student.site }}</td>
+              <td>
+                {% for classroom in attendance.classroom %}
+                  {{classroom.classroom_id.get_cohort_display}}
+                  {% if not forloop.last and attendance.classroom|length > 1 %}
+                     |
+                  {% endif %}
+                {% endfor %}
+              </td>
+              <td>
+                {% for classroom in attendance.classroom %}
+                  {{classroom.classroom_id.classroom_number}}
+                  {% if not forloop.last and attendance.classroom|length > 1 %}
+                     |
+                  {% endif %}
+                {% endfor %}
+              </td>
+              <td>{{ student }}</td>
+              <td>{{ student.gender }}</td>
+              <td>{{ attendance.present }}</td>
+              <td>{{ attendance.unapproved }}</td>
+              <td>{{ attendance.approved }}</td>
+              <td>{{ attendance.total }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+    </div>
+
+
+    <div class="col-md-3">
+        <div class="col-md-12">
+            {% if current_selected and select_type %}
+            <form method="post"  action="{% url 'attendance_summary_report' id select_type %}">
+            {% else %}
+            <form method="post"  action="{% url 'attendance_summary_report' %}">
+            {% endif %}
+
+            {% csrf_token %}
+            <div class="form-group">
+              <input type="date" name="start_date" class="form-control"/>
+            </div>
+            <div class="form-group">
+              <input type="date" name="end_date" class="form-control"/>
+            </div>
+            <div class="form-group">
+              <input type="submit" class="form-control btn btn-primary"/>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group">
+              <select name="site" class="form-control" id="site">
+                <option>Select Site</option>
+                {% for school in schools %}
+                <option value="{{school.school_id}}">{{school}}</option>
+                {% endfor%}
+              </select>
+            </div>
+            <div class="form-group">
+              <select name="classroom" class="form-control" id="classroom">
+                <option>Select Classroom</option>
+                {% for classroom in classrooms %}
+                <option value="{{ classroom.classroom_id }}">{{ classroom }}</option>
+                {% endfor%}
+              </select>
+            </div>
+            <div class="form-group">
+              <a href="{% url 'attendance_summary_report' %}" class="form-control btn btn-warning">
+                Clear
+              </a>
+            </div>
+        </div>
+
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+ <!-- DataTables JavaScript -->
+    <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+    <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+    <script src="/static/mande/dist/js/jethro.js"></script>
+
+
+<script type="text/javascript">
+// $('#site').val('{{site}}');
+$(function() {
+      $('#site').change(function() {
+          //split on /
+          url = '{%url 'attendance_summary_report' %}' + $(this).val() + '/site'
+          window.location.href = url
+      });
+      $('#classroom').change(function() {
+          //split on /
+          url = '{%url 'attendance_summary_report' %}' + $(this).val() + '/classroom'
+          window.location.href = url
+      });
+});
+
+$(document).ready(function(){
+  $('#attendanceReportTable').DataTable({
+      responsive: true,
+      pageLength: 25,
+      columnDefs: [
+       { type: 'jethro', targets: 1 }
+     ],
+     dom: 'frtipB',
+     buttons: [
+       {
+                extend: 'csvHtml5',
+                text: 'TSV export <i class="fa fa-download"></i>',
+                className: 'btn btn-sm btn-success',
+                fieldSeparator: '\t',
+                extension: '.tsv',
+                title: 'AttendanceSummaryReport'
+            },
+
+   ]
+  });
+});
+</script>
+
+{% endblock %}

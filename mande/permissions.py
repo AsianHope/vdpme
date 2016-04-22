@@ -47,7 +47,8 @@ perms_required = {
 	'student_list': {'mande.view_student_list'},
 	'studentevaluation_form': {'mande.view_studentevaluation_form'},
 	'student_dental_summary_report': {'mande.view_student_dental_summary_report'},
-	'student_attendance_detail':{'mande.view_student_attendance_detail'}
+	'student_attendance_detail':{'mande.view_student_attendance_detail'},
+	'attendance_summary_report':{'mande.view_attendance_summary_report'}
 }
 #this is a function to help test that the permissions above are
 #correctly implemented in the views
@@ -72,6 +73,8 @@ def generate_group_perms():
     #community workers can:
     #view attendance detail
     group_perms['community_worker'] = __addperms(perms_required['student_attendance_detail'],group_perms['community_worker'])
+	#view attendance summary
+    group_perms['community_worker'] = __addperms(perms_required['attendance_summary_report'],group_perms['community_worker'])
     #view classroom Attendance
     group_perms['community_worker'] = __addperms(perms_required['daily_attendance_report'],group_perms['community_worker'])
     #view class list
@@ -114,6 +117,8 @@ def generate_group_perms():
     #teachers can:
     #view attendance detail
     group_perms['teacher'] = __addperms(perms_required['student_attendance_detail'],group_perms['teacher'])
+	#view attendance summary
+    group_perms['teacher'] = __addperms(perms_required['attendance_summary_report'],group_perms['teacher'])
     #view dailiy absences
     group_perms['teacher'] = __addperms(perms_required['daily_absence_report'],group_perms['teacher'])
     #view class list

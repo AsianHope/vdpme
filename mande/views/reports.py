@@ -135,6 +135,89 @@ def student_attendance_detail(request,student_id=None,start_date=None,end_date=N
 
 '''
 *****************************************************************************
+Attendance Summary
+ - lists attendance summary for student
+*****************************************************************************
+'''
+def attendance_summary_report(request,start_date=None,end_date=None,id=None,select_type=None):
+ #get current method name
+ method_name = inspect.currentframe().f_code.co_name
+ if user_permissions(method_name,request.user):
+
+      exit_surveys = ExitSurvey.objects.filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
+      students = IntakeSurvey.objects.exclude(student_id__in=exit_surveys).filter(date__lte=date.today().isoformat())
+
+      schools = School.objects.all()
+      classrooms = Classroom.objects.all()
+      current_selected = None
+      studentattendance = {}
+
+      #filter student by site
+      if id != None and select_type == 'site':
+        #select students who have not dropped the class, or have not dropped it yet. by site
+        students = ClassroomEnrollment.objects.all().filter(Q(classroom_id__school_id=id) & Q(student_id__date__lte=date.today().isoformat()) & Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None)))
+        current_selected =  School.objects.get(school_id=id)
+      #filter by classroom
+      elif id != None and select_type == 'classroom':
+        #select students who have not dropped the class, or have not dropped it yet. by classroom
+        students = ClassroomEnrollment.objects.all().filter(Q(classroom_id__classroom_id=id) & Q(student_id__date__lte=date.today().isoformat()) & Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None)))
+        current_selected =  Classroom.objects.get(classroom_id=id)
+        
+      if request.method == 'POST':
+        start_date = request.POST['start_date']
+        end_date = request.POST['end_date']
+        for stu in students:
+            if id != None:
+                student = stu.student_id
+            else:
+                student = stu
+            try:
+                studentattendance[student] = {
+                    'classroom' : ClassroomEnrollment.objects.filter(Q(student_id=student) & Q(Q(drop_date=None) | Q(drop_date__gte=date.today().isoformat()))),
+                    'present' : Attendance.objects.filter(student_id=student,attendance='P',date__gte=start_date,date__lte=end_date).count(),
+                    'unapproved' : Attendance.objects.filter(student_id=student,attendance='UA',date__gte=start_date,date__lte=end_date).count(),
+                    'approved' : Attendance.objects.filter(student_id=student,attendance='AA',date__gte=start_date,date__lte=end_date).count(),
+                    'total' : Attendance.objects.filter(student_id=student,attendance='P',date__gte=start_date,date__lte=end_date).count()
+                            +Attendance.objects.filter(student_id=student,attendance='UA',date__gte=start_date,date__lte=end_date).count()
+                            +Attendance.objects.filter(student_id=student,attendance='AA',date__gte=start_date,date__lte=end_date).count(),
+                     }
+            except ObjectDoesNotExist:
+               studentattendance[student] = None
+      else:
+        for stu in students:
+            if id != None:
+                student = stu.student_id
+            else:
+                student = stu
+            try:
+                studentattendance[student] = {
+                    'classroom' : ClassroomEnrollment.objects.filter(Q(student_id=student) & Q(Q(drop_date=None) | Q(drop_date__gte=date.today().isoformat()))),
+                    'present' : Attendance.objects.filter(student_id=student,attendance='P').count(),
+                    'unapproved' : Attendance.objects.filter(student_id=student,attendance='UA').count(),
+                    'approved' : Attendance.objects.filter(student_id=student,attendance='AA').count(),
+                    'total' : Attendance.objects.filter(student_id=student,attendance='P').count()
+                            +Attendance.objects.filter(student_id=student,attendance='UA').count()
+                            +Attendance.objects.filter(student_id=student,attendance='AA').count()
+                     }
+            except ObjectDoesNotExist:
+               studentattendance[student] = None
+
+      return render(request, 'mande/attendance_summary_report.html',
+                            {'studentattendance' : studentattendance,
+                            'start_date' : start_date,
+                            'end_date' : end_date,
+                            'schools' : schools,
+                            'classrooms' : classrooms,
+                            'current_selected' : current_selected,
+                            'select_type' : select_type,
+                            'id' : id
+                                                                        })
+ else:
+     raise PermissionDenied
+
+
+'''
+*****************************************************************************
 Daily Absence Report
  - lists all students with unexcuses absences for the day and their contact info
 *****************************************************************************
@@ -164,7 +247,6 @@ def daily_absence_report(request,attendance_date=date.today().isoformat(),attend
                                                            )
         except ObjectDoesNotExist:
             classroomattendance[classroom] = None
-      print classroomattendance
       return render(request, 'mande/absencereport.html',
                             {'classroomattendance' : classroomattendance,
                              'attendance_date': attendance_date,
