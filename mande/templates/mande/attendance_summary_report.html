@@ -41,7 +41,7 @@ Attendance Summary Report {% if current_selected %} {{ current_selected }} {% en
                   {% endif %}
                 {% endfor %}
               </td>
-              <td>{{ student }}</td>
+              <td><a href="{% url 'student_attendance_detail' student.student_id %}">{{ student }}</a></td>
               <td>{{ student.gender }}</td>
               <td>{{ attendance.present }}</td>
               <td>{{ attendance.unapproved }}</td>
