@@ -162,7 +162,7 @@ def attendance_summary_report(request,start_date=None,end_date=None,id=None,sele
         #select students who have not dropped the class, or have not dropped it yet. by classroom
         students = ClassroomEnrollment.objects.all().filter(Q(classroom_id__classroom_id=id) & Q(student_id__date__lte=date.today().isoformat()) & Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None)))
         current_selected =  Classroom.objects.get(classroom_id=id)
-        
+
       if request.method == 'POST':
         start_date = request.POST['start_date']
         end_date = request.POST['end_date']

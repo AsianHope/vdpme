@@ -106,6 +106,44 @@ def student_detail(request, student_id):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
+      # -----------------attendances by school year----------------------
+      attendances = Attendance.objects.filter(student_id=student_id)
+      attendance_years = []
+
+      years = datetime.now().year-2012
+      list_of_years = []
+      # generate list of year
+      for i in range(years):
+        list_of_years.append(2013+i)
+
+      for list_of_year in list_of_years:
+        attendance_years.extend(
+              [
+                  {
+                  'year':list_of_year,
+                  'present':[],
+                  'unapproved':[],
+                  'approved':[]
+                  }
+              ]
+          )
+      for attendance in attendances:
+        for attendance_year in attendance_years:
+             if attendance_year['year'] == attendance.date.year or int(attendance_year['year'])+1 == attendance.date.year:
+                 beginning = str(attendance_year['year'])+"-08-01"
+                 end = str(attendance_year['year']+1)+"-07-31"
+
+                 beginning_of_school_year = datetime.strptime(beginning, "%Y-%m-%d").date()
+                 end_of_school_year = datetime.strptime(end, "%Y-%m-%d").date()
+
+                 if attendance.date >= beginning_of_school_year and attendance.date <= end_of_school_year:
+                    if attendance.attendance == 'P':
+                        attendance_year['present'].append(attendance)
+                    elif attendance.attendance == 'UA':
+                        attendance_year['unapproved'].append(attendance)
+                    elif attendance.attendance == 'AA':
+                        attendance_year['approved'].append(attendance)
+      #------------------------------end------------------------------------
       survey = IntakeSurvey.objects.get(pk=student_id)
       intake = survey.intakeinternal_set.all().filter().order_by(
                                                         '-enrollment_date'
@@ -171,7 +209,8 @@ def student_detail(request, student_id):
         'exit_survey':exit_survey,
         'post_exit_survey':post_exit_survey,
         'notes':notes,
-        'TODAY':date.today().isoformat()}
+        'TODAY':date.today().isoformat(),
+        'attendance_years':attendance_years}
       return render(request, 'mande/detail.html', context)
     else:
       raise PermissionDenied

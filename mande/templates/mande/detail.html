@@ -199,19 +199,19 @@
       </h3>
     <table class="table table-bordered table-striped table-hover">
       <tr>
+        <th>Year</th>
         <th>Present</th>
-        <th>Approved Absences</th>
-        <th>Unapproved Absences</th>
-
-
+        <th>Unapproved</th>
+        <th>Approved</th>
       </tr>
+      {% for attendance_year in attendance_years %}
       <tr>
-        <td>{{attendance_present}}</td>
-        <td>{{attendance_approved_absence}}</td>
-        <td>{{attendance_unapproved_absence}}</td>
-
+        <td>{{attendance_year.year}} - {{attendance_year.year | add:1}}</td>
+        <td>{{attendance_year.present | length}}</td>
+        <td>{{attendance_year.unapproved | length}}</td>
+        <td>{{attendance_year.approved | length}}</td>
       </tr>
-
+      {% endfor %}
       </table>
 
     </div>
