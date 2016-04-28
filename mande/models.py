@@ -203,7 +203,18 @@ class IntakeSurvey(models.Model):
 
 	#return the most up to date information
 	def getRecentFields(self,view_date=None):
-
+		list_of_field = [
+			'guardian1_name',
+			'guardian1_relationship',
+			'guardian1_phone',
+			'guardian1_profession',
+			'guardian1_employment',
+			'guardian2_name',
+			'guardian2_relationship',
+			'guardian2_phone',
+			'guardian2_profession',
+			'guardian2_employment'
+			]
 		recent = {}
 		#seed recent with the intake survey
 		for field in self._meta.fields:
@@ -217,13 +228,16 @@ class IntakeSurvey(models.Model):
 			for field in self._meta.fields:
 				try:
 					attr = getattr(update,field.name)
-					if attr is not None and field.name!='student_id':
-						if isinstance(attr, (str, unicode)):
-							if len(attr)>0: #for unicode things, only if they're of value
-
+					# if field in guardian
+					if field.name in list_of_field:
+						recent[field.name] = attr
+					else:
+						if attr is not None and field.name != 'student_id':
+							if isinstance(attr, (str, unicode)):
+								if len(attr)>0: #for unicode things, only if they're of value
+									recent[field.name] = attr #most recent non null update wins!
+							else:
 								recent[field.name] = attr #most recent non null update wins!
-						else:
-							recent[field.name] = attr #most recent non null update wins!
 				except (AttributeError, TypeError) as e:
 					#print 'caught:  '+str(type(e))+' while processing '+field.name+'()'+str(type(attr))+')'
 					pass
