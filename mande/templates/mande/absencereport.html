@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load mandefilters %}
 {% block title %}
-Students absent on {{ attendance_date }} to {{ attendance_end_date }}
+Students Attendance on {{ attendance_date }} to {{ attendance_end_date }}
 {% endblock %}
 
 {% block content %}
@@ -29,7 +29,9 @@ Students absent on {{ attendance_date }} to {{ attendance_end_date }}
           <th>Code</th>
           <th>Date</th>
           <th>Guardian 1</th>
+          <th>Phone Number</th>
           <th>Guardian 2</th>
+          <th>Phone Number</th>
           <th>Update</th>
           <th>Note</th></tr></thead>
         <tbody>
@@ -43,7 +45,9 @@ Students absent on {{ attendance_date }} to {{ attendance_end_date }}
               <td>{{ student.student_id }}</td>
               <td>{{ student.get_attendance_display }}</td>
               <td>{{ student.date }}</td>
+              <td>{{ student.student_id.getRecentFields | get_item:'guardian1_name' }}</td>
               <td>{{ student.student_id.getRecentFields | get_item:'guardian1_phone' }}</td>
+              <td>{{ student.student_id.getRecentFields | get_item:'guardian2_name' }}</td>
               <td>{{ student.student_id.getRecentFields | get_item:'guardian2_phone' }}</td>
               <td><a href = "{% url 'take_class_attendance' classroom.classroom_id attendance_date %}" role="button" class="btn btn-xs btn-danger">Update Attendance</a></td>
               <td>{{ student.notes }}</td>
@@ -72,7 +76,7 @@ $(function() {
     });
 
 $(document).ready(function(){
-  $('#attendanceReportTable').DataTable({
+  var table = $('#attendanceReportTable').DataTable({
       responsive: true,
       pageLength: 25,
       order: [[0,'asc'],[1,'asc'],[2,'asc']],
@@ -90,7 +94,8 @@ $(document).ready(function(){
                 title: 'AttendanceReport'
             },
 
-   ]
+   ],
+   "oSearch": {"sSearch": "Unapproved Absence"}
 
   });
 });

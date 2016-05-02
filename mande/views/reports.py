@@ -243,7 +243,7 @@ def daily_absence_report(request,attendance_date=date.today().isoformat(),attend
             classroomattendance[classroom] = Attendance.objects.filter(
                                                            Q(Q(date__gte=attendance_date) & Q(date__lte=attendance_end_date))
                                                            & Q(classroom=classroom)
-                                                           & Q(attendance='UA')
+                                                        #    & Q(attendance='UA')
                                                            )
         except ObjectDoesNotExist:
             classroomattendance[classroom] = None

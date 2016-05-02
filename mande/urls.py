@@ -124,7 +124,7 @@ activity_map = [
         'icon':'fa-bar-chart-o',
         'items':[
             {'name':'daily_attendance_report','display':'Classroom Attendance'},
-            {'name':'daily_absence_report','display':'Daily Absences'},
+            {'name':'daily_absence_report','display':'Daily Attendance'},
             {'name':'attendance_summary_report','display':'Attendance Summary'},
             {'name':'data_audit','display':'Data Audit'},
             {'name':'class_list','display':'Class List'},
