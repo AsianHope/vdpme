@@ -226,31 +226,58 @@ def daily_absence_report(request,attendance_date=date.today().isoformat(),attend
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
-      if request.method == 'POST':
-        attendance_date = request.POST['attendance_date']
-        attendance_end_date = request.POST['attendance_end_date']
-      #only classrooms who take attendance, and who take attendance today.
-      classrooms = Classroom.objects.all().filter(active=True)
-      takesattendance = AttendanceDayOffering.objects.filter(
-                                                        Q(date__gte=attendance_date) & Q(date__lte=attendance_end_date)
-                                                  ).values_list('classroom_id',flat=True)
+        site = None
+        classroom_id = None
 
-      classrooms = classrooms.filter(classroom_id__in=takesattendance)
-      classroomattendance = {}
-      for classroom in classrooms:
-        try:
-            #only displays unexcused absences
-            classroomattendance[classroom] = Attendance.objects.filter(
-                                                           Q(Q(date__gte=attendance_date) & Q(date__lte=attendance_end_date))
-                                                           & Q(classroom=classroom)
-                                                        #    & Q(attendance='UA')
-                                                           )
-        except ObjectDoesNotExist:
-            classroomattendance[classroom] = None
-      return render(request, 'mande/absencereport.html',
-                            {'classroomattendance' : classroomattendance,
+        current_site = None
+        current_classroom = None
+        schools = School.objects.all()
+        classroom_list = Classroom.objects.filter(active=True)
+
+        if request.method == 'POST':
+          classroom_id = request.POST['classroom']
+          site = request.POST['site']
+          attendance_date = request.POST['attendance_date']
+          attendance_end_date = request.POST['attendance_end_date']
+
+        #only classrooms who take attendance, and who take attendance today.
+        classrooms = Classroom.objects.all().filter(active=True)
+        takesattendance = AttendanceDayOffering.objects.filter(
+                                                               Q(date__gte=attendance_date) & Q(date__lte=attendance_end_date)
+                                                         ).values_list('classroom_id',flat=True)
+        # filter by site, classroom
+        if (site=='None' or site==None) and (classroom_id=='None' or classroom_id==None):
+            classrooms = classrooms.filter(classroom_id__in=takesattendance)
+        else:
+              if site != 'None' and site != None:
+                classrooms = classrooms.filter(classroom_id__in=takesattendance,school_id=site)
+                current_site = School.objects.get(school_id=site)
+              elif classroom_id != 'None' and classroom_id != None:
+                classrooms = classrooms.filter(classroom_id__in=takesattendance,classroom_id=classroom_id)
+                current_classroom = Classroom.objects.get(classroom_id=classroom_id)
+              else:
+                classrooms = classrooms.filter(classroom_id__in=takesattendance)
+
+        classroomattendance = {}
+        for classroom in classrooms:
+           try:
+               #only displays unexcused absences
+               classroomattendance[classroom] = Attendance.objects.filter(
+                                                              Q(Q(date__gte=attendance_date) & Q(date__lte=attendance_end_date))
+                                                              & Q(classroom=classroom)
+                                                           #    & Q(attendance='UA')
+                                                              )
+           except ObjectDoesNotExist:
+               classroomattendance[classroom] = None
+        return render(request, 'mande/absencereport.html',
+                            {
+                             'classroomattendance' : classroomattendance,
                              'attendance_date': attendance_date,
-                             'attendance_end_date':attendance_end_date
+                             'attendance_end_date':attendance_end_date,
+                             'schools' : schools,
+                             'classroom_list' : classroom_list,
+                             'current_site' : current_site,
+                             'current_classroom':current_classroom
                                                                         })
     else:
       raise PermissionDenied
