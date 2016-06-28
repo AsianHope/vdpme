@@ -74,6 +74,7 @@ class ExitSurveyAdmin(admin.ModelAdmin):
         return obj.student_id.site
     list_filter = ('exit_date','last_grade','early_exit_reason')
     raw_id_fields = ('student_id',)
+    search_fields = ['student_id__student_id']
 
 class PostExitSurveyAdmin(admin.ModelAdmin):
     list_display = ('student_id','exit_date','enrolled')
