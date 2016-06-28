@@ -235,7 +235,8 @@ def post_exit_survey(request,student_id):
     if user_permissions(method_name,request.user):
       #if the student hasn't had an exit survey performed alert the user
       try:
-        exit = ExitSurvey.objects.get(student_id=student_id)
+        # exit = ExitSurvey.objects.get(student_id=student_id)
+        exit = ExitSurvey.objects.filter(student_id=student_id)
       except ObjectDoesNotExist:
         return render(
                         request,'mande/errors/noexitsurvey.html',
