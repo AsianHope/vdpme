@@ -23,7 +23,7 @@
           <tr>
             <td>{{exit_survey.student_id.site}}</td>
             <td><a href="{% url 'student_detail' exit_survey.student_id.student_id %}">{{exit_survey.student_id}}</a></td>
-            <td>{{exit_survey.exit_date}}</td>
+            <td>{{exit_survey.exit_date}} ({{exit_survey.exit_date | timesince}})</td>
             <td>{{exit_survey.student_id.current_vdp_grade|grade_by_id}}</td>
             <td>{{exit_survey.get_last_grade_display}}</td>
             <td>{{exit_survey.get_early_exit_reason_display}}</td>
