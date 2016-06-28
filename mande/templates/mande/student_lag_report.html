@@ -7,14 +7,16 @@ Student Lag Report
 {% block content %}
 <div class="col-md-9">
       <table class="table table-bordered table-striped table-hover" id="attendanceReportTable">
-        <thead><tr>
-          <th>Site</th>
-          <th>Student</th>
-          <th>Current Grade</th>
-          <th>Age Appropriate Grade</th>
-          <th>Lag</th>
-
-        </tr></thead>
+        <thead>
+          <tr>
+            <th>Site</th>
+            <th>Student</th>
+            <th>Current Grade</th>
+            <th>Age Appropriate Grade</th>
+            <th>Lag</th>
+            <th>Date Achieved Age Appropriate Level</th>
+          </tr>
+        </thead>
         <tbody>
           {% for student,lag in students_lag.items %}
           <tr>
@@ -22,8 +24,11 @@ Student Lag Report
               <td><a href="{% url 'student_detail' student.student_id %}">{{ student }}</a></td>
               <td>{{lag.vdp_grade}}</td>
               <td>{{lag.appropriate_grade}}</td>
-              <td>{{lag.lag}}</a></td>
-              </tr>
+              <td>{{lag.lag}}</td>
+              <td>
+                 {{lag.date_achieved_age_appropriate_level}} ({{lag.date_achieved_age_appropriate_level|timesince }})
+              </td>
+          </tr>
           {% endfor %}
         </tbody>
 

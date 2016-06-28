@@ -512,11 +512,14 @@ def student_lag_report(request):
       for student in enrolled_students:
         #only students in the scope of grade levels
         if student.current_vdp_grade(view_date) < 12:
+            age_appropriate_grade = student.age_appropriate_grade(view_date)
+            current_vdp_grade = student.current_vdp_grade(view_date)
+            lag = age_appropriate_grade - current_vdp_grade
             students_lag[student] = {
-                    'lag':student.age_appropriate_grade(view_date) - student.current_vdp_grade(view_date),
-                    'appropriate_grade':student.age_appropriate_grade(view_date),
-                    'vdp_grade':student.current_vdp_grade(view_date)
-
+                    'lag':lag,
+                    'appropriate_grade':age_appropriate_grade,
+                    'vdp_grade':current_vdp_grade,
+                    'date_achieved_age_appropriate_level': student.date_enrolled_grade(current_vdp_grade) if current_vdp_grade - age_appropriate_grade<=0 else student.date_enrolled_grade(current_vdp_grade-(current_vdp_grade - age_appropriate_grade))
             }
 
       return render(request, 'mande/student_lag_report.html',

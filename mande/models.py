@@ -272,7 +272,22 @@ class IntakeSurvey(models.Model):
 			current_grade = recent_intake.starting_grade if type(recent_intake) != str else 0
 
 		return current_grade
+	# -------------------------------------------
+	def date_enrolled_grade(self,current_grade):
+		grade = current_grade-1
+		academics = self.academic_set.all().filter().order_by('-test_level')
+		intake = self.intakeinternal_set.all().filter().order_by('-enrollment_date')
+		if len(intake) > 0:
+			recent_intake = intake[0]
+		else:
+			recent_intake = 'Not enrolled'
 
+		try:
+			date_enrolled_grade = academics.filter(promote=True,test_level=grade).latest('test_level').test_date
+		except ObjectDoesNotExist:
+			date_enrolled_grade = recent_intake.enrollment_date
+		return date_enrolled_grade
+	# -------------------------------------------
 	def age_appropriate_grade(self,view_date=datetime.datetime.now()):
 		if self.dob == None:
 		    return 'DOB not entered'
