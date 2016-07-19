@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load mandefilters %}
+{% block title %}
+Student Achievement Test Report {% if selected_classroom %} {{selected_classroom}} {% endif %} {% if start_date and end_date%} on {{start_date}} - {{end_date}} {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="col-md-12">
+      {% if classroom_id %}
+      <form action = "{% url 'student_achievement_test_report' classroom_id %}" method="post" class="form-inline" role="form" style="text-align: right; margin-bottom: 15px">
+      {% else %}
+      <form action = "{% url 'student_achievement_test_report' %}" method="post" class="form-inline" role="form" style="text-align: right; margin-bottom: 15px">
+      {% endif %}
+          {% csrf_token %}
+            <div class="form-group">
+              <input type="date" name="search_start_date" class="form-control" id="search_start_date" required>
+            </div>
+            <div class="form-group">
+              <input type="date" name="search_end_date" class="form-control" id="search_end_date" required>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary form-control">Submit</button>
+            </div>
+      </form>
+    </div>
+    <div class="col-md-3">
+      <table class="table table-responsive" id="classlist">
+        <thead><tr><th>Classroom</th></tr></thead>
+        <tbody>
+          <tr><td>
+            <a href = "{% url 'student_achievement_test_report' %}" role="button" class="btn btn-xs btn-warning">All Classrooms</a>
+          </td></tr>
+        {% for classroom in active_classrooms %}
+        {% if classroom.cohort < 7  %}
+          <tr>
+            <td>
+            <a href = "{% url 'student_achievement_test_report' classroom.classroom_id %}" role="button" class="btn btn-xs btn-success">{{classroom}}</a>
+            </td>
+          </tr>
+          {% endif %}
+        {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+    <div class="col-md-9">
+          <table class="table table-responsive table-bordered table-striped table-hover" id="evaluationReportTable">
+            <thead>
+              <tr>
+                <th>Site</th>
+                <th>Student</th>
+                <th>Test Date</th>
+                <th>Level</th>
+                <th>Math</th>
+                <th>Khmer</th>
+                <th>Promote</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for achievement_test in achievement_tests %}
+              <tr>
+                  <td>{{ achievement_test.student_id.site }}</td>
+                  <td><a href="{% url 'student_detail' achievement_test.student_id.student_id %}">{{ achievement_test.student_id }} </a></td>
+                  <td>{{ achievement_test.test_date }}</td>
+                  <td>{{achievement_test.test_level}}</td>
+                  <td>{{achievement_test.test_grade_math}}</td>
+                  <td>{{achievement_test.test_grade_khmer}}</td>
+                  <td>{{achievement_test.promote}}</td>
+                  </tr>
+              {% endfor %}
+            </tbody>
+
+          </table>
+        </div>
+
+{% endblock %}
+
+{% block script %}
+ <!-- DataTables JavaScript -->
+<script type="text/javascript">
+  $('#search_start_date').val('{{start_date}}');
+  $('#search_end_date').val('{{end_date}}');
+  $(document).ready(function(){
+    $('#evaluationReportTable').DataTable({
+        responsive: true,
+        pageLength: 15,
+        order: [[0,'asc']],
+        dom: 'frtipB',
+        buttons: [
+          {
+                   extend: 'csvHtml5',
+                   text: 'TSV export <i class="fa fa-download"></i>',
+                   className: 'btn btn-sm btn-success',
+                   fieldSeparator: '\t',
+                   extension: '.tsv',
+                   title: 'StudentAchievementTest'
+               },
+
+      ]
+    });
+    $('#classlist').DataTable({
+        responsive: true,
+        pageLength: 15,
+        order: [[0,'asc']],
+        dom: 'frtipB',
+        buttons: [
+        ],
+        oLanguage: {
+           "sSearch": "Filter Classrooms: "
+         }
+    });
+  });
+</script>
+
+{% endblock %}

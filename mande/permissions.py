@@ -25,6 +25,7 @@ perms_required = {
 	'exit_survey': {'mande.view_exit_survey'},
 	'student_absence_report': {'mande.view_student_absence_report'},
 	'student_evaluation_report': {'mande.view_student_evaluation_report'},
+	'student_achievement_test_report': {'mande.view_student_achievement_test_report'},
 	'academic_form_single': {'mande.view_academic_form_single'},
 	'attendance_days': {'mande.view_attendance_days'},
 	'classroomenrollment_individual': {'mande.view_classroomenrollment_individual'},
@@ -127,6 +128,8 @@ def generate_group_perms():
     group_perms['teacher'] = __addperms(perms_required['student_lag_report'],group_perms['teacher'])
     #view student evaluation reports
     group_perms['teacher'] = __addperms(perms_required['student_evaluation_report'],group_perms['teacher'])
+	#view student achievement test reports
+    group_perms['teacher'] = __addperms(perms_required['student_achievement_test_report'],group_perms['teacher'])
     #view students promoted reports
     group_perms['teacher'] = __addperms(perms_required['student_promoted_report'],group_perms['teacher'])
     #view students promoted times report
