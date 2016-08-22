@@ -77,14 +77,18 @@
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
                         <li class="sidebar-search">
+                          <form method="post" name="search_form" onsubmit="get_action();">
+                            {% csrf_token %}
                             <div class="input-group custom-search-form">
-                                <input type="text" class="form-control" placeholder="Search...">
+
+                                <input type="number" class="form-control" placeholder="Search..." id="search_box" required>
                                 <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">
+                                  <button class="btn btn-default" type="submit">
                                     <i class="fa fa-search"></i>
-                                </button>
-                            </span>
+                                  </button>
+                                </span>
                             </div>
+                          </form>
                             <!-- /input-group -->
                         </li>
 
@@ -158,4 +162,11 @@
                   {%block script %}{% endblock %}
 </body>
 <script type="text/javascript" src="https://jira.asianhope.org/s/10d73b3422438e6017ba5dd35108ef3c-T/en_US-cs84eg/6346/211/1.4.16/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=cf39bee7"></script>
+<script type="text/javascript">
+    function get_action() {
+        var student_id = $("#search_box").val();
+        document.search_form.action = "/students/"+student_id+"/"
+    }
+
+</script>
 </html>

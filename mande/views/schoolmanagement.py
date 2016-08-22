@@ -144,7 +144,14 @@ def student_detail(request, student_id):
                     elif attendance.attendance == 'AA':
                         attendance_year['approved'].append(attendance)
       #------------------------------end------------------------------------
-      survey = IntakeSurvey.objects.get(pk=student_id)
+      try:
+          survey = IntakeSurvey.objects.get(pk=student_id)
+      except IntakeSurvey.DoesNotExist as e:
+          context = {
+            'error_sms':e
+            }
+          return render(request, 'mande/errors/intakesurveynotexist.html', context)
+
       intake = survey.intakeinternal_set.all().filter().order_by(
                                                         '-enrollment_date'
                                                     )
