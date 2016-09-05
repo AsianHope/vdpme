@@ -4,7 +4,10 @@ from mande.models import GRADES
 from mande.models import RELATIONSHIPS
 from mande.models import Academic
 from mande.models import IntakeInternal
+from mande.models import ClassroomEnrollment
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
+from datetime import date
 
 register = template.Library()
 @register.filter(name='name_by_sid')
@@ -97,7 +100,7 @@ def get_students_length_by_gender(students,arg):
         if student.getRecentFields()['gender'] == gender:
             students_by_gender.append(student)
     return len(students_by_gender)
-# increase one year 
+# increase one year
 @register.filter(name='add_year')
 def add_year(year):
     return year+1
@@ -106,3 +109,8 @@ def add_year(year):
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
+
+#get student classroom
+@register.filter
+def student_classroom(student):
+    return ClassroomEnrollment.objects.filter(Q(student_id=student) & Q(Q(drop_date=None) | Q(drop_date__gte=date.today().isoformat())))

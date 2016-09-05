@@ -30,7 +30,6 @@ urlpatterns = patterns('',
     url(r'^attendance/report/attendance_summary/$', views.attendance_summary_report, name='attendance_summary_report'),
     url(r'^attendance/report/attendance_summary/(?P<id>\d+)/(?P<select_type>[\w-]+)/$', views.attendance_summary_report, name='attendance_summary_report'),
 
-
     url(r'^reports/data_audit/$', cache_page(60)(views.data_audit), name='data_audit'),
     url(r'^reports/class_list/$', cache_page(60)(views.class_list), name='class_list'),
     url(r'^reports/exit_surveys_list/$', views.exit_surveys_list, name='exit_surveys_list'),
@@ -59,6 +58,8 @@ urlpatterns = patterns('',
 
     url(r'^reports/students_lag_summary/$', views.students_lag_summary, name='students_lag_summary'),
     url(r'^reports/anomolous_data/$', views.anomolous_data, name='anomolous_data'),
+    url(r'^reports/advanced_report/$', views.advanced_report, name='advanced_report'),
+
 
 
     url(r'^surveys/intake/$', views.intake_survey, name='intake_survey'),
@@ -143,7 +144,9 @@ activity_map = [
             {'name':'students_intergrated_in_public_school','display':'Students Intergrated In Public School Report'},
             {'name':'mande_summary_report','display':'M&E Summary Report'},
             {'name':'students_lag_summary','display':'Students Lag Summary Report'},
-            {'name':'anomolous_data','display':'Anomolous Data'}
+            {'name':'anomolous_data','display':'Anomolous Data'},
+            {'name':'advanced_report','display':'Advanced Report'}
+
         ],
     },
     {

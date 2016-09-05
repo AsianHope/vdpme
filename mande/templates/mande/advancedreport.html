@@ -1,0 +1,574 @@
+{% extends "base.html" %}
+{% load mandefilters %}
+{% block title %}
+  Advanced Report
+{% endblock %}
+
+{% block content %}
+{% if show_data == 'yes' %}
+<div class="col-md-12" id="resutl">
+    <button class="btn btn-primary" id="click_back" style="margin-bottom:20px;"><i class="fa fa-chevron-left" aria-hidden="true"></i> Go Back to Filter</button>
+    <br/>
+    {% if students|length > 0 %}
+    <div id="all_field" style="padding-bottom:10px;">
+
+    </div>
+    <div style="margin-bottom:15px;">
+      <input list="student_datalist" name="student_data" id="input" style="height: 34px; padding: 6px 12px;color: #555;background-color: #fff;border: 1px solid #ccc;border-radius: 4px;">
+      <datalist id="student_datalist">
+        <option id="site" value="Site">
+        <option id="id" value="ID">
+        <option id="name" value="Name">
+        <option id="gender" value="Gender">
+        <option id="date" value="Date of Intake">
+        <option id="dob" value="Date of Birth">
+        <option id="address" value="Address">
+
+        <option id="vdp_grade" value="VDP Grade">
+        <option id="classroom" value="Classroom">
+
+        <option id="guardian1_name" value="Guardian 1 Name">
+        <option id="guardian1_relationship" value="Guardian 1 Relationship">
+        <option id="guardian1_phone" value="Guardian 1 Phone">
+        <option id="guardian1_profession" value="Guardian 1 Profession">
+        <option id="guardian1_employment" value="Guardian 1 Employment">
+
+        <option id="guardian2_name" value="Guardian 2 Name">
+        <option id="guardian2_relationship" value="Guardian 2 Relationship">
+        <option id="guardian2_phone" value="Guardian 2 Phone">
+        <option id="guardian2_profession" value="Guardian 2 Profession">
+        <option id="guardian2_employment" value="Guardian 2 Employment">
+
+        <option id="minors" value="Minors">
+        <option id="minors_in_public_school" value="Minors in Public School">
+        <option id="minors_in_other_school" value="Minors in Other Schoo">
+        <option id="minors_working" value="Minors Working">
+        <option id="minors_profession" value="Minors Profession">
+        <option id="minors_encouraged" value="Minors Encouraged">
+        <option id="minors_training" value="Minors Training">
+        <option id="minors_training_type" value="Minors Training Type">
+
+        <option id="enrolled" value="Enrolled">
+        <option id="grade_current" value="Current Grade in Public School">
+        <option id="grade_last" value="Last Grade in Public School">
+        <option id="reasons" value="Reasons not Attending School">
+
+        <option id="notes" value="Notes">
+
+      </datalist>
+      &nbsp;
+      <i id="add" style="color:#398439; margin-top: -3px; vertical-align: middle;" class="fa fa-plus-circle fa-3x" aria-hidden="true"></i>
+    </div>
+    <button class="btn btn-primary" id="show_result" style="margin-top:15px;">Show Result</button>
+    {% else %}
+     <p>No matching records found</p>
+    {% endif %}
+    <div id="result_tbl" style="display:none;">
+      <table style="width:100%;" class="table table-bordered table-striped table-hover" id="tbl_data">
+           <thead>
+             <tr>
+              <th class="hide site">Site</th>
+              <th class="hide id">ID</th>
+              <th class="hide name hide">Name</th>
+              <th class="hide gender">Gender</th>
+              <th class="hide date">Date of Intake</th>
+              <th class="hide dob">Date of birth</th>
+              <th class="hide address">Address</th>
+
+              <th class="hide vdp_grade">VDP Grade</th>
+              <th class="hide classroom">Classroom</th>
+
+              <th class="hide guardian1_name">Guardian 1 Name</th>
+              <th class="hide guardian1_relationship">Guardian 1 Rrelationship</th>
+              <th class="hide guardian1_phone">Guardian 1 Phone</th>
+              <th class="hide guardian1_profession">Guardian 1 Profession</th>
+              <th class="hide guardian1_employment">Guardian 1 Employment</th>
+
+              <th class="hide guardian2_name">Guardian 2 Name</th>
+              <th class="hide guardian2_relationship">Guardian 2 Relationship</th>
+              <th class="hide guardian2_phone">Guardian 2 Phone</th>
+              <th class="hide guardian2_profession">Guardian 2 Profession</th>
+              <th class="hide guardian2_employment">Guardian 2 Employment</th>
+
+              <th class="hide minors">Minors</th>
+              <th class="hide minors_in_public_school">Minors in Public School</th>
+              <th class="hide minors_in_other_school">Minors in Other School</th>
+              <th class="hide minors_working">Minors Working</th>
+              <th class="hide minors_profession">Minors Profession</th>
+              <th class="hide minors_encouraged">Minors Profession</th>
+              <th class="hide minors_training">Minors Training</th>
+              <th class="hide minors_training_type">Minors Training Type</th>
+
+              <th class="hide enrolled">Enrolled</th>
+              <th class="hide grade_current">Current grade in Public School</th>
+              <th class="hide grade_last">Last grade in Public School</th>
+              <th class="hide reasons">Reasons not Attending School</th>
+
+              <th class="hide notes">Notes</th>
+
+             </tr>
+           </thead>
+           <tbody>
+             {% for student in students %}
+             <tr>
+               <td class="hide site">{{student.site}}</td>
+               <td class="hide id">{{student.student_id}}</td>
+               <td class="hide name">{{student.name}}</td>
+               <td class="hide gender">{{student.gender}}</td>
+               <td class="hide date">{{student.date}}</td>
+               <td class="hide dob">{{student.dob}}</td>
+               <td class="hide address">{{student.getRecentFields.address}}</td>
+
+               <td class="hide vdp_grade">{{student.current_vdp_grade|grade_by_id}}</td>
+               <td class="hide classroom">
+                 {% for classroom in student|student_classroom%}
+                    {{classroom.classroom_id}},&nbsp;
+                 {% endfor%}
+               </td>
+
+               <td class="hide guardian1_name">{{student.getRecentFields.guardian1_name}}</td>
+               <td class="hide guardian1_relationship">{{student.getRecentFields.guardian1_relationship}}</td>
+               <td class="hide guardian1_phone">{{student.getRecentFields.guardian1_phone}}</td>
+               <td class="hide guardian1_profession">{{student.getRecentFields.guardian1_profession}}</td>
+               <td class="hide guardian1_employment">{{student.getRecentFields.guardian1_employment}}</td>
+
+               <td class="hide guardian2_name">{{student.getRecentFields.guardian2_name}}</td>
+               <td class="hide guardian2_relationship">{{student.getRecentFields.guardian2_relationship}}</td>
+               <td class="hide guardian2_phone">{{student.getRecentFields.guardian2_phone}}</td>
+               <td class="hide guardian2_profession">{{student.getRecentFields.guardian2_profession}}</td>
+               <td class="hide guardian2_employment">{{student.getRecentFields.guardian2_employment}}</td>
+
+               <td class="hide minors">{{student.getRecentFields.minors}}</td>
+               <td class="hide minors_in_public_school">{{student.getRecentFields.minors_in_public_school}}</td>
+               <td class="hide minors_in_other_school">{{student.getRecentFields.minors_in_other_school}}</td>
+               <td class="hide minors_working">{{student.getRecentFields.minors_working}}</td>
+               <td class="hide minors_profession">{{student.getRecentFields.minors_profession}}</td>
+               <td class="hide minors_encouraged">{{student.getRecentFields.minors_encouraged}}</td>
+               <td class="hide minors_training">{{student.getRecentFields.minors_training}}</td>
+               <td class="hide minors_training_type">{{student.getRecentFields.minors_training_type}}</td>
+
+               <td class="hide enrolled">{{student.getRecentFields.enrolled}}</td>
+               <td class="hide grade_current">{{student.getRecentFields.grade_current}}</td>
+               <td class="hide grade_last">{{student.getRecentFields.grade_last}}</td>
+               <td class="hide reasons">{{student.getRecentFields.reasons}}</td>
+
+               <td class="hide notes">
+                   {% for note in student.getNotes %}
+                     {{note.date|date:'d N Y'}} : {{note.note}}
+                     <br/>
+                   {% endfor %}
+               </td>
+             </tr>
+             {% endfor %}
+           </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+ <form class="form-horizontal" action = "{% url 'advanced_report' %}" method="post">
+ <div id="search_form" class="col-md-12" style="display:{% if show_data == 'yes' %}none{% else %}block{% endif %};">
+     {% csrf_token %}
+     <div class="col-md-6">
+     <table class="search">
+       <tr>
+         <td>Name</td>
+         <td>
+           <input type="text" class="form-control input-sm" name="name"/>
+         </td>
+       </tr>
+       <tr>
+         <td>ID</td>
+         <td>
+           <input type="text" class="form-control input-sm" name="studnet_id"/>
+         </td>
+       </tr>
+       <tr>
+         <td>School</td>
+         <td>
+           <select name="school" class="form-control input-sm">
+             <option value="" selected="selected">Select Site</option>
+             {% for school in schools %}
+             <option value="{{school.school_id}}">{{school}}</option>
+             {% endfor %}
+           </select>
+         </td>
+       </tr>
+       <tr>
+         <td>Date of Intake</td>
+         <td>
+           <input type="date" class="form-control input-sm" name="intake_date"/>
+         </td>
+       </tr>
+       <tr>
+         <td>Date of Intake (year)</td>
+         <td>
+           <input type="number" class="form-control input-sm" name="intake_date_year"/>
+         </td>
+       </tr>
+       <tr>
+         <td>Date of Birth</td>
+         <td>
+           <input type="date" class="form-control input-sm" name="dob"/>
+         </td>
+       </tr>
+       <tr>
+         <td>Date of Birth (year)</td>
+         <td>
+           <input type="number" class="form-control input-sm" name="dob_year"/>
+         </td>
+       </tr>
+       <tr>
+         <td>Gender</td>
+         <td>
+           <select name="gender" class="form-control input-sm">
+             <option value="" selected="selected">Select Gender</option>
+             {% for key,value in genders.iteritems %}
+             <option value="{{key}}">{{value}}</option>
+             {% endfor %}
+           </select>
+         </td>
+       </tr>
+       <tr>
+         <td>Address</td>
+         <td>
+           <input type="text" class="form-control input-sm" name="address"/>
+         </td>
+       </tr>
+       <tr>
+         <td>Guardian 1 Name</td>
+         <td>
+           <input type="text" class="form-control input-sm" name="guardian1_name"/>
+         </td>
+       </tr>
+       <tr>
+         <td>Guardian 1 Relationship</td>
+         <td>
+           <select name="guardian1_relationship" class="form-control input-sm">
+             <option value="" selected="selected">Select Guardian 1 Relationship</option>
+             {% for id,relationship in relationships.items %}
+             <option value="{{id}}">{{relationship}}</option>
+             {% endfor %}
+           </select>
+         </td>
+       </tr>
+       <tr>
+         <td>Guardian 1 Phone</td>
+         <td>
+           <input type="number" class="form-control input-sm" name="guardian1_phone"/>
+         </td>
+       </tr>
+       <tr>
+         <td>Guardian 1 Profession</td>
+         <td>
+           <input type="text" class="form-control input-sm" name="guardian1_profession"/>
+         </td>
+       </tr>
+       <tr>
+         <td>Guardian 1 Employment</td>
+         <td>
+           <select name="guardian1_employment" class="form-control input-sm">
+             <option value="" selected="selected">Select Guardian 1 Employment</option>
+             {% for id,employment in employments.items %}
+             <option value="{{id}}">{{employment}}</option>
+             {% endfor %}
+           </select>
+         </td>
+       </tr>
+       <tr>
+         <td>Guardian 2 Name</td>
+         <td>
+           <input type="text" class="form-control input-sm" name="guardian2_name"/>
+         </td>
+       </tr>
+       <tr>
+         <td>Guardian 2 Relationship</td>
+         <td>
+           <select name="guardian2_relationship" class="form-control input-sm">
+             <option value="" selected="selected">Select Guardian 2 Relationship</option>
+             {% for id,relationship in relationships.items %}
+             <option value="{{id}}">{{relationship}}</option>
+             {% endfor %}
+           </select>
+         </td>
+       </tr>
+       <tr>
+         <td>Guardian 2 Phone</td>
+         <td>
+           <input type="number" class="form-control input-sm" name="guardian2_phone"/>
+         </td>
+       </tr>
+       <tr>
+         <td>Guardian 2 Profession</td>
+         <td>
+           <input type="text" class="form-control input-sm" name="guardian2_profession"/>
+         </td>
+       </tr>
+       <tr>
+         <td>Guardian 2 Employment</td>
+         <td>
+           <select name="guardian2_employment" class="form-control input-sm">
+             <option value="" selected="selected">Select Guardian 2 Employment</option>
+             {% for id,employment in employments.items %}
+             <option value="{{id}}">{{employment}}</option>
+             {% endfor %}
+           </select>
+         </td>
+       </tr>
+       <tr>
+         <td>Minors</td>
+         <td>
+           <input type="number" class="form-control input-sm" name="minors"/>
+         </td>
+       </tr>
+       <tr>
+         <td>Minors in Public School</td>
+         <td>
+           <input type="number" class="form-control input-sm" name="minors_in_public_school"/>
+         </td>
+       </tr>
+       <tr>
+         <td>Minors in Other School</td>
+         <td>
+           <input type="number" class="form-control input-sm" name="minors_in_other_school"/>
+         </td>
+       </tr>
+       <tr>
+         <td>Minors Working</td>
+         <td>
+           <input type="number" class="form-control input-sm" name="minors_working"/>
+         </td>
+       </tr>
+       <tr>
+         <td>Minors Profession</td>
+         <td>
+           <input type="text" class="form-control input-sm" name="minors_profession"/>
+         </td>
+       </tr>
+       <tr>
+         <td>Minors Encouraged</td>
+         <td>
+           <select name="minors_encouraged" class="form-control input-sm">
+             <option value="" selected="selected">Select Minors Encouraged</option>
+             {% for id,yn in yns.items %}
+             <option value="{{id}}">{{yn}}</option>
+             {% endfor %}
+           </select>
+         </td>
+       </tr>
+       <tr>
+         <td>Minors Training</td>
+         <td>
+           <select name="minors_training" class="form-control input-sm">
+             <option value="" selected="selected">Select Minors Training</option>
+             {% for id,yn in yns.items %}
+             <option value="{{id}}">{{yn}}</option>
+             {% endfor %}
+           </select>
+         </td>
+       </tr>
+       <tr>
+         <td>Minors Training Type</td>
+         <td>
+           <input type="text" class="form-control input-sm" name="minors_training_type"/>
+         </td>
+       </tr>
+     </table>
+   </div>
+   <div class="col-md-6">
+     <table class="search">
+       <tr>
+         <td>Classroom</td>
+         <td>
+           <select name="classroom" class="form-control input-sm" id="site">
+             <option value="" selected="selected">Select Classroom</option>
+             {% for classroom in classrooms %}
+             <option value="{{classroom.classroom_id}}">{{classroom}}</option>
+             {% endfor %}
+           </select>
+         </td>
+       </tr>
+       <tr>
+         <td>VDP Grade</td>
+         <td>
+           <select name="vdp_grade" class="form-control input-sm">
+             <option value="" selected="selected">Select VDP Grade</option>
+             {% for id,grade in grades.items %}
+               <option value="{{id}}">{{grade}}</option>
+             {% endfor %}
+           </select>
+         </td>
+       </tr>
+       <tr>
+         <td>Enrolled</td>
+         <td>
+           <select name="enrolled" class="form-control input-sm">
+             <option value="" selected="selected">Select Enrolled</option>
+             {% for id,yn in yns.items %}
+             <option value="{{id}}">{{yn}}</option>
+             {% endfor %}
+           </select>
+         </td>
+       </tr>
+       <tr>
+         <td>Current Grade in Public School</td>
+         <td>
+           <select name="grade_current" class="form-control input-sm">
+             <option value="" selected="selected">Select Current Grade in Public School</option>
+             {% for id,grade in grades.items %}
+               <option value="{{id}}">{{grade}}</option>
+             {% endfor %}
+           </select>
+         </td>
+       </tr>
+       <tr>
+         <td>Last Grade in Public School</td>
+         <td>
+           <select name="grade_last" class="form-control input-sm">
+             <option value="" selected="selected">Select Last Grade in Public Schoo</option>
+             {% for id,grade in grades.items %}
+               <option value="{{id}}">{{grade}}</option>
+             {% endfor %}
+           </select>
+         </td>
+       </tr>
+       <tr>
+         <td>Reasons not Attending School</td>
+         <td>
+           <input type="text" class="form-control input-sm" name="reasons"/>
+         </td>
+       </tr>
+       <tr>
+         <td colspan="2">
+           <input type="submit" class="btn btn-success" style="text-align:right"/>
+         </td>
+       </tr>
+     </table>
+   </div>
+ </div>
+ </form>
+
+  <style>
+    .search td{
+      padding: 5px;
+    }
+    .input-sm {
+      height: 25px !important;
+    }
+    /*#result_tbl th, #result_tbl td{
+      display: none;
+    }*/
+    .tblcheckbox tr td {
+    padding-right: 20px;
+    }
+    .button_field{
+      color: #5cb85c;
+      background-color: #fff;
+      border-color: #5cb85c;
+      margin-right:4px;
+    }
+    .hide{
+      display: none;
+    }
+  </style>
+</div>
+{% endblock %}
+{% block script %}
+
+<script type="text/javascript">
+$(document).ready(function(){
+  var table = $('#tbl_data').DataTable({
+    responsive: true,
+    pageLength: 10,
+    order: [[0,'asc']],
+    dom: 'frtipB',
+    buttons: [
+      {
+               extend: 'csvHtml5',
+               text: 'TSV export <i class="fa fa-download"></i>',
+               className: 'btn btn-sm btn-success',
+               fieldSeparator: '\t',
+               extension: '.tsv',
+               title: 'AdvancedReport'
+           },
+
+   ],
+    // show / hide row when draw data again (pagination)
+    fnDrawCallback: function( oSettings ) {
+      var button = $(".field");
+      button.each(function(i, obj) {
+        var class_name = $(this).attr("id");
+        $("."+class_name).each(function(){
+          $(this).removeClass("hide");
+        })
+      });
+    }
+
+  });
+});
+$("#add").click(function(){
+   var input_data = $('#input').val()
+   var option = $('datalist option[value="'+input_data+'"]');
+
+   if(option.length){
+     var button_field = $('#all_field').has('input[value="'+input_data+'"]')
+    //  if button value exist with current input value
+     if (button_field.length){
+       alert('You already selected this column name!');
+     }
+     else{
+       var value = option.attr('value')
+       var id = option.attr('id')
+       $('#all_field').append("<input class='field btn button_field' type='button' value='"+value+"' id='"+id+"''/>")
+     }
+   }
+   else{
+     alert("No option");
+   }
+});
+$('#input').keypress(function (e) {
+ var key = e.which;
+ if(key == 13)  // the enter key code
+  {
+    var input_data = $('#input').val()
+    var option = $('datalist option[value="'+input_data+'"]');
+
+    if(option.length){
+      var button_field = $('#all_field').has('input[value="'+input_data+'"]')
+     //  if button value exist with current input value
+      if (button_field.length){
+        alert('You already selected this column name!');
+      }
+      else{
+        var value = option.attr('value')
+        var id = option.attr('id')
+        $('#all_field').append("<input class='field btn button_field' type='button' value='"+value+"' id='"+id+"''/>")
+      }
+    }
+    else{
+      alert("No option");
+    }
+  }
+});
+//show resutl
+$("#show_result").click(function(){
+  var button = $(".field");
+  if(button.length){
+    $('#result_tbl').show();
+    button.each(function(i, obj) {
+      var class_name = $(this).attr("id");
+      $("."+class_name).each(function(){
+        $(this).removeClass("hide");
+      })
+    });
+  }
+  else{
+    alert("You didn't select any column to show!");
+  }
+});
+$("#click_back").click(function(){
+    $('#resutl').hide();
+    $('#search_form').show();
+});
+</script>
+
+{% endblock %}

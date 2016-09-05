@@ -13,12 +13,9 @@ from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
 
 from calendar import HTMLCalendar, monthrange
-
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
-
-
 from django.views.generic import ListView
 from mande.models import IntakeSurvey
 from mande.models import IntakeUpdate
@@ -40,7 +37,11 @@ from mande.models import IntakeInternal
 from mande.models import StudentEvaluation
 
 from mande.models import GRADES
+from mande.models import GENDERS
 from mande.models import ATTENDANCE_CODES
+from mande.models import RELATIONSHIPS
+from mande.models import YN
+from mande.models import EMPLOYMENT
 
 from mande.forms import IntakeSurveyForm
 from mande.forms import IntakeUpdateForm
@@ -69,7 +70,7 @@ from django.core.cache import cache
 from mande.utils import user_permissions
 
 import inspect
-
+import operator
 
 TOO_YOUNG = 4
 TOO_OLD = 25
@@ -1070,6 +1071,204 @@ def anomolous_data(request):
       return render(request, 'mande/anomolous_data_report.html',
                             {
                                 'future_students' : future_students,
+                            })
+    else:
+      raise PermissionDenied
+
+'''
+*****************************************************************************
+advance report
+ - advance report
+*****************************************************************************
+'''
+
+def advanced_report(request):
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      q=[]
+      filter_query = Q()
+      recent_field_list={}
+      show_data = 'no'
+      students = None
+
+      schools = School.objects.all()
+      classrooms = Classroom.objects.filter(active=True)
+      genders = dict(GENDERS)
+      grades = dict(GRADES)
+      yns = dict(YN)
+      employments = dict(EMPLOYMENT)
+      relationships = dict(RELATIONSHIPS)
+
+      if request.method == 'POST':
+
+         student_id = request.POST['studnet_id']
+         name = request.POST['name']
+         school = request.POST['school']
+         gender = request.POST['gender']
+         intake_date = request.POST['intake_date']
+         intake_date_year = request.POST['intake_date_year']
+         dob = request.POST['dob']
+         dob_year = request.POST['dob_year']
+
+         address = request.POST['address']
+
+         guardian1_name = request.POST['guardian1_name']
+     	 guardian1_relationship = request.POST['guardian1_relationship']
+     	 guardian1_phone = request.POST['guardian1_phone']
+     	 guardian1_profession = request.POST['guardian1_profession']
+     	 guardian1_employment = request.POST['guardian1_employment']
+
+         guardian2_name = request.POST['guardian2_name']
+     	 guardian2_relationship = request.POST['guardian2_relationship']
+     	 guardian2_phone = request.POST['guardian2_phone']
+     	 guardian2_profession = request.POST['guardian2_profession']
+     	 guardian2_employment = request.POST['guardian2_employment']
+
+          #Household Information
+      	 minors = request.POST['minors']
+      	 minors_in_public_school = request.POST['minors_in_public_school']
+      	 minors_in_other_school = request.POST['minors_in_other_school']
+      	 minors_working = request.POST['minors_working']
+      	 minors_profession = request.POST['minors_profession']
+      	 minors_encouraged = request.POST['minors_encouraged']
+      	 minors_training = request.POST['minors_training']
+      	 minors_training_type = request.POST['minors_training_type']
+
+         enrolled = request.POST['enrolled']
+         grade_current = request.POST['grade_current']
+         grade_last = request.POST['grade_last']
+         reasons = request.POST['reasons']
+
+         classroom = request.POST['classroom']
+         vdp_grade = request.POST['vdp_grade']
+
+        #  ----field that don't have in intakeupdate----
+         if school != '':
+             q.append(Q(site=school))
+         if intake_date != '':
+             q.append(Q(date=intake_date))
+         if dob != '':
+            q.append(Q(dob=dob))
+         if gender != '':
+             q.append(Q(gender=gender))
+         if dob_year != '':
+             q.append(Q(dob__year=int(dob_year)))
+         if intake_date_year != '':
+             q.append(Q(date__year=int(intake_date_year)))
+         if len(q) > 0:
+             filter_query = reduce(operator.and_, q)
+
+         students = IntakeSurvey.objects.filter(
+                     Q(student_id__contains=student_id) &
+                     Q(name__contains=name)
+                     ).filter(filter_query)
+         #  ----------------------------------------
+
+
+         # ----- for field that has in intakeupdate -----
+         if address != '':
+             recent_field_list['address'] == address
+
+         #  guardian 1
+         if guardian1_name != '':
+             recent_field_list['guardian1_name'] = guardian1_name
+         if guardian1_relationship != '':
+             recent_field_list['guardian1_relationship'] = guardian1_relationship
+         if guardian1_phone != '':
+             recent_field_list['guardian1_phone'] = guardian1_phone
+         if guardian1_profession != '':
+             recent_field_list['guardian1_profession'] = guardian1_profession
+         if guardian1_employment != '':
+             recent_field_list['guardian1_employment'] = guardian1_employment
+
+        #  guardian 2
+         if guardian2_name != '':
+             recent_field_list['guardian2_name'] = guardian2_name
+         if guardian2_relationship != '':
+             recent_field_list['guardian2_relationship'] = guardian2_relationship
+         if guardian2_phone != '':
+             recent_field_list['guardian2_phone'] = guardian2_phone
+         if guardian2_profession != '':
+             recent_field_list['guardian2_profession'] = guardian2_profession
+         if guardian2_employment != '':
+             recent_field_list['guardian2_employment'] = guardian2_employment
+
+        # minors
+         if minors != '':
+            recent_field_list['minors'] = int(minors)
+         if minors_in_public_school != '':
+            recent_field_list['minors_in_public_school'] = int(minors_in_public_school)
+         if minors_in_other_school != '':
+            recent_field_list['minors_in_other_school'] = int(minors_in_other_school)
+         if minors_working != '':
+            recent_field_list['minors_working'] = int(minors_working)
+         if minors_profession != '':
+            recent_field_list['minors_profession'] = minors_profession
+         if minors_encouraged != '':
+            recent_field_list['minors_encouraged'] = minors_encouraged
+         if minors_training != '':
+            recent_field_list['minors_training'] = minors_training
+         if minors_training_type != '':
+            recent_field_list['minors_training_type'] = minors_training_type
+        # education
+         if enrolled != '':
+            recent_field_list['enrolled'] = enrolled
+         if grade_current != '':
+            recent_field_list['grade_current'] = int(grade_current)
+         if grade_last != '':
+            recent_field_list['grade_last'] = int(grade_last)
+         if reasons != '':
+            recent_field_list['reasons'] = reasons
+
+         equal_value_list = ['guardian1_relationship','guardian2_relationship',
+                             'guardian1_employment','guardian2_employment',
+                             'minors','minors_in_public_school','minors_in_other_school',
+                             'minors_working','minors_encouraged','minors_training',
+                             'enrolled','grade_current','grade_last'
+                            ]
+         match_intakeUpdate = []
+         for key, value in recent_field_list.iteritems():
+             match_intakeUpdate=[]
+             for student in students:
+                student_recent_data = student.getRecentFields()
+                if key not in equal_value_list:
+                    if value in student_recent_data[key]:
+                        match_intakeUpdate.append(student.student_id)
+                else:
+                    if value == student_recent_data[key]:
+                        match_intakeUpdate.append(student.student_id)
+             students = students.filter(student_id__in=match_intakeUpdate)
+         #  -----end filter field that have in intakeupdate----
+
+        #-----filter classroom and grade-----
+         if classroom != '':
+             students = students.filter(Q(classroomenrollment__classroom_id=classroom) & Q(Q(classroomenrollment__drop_date__gte=date.today().isoformat()) | Q(classroomenrollment__drop_date=None)))
+         if vdp_grade != '':
+             student_filter_by_vdp_grade = []
+             for student in students:
+                 if(student.current_vdp_grade() == int(vdp_grade)):
+                     student_filter_by_vdp_grade.append(student.student_id)
+             students = students.filter(student_id__in=student_filter_by_vdp_grade)
+         # -----end filter classroom and grede-----
+
+         show_data = 'yes'
+
+
+      else :
+          pass
+        #   students = IntakeSurvey.objects.all()
+      return render(request, 'mande/advancedreport.html',
+                            {
+                                'students':students,
+                                'schools':schools,
+                                'genders':genders,
+                                'grades' : grades,
+                                'relationships':relationships,
+                                'yns':yns,
+                                'employments':employments,
+                                'classrooms':classrooms,
+                                'show_data': show_data
                             })
     else:
       raise PermissionDenied
