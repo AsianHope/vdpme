@@ -70,7 +70,7 @@ $(document).ready( function() {
   $('#autoapply').click(function(e){
     console.log('click!');
     e.preventDefault();
-    if(confirm("ALL FUTURE DAYS IN ALL CALENDARS WILL BE DELETED!")){
+    if(confirm("YOU ARE APPLYING A MASTER CALENDAR TO ALL CLASSROOMS AT THIS SITE!")){
       $.get(window.location.href,{'autoapply':'True'}, function(data){
         $('#autoapply').removeClass('btn-danger');
         $('#autoapply').addClass('btn-success');

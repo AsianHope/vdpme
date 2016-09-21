@@ -144,6 +144,22 @@ class Classroom(models.Model):
 	classroom_number = models.CharField('Description',max_length=16,blank=True)
 	classroom_location = models.CharField('Classroom Location',max_length=128,blank=True)
 	active = models.BooleanField('Active',default=True)
+	attendance_calendar = models.ForeignKey('self',default=None,blank=True,null=True)
+
+	def getAttendanceDayOfferings(self,attendance_date=None):
+
+		attendance_calendar_to_fetch = self
+		if self.attendance_calendar is not None:
+			attendance_calendar_to_fetch = self.attendance_calendar
+		if attendance_date is not None:
+			offered = AttendanceDayOffering.objects.filter(classroom_id=attendance_calendar_to_fetch,
+                                                			date=attendance_date)
+		else:
+			offered = AttendanceDayOffering.objects.filter(classroom_id=attendance_calendar_to_fetch)
+
+		return offered
+
+
 	def __unicode__(self):
 		return unicode(self.school_id)+ ' - '+ unicode(self.get_cohort_display())+' - '+unicode(self.classroom_number)
 
