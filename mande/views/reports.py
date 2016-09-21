@@ -86,14 +86,19 @@ def daily_attendance_report(request,attendance_date=date.today().isoformat()):
     if user_permissions(method_name,request.user):
       #only classrooms who take attendance, and who take attendance today.
       classrooms = Classroom.objects.all().filter(active=True)
-      takesattendance = AttendanceDayOffering.objects.filter(
-                                                        date=attendance_date
-                                                  ).values_list(
-                                                       'classroom_id',flat=True)
-      classrooms = classrooms.filter(classroom_id__in=takesattendance)
+      classrooms_who_take_attendance = []
+      for classroom in classrooms:
+          if classroom.getAttendanceDayOfferings(date.today().isoformat()):
+              classrooms_who_take_attendance.append(classroom)
+
+    #   takesattendance = AttendanceDayOffering.objects.filter(
+    #                                                     date=attendance_date
+    #                                               ).values_list(
+    #                                                    'classroom_id',flat=True)
+    #   classrooms = classrooms.filter(classroom_id__in=takesattendance)
 
       classroomattendance = {}
-      for classroom in classrooms:
+      for classroom in classrooms_who_take_attendance:
         try:
             classroomattendance[classroom] = AttendanceLog.objects.get(
                                                            classroom=classroom,

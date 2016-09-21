@@ -140,8 +140,7 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
                                                    'classroom':classroom})
 
       try:
-        offered = AttendanceDayOffering.objects.filter(classroom_id=classroom_id,
-                                                    date=attendance_date)
+        offered = classroom.getAttendanceDayOfferings(attendance_date)
         if len(offered) < 1 :
             submit_enabled = False
             Attendance.objects.filter(attendance=None).delete()
@@ -285,17 +284,13 @@ def attendance_days(request,classroom_id,attendance_date=date.today().isoformat(
       #copy this calendar to all other calendars at the site from today forward
       elif request.method == 'GET' and request.GET.get('autoapply'):
 
-        attendance_days = AttendanceDayOffering.objects.all().filter(classroom_id=classroom).filter(date__gte=date.today().isoformat())
         site_classrooms = Classroom.objects.all(
                     ).filter(school_id=classroom.school_id
                     ).exclude(classroom_id=classroom.classroom_id)
 
         for site_class in site_classrooms:
-            AttendanceDayOffering.objects.filter(classroom_id=site_class).filter(date__gte=date.today().isoformat()).delete()
-            for attendance_day in attendance_days:
-                AttendanceDayOffering.objects.get_or_create(classroom_id=site_class,
-                                                            date = attendance_day.date,
-                                                            offered = 'Y')
+            site_class.attendance_calendar = classroom
+            site_class.save()
 
 
 
