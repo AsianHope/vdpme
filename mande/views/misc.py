@@ -161,8 +161,18 @@ def dashboard(request):
         if students_by_grade[key] == 0:
             del clean_students_by_grade_by_site[key]
 
-      #find students with unapproved absences and no notes
-      unapproved_absence_no_comment = Attendance.objects.all().filter(attendance__exact="UA").filter(Q(notes=u"") |Q(notes=None)).order_by('-date')
+      #find students with unapproved absences and no notes ; get only current school year
+      today = date.today()
+    #   today = datetime.strptime("2014-08-01", "%Y-%m-%d").date()
+      if (today < datetime.strptime(str(today.year)+"-08-01", "%Y-%m-%d").date()):
+          school_year = today.year - 1
+      else:
+          school_year = today.year
+      print "school_year:" + str(school_year)
+      school_year_start_date = str(school_year)+"-08-01"
+      school_year_end_date = str(school_year+1)+"-07-31"
+
+      unapproved_absence_no_comment = Attendance.objects.all().filter(attendance__exact="UA").filter(Q(Q(notes=u"") |Q(notes=None)) & Q(Q(date__gte=school_year_start_date) & Q(date__lte=school_year_end_date))).order_by('-date')
 
       context = { 'surveys': surveys,
                 'females': tot_females,

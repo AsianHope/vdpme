@@ -353,11 +353,23 @@ def data_audit(request,audit_type='ALL'):
                 resolution = reverse('student_detail',kwargs={'student_id':student.student_id})
                 addAnomaly(anomalies, student, text, resolution)
                 filters.append(text)
-      ''' students who have unapproved absences with no comment '''
-      uastudents = Attendance.objects.all().filter(attendance__exact="UA").filter(Q(notes=u"")|Q(notes=None)).order_by('-date')
+      ''' students who have unapproved absences with no comment, and get only current school year'''
+      today = date.today()
+    #   today = datetime.strptime("2014-08-01", "%Y-%m-%d").date()
+      if (today < datetime.strptime(str(today.year)+"-08-01", "%Y-%m-%d").date()):
+           school_year = today.year - 1
+      else:
+           school_year = today.year
+      print "school_year:" + str(school_year)
+      school_year_start_date = str(school_year)+"-08-01"
+      school_year_end_date = str(school_year+1)+"-07-31"
+
+      uastudents = Attendance.objects.all().filter(attendance__exact="UA").filter(Q(Q(notes=u"") |Q(notes=None)) & Q(Q(date__gte=school_year_start_date) & Q(date__lte=school_year_end_date))).order_by('-date')
+
       for uastudent in uastudents:
         text = 'Unapproved absence with no comment'
         attendance_date = uastudent.date
+
         attendance_class = uastudent.classroom
         ''' historical data has null classroom. need to determine how to resolve '''
         if attendance_class is None:
