@@ -12,11 +12,18 @@ Manage Teachers
 
 </div>
 <div class="col-md-3"><ul>
+  <h5>Active</h5>
   {% for teacher in current_teachers %}
     <li><a href = "{% url 'teacher_form' %}{{teacher.teacher_id}}">{{teacher}}</a></li>
   {% endfor %}
 </ul></div>
-<div class="col-md-6">
+<div class="col-md-3"><ul>
+  <h5>Inactive</h5>
+  {% for teacher in inactive_teachers %}
+    <li><a href = "{% url 'teacher_form' %}{{teacher.teacher_id}}">{{teacher}}</a></li>
+  {% endfor %}
+</ul></div>
+<div class="col-md-3">
 <form action = "{% url 'teacher_form' teacher_id %}" method="post">
 
     {{ form|bootstrap }}

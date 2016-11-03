@@ -266,7 +266,8 @@ def teacher_form(request, teacher_id=0):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
-      current_teachers = Teacher.objects.all()
+      current_teachers = Teacher.objects.filter(active=True)
+      inactive_teachers = Teacher.objects.filter(active=False)
       action = None
 
       if int(teacher_id)>0:
@@ -294,7 +295,8 @@ def teacher_form(request, teacher_id=0):
       context = { 'form': form,
                 'teacher_id':teacher_id,
                 'current_teachers':current_teachers,
-                'action':action}
+                'action':action,
+                'inactive_teachers':inactive_teachers}
       return render(request, 'mande/teacherform.html', context)
     else:
       raise PermissionDenied
