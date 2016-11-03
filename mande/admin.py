@@ -35,6 +35,7 @@ class ClassroomAdmin(admin.ModelAdmin):
 
 class TeacherAdmin(admin.ModelAdmin):
         list_display = ('teacher_id','name','active')
+        list_filter = ('active',)
 
 class IntakeSurveyAdmin(admin.ModelAdmin):
     fieldsets = [
