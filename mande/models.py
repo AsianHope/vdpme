@@ -165,7 +165,7 @@ class Classroom(models.Model):
 
 class Teacher(models.Model):
 	teacher_id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=32,default='')
+	name = models.CharField(max_length=32,default='',unique=True)
 	active = models.BooleanField(default=True)
 	def __unicode__(self):
 		return unicode(self.teacher_id)+ ' - '+ unicode(self.name)
