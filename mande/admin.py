@@ -34,7 +34,7 @@ class ClassroomAdmin(admin.ModelAdmin):
         list_filter = ('school_id','cohort')
 
 class TeacherAdmin(admin.ModelAdmin):
-        list_display = ('teacher_id','name')
+        list_display = ('teacher_id','name','active')
 
 class IntakeSurveyAdmin(admin.ModelAdmin):
     fieldsets = [

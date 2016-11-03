@@ -31,13 +31,13 @@ class Html5DateInput(forms.DateInput):
 class IntakeSurveyForm(forms.ModelForm):
     date = forms.DateField(label="Survey Date",widget=Html5DateInput,initial=date.today().isoformat())
     dob =  forms.DateField(label="Date of Birth",widget=Html5DateInput)
-    
+
     def clean(self):
         cleaned_data = super(IntakeSurveyForm, self).clean()
         enrolled = cleaned_data.get("enrolled")
         grade_last = cleaned_data.get("grade_last")
         grade_current = cleaned_data.get("grade_current")
-        
+
         msg = u"Must select value other than Not Applicable"
         top_msg = u"Enrollment status and grade data mismatch triggered"
         if enrolled == 'N' and grade_last < 0:
@@ -46,7 +46,7 @@ class IntakeSurveyForm(forms.ModelForm):
         if enrolled == 'Y' and grade_current < 0:
             self.add_error('grade_current', msg)
             raise forms.ValidationError(top_msg)
-            
+
     class Meta:
         model = IntakeSurvey
         exclude=[
@@ -73,7 +73,7 @@ class IntakeUpdateForm(forms.ModelForm):
         enrolled = cleaned_data.get("enrolled")
         grade_last = cleaned_data.get("grade_last")
         grade_current = cleaned_data.get("grade_current")
-        
+
         msg = u"Must select value other than Not Applicable"
         top_msg = u"Enrollment status and grade data mismatch triggered"
         if enrolled == 'N' and grade_last < 0:
@@ -82,7 +82,7 @@ class IntakeUpdateForm(forms.ModelForm):
         if enrolled == 'Y' and grade_current < 0:
             self.add_error('grade_current', msg)
             raise forms.ValidationError(top_msg)
-            
+
     class Meta:
         model = IntakeUpdate
         exclude=[
@@ -134,6 +134,7 @@ class ClassroomTeacherForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
          super(ClassroomTeacherForm, self).__init__(*args, **kwargs)
          self.fields['classroom_id'].queryset = Classroom.objects.filter(active=True)
+         self.fields['teacher_id'].queryset = Teacher.objects.filter(active=True)
     class Meta:
         model = ClassroomTeacher
         exclude=[]
