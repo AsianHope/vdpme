@@ -1289,3 +1289,30 @@ def advanced_report(request):
                             })
     else:
       raise PermissionDenied
+
+'''
+*****************************************************************************
+Unapproved Absence With No Comment Report
+ - lists all student attendance that unapproved absence with no comment
+*****************************************************************************
+'''
+def unapproved_absence_with_no_comment(request,school_year=None):
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      thisyear = date.today().year
+      school_year_list = [thisyear-i for i in range(thisyear-2013)]
+      if school_year != None:
+        school_year_start_date = str(school_year)+"-08-01"
+        school_year_end_date = str(int(school_year)+1)+"-07-31"
+        unapproved_absence_no_comments = Attendance.objects.all().filter(attendance__exact="UA").filter(Q(Q(notes=u"") |Q(notes=None)) & Q(Q(date__gte=school_year_start_date) & Q(date__lte=school_year_end_date))).order_by('-date')
+      else:
+          unapproved_absence_no_comments = Attendance.objects.all().filter(attendance__exact="UA").filter(Q(Q(notes=u"") |Q(notes=None))).order_by('-date')
+      return render(request, 'mande/unapproved_absence_with_no_comment.html',
+                            {
+                                'unapproved_absence_no_comments':unapproved_absence_no_comments,
+                                'school_year_list':school_year_list,
+                                'school_year':school_year
+                            })
+    else:
+      raise PermissionDenied

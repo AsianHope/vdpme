@@ -51,6 +51,8 @@ perms_required = {
 	'student_attendance_detail':{'mande.view_student_attendance_detail'},
 	'attendance_summary_report':{'mande.view_attendance_summary_report'},
 	'advanced_report':{'mande.view_advanced_report'},
+	'unapproved_absence_with_no_comment':{'mande.view_unapproved_absence_with_no_comment'},
+
 }
 #this is a function to help test that the permissions above are
 #correctly implemented in the views
@@ -73,6 +75,8 @@ def generate_group_perms():
     group_perms['health_worker'] = __addperms(perms_required['health_form'],group_perms['health_worker'])
 
     #community workers can:
+	#view students unapproved absence with no comment
+    group_perms['community_worker'] = __addperms(perms_required['unapproved_absence_with_no_comment'],group_perms['community_worker'])
     #view attendance detail
     group_perms['community_worker'] = __addperms(perms_required['student_attendance_detail'],group_perms['community_worker'])
 	#view attendance summary
@@ -119,6 +123,8 @@ def generate_group_perms():
     group_perms['community_worker'] = __addperms(perms_required['advanced_report'],group_perms['community_worker'])
 
     #teachers can:
+	#view student unapproved absence with no comment
+    group_perms['teacher'] = __addperms(perms_required['unapproved_absence_with_no_comment'],group_perms['teacher'])
     #view attendance detail
     group_perms['teacher'] = __addperms(perms_required['student_attendance_detail'],group_perms['teacher'])
 	#view attendance summary
