@@ -118,6 +118,25 @@ RELATIONSHIPS = (
 	('OTHER','Other'),
 	('NONE','No guardian')
 )
+PUBLIC_SCHOOL_GRADES = (
+	(1,'Grade 1'),
+	(2,'Grade 2'),
+	(3,'Grade 3'),
+	(4,'Grade 4'),
+	(5,'Grade 5'),
+	(6,'Grade 6'),
+	(7,'Grade 7'),
+	(8,'Grade 8'),
+	(9,'Grade 9'),
+	(10,'Grade 10'),
+	(11,'Grade 11'),
+	(12,'Grade 12')
+)
+STATUS = (
+	('COMPLETED','Completed'),
+	('DROPPED','Dropped out'),
+	('ON_GOING','On going')
+)
 def generate_activity_permissions(perms_required):
 	perms = []
 	for key,activity in perms_required.iteritems():
@@ -544,3 +563,15 @@ class AttendanceLog(models.Model):
 		return unicode(self.classroom) + ': '+ unicode(self.date)
 	class Meta:
 			unique_together = (('classroom','date'))
+
+class PublicSchoolHistory(models.Model):
+	student_id = models.ForeignKey(IntakeSurvey)
+	academic_year = models.IntegerField(choices=COHORTS)
+	grade = models.IntegerField('Public School Grade',choices=PUBLIC_SCHOOL_GRADES)
+	status = models.CharField(choices=STATUS,default='COMPLETED',max_length=16)
+	enroll_date = models.DateField()
+	drop_date = models.DateField(null=True,blank=True)
+	school_name = models.CharField('public school name',max_length=128,blank=True)
+	reasons = models.TextField('Reasons for not attending',blank=True)
+	def __unicode__(self):
+		return unicode(self.student_id) + ' - '+ unicode(self.grade)

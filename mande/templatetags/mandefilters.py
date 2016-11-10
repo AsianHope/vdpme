@@ -5,6 +5,8 @@ from mande.models import RELATIONSHIPS
 from mande.models import Academic
 from mande.models import IntakeInternal
 from mande.models import ClassroomEnrollment
+from mande.models import COHORTS
+from mande.models import STATUS
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from datetime import date
@@ -114,3 +116,21 @@ def get_item(dictionary, key):
 @register.filter
 def student_classroom(student):
     return ClassroomEnrollment.objects.filter(Q(student_id=student) & Q(Q(drop_date=None) | Q(drop_date__gte=date.today().isoformat())))
+
+#get academic year
+@register.filter(name='get_academic_year')
+def get_academic_year(value):
+    if value is None:
+        return "Unknown"
+    else:
+        academic_year_dict = dict(COHORTS)
+        return academic_year_dict.get(int(value), None)
+
+#get status
+@register.filter(name='get_status')
+def get_status(value):
+    if value is None:
+        return "Unknown"
+    else:
+        status_dict = dict(STATUS)
+        return status_dict.get(value, None)

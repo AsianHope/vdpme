@@ -26,6 +26,8 @@ from mande.models import Health
 from mande.models import ClassroomEnrollment
 from mande.models import ClassroomTeacher
 
+from mande.models import PublicSchoolHistory
+
 class SchoolAdmin(admin.ModelAdmin):
         list_display = ('school_name','school_location')
 
@@ -135,6 +137,10 @@ class ClassroomTeacherAdmin(admin.ModelAdmin):
     list_display = ('classroom_id','teacher_id')
     list_filter = ('classroom_id','teacher_id')
 
+class PublicSchoolHistoryAdmin(admin.ModelAdmin):
+    list_display = ('student_id','academic_year','grade','status','enroll_date','drop_date','school_name')
+    list_filter = ('status','grade','academic_year')
+
 admin.site.register(School,SchoolAdmin)
 admin.site.register(Classroom,ClassroomAdmin)
 admin.site.register(Teacher,TeacherAdmin)
@@ -157,3 +163,5 @@ admin.site.register(Health,HealthAdmin)
 
 admin.site.register(ClassroomEnrollment,ClassroomEnrollmentAdmin)
 admin.site.register(ClassroomTeacher,ClassroomTeacherAdmin)
+
+admin.site.register(PublicSchoolHistory,PublicSchoolHistoryAdmin)

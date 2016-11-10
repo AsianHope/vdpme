@@ -115,6 +115,10 @@ urlpatterns = patterns('',
     url(r'^school-management/student-evaluation/bulk/(?P<school_id>\d+)/(?P<get_date>\d{4}-\d{1,2}-\d{1,2})/$', views.studentevaluation_form, name='studentevaluation_form'),
     url(r'^school-management/student-evaluation/bulk/(?P<school_id>\d+)/(?P<get_date>\d{4}-\d{1,2}-\d{1,2})/(?P<classroom_id>\d+)/$', views.studentevaluation_form, name='studentevaluation_form'),
 
+    url(r'^school-management/student_publicschool/(?P<student_id>\d+)/$', views.publicschool_form, name='publicschool_form'),
+    url(r'^school-management/student_publicschool/(?P<student_id>\d+)/(?P<id>\d+)$', views.publicschool_form, name='publicschool_form'),
+
+
     url(r'^success/$', views.survey_success, name='success'),
     url(r'^log/$', views.notification_log, name='notification_log')
 

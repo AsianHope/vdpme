@@ -18,6 +18,8 @@ from mande.models import StudentEvaluation
 from mande.models import Health
 from mande.models import GRADES
 from mande.models import SCORES
+from mande.models import PublicSchoolHistory
+from mande.models import COHORTS
 
 from mande.utils import getEnrolledStudents
 
@@ -222,4 +224,30 @@ class StudentEvaluationForm(forms.ModelForm):
     #comments = forms.TextField(label='')
     class Meta:
         model = StudentEvaluation
+        exclude = []
+
+class StudentPublicSchoolHistoryForm(forms.ModelForm):
+    enroll_date = forms.DateField(widget=Html5DateInput)
+    drop_date = forms.DateField(widget=Html5DateInput,required=False)
+    reasons = forms.CharField( widget=forms.Textarea,required=False)
+    def clean(self):
+        cleaned_data = super(StudentPublicSchoolHistoryForm, self).clean()
+        status = cleaned_data.get("status")
+        reasons = cleaned_data.get("reasons")
+        enroll_date = cleaned_data.get("enroll_date")
+        drop_date = cleaned_data.get('drop_date')
+        msg = u"This field is required."
+        top_msg = u"Enrollment status and grade data mismatch triggered"
+        if (status == 'DROPPED') & ((reasons=='') | (reasons==None)):
+            self.add_error('reasons', msg)
+
+        if (status == 'DROPPED') & ((drop_date=='') | (drop_date==None)):
+            self.add_error('drop_date', msg)
+        if (drop_date != None):
+            if(drop_date < enroll_date):
+                msg = u"Drop date should be greater than enroll date."
+                self.add_error('drop_date',msg)
+
+    class Meta:
+        model = PublicSchoolHistory
         exclude = []

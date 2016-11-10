@@ -36,6 +36,8 @@ from mande.models import Health
 from mande.models import AttendanceLog
 from mande.models import IntakeInternal
 from mande.models import StudentEvaluation
+from mande.models import PublicSchoolHistory
+
 
 from mande.models import GRADES
 from mande.models import ATTENDANCE_CODES
@@ -57,6 +59,7 @@ from mande.forms import AcademicForm
 from mande.forms import IntakeInternalForm
 from mande.forms import HealthForm
 from mande.forms import StudentEvaluationForm
+from mande.forms import StudentPublicSchoolHistoryForm
 
 from mande.utils import getEnrolledStudents
 from mande.utils import getStudentGradebyID
@@ -198,6 +201,7 @@ def student_detail(request, student_id):
 
       current_grade = getStudentGradebyID(student_id)
       graduation = survey.dob +timedelta(days=365*12) if survey.dob is not None else "No birthday entered"
+      publich_school_historys = survey.publicschoolhistory_set.all()
       context = {
         'survey': survey.getRecentFields(),
         'recent_intake':recent_intake,
@@ -217,7 +221,8 @@ def student_detail(request, student_id):
         'post_exit_survey':post_exit_survey,
         'notes':notes,
         'TODAY':date.today().isoformat(),
-        'attendance_years':attendance_years}
+        'attendance_years':attendance_years,
+        'publich_school_historys':publich_school_historys}
       return render(request, 'mande/detail.html', context)
     else:
       raise PermissionDenied
@@ -792,5 +797,55 @@ def studentevaluation_form_single(request, student_id=0):
       context = {'form': form,'student_id':student_id}
 
       return render(request, 'mande/studentevaluationformsingle.html',context)
+    else:
+      raise PermissionDenied
+
+'''
+*****************************************************************************
+Student Public School Form
+ - process a public school form for requested student
+*****************************************************************************
+'''
+def publicschool_form(request, student_id=0,id=None):
+    #get current method name
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+      try:
+          survey = IntakeSurvey.objects.get(pk=student_id)
+
+          try:
+              #edit form
+              instance = PublicSchoolHistory.objects.get(pk=id)
+              form = StudentPublicSchoolHistoryForm(instance=instance)
+              action = 'Editing '
+          except ObjectDoesNotExist:
+              #adding form
+              form = StudentPublicSchoolHistoryForm(initial={'student_id': student_id})
+              action = 'Adding'
+              instance = None
+
+          if request.method == 'POST':
+            if instance != None:
+                # edit
+                form = StudentPublicSchoolHistoryForm(request.POST,instance=instance)
+            else:
+                # add
+                form = StudentPublicSchoolHistoryForm(request.POST)
+                
+            if form.is_valid():
+                #process
+                form.save()
+                url = '/students/'+str(student_id)+'/#enrollment'
+                return HttpResponseRedirect(url)
+            else:
+                print form.errors
+
+          context = {'form': form,'student_id':student_id,'action':action}
+          return render(request, 'mande/publicschoolhistoryform.html',context)
+      except IntakeSurvey.DoesNotExist as e:
+          context = {
+            'error_sms':e
+            }
+          return render(request, 'mande/errors/intakesurveynotexist.html', context)
     else:
       raise PermissionDenied

@@ -248,6 +248,39 @@
         </table>
 
     </div>
+    <div class ="col-md-12">
+      <h3>Public School History   <a href="{% url 'publicschool_form' survey.student_id %}" class="btn btn-xs btn-success" role="button">+ Add a Public School History</a></h3>
+
+        <table class="table table-bordered table-striped table-hover" id="publicSchoolHistory">
+          <thead>
+            <tr>
+              <th>Edit</th>
+              <th>Acadimic Year</th>
+              <th>Grade</th>
+              <th>Status</th>
+              <th>Enroll Date</th>
+              <th>Drop Date</th>
+              <th>School Name</th>
+              <th>Reasons for not attending</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for publich_school_history in publich_school_historys %}
+            <tr>
+              <td><a href="{% url 'publicschool_form' survey.student_id publich_school_history.id%}" role="button" class="btn btn-xs btn-warning">Edit</a></td>
+              <td>{{publich_school_history.academic_year | get_academic_year}}</td>
+              <td>{{publich_school_history.grade | grade_by_id}}</td>
+              <td>{{publich_school_history.status | get_status}}</td>
+              <td>{{publich_school_history.enroll_date | date:'d N Y'}}</td>
+              <td>{{publich_school_history.drop_date | date:'d N Y'}}</td>
+              <td>{{publich_school_history.school_name}}</td>
+              <td>{{publich_school_history.reasons}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+    </div>
   </div>
   <div role="tabpanel" class="tab-pane" id="contact">
     <h3>Contact Information <a href="{% url 'intake_update' survey.student_id %}?next={% url 'student_detail' survey.student_id %}&tab=contact" class="btn btn-xs btn-info" role="button"> +Update this information?</a></h3>
@@ -471,7 +504,14 @@ $(document).ready( function() {
       bLengthChange: false,
       bInfo: false,
   });
-
+  var publicSchoolHistory = $('#publicSchoolHistory').DataTable({
+      responsive: true,
+      pageLength: 5,
+      searching: false,
+      bLengthChange: false,
+      bInfo: false,
+      order: [[ 1, "desc" ]]
+  });
 });
 </script>
 {% endblock %}

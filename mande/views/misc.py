@@ -35,6 +35,7 @@ from mande.models import NotificationLog
 from mande.models import Health
 from mande.models import AttendanceLog
 from mande.models import IntakeInternal
+from mande.models import PublicSchoolHistory
 
 from mande.models import GRADES
 from mande.models import ATTENDANCE_CODES
@@ -173,7 +174,6 @@ def dashboard(request):
       school_year_end_date = str(school_year+1)+"-07-31"
 
       unapproved_absence_no_comment = Attendance.objects.all().filter(attendance__exact="UA").filter(Q(Q(notes=u"") |Q(notes=None)) & Q(Q(date__gte=school_year_start_date) & Q(date__lte=school_year_end_date))).order_by('-date')
-
       context = { 'surveys': surveys,
                 'females': tot_females,
                 'breakdown':breakdown,
