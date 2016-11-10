@@ -35,6 +35,7 @@ from mande.models import Health
 from mande.models import AttendanceLog
 from mande.models import IntakeInternal
 from mande.models import StudentEvaluation
+from mande.models import PublicSchoolHistory
 
 from mande.models import GRADES
 from mande.models import GENDERS
@@ -353,6 +354,12 @@ def data_audit(request,audit_type='ALL'):
                 resolution = reverse('student_detail',kwargs={'student_id':student.student_id})
                 addAnomaly(anomalies, student, text, resolution)
                 filters.append(text)
+        '''student no public school history'''
+        if PublicSchoolHistory.objects.filter(student_id=student).count()==0:
+            text = 'No Public School History '
+            resolution = reverse('student_detail',kwargs={'student_id':student.student_id})
+            addAnomaly(anomalies, student, text, resolution)
+            filters.append(text)
       ''' students who have unapproved absences with no comment, and get only current school year'''
       today = date.today()
     #   today = datetime.strptime("2014-08-01", "%Y-%m-%d").date()
