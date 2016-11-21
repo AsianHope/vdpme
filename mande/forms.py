@@ -135,7 +135,7 @@ class ClassroomForm(forms.ModelForm):
 class ClassroomTeacherForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
          super(ClassroomTeacherForm, self).__init__(*args, **kwargs)
-         self.fields['classroom_id'].queryset = Classroom.objects.filter(active=True)
+         self.fields['classroom_id'].queryset = Classroom.objects.filter(active=True).order_by('school_id')
          self.fields['teacher_id'].queryset = Teacher.objects.filter(active=True)
     class Meta:
         model = ClassroomTeacher
@@ -156,7 +156,7 @@ class ClassroomEnrollmentForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
          super(ClassroomEnrollmentForm, self).__init__(*args, **kwargs)
-         self.fields['classroom_id'].queryset = Classroom.objects.filter(active=True)
+         self.fields['classroom_id'].queryset = Classroom.objects.filter(active=True).order_by('school_id')
 
     class Meta:
         model = ClassroomEnrollment

@@ -51,12 +51,19 @@ Manage Classroom Assignments
  <!-- DataTables JavaScript -->
     <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
     <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+    <script src="/static/mande/bower_components/select2/js/select2.js"></script>
 
 <script type="text/javascript">
 $(document).ready(function(){
   $('#classroomDataTable').DataTable({
       responsive: true,
       pageLength: 25,
+  });
+  $('#id_classroom_id').select2({
+    placeholder: "---Select a Classroom---",
+  });
+  $('#id_teacher_id').select2({
+    placeholder: "---Select a Teacher---",
   });
 });
 </script>

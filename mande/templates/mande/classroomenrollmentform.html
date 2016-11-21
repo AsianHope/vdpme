@@ -61,6 +61,7 @@ Classroom Enrollment
  <!-- DataTables JavaScript -->
     <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
     <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+    <script src="/static/mande/bower_components/select2/js/select2.js"></script>
 
 <script type="text/javascript">
 
@@ -88,6 +89,9 @@ $("[type=checkbox]").change(function(){
       } else {
           $('#'+this.id+'student').remove();
       }
+});
+$('#id_classroom_id').select2({
+  placeholder: "---Select a Classroom---",
 });
 </script>
 
