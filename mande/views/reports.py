@@ -994,15 +994,17 @@ Students not enrolled in public school Report
  - lists all students not enrolled in public school
 *****************************************************************************
 '''
-def students_not_enrolled_in_public_school_report(request):
+def public_school_report(request):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
-      exit_surveys = ExitSurvey.objects.filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
-      students_not_enrolled_in_public_school = IntakeSurvey.objects.exclude(student_id__in=exit_surveys).filter(enrolled='N',date__lte=date.today().isoformat())
-      return render(request, 'mande/students_not_enrolled_in_public_school_report.html',
+      students = getEnrolledStudents()
+      grades = {k:v for k, v in dict(GRADES).items() if (k>0 and k<=6) or k in [50,60,70] }
+      return render(request, 'mande/public_school_report.html',
                             {
-                                'students_not_enrolled_in_public_school' : students_not_enrolled_in_public_school
+                                'students' : students,
+                                'grades' : grades,
+                                'sites' : School.objects.all()
                             })
     else:
       raise PermissionDenied

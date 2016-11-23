@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% load mandefilters %}
+{% block title %}
+Public School Report
+{% endblock %}
+
+{% block content %}
+<div class="col-md-9">
+      <table class="table table-bordered table-striped table-hover" id="publicSchoolReportTable">
+        <thead><tr>
+          <th>Site</th>
+          <th>Student</th>
+          <th>Enrollment Date In VDP</th>
+          <th>VDP Grade</th>
+          <th>Pubic School Grade</th>
+          <th>Public School Name</th>
+          <th>Reason Not Attend Public School</th>
+        </tr></thead>
+        <tbody>
+          {% for student in students %}
+              <tr>
+                  <td>{{ student.site }}</td>
+                  <td><a href="{% url 'student_detail' student.student_id %}">{{ student }}</a></td>
+                  <td>{{ student.date}}</td>
+                  <td>{{ student.current_vdp_grade | grade_by_id}}</td>
+                  <!-- if attend in public school -->
+                  {% if student.getRecentFields.enrolled == 'Y'%}
+                  <td>{{ student.grade_current|grade_by_id }}</td>
+                  <td>{{ student.getRecentFields.public_school_name }}</td>
+                  <td></td>
+                  {% else %}
+                  <!-- if not attend in public school -->
+                  <td>Not Attend</td>
+                  <td>{{ student.getRecentFields.public_school_name }}</td>
+                  <td>{{ student.getRecentFields.reasons}}</td>
+                  {% endif%}
+              </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+</div>
+<div class="col-md-3">
+  <div class="col-md-12" id="filtered">
+    <b>Filter by:</b>
+    <div>
+      <input id="site" type="button" class="btn btn-sm btn-success" value="Site">
+      <input id="grade" type="button" class="btn btn-sm btn-success" value="Grade">
+    </div>
+  </div>
+  <div class="col-md-6">
+    <b>Site</b>
+    <ul class = "buttonlist">
+    {% for site in sites %}
+      <li> <a class="btn btn-sm btn-warning" onclick ="filterBySite('{{site}}')" href='#'>{{site}}</a></li>
+    {% endfor %}
+    <li><a role = "button" class="btn btn-sm btn-warning" onclick="ClearFilterBySite()" href="#">Clear Search</a></li>
+    </ul>
+  </div>
+  <div class="col-md-6">
+    <b>Grade</b>
+    <ul class = "buttonlist">
+    {% for value,key in grades.items %}
+      <li> <a class="btn btn-sm btn-warning" onclick ="filterByGrade('{{key|escapejs}}')" href='#'>{{key}}</a></li>
+    {% endfor %}
+    <li><a role = "button" class="btn btn-sm btn-warning" onclick="ClearFilterByGrade()" href="#">Clear Search</a></li>
+    </ul>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+ <!-- DataTables JavaScript and filter-->
+<script type="text/javascript">
+var table = null
+function filterBySite(search_value){
+  table.columns(0).search(search_value).draw();
+  $("#site").val(search_value);
+  $("#site").show();
+}
+function ClearFilterBySite(){
+  table.columns(0).search('').draw();
+  $("#site").val("Site");
+  $("#site").hide();
+}
+function filterByGrade(search_value){
+  table.columns(3).search(search_value).draw();
+  $("#grade").val(search_value);
+  $("#grade").show();
+}
+function ClearFilterByGrade(){
+  table.columns(3).search('').draw();
+  $("#grade").val("Grade");
+  $("#grade").hide();
+}
+$(document).ready(function(){
+  $("#site").hide();
+  $("#grade").hide();
+
+  table = $('#publicSchoolReportTable').DataTable({
+      responsive: true,
+      pageLength: 25,
+      order: [[0,'asc']],
+      dom: 'frtipB',
+      buttons: [
+        {
+                 extend: 'csvHtml5',
+                 text: 'TSV export <i class="fa fa-download"></i>',
+                 className: 'btn btn-sm btn-success',
+                 fieldSeparator: '\t',
+                 extension: '.tsv',
+                 title: 'PublicSchoolReport'
+             },
+
+    ]
+  });
+});
+</script>
+
+{% endblock %}

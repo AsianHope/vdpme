@@ -41,7 +41,7 @@ perms_required = {
 	'teacher_form': {'mande.view_teacher_form'},
 	'student_promoted_report': {'mande.view_student_promoted_report'},
 	'students_intergrated_in_public_school': {'mande.view_students_intergrated_in_public_school'},
-	'students_not_enrolled_in_public_school_report': {'mande.view_students_not_enrolled_in_public_school_report'},
+	'public_school_report': {'mande.view_public_school_report'},
 	'post_exit_survey': {'mande.view_post_exit_survey'},
 	'academic_form': {'mande.view_academic_form'},
 	'dashboard': {'mande.view_dashboard'},
@@ -97,8 +97,8 @@ def generate_group_perms():
     group_perms['community_worker'] = __addperms(perms_required['student_dental_report'],group_perms['community_worker'])
     #view student dental summary report
     group_perms['community_worker'] = __addperms(perms_required['student_dental_summary_report'],group_perms['community_worker'])
-    #view students not enrolled in public school
-    group_perms['community_worker'] = __addperms(perms_required['students_not_enrolled_in_public_school_report'],group_perms['community_worker'])
+    #view students public school report
+    group_perms['community_worker'] = __addperms(perms_required['public_school_report'],group_perms['community_worker'])
     #view students integrated in publich school report
     group_perms['community_worker'] = __addperms(perms_required['students_intergrated_in_public_school'],group_perms['community_worker'])
     #take Attendance
