@@ -30,13 +30,14 @@
 {% block script %}
 <script type="text/javascript">
   $(document).ready(function(){
+    //  public school acedemic year start from 01/November, and end on 31/July
     $("#id_academic_year").val(2015);
     $("#id_enroll_date").change(function(){
       date = new Date($(this).val())
       compare_date = new Date($(this).val());
-      //01-08
+      //01-11
       compare_date.setDate(1);
-      compare_date.setMonth(7);
+      compare_date.setMonth(10);
       if(date<compare_date){
         year = date.getFullYear()-1
         $("#id_academic_year").val(year);
