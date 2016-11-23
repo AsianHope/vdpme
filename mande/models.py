@@ -205,6 +205,7 @@ class IntakeSurvey(models.Model):
 	enrolled = models.CharField('Currently enrolled in (public) school?',max_length=2,choices=YN,default='N')
 	grade_current = models.IntegerField('Current grade in [public] school (if enrolled)',choices=GRADES,default=-1)
 	grade_last = models.IntegerField('Last grade attended (if not enrolled)',choices=GRADES,default=-1)
+	public_school_name = models.CharField('Public School Name',max_length=128,blank=True)
 	reasons = models.TextField('Reasons for not attending',blank=True)
 
 	#Guardian 1's Information
@@ -383,6 +384,7 @@ class IntakeUpdate(models.Model):
 	enrolled = models.CharField('Currently enrolled in formal school?',max_length=2,choices=YN,default='N')
 	grade_current = models.IntegerField('Current grade in (public) school?',choices=GRADES,default=1)
 	grade_last = models.IntegerField('Last grade in public school (if not currently enrolled)',choices=GRADES,default='-1')
+	public_school_name = models.CharField('Public School Name',max_length=128,blank=True)
 	reasons = models.TextField('Reasons for not attending school',default='NA',blank=True,null=True)
 	notes = models.TextField(default='NA',blank=True)
 
@@ -571,7 +573,7 @@ class PublicSchoolHistory(models.Model):
 	status = models.CharField(choices=STATUS,default='COMPLETED',max_length=16)
 	enroll_date = models.DateField()
 	drop_date = models.DateField(null=True,blank=True)
-	school_name = models.CharField('public school name',max_length=128,blank=True)
+	school_name = models.CharField('Public School Name',max_length=128,blank=True)
 	reasons = models.TextField('Reasons for not attending',blank=True)
 	def __unicode__(self):
 		return unicode(self.student_id) + ' - '+ unicode(self.grade)

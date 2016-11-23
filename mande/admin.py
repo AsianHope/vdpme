@@ -44,7 +44,7 @@ class IntakeSurveyAdmin(admin.ModelAdmin):
         ('',
         {'fields': ['date','site']}),
         ('Student Biographical Information',
-        {'fields': ['name','dob','grade_appropriate','gender','address','enrolled','grade_current','grade_last','reasons']}),
+        {'fields': ['name','dob','grade_appropriate','gender','address','enrolled','grade_current','grade_last','public_school_name','reasons']}),
         ('Information about Guadian 1',
         {'fields': ['guardian1_relationship','guardian1_name','guardian1_phone','guardian1_profession','guardian1_employment']}),
         ('Information about Guardian 2',
