@@ -72,6 +72,7 @@ from mande.utils import user_permissions
 
 import inspect
 import operator
+import re
 
 TOO_YOUNG = 4
 TOO_OLD = 25
@@ -1126,6 +1127,19 @@ def advanced_report(request):
       employments = dict(EMPLOYMENT)
       relationships = dict(RELATIONSHIPS)
 
+      #   ------------------
+      #   convert object fields to human readable
+      def convert_field_to_readable(string):
+           s = string
+           s1= re.sub(r'([^0-9])([0-9])', r'\1 \2',s)
+           s2 =  re.sub(r'([$0-9])([a-z])', r'\1 \2',s1)
+           s3 = s2.replace('_', ' ').title()
+           return s3
+      
+      all_fields = IntakeSurvey._meta.fields
+      list_of_fields = dict((field.name, convert_field_to_readable(field.name)) for field in all_fields if not field.primary_key)
+      list_of_fields.update({"vdp_grade":"VDP Grade", "classroom": "Classroom"})
+
       if request.method == 'POST':
 
          student_id = request.POST['studnet_id']
@@ -1294,7 +1308,8 @@ def advanced_report(request):
                                 'yns':yns,
                                 'employments':employments,
                                 'classrooms':classrooms,
-                                'show_data': show_data
+                                'show_data': show_data,
+                                'list_of_fields':list_of_fields
                             })
     else:
       raise PermissionDenied

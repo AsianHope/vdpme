@@ -14,48 +14,12 @@
 
     </div>
     <div style="margin-bottom:15px;">
-      <input list="student_datalist" name="student_data" id="input" style="height: 34px; padding: 6px 12px;color: #555;background-color: #fff;border: 1px solid #ccc;border-radius: 4px;">
-      <datalist id="student_datalist">
-        <option id="site" value="Site">
-        <option id="id" value="ID">
-        <option id="name" value="Name">
-        <option id="gender" value="Gender">
-        <option id="date" value="Date of Intake">
-        <option id="dob" value="Date of Birth">
-        <option id="address" value="Address">
-
-        <option id="vdp_grade" value="VDP Grade">
-        <option id="classroom" value="Classroom">
-
-        <option id="guardian1_name" value="Guardian 1 Name">
-        <option id="guardian1_relationship" value="Guardian 1 Relationship">
-        <option id="guardian1_phone" value="Guardian 1 Phone">
-        <option id="guardian1_profession" value="Guardian 1 Profession">
-        <option id="guardian1_employment" value="Guardian 1 Employment">
-
-        <option id="guardian2_name" value="Guardian 2 Name">
-        <option id="guardian2_relationship" value="Guardian 2 Relationship">
-        <option id="guardian2_phone" value="Guardian 2 Phone">
-        <option id="guardian2_profession" value="Guardian 2 Profession">
-        <option id="guardian2_employment" value="Guardian 2 Employment">
-
-        <option id="minors" value="Minors">
-        <option id="minors_in_public_school" value="Minors in Public School">
-        <option id="minors_in_other_school" value="Minors in Other Schoo">
-        <option id="minors_working" value="Minors Working">
-        <option id="minors_profession" value="Minors Profession">
-        <option id="minors_encouraged" value="Minors Encouraged">
-        <option id="minors_training" value="Minors Training">
-        <option id="minors_training_type" value="Minors Training Type">
-
-        <option id="enrolled" value="Enrolled">
-        <option id="grade_current" value="Current Grade in Public School">
-        <option id="grade_last" value="Last Grade in Public School">
-        <option id="reasons" value="Reasons not Attending School">
-
-        <option id="notes" value="Notes">
-
-      </datalist>
+      <select id="field_list">
+        <option selected="selected" value="">--- Choose a Column ---</option>
+        {% for key,value in list_of_fields.items %}
+          <option value="{{key}}">{{value}}</option>
+        {% endfor %}
+      </select>
       &nbsp;
       <i id="add" style="color:#398439; margin-top: -3px; vertical-align: middle;" class="fa fa-plus-circle fa-3x" aria-hidden="true"></i>
     </div>
@@ -74,6 +38,7 @@
               <th class="hide date">Date of Intake</th>
               <th class="hide dob">Date of birth</th>
               <th class="hide address">Address</th>
+              <th class="hide grade_appropriate">Grade Appropriate</th>
 
               <th class="hide vdp_grade">VDP Grade</th>
               <th class="hide classroom">Classroom</th>
@@ -102,6 +67,7 @@
               <th class="hide enrolled">Enrolled</th>
               <th class="hide grade_current">Current grade in Public School</th>
               <th class="hide grade_last">Last grade in Public School</th>
+              <th class="hide public_school_name">Public School Name</th>
               <th class="hide reasons">Reasons not Attending School</th>
 
               <th class="hide notes">Notes</th>
@@ -118,6 +84,7 @@
                <td class="hide date">{{student.date}}</td>
                <td class="hide dob">{{student.dob}}</td>
                <td class="hide address">{{student.getRecentFields.address}}</td>
+               <td class="hide grade_appropriate">{{student.grade_appropriate}}</td>
 
                <td class="hide vdp_grade">{{student.current_vdp_grade|grade_by_id}}</td>
                <td class="hide classroom">
@@ -150,6 +117,7 @@
                <td class="hide enrolled">{{student.getRecentFields.enrolled}}</td>
                <td class="hide grade_current">{{student.getRecentFields.grade_current}}</td>
                <td class="hide grade_last">{{student.getRecentFields.grade_last}}</td>
+               <td class="hide public_school_name">{{student.getRecentFields.public_school_name}}</td>
                <td class="hide reasons">{{student.getRecentFields.reasons}}</td>
 
                <td class="hide notes">
@@ -473,9 +441,12 @@
 </div>
 {% endblock %}
 {% block script %}
-
+<script src="/static/mande/bower_components/select2/js/select2.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
+  $('#field_list').select2({
+    placeholder: "---Select a Column---",
+  });
   var table = $('#tbl_data').DataTable({
     responsive: true,
     pageLength: 10,
@@ -506,48 +477,15 @@ $(document).ready(function(){
   });
 });
 $("#add").click(function(){
-   var input_data = $('#input').val()
-   var option = $('datalist option[value="'+input_data+'"]');
-
-   if(option.length){
-     var button_field = $('#all_field').has('input[value="'+input_data+'"]')
-    //  if button value exist with current input value
-     if (button_field.length){
+  key = $("#field_list :selected").val()
+  value = $("#field_list :selected").text();
+  selected_field = $('#all_field').has('input[value="'+value+'"]')
+  if (selected_field.length){
        alert('You already selected this column name!');
      }
      else{
-       var value = option.attr('value')
-       var id = option.attr('id')
-       $('#all_field').append("<input class='field btn button_field' type='button' value='"+value+"' id='"+id+"''/>")
+       $('#all_field').append("<input class='field btn button_field' type='button' value='"+value+"' id='"+key+"''/>")
      }
-   }
-   else{
-     alert("No option");
-   }
-});
-$('#input').keypress(function (e) {
- var key = e.which;
- if(key == 13)  // the enter key code
-  {
-    var input_data = $('#input').val()
-    var option = $('datalist option[value="'+input_data+'"]');
-
-    if(option.length){
-      var button_field = $('#all_field').has('input[value="'+input_data+'"]')
-     //  if button value exist with current input value
-      if (button_field.length){
-        alert('You already selected this column name!');
-      }
-      else{
-        var value = option.attr('value')
-        var id = option.attr('id')
-        $('#all_field').append("<input class='field btn button_field' type='button' value='"+value+"' id='"+id+"''/>")
-      }
-    }
-    else{
-      alert("No option");
-    }
-  }
 });
 //show resutl
 $("#show_result").click(function(){
