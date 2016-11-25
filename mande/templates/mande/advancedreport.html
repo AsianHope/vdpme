@@ -479,12 +479,12 @@ $(document).ready(function(){
 $("#add").click(function(){
   key = $("#field_list :selected").val()
   value = $("#field_list :selected").text();
-  selected_field = $('#all_field').has('input[value="'+value+'"]')
+  selected_field = $('#all_field').has('button[id="'+key+'"]')
   if (selected_field.length){
        alert('You already selected this column name!');
      }
      else{
-       $('#all_field').append("<input class='field btn button_field' type='button' value='"+value+"' id='"+key+"''/>")
+       $('#all_field').append("<button role='button' class='field btn button_field' type='button' id='"+key+"''>"+value+" <a href='#' style='display:none; color:red;' class='remove_icon'><span class='glyphicon glyphicon-remove'></span></a></button>")
      }
 });
 //show resutl
@@ -506,6 +506,21 @@ $("#show_result").click(function(){
 $("#click_back").click(function(){
     $('#resutl').hide();
     $('#search_form').show();
+});
+// show/hide remove icon in button field
+$("#all_field").on({
+    mouseenter: function () {
+      $(this).children("a").show();
+    },
+    mouseleave:function () {
+       $(this).children("a").hide();
+    }
+},'button');
+$(document).on('click','.field a',function(e){
+  $(this).parent().remove();
+  // hide table column that match with button field
+  id = $(this).parent().attr("id")
+   $("."+id).addClass("hide");
 });
 </script>
 
