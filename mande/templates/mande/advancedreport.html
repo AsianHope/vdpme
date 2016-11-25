@@ -485,6 +485,8 @@ $("#add").click(function(){
      }
      else{
        $('#all_field').append("<button role='button' class='field btn button_field' type='button' id='"+key+"''>"+value+" <a href='#' style='display:none; color:red;' class='remove_icon'><span class='glyphicon glyphicon-remove'></span></a></button>")
+       //  reset selected to default
+       $('#field_list').val('').trigger('change')
      }
 });
 //show resutl
