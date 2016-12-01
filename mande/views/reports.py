@@ -1135,10 +1135,10 @@ def advanced_report(request):
            s2 =  re.sub(r'([$0-9])([a-z])', r'\1 \2',s1)
            s3 = s2.replace('_', ' ').title()
            return s3
-      
+
       all_fields = IntakeSurvey._meta.fields
       list_of_fields = dict((field.name, convert_field_to_readable(field.name)) for field in all_fields if not field.primary_key)
-      list_of_fields.update({"vdp_grade":"VDP Grade", "classroom": "Classroom"})
+      list_of_fields.update({"vdp_grade":"VDP Grade", "classroom": "Classroom","id":"ID"})
 
       if request.method == 'POST':
 
@@ -1309,7 +1309,7 @@ def advanced_report(request):
                                 'employments':employments,
                                 'classrooms':classrooms,
                                 'show_data': show_data,
-                                'list_of_fields':list_of_fields
+                                'list_of_fields':sorted(list_of_fields.iteritems())
                             })
     else:
       raise PermissionDenied

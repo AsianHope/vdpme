@@ -16,7 +16,7 @@
     <div style="margin-bottom:15px;">
       <select id="field_list">
         <option selected="selected" value="">--- Choose a Column ---</option>
-        {% for key,value in list_of_fields.items %}
+        {% for key,value in list_of_fields %}
           <option value="{{key}}">{{value}}</option>
         {% endfor %}
       </select>
@@ -28,99 +28,103 @@
      <p>No matching records found</p>
     {% endif %}
     <div id="result_tbl" style="display:none;">
-      <table style="width:100%;" class="table table-bordered table-striped table-hover" id="tbl_data">
+      <table id="tblAdvancedReport" class="table table-bordered table-striped table-hover">
+        <thead></thead>
+        <tbody></tbody>
+      </table>
+      <table style="width:100%; display:none;" class="table table-bordered table-striped table-hover" id="tbl_data">
            <thead>
              <tr>
-              <th class="hide site">Site</th>
-              <th class="hide id">ID</th>
-              <th class="hide name hide">Name</th>
-              <th class="hide gender">Gender</th>
-              <th class="hide date">Date of Intake</th>
-              <th class="hide dob">Date of birth</th>
-              <th class="hide address">Address</th>
-              <th class="hide grade_appropriate">Grade Appropriate</th>
+              <th class="site">Site</th>
+              <th class="id">ID</th>
+              <th class="name">Name</th>
+              <th class="gender">Gender</th>
+              <th class="date">Date of Intake</th>
+              <th class="dob">Date of birth</th>
+              <th class="address">Address</th>
+              <th class="grade_appropriate">Grade Appropriate</th>
 
-              <th class="hide vdp_grade">VDP Grade</th>
-              <th class="hide classroom">Classroom</th>
+              <th class="vdp_grade">VDP Grade</th>
+              <th class="classroom">Classroom</th>
 
-              <th class="hide guardian1_name">Guardian 1 Name</th>
-              <th class="hide guardian1_relationship">Guardian 1 Rrelationship</th>
-              <th class="hide guardian1_phone">Guardian 1 Phone</th>
-              <th class="hide guardian1_profession">Guardian 1 Profession</th>
-              <th class="hide guardian1_employment">Guardian 1 Employment</th>
+              <th class="guardian1_name">Guardian 1 Name</th>
+              <th class="guardian1_relationship">Guardian 1 Rrelationship</th>
+              <th class="guardian1_phone">Guardian 1 Phone</th>
+              <th class="guardian1_profession">Guardian 1 Profession</th>
+              <th class="guardian1_employment">Guardian 1 Employment</th>
 
-              <th class="hide guardian2_name">Guardian 2 Name</th>
-              <th class="hide guardian2_relationship">Guardian 2 Relationship</th>
-              <th class="hide guardian2_phone">Guardian 2 Phone</th>
-              <th class="hide guardian2_profession">Guardian 2 Profession</th>
-              <th class="hide guardian2_employment">Guardian 2 Employment</th>
+              <th class="guardian2_name">Guardian 2 Name</th>
+              <th class="guardian2_relationship">Guardian 2 Relationship</th>
+              <th class="guardian2_phone">Guardian 2 Phone</th>
+              <th class="guardian2_profession">Guardian 2 Profession</th>
+              <th class="guardian2_employment">Guardian 2 Employment</th>
 
-              <th class="hide minors">Minors</th>
-              <th class="hide minors_in_public_school">Minors in Public School</th>
-              <th class="hide minors_in_other_school">Minors in Other School</th>
-              <th class="hide minors_working">Minors Working</th>
-              <th class="hide minors_profession">Minors Profession</th>
-              <th class="hide minors_encouraged">Minors Profession</th>
-              <th class="hide minors_training">Minors Training</th>
-              <th class="hide minors_training_type">Minors Training Type</th>
+              <th class="minors">Minors</th>
+              <th class="minors_in_public_school">Minors in Public School</th>
+              <th class="minors_in_other_school">Minors in Other School</th>
+              <th class="minors_working">Minors Working</th>
+              <th class="minors_profession">Minors Profession</th>
+              <th class="minors_encouraged">Minors Encouraged</th>
+              <th class="minors_training">Minors Training</th>
+              <th class="minors_training_type">Minors Training Type</th>
 
-              <th class="hide enrolled">Enrolled</th>
-              <th class="hide grade_current">Current grade in Public School</th>
-              <th class="hide grade_last">Last grade in Public School</th>
-              <th class="hide public_school_name">Public School Name</th>
-              <th class="hide reasons">Reasons not Attending School</th>
+              <th class="enrolled">Enrolled</th>
+              <th class="grade_current">Current grade in Public School</th>
+              <th class="grade_last">Last grade in Public School</th>
+              <th class="public_school_name">Public School Name</th>
+              <th class="reasons">Reasons not Attending School</th>
 
-              <th class="hide notes">Notes</th>
+              <th class="notes">Notes</th>
 
              </tr>
            </thead>
            <tbody>
              {% for student in students %}
              <tr>
-               <td class="hide site">{{student.site}}</td>
-               <td class="hide id">{{student.student_id}}</td>
-               <td class="hide name">{{student.name}}</td>
-               <td class="hide gender">{{student.gender}}</td>
-               <td class="hide date">{{student.date}}</td>
-               <td class="hide dob">{{student.dob}}</td>
-               <td class="hide address">{{student.getRecentFields.address}}</td>
-               <td class="hide grade_appropriate">{{student.grade_appropriate}}</td>
+               <td class="site">{{student.site}}</td>
+               <td class="id">{{student.student_id}}</td>
+               <td class="name">{{student.name}}</td>
+               <td class="gender">{{student.gender}}</td>
+               <td class="date">{{student.date}}</td>
+               <td class="dob">{{student.dob}}</td>
+               <td class="address">{{student.getRecentFields.address}}</td>
+               <td class="grade_appropriate">{{student.grade_appropriate}}</td>
 
-               <td class="hide vdp_grade">{{student.current_vdp_grade|grade_by_id}}</td>
-               <td class="hide classroom">
+               <td class="vdp_grade">{{student.current_vdp_grade|grade_by_id}}</td>
+               <td class="classroom">
                  {% for classroom in student|student_classroom%}
                     {{classroom.classroom_id}},&nbsp;
                  {% endfor%}
                </td>
 
-               <td class="hide guardian1_name">{{student.getRecentFields.guardian1_name}}</td>
-               <td class="hide guardian1_relationship">{{student.getRecentFields.guardian1_relationship}}</td>
-               <td class="hide guardian1_phone">{{student.getRecentFields.guardian1_phone}}</td>
-               <td class="hide guardian1_profession">{{student.getRecentFields.guardian1_profession}}</td>
-               <td class="hide guardian1_employment">{{student.getRecentFields.guardian1_employment}}</td>
+               <td class="guardian1_name">{{student.getRecentFields.guardian1_name}}</td>
+               <td class="guardian1_relationship">{{student.getRecentFields.guardian1_relationship}}</td>
+               <td class="guardian1_phone">{{student.getRecentFields.guardian1_phone}}</td>
+               <td class="guardian1_profession">{{student.getRecentFields.guardian1_profession}}</td>
+               <td class="guardian1_employment">{{student.getRecentFields.guardian1_employment}}</td>
 
-               <td class="hide guardian2_name">{{student.getRecentFields.guardian2_name}}</td>
-               <td class="hide guardian2_relationship">{{student.getRecentFields.guardian2_relationship}}</td>
-               <td class="hide guardian2_phone">{{student.getRecentFields.guardian2_phone}}</td>
-               <td class="hide guardian2_profession">{{student.getRecentFields.guardian2_profession}}</td>
-               <td class="hide guardian2_employment">{{student.getRecentFields.guardian2_employment}}</td>
+               <td class="guardian2_name">{{student.getRecentFields.guardian2_name}}</td>
+               <td class="guardian2_relationship">{{student.getRecentFields.guardian2_relationship}}</td>
+               <td class="guardian2_phone">{{student.getRecentFields.guardian2_phone}}</td>
+               <td class="guardian2_profession">{{student.getRecentFields.guardian2_profession}}</td>
+               <td class="guardian2_employment">{{student.getRecentFields.guardian2_employment}}</td>
 
-               <td class="hide minors">{{student.getRecentFields.minors}}</td>
-               <td class="hide minors_in_public_school">{{student.getRecentFields.minors_in_public_school}}</td>
-               <td class="hide minors_in_other_school">{{student.getRecentFields.minors_in_other_school}}</td>
-               <td class="hide minors_working">{{student.getRecentFields.minors_working}}</td>
-               <td class="hide minors_profession">{{student.getRecentFields.minors_profession}}</td>
-               <td class="hide minors_encouraged">{{student.getRecentFields.minors_encouraged}}</td>
-               <td class="hide minors_training">{{student.getRecentFields.minors_training}}</td>
-               <td class="hide minors_training_type">{{student.getRecentFields.minors_training_type}}</td>
+               <td class="minors">{{student.getRecentFields.minors}}</td>
+               <td class="minors_in_public_school">{{student.getRecentFields.minors_in_public_school}}</td>
+               <td class="minors_in_other_school">{{student.getRecentFields.minors_in_other_school}}</td>
+               <td class="minors_working">{{student.getRecentFields.minors_working}}</td>
+               <td class="minors_profession">{{student.getRecentFields.minors_profession}}</td>
+               <td class="minors_encouraged">{{student.getRecentFields.minors_encouraged}}</td>
+               <td class="minors_training">{{student.getRecentFields.minors_training}}</td>
+               <td class="minors_training_type">{{student.getRecentFields.minors_training_type}}</td>
 
-               <td class="hide enrolled">{{student.getRecentFields.enrolled}}</td>
-               <td class="hide grade_current">{{student.getRecentFields.grade_current}}</td>
-               <td class="hide grade_last">{{student.getRecentFields.grade_last}}</td>
-               <td class="hide public_school_name">{{student.getRecentFields.public_school_name}}</td>
-               <td class="hide reasons">{{student.getRecentFields.reasons}}</td>
+               <td class="enrolled">{{student.getRecentFields.enrolled}}</td>
+               <td class="grade_current">{{student.getRecentFields.grade_current}}</td>
+               <td class="grade_last">{{student.getRecentFields.grade_last}}</td>
+               <td class="public_school_name">{{student.getRecentFields.public_school_name}}</td>
+               <td class="reasons">{{student.getRecentFields.reasons}}</td>
 
-               <td class="hide notes">
+               <td class="notes">
                    {% for note in student.getNotes %}
                      {{note.date|date:'d N Y'}} : {{note.note}}
                      <br/>
@@ -447,40 +451,14 @@ $(document).ready(function(){
   $('#field_list').select2({
     placeholder: "---Select a Column---",
   });
-  var table = $('#tbl_data').DataTable({
-    responsive: true,
-    pageLength: 10,
-    order: [[0,'asc']],
-    dom: 'frtipB',
-    buttons: [
-      {
-               extend: 'csvHtml5',
-               text: 'TSV export <i class="fa fa-download"></i>',
-               className: 'btn btn-sm btn-success',
-               fieldSeparator: '\t',
-               extension: '.tsv',
-               title: 'AdvancedReport'
-           },
 
-   ],
-    // show / hide row when draw data again (pagination)
-    fnDrawCallback: function( oSettings ) {
-      var button = $(".field");
-      button.each(function(i, obj) {
-        var class_name = $(this).attr("id");
-        $("."+class_name).each(function(){
-          $(this).removeClass("hide");
-        })
-      });
-    }
-
-  });
 });
 $("#add").click(function(){
   key = $("#field_list :selected").val()
   value = $("#field_list :selected").text();
-  selected_field = $('#all_field').has('button[id="'+key+'"]')
-  if (selected_field.length){
+  if (key!="" && key !=undefined){
+    selected_field = $('#all_field').has('button[id="'+key+'"]')
+    if (selected_field.length){
        alert('You already selected this column name!');
      }
      else{
@@ -488,22 +466,71 @@ $("#add").click(function(){
        //  reset selected to default
        $('#field_list').val('').trigger('change')
      }
+  }
 });
 //show resutl
 $("#show_result").click(function(){
-  var button = $(".field");
-  if(button.length){
-    $('#result_tbl').show();
-    button.each(function(i, obj) {
-      var class_name = $(this).attr("id");
-      $("."+class_name).each(function(){
-        $(this).removeClass("hide");
-      })
-    });
-  }
-  else{
-    alert("You didn't select any column to show!");
-  }
+    var button = $(".field");
+    if(button.length){
+        $('#result_tbl').show();
+        // remove datatable from table
+        if ( $.fn.DataTable.isDataTable( '#tblAdvancedReport' ) ) {
+            $("#tblAdvancedReport").DataTable().destroy();
+        }
+        // clear tr in table
+        $("#tblAdvancedReport tr").remove()
+
+        var tbl = $('#tbl_data');
+        var rows = $('tr', tbl);
+        var cols;
+        var row_tblAdvancedReport, this_row, btn, class_name, td_th_tblAdvancedReport;
+
+        rows.each(function(i,obj){
+          row_tblAdvancedReport = $("<tr></tr>");
+          cols = $(this).children('th, td');
+          this_row= $(this)
+          button.each(function() {
+            btn = $(this)
+            class_name = btn.attr("id");
+            td_th_tblAdvancedReport = this_row.children("."+class_name+"")
+            td_th_tblAdvancedReport.each(function(j, obj){
+                if(j==0){
+                  // copy match th or td to new table
+                  $(this).clone().appendTo(row_tblAdvancedReport);
+                }
+            });
+          });
+
+          // add row to table (if the first row at to thead, else add to tbody)
+          if(i == 0){
+              $("#tblAdvancedReport thead").append(row_tblAdvancedReport);
+          }
+          else{
+              $("#tblAdvancedReport tbody").append(row_tblAdvancedReport);
+          }
+        });
+        // add datatable to table
+        var table = $('#tblAdvancedReport').DataTable({
+            responsive: true,
+            pageLength: 10,
+            order: [[0,'asc']],
+            dom: 'frtipB',
+            buttons: [
+              {
+                       extend: 'csvHtml5',
+                       text: 'TSV export <i class="fa fa-download"></i>',
+                       className: 'btn btn-sm btn-success',
+                       fieldSeparator: '\t',
+                       extension: '.tsv',
+                       title: 'AdvancedReport'
+                   },
+
+           ]
+        });
+    }
+    else{
+      alert("You didn't select any column to show!");
+    }
 });
 $("#click_back").click(function(){
     $('#resutl').hide();
@@ -518,11 +545,10 @@ $("#all_field").on({
        $(this).children("a").hide();
     }
 },'button');
+
 $(document).on('click','.field a',function(e){
+  // remove button
   $(this).parent().remove();
-  // hide table column that match with button field
-  id = $(this).parent().attr("id")
-   $("."+id).addClass("hide");
 });
 </script>
 
