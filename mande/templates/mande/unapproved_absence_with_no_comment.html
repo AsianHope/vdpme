@@ -19,7 +19,11 @@ Unapproved Absence With No Comment {% if school_year %} {{school_year}}-{{school
       <tr>
         <td>{{absence.student_id.site}}</td>
         <td><a href ="{% url 'student_detail' absence.student_id.student_id %}">{{ absence.student_id }}</a></td>
+        {% if absence.classroom %}
+        <td><a href ="{% url 'take_class_attendance' absence.classroom.classroom_id absence.date %}?next={% url 'unapproved_absence_with_no_comment' %}&limit=None">{{absence.date}}</a></td>
+        {% else%}
         <td>{{absence.date}}</td>
+        {% endif %}
       </tr>
       {% endfor %}
     </tbody>

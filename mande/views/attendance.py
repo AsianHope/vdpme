@@ -112,6 +112,9 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
+      next_url = request.GET.get('next') #where we're going next
+      limit = request.GET.get('limit') #limit to a single field
+
       message = ''
       submit_enabled = True
       if attendance_date != date.today().isoformat():
@@ -192,6 +195,8 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
             log.save()
             #clean up the mess we created making blank rows to update.
             Attendance.objects.filter(attendance=None).delete()
+            if next_url is not None:
+                return HttpResponseRedirect(next_url)
 
       else:
         formset = AttendanceFormSet(queryset = student_attendance)
@@ -201,7 +206,9 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
                 'formset':formset,
                 'warning': mark_safe(warning),
                 'message': message,
-                'submit_enabled': submit_enabled}
+                'submit_enabled': submit_enabled,
+                'next_url':next_url,
+                'limit':limit}
 
       return render(request, 'mande/takeclassattendanceformset.html', context)
 
