@@ -6,9 +6,7 @@
 {% endblock %}
 
 {% block content %}
-
-<div class="col-md-3"></div>
-<div class="col-md-6">
+<div class="col-md-9">
 <form method="post">
     <!-- {{ form|bootstrap }} -->
     {% csrf_token %}
@@ -25,7 +23,11 @@
     </div>
 </form>
 </div>
-<div class="col-md-3"></div>
+<div style="color:red;" class="col-md-3">
+  {% if form.errors%}
+    {{form.non_field_errors}}
+  {% endif %}
+</div>
 {% endblock %}
 {% block script %}
 <script type="text/javascript">

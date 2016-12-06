@@ -577,3 +577,5 @@ class PublicSchoolHistory(models.Model):
 	reasons = models.TextField('Reasons for not attending',blank=True)
 	def __unicode__(self):
 		return unicode(self.student_id) + ' - '+ unicode(self.grade)
+	class Meta:
+			unique_together = (('student_id','grade'))
