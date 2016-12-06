@@ -11,6 +11,9 @@ Performing Intake Update - {{survey.name}}
 <form action = "{% url 'intake_update' student_id %}?next={{next}}&tab={{tab}}" method="post">
 
     {{ form|bootstrap }}
+    <input type="hidden" name="initial_grade_current" value="{{form.grade_current.value}}">
+    <input type="hidden" name="initial_school_name" value="{{form.public_school_name.value}}">
+
     {% csrf_token %}
     <div class="col-md-12">
       <button type="submit" class="btn btn-primary">Submit</button>
@@ -19,7 +22,6 @@ Performing Intake Update - {{survey.name}}
 </div>
 <div class="col-md-3"></div>
 {% endblock %}
-
 
 {% block script %}
 <script type="text/javascript">
@@ -59,8 +61,7 @@ $(document).ready(function(){
       }
     });
   }
-  
+
 });
 </script>
-
 {% endblock %}

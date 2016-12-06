@@ -571,7 +571,7 @@ class PublicSchoolHistory(models.Model):
 	academic_year = models.IntegerField(choices=COHORTS)
 	grade = models.IntegerField('Public School Grade',choices=PUBLIC_SCHOOL_GRADES)
 	status = models.CharField(choices=STATUS,default='COMPLETED',max_length=16)
-	enroll_date = models.DateField()
+	enroll_date = models.DateField(null=True,blank=True)
 	drop_date = models.DateField(null=True,blank=True)
 	school_name = models.CharField('Public School Name',max_length=128,blank=True)
 	reasons = models.TextField('Reasons for not attending',blank=True)

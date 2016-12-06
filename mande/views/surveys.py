@@ -35,6 +35,7 @@ from mande.models import NotificationLog
 from mande.models import Health
 from mande.models import AttendanceLog
 from mande.models import IntakeInternal
+from mande.models import PublicSchoolHistory
 
 from mande.models import GRADES
 from mande.models import ATTENDANCE_CODES
@@ -166,9 +167,40 @@ def intake_update(request,student_id=0):
         most_recent = {}
 
       if request.method == 'POST':
+        initial_grade_current = request.POST.get('initial_grade_current')
+        initial_public_school_name = request.POST.get('initial_school_name')
+
         form = IntakeUpdateForm(request.POST)
         if form.is_valid():
             instance = form.save()
+            # get academic_year base on intake update date
+            academic_year = instance.date.year
+            d = datetime.strptime(str(instance.date.year)+"-11-01", "%Y-%m-%d").date()
+            if instance.date.date() < d:
+                academic_year = instance.date.year - 1
+            else:
+                academic_year = instance.date.year
+            # if public school grade or name changed
+            if (instance.enrolled == 'Y') and ((int(initial_grade_current) != instance.grade_current) or (initial_public_school_name != instance.public_school_name)):
+                # if found p school with this student id and grade, update
+                try:
+                    pschool= PublicSchoolHistory.objects.get(
+                                student_id=instance.student_id,
+                                grade=instance.grade_current,
+                                )
+
+                    pschool.school_name=instance.public_school_name
+                    pschool.save()
+                # if cannot found p school with this student id and grade, create new one
+                except ObjectDoesNotExist:
+                    pschool = PublicSchoolHistory(
+                        student_id=instance.student_id,
+                        academic_year=academic_year,
+                        grade=instance.grade_current,
+                        status='ON_GOING',
+                        school_name=instance.public_school_name
+                        )
+                    pschool.save()
             message = 'Updated '+unicode(instance.student_id.name)+'\'s record'
             log = NotificationLog(  user=request.user,
                                     text=message,
