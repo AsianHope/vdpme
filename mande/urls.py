@@ -190,7 +190,7 @@ activity_map = [
             {'name':'classroom_form','display':'Manage Classrooms'},
             {'name':'classroomteacher_form','display':'Manage Classroom Assignments'},
             {'name':'academic_select','display':'Input Achievement Tests'},
-            {'name':'studentevaluation_select','display':'Input Student Evaluations '}
+            {'name':'studentevaluation_select','display':'Input Student Evaluations'}
         ]
     }
 ]

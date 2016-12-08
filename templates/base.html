@@ -111,7 +111,7 @@
                           <ul class="nav nav-second-level">
                             {% for item in heading.items %}
                               <li>
-                                <a href="{% url item.name %}">{{item.display}}</a>
+                                <a href="{% url item.name %}">{% trans item.display %}</a>
                               </li>
                             {% endfor %}
                           </ul>

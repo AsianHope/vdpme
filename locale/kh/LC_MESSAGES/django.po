@@ -39,3 +39,126 @@ msgstr "ការវាស់ស្ទង់"
 
 msgid "School Management"
 msgstr "ប្រពន្ធគ្រប់គ្រងសាលា"
+
+#-----------------report----------------
+
+msgid "Classroom Attendance"
+msgstr "វត្តមានតាមថ្នាក់"
+
+msgid "Attendance Summary"
+msgstr "តារាងសង្ខេបវត្តមាន"
+
+msgid "Data Audit"
+msgstr "ត្រួតពិនិត្យទិន្នន័យ"
+
+msgid "Daily Attendance"
+msgstr "សម្រង់វត្តមានប្រចាំថ្ងៃ"
+
+msgid "Class List"
+msgstr "បញ្ជីថ្នាក់រៀន"
+
+msgid "Exit Surveys List"
+msgstr "បញ្ជីសិស្សឈប់រៀន"
+
+msgid "Student Lag Report"
+msgstr "របាយការណ៍សិស្សរៀនយឺតឬ​សិស្សរៀនមិនត្រូវកម្រិតអាយុ"
+
+msgid "Student Evaluation Report"
+msgstr "របាយការណ៍វាយតម្លៃសិស្ស"
+
+msgid "Student Achievement Test"
+msgstr "វិញ្ញាសារប្រឡងរបស់សិស្ស"
+
+msgid "Student Medical Report"
+msgstr "របាយការណ៍ពិនិត្យសុខភាពរបស់សិស្ស"
+
+msgid "Student Dental Report"
+msgstr "របាយការណ៍សុខភាពមាត់ធ្មេញរបស់សិស្ស"
+
+msgid "Student Dental Summary Report"
+msgstr "របាយការណ៍សរុបទៅពេទ្យធ្មេញ"
+
+msgid "Student Promoted Report"
+msgstr "របាយការណ៍សិស្សឡើងថ្នាក់"
+
+msgid "Students Promoted Times Report"
+msgstr "របាយការណ៍ចំនួនដងនៃការឡើងថ្នាក់"
+
+msgid "Students Not Enrolled in Public School Report"
+msgstr "របាយការណ៍សិស្សមិនចុះឈ្មោះទៅរៀននៅសាលារដ្ឋ"
+
+#todo
+#msgid "Public School Report"
+#msgstr ""
+
+#todo
+#msgid "Unapproved Absence With NO Comment"
+#msgstr
+
+#todo
+#msgid "Students Integrated in Public school Report "
+#msgstr ""
+
+#todo
+#msgid "Advanced Report"
+#msgstr ""
+
+msgid "M&E Summary Report"
+msgstr "របាយការណ៍សង្ខេបនៃសាលាទាំងមូល"
+
+msgid "Students Lag Summary Report"
+msgstr "របាយការណ៍សង្ខេបសិស្សរៀនមិនទាន់ត្រូវកម្រិត"
+
+msgid "Anomalous Data"
+msgstr "ទិន្នន័យមិនពេញលេញ"
+
+#-----------------attendance----------------
+
+msgid "Take Attendance"
+msgstr "យកវត្តមាន"
+
+msgid "Modify Attendance Calendars"
+msgstr "រៀបចំកាលវិភាគថ្ងៃរៀនរបស់សាលា"
+
+#-----------------Surveys----------------
+
+msgid "Intake Survey"
+msgstr "ចុះឈ្មោះសិស្សចូលរៀន"
+
+msgid "Exit Survey"
+msgstr "បញ្ឈប់ការសិក្សារបស់សិស្ស"
+
+msgid "Post-Exit Survey"
+msgstr "លប់ឈ្មោះសិស្សចេញពីបញ្ជីសាលារៀន"
+
+msgid "Spiritual Activities"
+msgstr "សកម្មភាពនៃសេចក្តីជំនឿ"
+
+msgid "Health Form"
+msgstr "បំពេញទម្រង់សុខភាព"
+
+#--------------School Management---------------
+
+msgid "Student Information"
+msgstr "ព័ត៌មានរបស់សិស្ស"
+
+msgid "Enrolment"
+msgstr "ការចុះឈ្មោះ"
+
+msgid "Discipline"
+msgstr "ការដាក់ពិន័យ"
+
+msgid "Manage Teachers"
+msgstr "គ្រូក្នុងកម្មវិធីសាលា"
+
+msgid "Manage Classrooms"
+msgstr "ថ្នាក់រៀនក្នុងកម្មវិធីសាលា"
+
+msgid "Manage Classroom Assignments"
+msgstr "គ្រូបន្ទុកថ្នាក់នីមួយៗ"
+
+msgid "Input Achievement Tests"
+msgstr "ដាក់បញ្ចូលភាគរយវិញ្ញាសារប្រឡងសិស្ស"
+
+msgid "Input Student Evaluations"
+msgstr "ដាក់បញ្ចូលភាគរយរង្វាយតម្លៃសិស្ស"
