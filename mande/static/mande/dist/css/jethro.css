@@ -25,3 +25,6 @@ ul.buttonlist li{
 .narrow-select.form-control{
   width:6em;
 }
+.navbar-right .active{
+  color: red;
+}
