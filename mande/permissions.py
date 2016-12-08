@@ -29,7 +29,7 @@ perms_required = {
 	'academic_form_single': {'mande.view_academic_form_single'},
 	'attendance_days': {'mande.view_attendance_days'},
 	'classroomenrollment_individual': {'mande.view_classroomenrollment_individual'},
-	'anomolous_data': {'mande.view_anomolous_data'},
+	'anomalous_data': {'mande.view_anomalous_data'},
 	'students_lag_summary': {'mande.view_students_lag_summary'},
 	'data_audit': {'mande.view_data_audit'},
 	'studentevaluation_select': {'mande.view_studentevaluation_select'},

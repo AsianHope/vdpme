@@ -60,7 +60,7 @@ urlpatterns = patterns('',
     url(r'^reports/students_intergrated_in_public_school/$', views.students_intergrated_in_public_school, name='students_intergrated_in_public_school'),
 
     url(r'^reports/students_lag_summary/$', views.students_lag_summary, name='students_lag_summary'),
-    url(r'^reports/anomolous_data/$', views.anomolous_data, name='anomolous_data'),
+    url(r'^reports/anomalous_data/$', views.anomalous_data, name='anomalous_data'),
     url(r'^reports/advanced_report/$', views.advanced_report, name='advanced_report'),
 
 
@@ -141,7 +141,7 @@ activity_map = [
             {'name':'attendance_summary_report','display':'Attendance Summary'},
             {'name':'data_audit','display':'Data Audit'},
             {'name':'class_list','display':'Class List'},
-            {'name':'exit_surveys_list','display':'Exit Surveys List '},
+            {'name':'exit_surveys_list','display':'Exit Surveys List'},
             {'name':'student_lag_report','display':'Student Lag Report'},
             {'name':'student_evaluation_report','display':'Student Evaluation Report'},
             {'name':'student_achievement_test_report','display':'Student Achievement Test'},
@@ -154,7 +154,7 @@ activity_map = [
             {'name':'students_intergrated_in_public_school','display':'Students Intergrated In Public School Report'},
             {'name':'mande_summary_report','display':'M&E Summary Report'},
             {'name':'students_lag_summary','display':'Students Lag Summary Report'},
-            {'name':'anomolous_data','display':'Anomolous Data'},
+            {'name':'anomalous_data','display':'Anomalous Data'},
             {'name':'advanced_report','display':'Advanced Report'}
 
         ],

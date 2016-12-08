@@ -1089,13 +1089,13 @@ Anamolous data report
  - get students have intake survey date in future
 *****************************************************************************
 '''
-def anomolous_data(request):
+def anomalous_data(request):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
       future_students = IntakeSurvey.objects.all().filter(date__gte=date.today().isoformat()).order_by('student_id')
 
-      return render(request, 'mande/anomolous_data_report.html',
+      return render(request, 'mande/anomalous_data_report.html',
                             {
                                 'future_students' : future_students,
                             })
