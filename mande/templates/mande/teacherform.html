@@ -11,21 +11,21 @@ Manage Teachers
 <div class="col-md-12">
 
 </div>
-<div class="col-md-3"><ul>
-  <h5>Active</h5>
-  {% for teacher in current_teachers %}
-    <li><a href = "{% url 'teacher_form' %}{{teacher.teacher_id}}">{{teacher}}</a></li>
-  {% endfor %}
-</ul></div>
-<div class="col-md-3"><ul>
-  <h5>Inactive</h5>
-  {% for teacher in inactive_teachers %}
-    <li><a href = "{% url 'teacher_form' %}{{teacher.teacher_id}}">{{teacher}}</a></li>
-  {% endfor %}
-</ul></div>
-<div class="col-md-3">
-<form action = "{% url 'teacher_form' teacher_id %}" method="post">
+<div class="col-md-4">
+  <ul>
+    {% if status == 'active' %}
+      <h5>Active Teacher</h5>
+    {% else %}
+      <h5>Inactive Teacher</h5>
+    {% endif %}
+    {% for teacher in current_teachers %}
+      <li><a href = "{% url 'teacher_form' status teacher.teacher_id %}">{{teacher}}</a></li>
+    {% endfor %}
+  </ul>
+</div>
 
+<div class="col-md-4">
+<form action = "{% url 'teacher_form' status teacher_id %}" method="post">
     {{ form|bootstrap }}
     {% csrf_token %}
     <div class="col-md-12">
@@ -33,12 +33,21 @@ Manage Teachers
     </div>
 </form>
 </div>
-<div class="col-md-3">
+<div class="col-md-2">
   {% if action == None %}
-    <a href = "{% url 'teacher_form' %}" role="button" class="btn btn-success">Adding a teacher</a>
+    <a href = "{% url 'teacher_form' status %}" role="button" class="btn btn-success">Adding a teacher</a>
   {% else %}
-    <a href = "{% url 'teacher_form' %}" role="button" class="btn btn-danger">Add a teacher?</a>
+    <a href = "{% url 'teacher_form' status %}" role="button" class="btn btn-danger">Add a teacher?</a>
   {% endif %}
 </div>
+<div class="col-md-2">
+   {% if status == 'active' %}
+    <a href = "{% url 'teacher_form' 'inactive' %}" role="button" class="btn btn-warning">Show Inactive Teacher</a>
+   {% else %}
+   <a href = "{% url 'teacher_form' 'active' %}" role="button" class="btn btn-warning">Show Active Teacher</a>
+   {% endif %}
+
+</div>
+
 
 {% endblock %}

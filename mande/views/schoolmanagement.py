@@ -267,12 +267,15 @@ Teacher Form
  - process a TeacherForm and log the action
 *****************************************************************************
 '''
-def teacher_form(request, teacher_id=0):
+def teacher_form(request,status='active',teacher_id=0):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
-      current_teachers = Teacher.objects.filter(active=True)
-      inactive_teachers = Teacher.objects.filter(active=False)
+      if status == 'active':
+          current_teachers = Teacher.objects.filter(active=True)
+      else:
+          current_teachers = Teacher.objects.filter(active=False)
+
       action = None
 
       if int(teacher_id)>0:
@@ -283,6 +286,8 @@ def teacher_form(request, teacher_id=0):
         action = None
 
       if request.method == 'POST':
+
+
         form = TeacherForm(request.POST, instance=instance)
         if form.is_valid():
             instance = form.save()
@@ -293,7 +298,8 @@ def teacher_form(request, teacher_id=0):
                                   font_awesome_icon='fa-street-view')
             log.save()
             #then return
-            return HttpResponseRedirect(reverse('teacher_form'))
+            print reverse('teacher_form')
+            return HttpResponseRedirect(reverse('teacher_form')+status)
       else:
             form = TeacherForm(instance=instance)
 
@@ -301,7 +307,7 @@ def teacher_form(request, teacher_id=0):
                 'teacher_id':teacher_id,
                 'current_teachers':current_teachers,
                 'action':action,
-                'inactive_teachers':inactive_teachers}
+                'status':status}
       return render(request, 'mande/teacherform.html', context)
     else:
       raise PermissionDenied
@@ -831,7 +837,7 @@ def publicschool_form(request, student_id=0,id=None):
             else:
                 # add
                 form = StudentPublicSchoolHistoryForm(request.POST)
-                
+
             if form.is_valid():
                 #process
                 form.save()

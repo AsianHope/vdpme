@@ -90,7 +90,8 @@ urlpatterns = patterns('',
     url(r'^school-management/discipline/$', views.discipline_form, name='discipline_form'),
 
     url(r'^school-management/teachers/$', views.teacher_form, name='teacher_form'),
-    url(r'^school-management/teachers/(?P<teacher_id>\d+)/$', views.teacher_form, name='teacher_form'),
+    url(r'^school-management/teachers/(?P<status>[\w-]+)/$', views.teacher_form, name='teacher_form'),
+    url(r'^school-management/teachers/(?P<status>[\w-]+)/(?P<teacher_id>\d+)/$', views.teacher_form, name='teacher_form'),
 
     url(r'^school-management/classrooms/$', views.classroom_form, name='classroom_form'),
     url(r'^school-management/classrooms/(?P<classroom_id>\d+)/$', views.classroom_form, name='classroom_form'),
