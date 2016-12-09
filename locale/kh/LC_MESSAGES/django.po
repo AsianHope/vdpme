@@ -162,3 +162,6 @@ msgstr "ដាក់បញ្ចូលភាគរយវិញ្ញាសារ
 
 msgid "Input Student Evaluations"
 msgstr "ដាក់បញ្ចូលភាគរយរង្វាយតម្លៃសិស្ស"
+
+msgid "Students Attendance on %(attendance_date)s to %(attendance_end_date)s"
+msgstr "វត្តមានសិស្សចាប់ពី​​ %(attendance_date)s​ ដល់ %(attendance_end_date)s"

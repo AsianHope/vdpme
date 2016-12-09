@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load mandefilters %}
 {% block title %}
-Students Attendance on {{ attendance_date }} to {{ attendance_end_date }}
+{% blocktrans %}Students Attendance on {{ attendance_date }} to {{ attendance_end_date }}{% endblocktrans %}
 {% if current_site and current_site != 'None' %} ({{current_site}}) {% endif %} {% if current_classroom and current_classroom != 'None' %} ({{current_classroom}}) {% endif %}
 {% endblock %}
 
@@ -95,7 +96,7 @@ $(function() {
       //     window.location.href = url
       // });
     });
-    
+
 // check select option for disable submit button
 function disableSubmit(){
     if((document.getElementById('site').value == "None") && (document.getElementById('classroom').value == "None")) {
