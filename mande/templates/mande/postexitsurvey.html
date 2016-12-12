@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load bootstrap %}
 {% block title %}
-Performing Post Exit Survey
+{% trans "Performing Post Exit Survey" %}
 {% endblock %}
 
 {% block content %}
@@ -13,7 +14,7 @@ Performing Post Exit Survey
     {{ form|bootstrap }}
     {% csrf_token %}
     <div class="col-md-12">
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
     </div>
 </form>
 </div>

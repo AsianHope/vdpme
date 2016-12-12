@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load bootstrap %}
 {% load mandefilters %}
 {% block title %}
-Adding a Student Evaluation for {{student_id|name_by_sid}}
+{% trans "Adding a Student Evaluation for " %}{{student_id|name_by_sid}}
 {% endblock %}
 
 {% block content %}

@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load mandefilters %}
 {% block title %}
-Student Evaluation Report {% if selected_classroom %} {{selected_classroom}} {% endif %}
+{% trans "Student Evaluation Report " %}{% if selected_classroom %} {{selected_classroom}} {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -11,10 +12,10 @@ Student Evaluation Report {% if selected_classroom %} {{selected_classroom}} {% 
     <div class="col-md-3">
 
       <table class="table table-responsive" id="classlist">
-        <thead><tr><th>Classroom</th></tr></thead>
+        <thead><tr><th>{% trans "Classroom" %}</th></tr></thead>
         <tbody>
           <tr><td>
-            <a href = "{% url 'student_evaluation_report' %}" role="button" class="btn btn-xs btn-warning">All Classrooms</a>
+            <a href = "{% url 'student_evaluation_report' %}" role="button" class="btn btn-xs btn-warning">{% trans "All Classrooms" %}</a>
           </td></tr>
         {% for classroom in active_classrooms %}
           <tr><td>
@@ -28,15 +29,15 @@ Student Evaluation Report {% if selected_classroom %} {{selected_classroom}} {% 
     <div class="col-md-9">
           <table class="table table-responsive table-bordered table-striped table-hover" id="evaluationReportTable">
             <thead><tr>
-              <th>Site</th>
-              <th>Evaluation Date</th>
-              <th>Student</th>
-              <th>Academic</th>
-              <th>Study/Learning</th>
-              <th>Life/Personal</th>
-              <th>Hygiene</th>
-              <th>Christian Growth</th>
-              <th>Comments</th>
+              <th>{% trans "Site" %}</th>
+              <th>{% trans "Evaluation Date" %}</th>
+              <th>{% trans "Student" %}</th>
+              <th>{% trans "Academic" %}</th>
+              <th>{% trans "Study/Learning" %}</th>
+              <th>{% trans "Life/Personal" %}</th>
+              <th>{% trans "Hygiene" %}</th>
+              <th>{% trans "Christian Growth" %}</th>
+              <th>{% trans "Comments" %}</th>
 
             </tr></thead>
             <tbody>

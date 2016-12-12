@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load mandefilters %}
 {% block title %}
-  Student Attendance Detail Report {% if start_date and end_date %} {{start_date}} to {{end_date}} {% endif %}
+  {% Student Attendance Detail Report {% if start_date and end_date %} {{start_date}} to {{end_date}} {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -10,13 +11,13 @@
       <table class="table table-bordered table-striped table-hover" id="attendanceReportTable">
         <thead>
           <tr>
-            <th>Site</th>
-            <th>Student</th>
-            <th>Date</th>
-            <th>Grade</th>
-            <th>Description</th>
-            <th>Absence code</th>
-            <th>Note</th>
+            <th>{% trans "Site" %}</th>
+            <th>{% trans "Student" %}</th>
+            <th>{% trans "Date" %}</th>
+            <th>{% trans "Grade" %}</th>
+            <th>{% trans "Description" %}</th>
+            <th>{% trans "Absence code" %}</th>
+            <th>{% trans "Note" %}</th>
           </tr>
         </thead>
         <tbody>

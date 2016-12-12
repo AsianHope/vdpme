@@ -1,19 +1,20 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load mandefilters %}
 {% block title %}
-Class List
+{% trans "Class List" %}
 {% endblock %}
 
 {% block content %}
 <div class="col-md-9">
       <table class="table table-bordered table-striped table-hover" id="classList">
         <thead><tr>
-          <th style="width:7em;">Site</th>
-          <th>Grade</th>
-          <th>Description</th>
-          <th>Teacher(s)</th>
-          <th>Students</th>
-          <th>% Female</th>
+          <th style="width:7em;">{% trans "Site" %}</th>
+          <th>{% trans "Grade" %}</th>
+          <th>{% trans "Description" %}</th>
+          <th>{% trans "Teacher(s)" %}</th>
+          <th>{% trans "Students" %}</th>
+          <th>{% trans "% Female" %}</th>
         <!--  <th>Enroll Students</th> -->
         <tbody>
           {% for classroom,class in class_list.items %}

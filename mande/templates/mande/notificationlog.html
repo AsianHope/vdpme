@@ -6,7 +6,7 @@ Notification Log
 {% block content %}
 <table id="log" class="table table-bordered table-striped table-hover">
   <thead>
-    <tr><th>Type</th><th>Date</th><th>User</th><th>Action</th></tr>
+    <tr><th>{% trans "Type" %}</th><th>{% trans "Date" %}</th><th>{% trans "User" %}</th><th>{% trans "Action" %}</th></tr>
   <thead>
   <tbody>
 {% for notification in notifications %}

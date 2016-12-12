@@ -1,13 +1,14 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block title %}
-Modify attendance calendar for:
+{% trans "Modify attendance calendar for" %}:
 {% endblock %}
 
 {% block content %}
 <div class="col-md-9">
   <table id="classroomDataTable" class="table table-bordered table-hover">
     <thead>
-      <tr><th>Site</th><th>Grade</th><th>Description</th><th>Edit</th></tr>
+      <tr><th>{% trans "Site" %}</th><th>{% trans "Grade" %}</th><th>{% trans "Description" %}</th><th>{% trans "Edit" %}</th></tr>
     </thead>
     <tbody>
       {% for classroom in classrooms %}
@@ -18,7 +19,7 @@ Modify attendance calendar for:
           {% if classroom.attendance_calendar %}
             <td><a href = "{% url 'attendance_days' classroom.attendance_calendar.classroom_id attendance_date %}" role="button" class="btn btn-xs btn-danger">Modify Master Attendance Calendar ({{ classroom.attendance_calendar }})</a></td>
           {% else %}
-            <td><a href = "{% url 'attendance_days' classroom.classroom_id attendance_date %}" role="button" class="btn btn-xs btn-success">Modify Attendance Calendar</a></td>
+            <td><a href = "{% url 'attendance_days' classroom.classroom_id attendance_date %}" role="button" class="btn btn-xs btn-success">{% trans "Modify Attendance Calendar" %}</a></td>
           {% endif %}
       {% endfor %}
       </tbody>

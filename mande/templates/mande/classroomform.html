@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% load i18n%}
 {% load bootstrap %}
 {% block title %}
-Manage Classrooms
+{% trans "Manage Classrooms" %}
 {% if classroom_id > 0 %}
-<small>editing {{selected_classroom}}</action>
+<small>{% trans "editing" %} {{selected_classroom}}</action>
 {% else %}
-<small>adding a classroom</small>
+<small>{% trans "adding a classroom" %}</small>
 {% endif %}
 {% endblock %}
 
@@ -13,7 +14,7 @@ Manage Classrooms
 <div class="col-md-9">
   <table id="classroomDataTable" class="table table-bordered table-hover">
     <thead>
-      <tr><th>Site</th><th>Grade</th><th>Description</th><th>Active</th><th>Edit</th></tr>
+      <tr><th>{% trans "Site" %}</th><th>{% trans "Grade" %}</th><th>{% trans "Description" %}</th><th>{% trans "Active" %}</th><th>{% trans "Edit" %}</th></tr>
     </thead>
     <tbody>
       {% for classroom in current_classrooms %}
@@ -22,7 +23,7 @@ Manage Classrooms
           <td>{{ classroom.get_cohort_display }}</td>
           <td>{{ classroom.classroom_number }}</td>
           <td>{{ classroom.active }}</td>
-          <td><a href = "{% url 'classroom_form' %}{{classroom.classroom_id}}" role="button" class="btn btn-xs btn-success">Edit</a></td>
+          <td><a href = "{% url 'classroom_form' %}{{classroom.classroom_id}}" role="button" class="btn btn-xs btn-success">{% trans "Edit" %}</a></td>
       {% endfor %}
       </tbody>
   </table>
@@ -34,16 +35,16 @@ Manage Classrooms
     {{ form|bootstrap }}
     {% csrf_token %}
     <div class="col-md-12">
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
       {% if classroom_id > 0 %}
-        <a href = "{% url 'classroom_form' %}" class="btn btn-success" role="button" id="add_new_class">Add a new classroom</a>
+        <a href = "{% url 'classroom_form' %}" class="btn btn-success" role="button" id="add_new_class">{% trans "Add a new classroom" %}</a>
       {%endif%}
   </div>
 </form>
 </div>
 {% if enrollments != None %}
 <div class = "col-md-4">
-  <h3>Currently Enrolled Students</h3>
+  <h3>{% trans "Currently Enrolled Students" %}</h3>
   <ul>
     {% for enrollment in enrollments %}
       <li>{{enrollment.student_id}}</li>
