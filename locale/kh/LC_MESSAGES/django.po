@@ -1,18 +1,18 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Jethro Khmer Translation
+# Copyright (C) 2016 Asian Hope
+# This file is distributed under the same license as the Jethro package.
+# SANG, Solida <ssang@asianhope.org>, 2016.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: Jethro 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-12-08 08:43+0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2016-12-08 08:43+0700\n"
+"Last-Translator: SANG, Solida <ssang@asianhope.org>\n"
+"Language-Team: Asian Hope MIS <mis@asianhope.org>\n"
+"Language: Khmer\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -99,9 +99,9 @@ msgstr "របាយការណ៍សិស្សមិនចុះឈ្មោ
 #msgid "Students Integrated in Public school Report "
 #msgstr ""
 
-#todo
-#msgid "Advanced Report"
-#msgstr ""
+
+msgid "Advanced Report"
+msgstr "Advanced Report"
 
 msgid "M&E Summary Report"
 msgstr "របាយការណ៍សង្ខេបនៃសាលាទាំងមូល"
@@ -161,7 +161,910 @@ msgid "Input Achievement Tests"
 msgstr "ដាក់បញ្ចូលភាគរយវិញ្ញាសារប្រឡងសិស្ស"
 
 msgid "Input Student Evaluations"
-msgstr "ដាក់បញ្ចូលភាគរយរង្វាយតម្លៃសិស្ស"
+msgstr "Input Student Evaluations"
 
 msgid "Students Attendance on %(attendance_date)s to %(attendance_end_date)s"
 msgstr "វត្តមានសិស្សចាប់ពី​​ %(attendance_date)s​ ដល់ %(attendance_end_date)s"
+
+msgid "Site"
+msgstr "Site"
+
+msgid "Grade"
+msgstr "Grade"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Present"
+msgstr "Present"
+
+msgid "Absent"
+msgstr "Absent"
+
+msgid "Select Site"
+msgstr "Select Site"
+
+msgid "Select Classroom"
+msgstr "Select Classroom"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Recorded"
+msgstr "Recorded"
+
+msgid "Updated"
+msgstr "Updated"
+
+msgid "a Semester Test for"
+msgstr "a Semester Test for"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "SID"
+msgstr "SID"
+
+#---------------- advanced report---------
+
+msgid "Go Back to Filter"
+msgstr "Go Back to Filter"
+
+msgid "Choose a Column"
+msgstr "Choose a Column"
+
+msgid "Show Result"
+msgstr "Show Result"
+
+msgid "Address"
+msgstr "Address"
+
+msgid "Classroom"
+msgstr "Classroom"
+
+msgid "Dob"
+msgstr "Dob"
+
+msgid "Enrolled"
+msgstr "Enrolled"
+
+msgid "Gender"
+msgstr "Gender"
+
+msgid "Grade Appropriate"
+msgstr "Grade Appropriate"
+
+msgid "Grade Current"
+msgstr "Grade Current"
+
+msgid "Grade Last"
+msgstr "Grade Last"
+
+msgid "Guardian 1 Employment"
+msgstr "Guardian 1 Employment"
+
+msgid "Guardian 1 Name"
+msgstr "Guardian 1 Name"
+
+msgid "Guardian 1 Phone"
+msgstr "Guardian 1 Phone"
+
+msgid "Guardian 1 Profession"
+msgstr "Guardian 1 Profession"
+
+msgid "Guardian 1 Relationship"
+msgstr "Guardian 1 Relationship"
+
+msgid "Guardian 2 Employment"
+msgstr "Guardian 2 Employment"
+
+msgid "Guardian 2 Name"
+msgstr "Guardian 2 Name"
+
+msgid "Guardian 2 Phone"
+msgstr "Guardian 2 Phone"
+
+msgid "Guardian 2 Profession"
+msgstr "Guardian 2 Profession"
+
+msgid "Guardian 2 Relationship"
+msgstr "Guardian 2 Relationship"
+
+msgid "ID"
+msgstr "ID"
+
+msgid "Minors"
+msgstr "Minors"
+
+
+msgid "Minors Encouraged"
+msgstr "Minors Encouraged"
+
+msgid "Minors In Other School"
+msgstr "Minors In Other School"
+
+msgid "Minors In Public School"
+msgstr "Minors In Public School" 
+
+msgid "Minors Profession"
+msgstr "Minors Profession"
+
+msgid "Minors Training"
+msgstr "Minors Training"
+
+msgid "Minors Training Type"
+msgstr "Minors Training Type"
+
+msgid "Minors Working"
+msgstr "Minors Working"
+
+msgid "Public School Name"
+msgstr "Public School Name"
+
+msgid "Reasons"
+msgstr "Reasons"
+
+msgid "VDP Grade"
+msgstr "VDP Grade"
+
+msgid "Date of Intake"
+msgstr "Date of Intake"
+
+msgid "Date of birth"
+msgstr "Date of birth"
+
+msgid "Current grade in Public School"
+msgstr "Current grade in Public School"
+
+msgid "Last grade in Public School"
+msgstr "Last grade in Public School"
+
+msgid "Reasons not Attending School"
+msgstr "Reasons not Attending School"
+
+msgid "Notes"
+msgstr "Notes"
+
+msgid "School"
+msgstr "School"
+
+msgid "year"
+msgstr "year"
+
+msgid "Select Gender"
+msgstr "Select Gender"
+
+msgid "Male"
+msgstr "Male"
+
+msgid "Female"
+msgstr "Female"
+
+msgid "Select Guardian 1 Relationship"
+msgstr "Select Guardian 1 Relationship"
+
+msgid "No guardian"
+msgstr "No guardian"
+
+msgid "Father"
+msgstr "Father"
+
+msgid "Grandfather"
+msgstr "Grandfather"
+
+msgid "Grandmother"
+msgstr "Grandmother"
+
+msgid "Other"
+msgstr "Other"
+
+msgid "Aunt"
+msgstr "Aunt"
+
+msgid "Mother"
+msgstr "Mother"
+
+msgid "Uncle"
+msgstr "Uncle"
+
+msgid "Select Guardian 1 Employment"
+msgstr "Select Guardian 1 Employment"
+
+msgid "1 - Very Low Wage"
+msgstr "1 - Very Low Wage"
+
+msgid "Middle Class (or higher)"
+msgstr "Middle Class (or higher)"
+
+msgid "Select Guardian 2 Employment"
+msgstr "Select Guardian 2 Employment"
+
+msgid "Select Guardian 2 Relationship"
+msgstr "Select Guardian 2 Relationship"
+
+msgid "Select Minors Encouraged"
+msgstr "Select Minors Encouraged"
+
+msgid "Yes"
+msgstr "Yes"
+
+msgid "No"
+msgstr "No"
+
+msgid "Not Applicable"
+msgstr "Not Applicable"
+
+msgid "Select Minors Training"
+msgstr "Select Minors Training"
+
+msgid "Select VDP Grade"
+msgstr "Select VDP Grade"
+
+msgid "Select Enrolled"
+msgstr "Select Enrolled"
+
+msgid "Select Current Grade in Public School"
+msgstr "Select Current Grade in Public School"
+
+msgid "Select Last Grade in Public School"
+msgstr "Select Last Grade in Public School"
+
+msgid "Current Grade"
+msgstr "Current Grade"
+
+msgid "Lag"
+msgstr "Lag"
+
+
+
+#---------------------------------------
+
+msgid "Input Student Achievment Test"
+msgstr "Input Student Achievement test"
+
+msgid "Level"
+msgstr "Level"
+
+msgid "Math"
+msgstr "Math"
+
+msgid "Promote?"
+msgstr "Promote?"
+
+msgid "Submit"
+msgstr "Submit"
+
+msgid "Evaluation"
+msgstr "Evaluation"
+
+msgid "Student"
+msgstr "Student"
+
+msgid "Code"
+msgstr "Code"
+
+msgid "Guardian 1"
+msgstr "Guardian 1"
+
+msgid "Phone Number"
+msgstr "Phone Number"
+ 
+msgid "Guardian 2"    
+msgstr "Guardian 2"
+ 
+msgid "Update"
+msgstr "Update"
+ 
+msgid "Note"
+msgstr "Note"
+ 
+msgid "Update Attendance"
+msgstr "Update Attendance"
+
+msgid "Intake Date"
+msgstr "Intake Date"
+
+msgid "Apply this calendar to all classes at %(classroom.school_id)s"
+msgstr "Apply this calendar to all classes at %(classroom.school_id)s"
+
+msgid "Edit"
+msgstr "Edit"
+
+msgid "Modify Attendance Calendar"
+msgstr "Modify Attendance Calendar"
+
+msgid "Academic preformance for"
+msgstr "Academic preformance for"
+
+
+msgid "Attendance Summary Report"
+msgstr "Attendance Summary Report"
+
+msgid "Unapproved"
+msgstr "Unapproved"
+
+msgid "Approved"
+msgstr "Approved"
+
+msgid "Total"
+msgstr "Total"
+
+
+msgid "Teacher(s)"
+msgstr "Teacher("
+
+msgid "Classroom Enrollment"
+msgstr "Classroom Enrollment"
+
+msgid "Currently Selected Students"
+msgstr "Currently Selected Students"
+
+msgid "Enroll"
+msgstr "Enroll"
+
+msgid "Students Currently Enrolled in"
+msgstr "Students Currently Enrolled in"
+
+msgid "Enrollment Date"
+msgstr "Enrollment Date"
+
+msgid "Drop Date"
+msgstr "Drop Date"
+
+msgid "Drop this class"
+msgstr "Drop this class"
+
+msgid "Editing Enrollment Record"
+msgstr "Editing Enrollment Record"
+
+msgid "Unassigned Classrooms"
+msgstr "Unassigned Classrooms"
+
+msgid "Current Assignments"
+msgstr "Current Assignments"
+
+
+msgid "editing"
+msgstr "editing"
+
+msgid "Problem"
+msgstr "Problem"
+
+msgid "adding a classroom"
+msgstr "adding a classroom"
+
+msgid "Active"
+msgstr "Active"
+
+msgid "Add a new classroom"
+msgstr "Add a new classroom"
+
+msgid "Jul. %(graduation|date:'Y')s"
+msgstr "Jul. %(graduation|date:'Y')s"
+
+msgid "Currently Enrolled Students"
+msgstr "Currently Enrolled Students"
+
+msgid "Error - IntakeSurvey does not exist"
+msgstr "Error - IntakeSurvey does not exist"
+
+msgid "Error - No Exit Survey on Record"
+msgstr "Error -No Exit Survey on Record"
+
+msgid "Error - You can't do that!"
+msgstr "Error - You can't do that!"
+
+msgid "Performing Exit Survey"
+msgstr "Performing Exit Survey"
+
+msgid "Student ID"
+msgstr "Student ID"
+
+msgid "Exit Date"
+msgstr "Exit Date"
+
+msgid "Grade In VDP When Exit"
+msgstr "Grade In VDP When Exit"
+
+msgid "Reason"
+msgstr "Reason"
+
+msgid "Comment"
+msgstr "Comment"
+
+msgid "Already Preformed"
+msgstr "Already Preformed"
+
+msgid "Preform"
+msgstr "Preform"
+
+msgid "Search"
+msgstr "Search"
+
+msgid "Detail"
+msgstr "Detail"
+ 
+msgid "Student ID:"
+msgstr "Student ID:"
+ 
+msgid "Update this Student's Information?"
+msgstr "Update this Student's Information?"
+ 
+msgid "Enroll this student in VDP"
+msgstr "Enroll this student in VDP"
+ 
+msgid "Perform an exit survey for this student"
+msgstr "Perform an exit survey for this student"
+ 
+msgid "Perform post-exit survey for this student"
+msgstr "Perform post-exit survey for this student"
+ 
+msgid "Exit Survey performed on "
+msgstr "Exit Survey performed on "
+ 
+msgid "Student will leave the program on "
+msgstr "Student will leave the program on "
+ 
+msgid " A post-exit survey has been performed"
+msgstr " A post-exit survey has been performed"
+ 
+msgid "Last Update: "
+msgstr "Last Update: "
+ 
+msgid "Gender: "
+msgstr "Gender: "
+ 
+msgid "DOB: "
+msgstr "DOB: "
+ 
+msgid "Enrolled: "
+msgstr "Enrolled: "
+ 
+msgid "Expected 6th Grade Graduation: "
+msgstr "Expected 6th Grade Graduation: "
+ 
+msgid "VDP Grade when Enrolled: "
+msgstr "VDP Grade when Enrolled: "
+ 
+msgid "Current VDP Grade:"
+msgstr "Current VDP Grade:"
+ 
+msgid "Public School Current Grade"
+msgstr "Public School Current Grade"
+ 
+msgid "Grades/Years to achieve"
+msgstr "Grades/Years to achieve"
+ 
+msgid "Academic Performance"
+msgstr "Academic Performance"
+ 
+msgid "Course History"
+msgstr "Course History"
+ 
+msgid "Contact"
+msgstr "Contact"
+ 
+msgid "Household"
+msgstr "Household"
+ 
+msgid "Health"
+msgstr "Health"
+ 
+msgid "Academics "
+msgstr "Academics "
+ 
+msgid "+ Add an achievement test"
+msgstr "+ Add an achievement test"
+ 
+msgid "Test Date"
+msgstr "Test Date"
+ 
+msgid "Test Grade"
+msgstr "Test Grade"
+ 
+msgid "Student Evaluations"
+msgstr "Student Evaluations"
+ 
+msgid "+ Add a student evaluation"
+msgstr "+ Add a student evaluation"
+ 
+msgid "Academic"
+msgstr "Academic"
+ 
+msgid "Study/Learning Skills"
+msgstr "Study/Learning Skills"
+ 
+msgid "Life Skills/Personal Development"
+msgstr "Life Skills/Personal Development"
+ 
+msgid "Hygeine Knowledge"
+msgstr "Hygeine Knowledge"
+ 
+msgid "Christian Growth"
+msgstr "Christian Growth"
+ 
+msgid "General Comments"
+msgstr "General Comments"
+ 
+msgid "Add Incident"
+msgstr "Add Incident"
+ 
+msgid "Date of Incident"
+msgstr "Date of Incident"
+ 
+msgid "Attendance Detail"
+msgstr "Attendance Detail"
+ 
+msgid "Year"
+msgstr "Year"
+ 
+msgid "+ Add a course"
+msgstr "+ Add a course"
+ 
+msgid "Date Dropped"
+msgstr "Date Dropped"
+ 
+msgid "Course"
+msgstr "Course"
+ 
+msgid "Public School History"
+msgstr "Public School History"
+ 
+msgid "+ Add a Public School History"
+msgstr "+ Add a Public School History"
+ 
+msgid "Acadimic Year"
+msgstr "Acadimic Year"
+ 
+msgid "Status"
+msgstr "Status"
+ 
+msgid "Enroll Date"
+msgstr "Enroll Date"
+ 
+msgid "School Name"
+msgstr "School Name"
+ 
+msgid "Reasons for not attending"
+msgstr "Reasons for not attending"
+ 
+msgid "Contact Information"
+msgstr "Contact Information"
+ 
+msgid "+Update this information?"
+msgstr "+Update this information?"
+ 
+msgid "Guardian 1:"
+msgstr "Guardian 1:"
+ 
+msgid "Guardian 2:"
+msgstr "Guardian 2:"
+ 
+msgid "Name:"
+msgstr "Name:"
+ 
+msgid "Phone:"
+msgstr "Phone:"
+ 
+msgid "Home Address"
+msgstr "Home Address"
+ 
+msgid "Home of Origin"
+msgstr "Home of Origin"
+ 
+msgid "Profession"
+msgstr "Profession"
+ 
+msgid "Income"
+msgstr "Income"
+ 
+msgid "Minors in Household"
+msgstr "Minors in Household"
+ 
+msgid "Minors in School (Public | Private)"
+msgstr "Minors in School (Public | Private)"
+ 
+msgid "Working Minors"
+msgstr "Working Minors"
+ 
+msgid "What are they doing for work?"
+msgstr "What are they doing for work?"
+
+ 
+msgid "Were they encouraged?"
+msgstr "Were they encouraged?"
+ 
+msgid "Did they receive any vocational training?"
+msgstr "Did they receive any vocational training?"
+ 
+msgid "What kind of vocational training did they receive?"
+msgstr "What kind of vocational training did they receive?"
+ 
+msgid "Checkups"
+msgstr "Checkups"
+ 
+msgid "Height"
+msgstr "Height"
+ 
+msgid "Weight"
+msgstr "Weight"
+ 
+msgid "Dentist Visits"
+msgstr "Dentist Visits"
+ 
+msgid "+ Add a dental visit"
+msgstr "+ Add a dental visit"
+ 
+msgid "Extractions"
+msgstr "Extractions"
+ 
+msgid "Sealent"
+msgstr "Sealent"
+ 
+msgid "Fillings"
+msgstr "Fillings"
+ 
+msgid "Endo"
+msgstr "Endo"
+ 
+msgid "Scaling"
+msgstr "Scaling"
+ 
+msgid "Pulped"
+msgstr "Pulped"
+ 
+msgid "Xray"
+msgstr "Xray"
+
+msgid "Performing Internal Intake"
+msgstr "Performing Internal Intake"
+
+msgid "Performing Intake Update"
+msgstr "Performing Intake Update"
+
+msgid "Editing Intake Survey for %(student)s"
+msgstr "Editing Intake Survey for %(student)s"
+
+msgid "Performing Intake Survey"
+msgstr "Performing Intake Survey"
+
+msgid "M&E Summary Report in %(start_view_date)s to %(view_date)s"
+msgstr "M&E Summary Report in %(start_view_date)s to %(view_date)s"
+
+msgid "Vietnamese"
+msgstr "Vietnamese"
+
+msgid "Students enrolled in grade plus Vietnamese"
+msgstr "Students enrolled in grade plus vietnamese"
+
+msgid "Only Vietnamese"
+msgstr "Only Vietnamese"
+
+msgid "Boys"
+msgstr "Boys"
+
+msgid "Girls"
+msgstr "Girls"
+
+msgid "English level"
+msgstr "English level"
+
+msgid "Students enrolled in English"
+msgstr "Students enrolled in English"
+
+msgid "English level %(i)s"
+msgstr "English level %(i)s"
+
+msgid "Catch-up school"
+msgstr "Catch-up school"
+ 
+msgid "Vietnamese only"
+msgstr "Vietnamese only"
+ 
+msgid "Total:"
+msgstr "Total:"
+ 
+msgid "Total Students"
+msgstr "Total Students"
+ 
+msgid "Achieved age appropriate level"
+msgstr "Achieved age appropriate level"
+ 
+msgid "of total"
+msgstr "of total"
+
+msgid "Action"
+msgstr "Action"
+
+msgid "Performing Post Exit Survey"
+msgstr "Performing Post Exit Survey"
+
+msgid "Post-Exit Survey Eligible Students"
+msgstr "Post-Exit Survey Eligible Students"
+
+msgid "Date of Exit"
+msgstr "Date of Exit"
+
+msgid "Perform"
+msgstr "Perform"
+
+msgid "Perform Post-Exit Survey"
+msgstr "Perform Post-Exit Survey"
+
+msgid "Public School Report"
+msgstr "Public School Report"
+ 
+msgid "Enrollment Date In VDP"
+msgstr "Enrollment Date In VDP"
+ 
+msgid "Pubic School Grade"
+msgstr "Pubic School Grade"
+ 
+msgid "Reason Not Attend Public School"
+msgstr "Reason Not Attend Public School"
+ 
+msgid "Not Attend"
+msgstr "Not Attend"
+ 
+msgid "Filter by:"
+msgstr "Filter by:"
+ 
+msgid "Clear Search"
+msgstr "Clear Search"
+
+msgid "Performing Spiritual Activities Survey"
+msgstr "Performing Spiritual Activities Survey"
+
+msgid "Student Achievement Test Report"
+msgstr "Student Achievement Test Report"
+
+msgid "Student daily absences"
+msgstr "Student daily absences"
+
+msgid "on"
+msgstr "on"
+
+msgid "All Classrooms"
+msgstr "All Classrooms"
+
+msgid "Student Attendance Detail Report"
+msgstr "Student Attendance Detail Report"
+
+msgid "Promote"
+msgstr "Promote"
+
+msgid "for"
+msgstr "for"
+
+msgid "to"
+msgstr "to"
+
+msgid "Filling"
+msgstr "Filling"
+
+msgid "Absence code"
+msgstr "Absence code"
+
+msgid "Student Evaluations for"
+msgstr "Student Evaluations for"
+
+msgid "Adding a Student Evaluation for"
+msgstr "Adding a Student Evaluation for"
+
+msgid "Study/Learning"
+msgstr "Study/Learning"
+
+msgid "Life/Personal"
+msgstr "Life/Personal"
+
+msgid "Hygiene"
+msgstr "Hygiene"
+
+msgid "Please select a classroom."
+msgstr "Please select a classroom."
+
+msgid "Evaluation Date"
+msgstr "Evaluation Date"
+
+msgid "Hygeine"
+msgstr "Hygeine"
+
+msgid "Comments"
+msgstr "Comments"
+
+msgid "Date Achieved Age Appropriate Level"
+msgstr "Date Achieved Age Appropriate Level"
+
+msgid "Intake Surveys"
+msgstr "Intake Surveys"
+
+msgid "At Grade Level?"
+msgstr "At Grade Level?"
+
+msgid "In Public School?"
+msgstr "In Public School?"
+
+msgid "Medical Visits"
+msgstr "Medical Visits"
+
+msgid "Student Promoted Times Report"
+msgstr "Student Promoted Times Report"
+
+msgid "How long in VDP Program"
+msgstr "How long in VDP Program"
+
+msgid "The Last Promoted Date"
+msgstr "The Last Promoted Date"
+
+msgid "The Last Promoted Date and Now"
+msgstr "The Last Promoted Date and Now"
+
+msgid "Promoted Times"
+msgstr "Promoted Times"
+
+#-------Students Integrated In Public School Report----
+
+msgid "Students Integrated In Public School Report"
+msgstr "Students Integrated In Public School Report"
+
+msgid "All Site"
+msgstr "All Site"
+
+msgid "Success!"
+msgstr "Success!"
+
+msgid "Take attendance for"
+msgstr "Take attendance for"
+
+msgid "This class does not meet today!"
+msgstr "This class does not meet today!"
+
+msgid "change the attendance calendar?"
+msgstr "change the attendance calendar?"
+
+msgid "Taking attendance for"
+msgstr "Taking attendance for"
+
+msgid "Unapproved Absence"
+msgstr "Unapproved Absence"
+
+msgid "Approved Absence"
+msgstr "Approved Absence"
+
+msgid "Active Teacher"
+msgstr "Active Teacher"
+
+msgid "Inactive Teacher"
+msgstr "Inactive Teacher"
+
+msgid "Adding a teacher"
+msgstr "Adding a teacher"
+
+msgid "All Students"
+msgstr "All Students"
+
+msgid "Add a teacher?"
+msgstr "Add a teacher?"
+
+msgid "Show Inactive Teacher"
+msgstr "Show Inactive Teacher"
+
+msgid "Current Students"
+msgstr "Current Students"
+
+msgid "Show Active Teacher"
+msgstr "Show Active Teacher"
+
+msgid "Unapproved Absence With No Comment"
+msgstr "Unapproved Absence With No Comment"
+
+msgid "Please perform an"
+msgstr "Please perform an"
+
+msgid "exit survey"
+msgstr "exit survey"
+
+msgid "first!"
+msgstr "first!"
+
+
