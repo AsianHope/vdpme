@@ -1,16 +1,17 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load mandefilters %}
 {% block title %}
-Students Integrated In Public School Report
+{% trans "Students Integrated In Public School Report" %}
 {% endblock %}
 
 {% block content %}
 <div class="col-md-9">
       <table class="table table-bordered table-striped table-hover" id="attendanceReportTable">
         <thead><tr>
-          <th>Site</th>
-          <th>Student</th>
-          <th>Current VDP Grade</th>
+          <th>{% trans "Site" %}</th>
+          <th>{% trans "Student" %}</th>
+          <th>{% trans "Current VDP Grade" %}</th>
         </tr></thead>
         <tbody>
           {% for student in intergrated_students %}

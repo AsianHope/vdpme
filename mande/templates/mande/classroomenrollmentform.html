@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load bootstrap %}
 {% block title %}
-Classroom Enrollment
+{% trans "Classroom Enrollment" %}
 {% if classroom != None %}
 <small>enrolling students in {{classroom}}</action>
 {% endif %}
@@ -15,7 +16,7 @@ Classroom Enrollment
       <div class = "col-md-4">
       {{form.classroom_id | bootstrap}}
       {{form.enrollment_date | bootstrap}}
-      <label for "selectedstudents">Currently Selected Students</label>
+      <label for "selectedstudents">{% trans "Currently Selected Students" %}</label>
       <ol id="selectedstudents">
       </ol>
 
@@ -26,7 +27,7 @@ Classroom Enrollment
         </div>
       {% endif %}
       <div class="col-md-12">
-        <button type="submit" class="btn btn-primary">Enroll</button>
+        <button type="submit" class="btn btn-primary">{% trans "Enroll" %}</button>
       </div>
   </form>
 
@@ -34,10 +35,11 @@ Classroom Enrollment
 </div>
 {% if classroom %}
 <div class="col-md-12">
-  <h2>Students Currently Enrolled in {{classroom}}</h2>
+  <h2>{% trans "Students Currently Enrolled in" %} {{classroom}}</h2>
     <table id="enrolled_students" class="table table-border table-striped table-hover">
       <thead>
-        <tr><th>Student</th><th>Gender</th><th>Enrollment Date</th><th>Drop Date</th></tr>
+        <tr><th>{% trans "Student" %}</th><th>{% trans "Gender" %}
+</th><th>{% trans "Enrollment Date" %}</th><th>{% trans "Drop Date" %</th></tr>
       </thead>
       {% for student in enrolled_students %}
       <tr>
@@ -47,7 +49,7 @@ Classroom Enrollment
         {% if student.drop_date %}
         <td>{{student.drop_date}}</td>
         {% else %}
-        <td><a href="{% url 'classroomenrollment_individual' classroom.classroom_id student.student_id.student_id %}?next={% url 'classroomenrollment_form' classroom.classroom_id %}" class="btn btn-xs btn-danger" role="button">Drop this class</a></td>
+        <td><a href="{% url 'classroomenrollment_individual' classroom.classroom_id student.student_id.student_id %}?next={% url 'classroomenrollment_form' classroom.classroom_id %}" class="btn btn-xs btn-danger" role="button">{% trans "Drop this class" %}</a></td>
         {% endif %}
       </tr>
       {% endfor %}

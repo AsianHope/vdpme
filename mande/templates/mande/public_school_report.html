@@ -1,20 +1,21 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load mandefilters %}
 {% block title %}
-Public School Report
+{% trans "Public School Report" %}
 {% endblock %}
 
 {% block content %}
 <div class="col-md-9">
       <table class="table table-bordered table-striped table-hover" id="publicSchoolReportTable">
         <thead><tr>
-          <th>Site</th>
-          <th>Student</th>
-          <th>Enrollment Date In VDP</th>
-          <th>VDP Grade</th>
-          <th>Pubic School Grade</th>
-          <th>Public School Name</th>
-          <th>Reason Not Attend Public School</th>
+          <th>{% trans "Site" %}</th>
+          <th>{% trans "Student" %}</th>
+          <th>{% trans "Enrollment Date In VDP" %}</th>
+          <th>{% trans "VDP Grade" %}</th>
+          <th>{% trans "Pubic School Grade" %}</th>
+          <th>{% trans "Public School Name" %}</th>
+          <th>{% trans "Reason Not Attend Public School" %}</th>
         </tr></thead>
         <tbody>
           {% for student in students %}
@@ -30,7 +31,7 @@ Public School Report
                   <td></td>
                   {% else %}
                   <!-- if not attend in public school -->
-                  <td>Not Attend</td>
+                  <td>{% trans "Not Attend" %}</td>
                   <td>{{ student.getRecentFields.public_school_name }}</td>
                   <td>{{ student.getRecentFields.reasons}}</td>
                   {% endif%}
@@ -41,28 +42,28 @@ Public School Report
 </div>
 <div class="col-md-3">
   <div class="col-md-12" id="filtered">
-    <b>Filter by:</b>
+    <b>{% trans "Filter by:" %}</b>
     <div>
       <input id="site" type="button" class="btn btn-sm btn-success" value="Site">
       <input id="grade" type="button" class="btn btn-sm btn-success" value="Grade">
     </div>
   </div>
   <div class="col-md-6">
-    <b>Site</b>
+    <b>{% trans "Site" %}</b>
     <ul class = "buttonlist">
     {% for site in sites %}
       <li> <a class="btn btn-sm btn-warning" onclick ="filterBySite('{{site}}')" href='#'>{{site}}</a></li>
     {% endfor %}
-    <li><a role = "button" class="btn btn-sm btn-warning" onclick="ClearFilterBySite()" href="#">Clear Search</a></li>
+    <li><a role = "button" class="btn btn-sm btn-warning" onclick="ClearFilterBySite()" href="#">{% trans "Clear Search" %}</a></li>
     </ul>
   </div>
   <div class="col-md-6">
-    <b>Grade</b>
+    <b>{% trans "Grade" %}</b>
     <ul class = "buttonlist">
     {% for value,key in grades.items %}
       <li> <a class="btn btn-sm btn-warning" onclick ="filterByGrade('{{key|escapejs}}')" href='#'>{{key}}</a></li>
     {% endfor %}
-    <li><a role = "button" class="btn btn-sm btn-warning" onclick="ClearFilterByGrade()" href="#">Clear Search</a></li>
+    <li><a role = "button" class="btn btn-sm btn-warning" onclick="ClearFilterByGrade()" href="#">{% trans "Clear Search" %}</a></li>
     </ul>
   </div>
 </div>

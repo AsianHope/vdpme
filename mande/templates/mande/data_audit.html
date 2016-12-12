@@ -1,16 +1,17 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load mandefilters %}
 {% block title %}
-Data Audit
+{% trans "Data Audit" %}
 {% endblock %}
 
 {% block content %}
 <div class="col-md-9">
       <table class="table table-bordered table-striped table-hover" id="dataAudit">
         <thead><tr>
-          <th>Site</th>
-          <th>Student</th>
-          <th>Problem</th>
+          <th>{% trans "Site" %}</th>
+          <th>{% trans "Student" %}</th>
+          <th>{% trans "Problem" %}</th>
         <tbody>
           {% for student,issues in students.items %}
           {% for issue in issues %}

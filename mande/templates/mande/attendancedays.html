@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block title %}
 Editing Attendance Calendar For {{classroom}}
 {% endblock %}
@@ -27,7 +28,7 @@ Editing Attendance Calendar For {{classroom}}
   </div>
   <div class="col-md-12">
     <br/>
-    <div class="col-md-2 col-md-offset-4"><button id="autoapply" class="btn btn-lg btn-danger">Apply this calendar to all classes at {{classroom.school_id}}</button></div>
+    <div class="col-md-2 col-md-offset-4"><button id="autoapply" class="btn btn-lg btn-danger">{% blocktrans %}Apply this calendar to all classes at {{classroom.school_id}}{% endblocktrans %}</button></div>
   </div>
 </div>
 {% endblock %}
