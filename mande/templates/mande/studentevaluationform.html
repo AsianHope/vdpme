@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load mandefilters %}
 {% load bootstrap %}
 {% block title %}
-Student Evaluations for {{classroom.school_id}} ({{classroom.get_cohort_display}} - {{classroom.classroom_number}})
+{% trans "Student Evaluations for" %} {{classroom.school_id}} ({{classroom.get_cohort_display}} - {{classroom.classroom_number}})
 {% endblock %}
 
 {% block content %}
@@ -27,11 +28,11 @@ Student Evaluations for {{classroom.school_id}} ({{classroom.get_cohort_display}
                 <th><h3>{{forloop.counter}} of {{formset|length}}</h3></th>
               </tr>
               <tr>
-              <th>Academic</th>
-              <th>Study/Learning</th>
-              <th>Life/Personal</th>
-              <th>Hygeine</th>
-              <th>Christian Growth</th>
+              <th>{% trans "Academic" %}</th>
+              <th>{% trans "Study/Learning" %}</th>
+              <th>{% trans "Life/Personal" %}</th>
+              <th>{% trans "Hygiene" %}</th>
+              <th>{% trans "Christian Growth" %}</th>
               </tr></thead>
             <tbody>
               <tr>
@@ -42,7 +43,7 @@ Student Evaluations for {{classroom.school_id}} ({{classroom.get_cohort_display}
                 <td>{{ form.faith_score|bootstrap }}</td>
             </tr>
             <tr>
-              <td colspan=7>{{form.comments|bootstrap}}</strong>  <button class="btn btn-primary">Submit</button></td>
+              <td colspan=7>{{form.comments|bootstrap}}</strong>  <button class="btn btn-primary">{% trans "Submit" %}</button></td>
             </tr>
           </tbody>
 
@@ -51,7 +52,7 @@ Student Evaluations for {{classroom.school_id}} ({{classroom.get_cohort_display}
         </table>
       </div>
           {% endfor %}
-      <button class="btn btn-primary">Submit</button>
+      <button class="btn btn-primary">{% trans "Submit" %}</button>
   </form>
 </div>
 

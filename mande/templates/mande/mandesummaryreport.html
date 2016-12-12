@@ -1,12 +1,13 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load mandefilters %}
 {% block title %}
-M&E Summary Report in {{start_view_date}} to {{view_date}}
+{% blocktrans %}M&E Summary Report in {{start_view_date}} to {{view_date}}{% endblocktrans %}
 {% endblock %}
 
 {% block content %}
     <div class="col-md-9">
-      <h3>Catch-up school</h3>
+      <h3>{% trans "Catch-up school" %}</h3>
       <table>
         <td>
           <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
@@ -22,10 +23,10 @@ M&E Summary Report in {{start_view_date}} to {{view_date}}
               {% endif %}
             {% endfor %}
             <tr>
-              <td>Vietnamese only</td>
+              <td>{% trans "Vietnamese only" %}</td>
             </tr>
             <tr>
-              <td>Total:</td>
+              <td>{% trans "Total:" %}</td>
             </tr>
           </table>
         </td>
@@ -36,7 +37,7 @@ M&E Summary Report in {{start_view_date}} to {{view_date}}
                 <th colspan="2">{{student_by_site_grade.school}}</th>
               </tr>
               <tr>
-                <td>Boys</td><td>Girls</td>
+                <td>{% trans "Boys" %}</td><td>{% trans "Girls" %}</td>
               </tr>
               {% for grade in student_by_site_grade.grades %}
               <tr>
@@ -72,14 +73,14 @@ M&E Summary Report in {{start_view_date}} to {{view_date}}
               <input type="date" name="view_date" class="form-control" id="view_date" required>
             </div>
             <div class="form-group">
-              <button id="submit" class="form-control btn btn-primary">Submit</button>
+              <button id="submit" class="form-control btn btn-primary">{% trans "Submit" %}</button>
             </div>
           </div>
       </form>
     </div>
 
   <div class="col-md-9">
-      <h3>Students enrolled in grade plus Vietnamese</h3>
+      <h3>{% trans "Students enrolled in grade plus Vietnamese" %}</h3>
       <table>
         <td>
           <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
@@ -89,16 +90,16 @@ M&E Summary Report in {{start_view_date}} to {{view_date}}
               {% if grade_id >= 1 and grade_id <= 6 %}
                 <tr>
                   <td>
-                    {{grade}} + Vietnamese
+                    {{grade}} + {% trans "Vietnamese" %}
                   </td>
                 </tr>
               {% endif %}
             {% endfor %}
             <tr>
-              <td>Only Vietnamese</td>
+              <td>{% trans "Only Vietnamese" %}</td>
             </tr>
             <tr>
-              <td>Total:</td>
+              <td>{% trans "Total:" %}</td>
             </tr>
           </table>
         </td>
@@ -109,7 +110,7 @@ M&E Summary Report in {{start_view_date}} to {{view_date}}
                 <th colspan="2">{{student_by_site_grade_plus_skill_vietnamese.school}}</th>
               </tr>
               <tr>
-                <td>Boys</td><td>Girls</td>
+                <td>{% trans "Boys" %}</td><td>{% trans "Girls" %}</td>
               </tr>
               {% for grade in student_by_site_grade_plus_skill_vietnamese.grades %}
               <tr>
@@ -139,7 +140,7 @@ M&E Summary Report in {{start_view_date}} to {{view_date}}
       </table>
     </div>
     <div class="col-md-9">
-      <h3>Students enrolled in English</h3>
+      <h3>{% trans "Students enrolled in English" %}</h3>
       <table>
         <td>
           <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
@@ -148,12 +149,12 @@ M&E Summary Report in {{start_view_date}} to {{view_date}}
             {% for i in level %}
                 <tr>
                   <td>
-                    English level {{i}}
+                    {% blocktrans %}English level {{i}}{% endblocktrans %}
                   </td>
                 </tr>
             {% endfor %}
             <tr>
-              <td>Total:</td>
+              <td>{% trans "Total:" %}</td>
             </tr>
           </table>
         </td>
@@ -164,7 +165,7 @@ M&E Summary Report in {{start_view_date}} to {{view_date}}
                 <th colspan="2">{{student_enrolled_in_english_by_level.school}}</th>
               </tr>
               <tr>
-                <td>Boys</td><td>Girls</td>
+                <td>{% trans "Boys" %}</td><td>{% trans "Girls" %}</td>
               </tr>
               {% for english_class in student_enrolled_in_english_by_level.english_classes %}
               <tr>
@@ -185,7 +186,7 @@ M&E Summary Report in {{start_view_date}} to {{view_date}}
       </table>
     </div>
     <div class="col-md-12">
-        <h3>Total Students</h3>
+        <h3>{% trans "Total Students" %}</h3>
         <table>
           <tr>
             {% for student_by_site in students_by_site %}
@@ -195,9 +196,9 @@ M&E Summary Report in {{start_view_date}} to {{view_date}}
                     <th colspan="2">{{student_by_site.school}}</th>
                   </tr>
                   <tr>
-                    <td>Boys</td>
-                    <td>Girls</td>
-                  </tr>
+                    <td>{% trans "Boys" %}</td>
+                    <td>{% trans "Girls" %}</td>
+                    </tr>
                   <tr>
                     <td>{{student_by_site.students | get_students_length_by_gender:'M'}}</td>
                     <td>{{student_by_site.students | get_students_length_by_gender:'F'}}</td>
@@ -209,12 +210,12 @@ M&E Summary Report in {{start_view_date}} to {{view_date}}
         </table>
     </div>
     <div class="col-md-12">
-        <h3>Achieved age appropriate level</h3>
+        <h3>{% trans "Achieved age appropriate level" %}</h3>
         <table>
           <td>
             <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
               <tr><th>&nbsp;</th></tr>
-              <tr><td>Grade<br/>&nbsp;</td></tr>
+              <tr><td>{% trans "Grade" %}<br/>&nbsp;</td></tr>
               {% for grade_id,grade in grades.items %}
                 {% if grade_id >= 1 and grade_id <= 6 %}
                   <tr>
@@ -225,7 +226,7 @@ M&E Summary Report in {{start_view_date}} to {{view_date}}
                 {% endif %}
               {% endfor %}
               <tr>
-                <td>Total:</td>
+                <td>{% trans "Total:" %}</td>
               </tr>
             </table>
           </td>
@@ -236,8 +237,8 @@ M&E Summary Report in {{start_view_date}} to {{view_date}}
                   <th colspan="4">{{student_by_site_grade.school}}</th>
                 </tr>
                 <tr>
-                  <td>Boys</td><td>% of total</td>
-                  <td>Girls</td><td>% of total</td>
+                  <td>{% trans "Boys" %}</td><td>% {% trans "of total" %}</td>
+                  <td>{% trans "Girls" %}</td><td>% {% trans "of total" %}</td>
                 </tr>
                 {% for grade in student_by_site_grade.grades %}
                 <tr>

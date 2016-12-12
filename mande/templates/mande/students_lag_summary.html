@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load mandefilters %}
 {% block title %}
-Students Lag Summary Report
+{% trans "Students Lag Summary Report" %}
 {% endblock %}
 
 {% block content %}
@@ -15,8 +16,8 @@ Students Lag Summary Report
                 <th colspan="4" style="text-align:center;">{{student_lag_by_site.school}}</th>
               </tr>
               <tr>
-                <td>Boys</td><td>% of Total</td>
-                <td>Girls</td><td>% of Total</td>
+                <td>{% trans "Boys" %}</td><td>% {% trans "of total" %}</td>
+                <td>{% trans "Girls" %}</td><td>% {% trans "of total" %}</td>
               </tr>
               <tr>
                 <td>{{ student_lag_by_site.students_age_not_appropriate_grade_level | get_students_length_by_gender:'M' }}</td>
@@ -42,11 +43,12 @@ Students Lag Summary Report
         <td>
           <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
               <tr>
-                <th colspan="4" style="text-align:center;">All Site</th>
+                <th colspan="4" style="text-align:center;">{% trans "All Site" %}
+</th>
               </tr>
               <tr>
-                <td>Boys</td><td>% of Total</td>
-                <td>Girls</td><td>% of Total</td>
+                <td>{% trans "Boys" %}</td><td>% {% trans "of total" %}</td>
+                <td>{% trans "Girls" %}</td><td>% {% trans "of total" %}</td>
               </tr>
               <tr>
                 <td>{{ students_all_site.students_age_not_appropriate_grade_level | get_students_length_by_gender:'M' }}</td>

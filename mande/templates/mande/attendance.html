@@ -1,15 +1,15 @@
 {% extends "base.html" %}
-
+{% load i18n %}
 {% block title %}
-Attendance
+{% trans "Attendance" %}
 {% endblock %}
 
 {% block content %}
 <h2>
-   <a href = "{% url 'attendance_calendar' %}">Modify Attendance Calendars</a>
+   <a href = "{% url 'attendance_calendar' %}">{% trans "Modify Attendance Calendars" %}</a>
 </h2>
 <h2>
-   <a href = "{% url 'take_attendance' %}">Take Attendance</a>
+   <a href = "{% url 'take_attendance' %}">{% trans "Take Attendance" %}</a>
 </h2>
 {% endblock %}
 

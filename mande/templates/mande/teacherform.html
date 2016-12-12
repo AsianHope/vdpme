@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load bootstrap %}
 {% block title %}
-Manage Teachers
+{% trans "Manage Teachers" %}
 {% if action != None %}
 <small>{{action}}</action>
 {% endif %}
@@ -14,9 +15,9 @@ Manage Teachers
 <div class="col-md-4">
   <ul>
     {% if status == 'active' %}
-      <h5>Active Teacher</h5>
+      <h5>{% trans "Active Teacher" %}</h5>
     {% else %}
-      <h5>Inactive Teacher</h5>
+      <h5>{% trans "Inactive Teacher" %}</h5>
     {% endif %}
     {% for teacher in current_teachers %}
       <li><a href = "{% url 'teacher_form' status teacher.teacher_id %}">{{teacher}}</a></li>
@@ -29,22 +30,22 @@ Manage Teachers
     {{ form|bootstrap }}
     {% csrf_token %}
     <div class="col-md-12">
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
     </div>
 </form>
 </div>
 <div class="col-md-2">
   {% if action == None %}
-    <a href = "{% url 'teacher_form' status %}" role="button" class="btn btn-success">Adding a teacher</a>
+    <a href = "{% url 'teacher_form' status %}" role="button" class="btn btn-success">{% trans "Adding a teacher" %}</a>
   {% else %}
-    <a href = "{% url 'teacher_form' status %}" role="button" class="btn btn-danger">Add a teacher?</a>
+    <a href = "{% url 'teacher_form' status %}" role="button" class="btn btn-danger">{% trans "Add a teacher?" %}</a>
   {% endif %}
 </div>
 <div class="col-md-2">
    {% if status == 'active' %}
-    <a href = "{% url 'teacher_form' 'inactive' %}" role="button" class="btn btn-warning">Show Inactive Teacher</a>
+    <a href = "{% url 'teacher_form' 'inactive' %}" role="button" class="btn btn-warning">{% trans "Show Inactive Teacher" %}</a>
    {% else %}
-   <a href = "{% url 'teacher_form' 'active' %}" role="button" class="btn btn-warning">Show Active Teacher</a>
+   <a href = "{% url 'teacher_form' 'active' %}" role="button" class="btn btn-warning">{% trans "Show Active Teacher" %}</a>
    {% endif %}
 
 </div>

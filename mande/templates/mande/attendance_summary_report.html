@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load mandefilters %}
 {% block title %}
-Attendance Summary Report {% if current_selected %} {{ current_selected }} {% endif %} {% if start_date and end_date %} {{ start_date }} to {{ end_date }}{% endif %}
+{% trans "Attendance Summary Report" %} {% if current_selected %} {{ current_selected }} {% endif %} {% if start_date and end_date %} {{ start_date }} to {{ end_date }}{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -10,15 +11,15 @@ Attendance Summary Report {% if current_selected %} {{ current_selected }} {% en
       <table class="table table-bordered table-striped table-hover" id="attendanceReportTable">
         <thead>
           <tr>
-            <th>Site</th>
-            <th>Grade</th>
-            <th>Description</th>
-            <th>Student</th>
-            <th>Gender</th>
-            <th>Present</th>
-            <th>Unapproved</th>
-            <th>Approved</th>
-            <th>Total</th>
+            <th>{% trans "Site" %}</th>
+            <th>{% trans "Grade" %}</th>
+            <th>{% trans "Description" %}</th>
+            <th>{% trans "Student" %}</th>
+            <th>{% trans "Gender" %}</th>
+            <th>{% trans "Present" %}</th>
+            <th>{% trans "Unapproved" %}</th>
+            <th>{% trans "Approved" %}</th>
+            <th>{% trans "Total" %}</th>
           </tr>
           </thead>
         <tbody>
@@ -78,7 +79,7 @@ Attendance Summary Report {% if current_selected %} {{ current_selected }} {% en
         <div class="col-md-12">
             <div class="form-group">
               <select name="site" class="form-control" id="site">
-                <option>Select Site</option>
+                <option>{% trans "Select Site" %}</option>
                 {% for school in schools %}
                 <option value="{{school.school_id}}">{{school}}</option>
                 {% endfor%}
@@ -86,7 +87,7 @@ Attendance Summary Report {% if current_selected %} {{ current_selected }} {% en
             </div>
             <div class="form-group">
               <select name="classroom" class="form-control" id="classroom">
-                <option>Select Classroom</option>
+                <option>{% trans "Select Classroom" %}</option>
                 {% for classroom in classrooms %}
                 <option value="{{ classroom.classroom_id }}">{{ classroom }}</option>
                 {% endfor%}

@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load mandefilters %}
 {% block title %}
- Student Dental Report {% if start_date and end_date %} for {{start_date}} to {{end_date}} {% endif %}
+ {% trans "Student Dental Report" %} {% if start_date and end_date %} {% trans "for" %} {{start_date}} {% trans "to" %} {{end_date}} {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -10,17 +11,17 @@
   <table class="table table-bordered table-striped table-hover" id="student_dental">
     <thead>
         <tr>
-          <th>Site</th>
-          <th>Student</th>
-          <th>Date</th>
-          <th>Extractions</th>
-          <th>Sealent</th>
-          <th>Filling</th>
-          <th>Endo</th>
-          <th>Scaling</th>
-          <th>Pulped</th>
-          <th>Xray</th>
-          <th>Notes</th>
+          <th>{% trans "Site" %}</th>
+          <th>{% trans "Student" %}</th>
+          <th>{% trans "Date" %}</th>
+          <th>{% trans "Extractions" %}</th>
+          <th>{% trans "Sealent" %}</th>
+          <th>{% trans "Filling" %}</th>
+          <th>{% trans "Endo" %}</th>
+          <th>{% trans "Scaling" %}</th>
+          <th>{% trans "Pulped" %}</th>
+          <th>{% trans "Xray" %}</th>
+          <th>{% trans "Notes" %}</th>
         </tr>
     </thead>
     <tbody>
