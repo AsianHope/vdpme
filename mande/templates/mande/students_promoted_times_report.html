@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load mandefilters %}
 {% block title %}
-Students Promoted Times Report
+{% trans "Students Promoted Times Report" %}
 {% endblock %}
 
 {% block content %}
@@ -9,13 +10,13 @@ Students Promoted Times Report
       <table class="table table-bordered table-striped table-hover" id="attendanceReportTable">
         <thead>
           <tr>
-            <th>Site</th>
-            <th>Student</th>
-            <th>Current Grade</th>
-            <th>How long in VDP Program</th>
-            <th>The Last Promoted Date</th>
-            <th>The Last Promoted Date and Now</th>
-            <th>Promoted Times</th>
+            <th>{% trans "Site" %}</th>
+            <th>{% trans "Student" %}</th>
+            <th>{% trans "Current Grade" %}</th>
+            <th>{% trans "How long in VDP Program" %}</th>
+            <th>{% trans "The Last Promoted Date" %}</th>
+            <th>{% trans "The Last Promoted Date and Now" %}</th>
+            <th>{% trans "Promoted Times" %}</th>
           </tr>
         </thead>
         <tbody>
@@ -38,12 +39,12 @@ Students Promoted Times Report
   <ul class="buttonlist">
     <li>
       <a href="{% url 'students_promoted_times_report' 'ALL' %}" class="btn {% if filter_seach != None %} btn-warning {% else %} btn-info {% endif %} btn-sm">
-        All Students
+        {% trans "All Students" %}
       </a>
     </li>
     <li>
     <a href="{% url 'students_promoted_times_report' %}" class="btn {% if filter_seach == None %} btn-warning {% else %} btn-info {% endif %} btn-sm">
-        Current Students
+        {% trans "Current Students" %}
     </a>
     </li>
   </ul>
@@ -61,7 +62,7 @@ Students Promoted Times Report
       </li>
     {% endfor %}
       <li>
-        <a role="button" class="btn btn-sm btn-warning" onclick="table.column(0).search('').column(2).search('').draw();" href="#">Clear Search</a>
+        <a role="button" class="btn btn-sm btn-warning" onclick="table.column(0).search('').column(2).search('').draw();" href="#">{% trans "Clear Search" %}</a>
       </li>
   </ul>
 </div>

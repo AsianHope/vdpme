@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load mandefilters %}
 {% block title %}
 Please select a classroom.
@@ -9,7 +10,7 @@ Please select a classroom.
   <div class="col-md-9">
     <table id="classroomDataTable" class="table table-bordered table-hover">
       <thead>
-        <tr><th>Site</th><th>Grade</th><th>Description</th><th>Evaluation</th></tr>
+        <tr><th>{% trans "Site" %}</th><th>{% trans "Grade" %}</th><th>{% trans "Description" %}</th><th>{% trans "Evaluation" %}</th></tr>
       </thead>
       <tbody>
         {% for classroom in classrooms %}
@@ -19,7 +20,7 @@ Please select a classroom.
             <td>{{ classroom.classroom_number }}</td>
             <td>
               <a href="{% url 'academic_form' classroom.school_id.school_id today %}{{classroom.classroom_id}}/" role="button" class="btn btn-xs btn-success">
-              Input Achievement Test
+              {% trans "Input Achievement Test" %}
               </a>
             </td>
           </tr>

@@ -2,26 +2,31 @@
 {% load mathfilters %}
 {% load mandefilters %}
 {% block title %}
+{% trans "Detail" %}
+{% endblock %}
 
 {% if exit_survey != None %}<style>div{color: red;}</style>{% endif %}
 
 {{survey.name}} ({{survey.site}})<br/>
     <small>
       <a href="#"><i id="decrement" class="fa fa-arrow-left"></i></a>
-        Student ID: <strong id="student_id">{{survey.student_id}}</strong>
+        {% trans "Student ID:" %} <strong id="student_id">{{survey.student_id}}</strong>
       <a href="#"><i id="increment" class="fa fa-arrow-right"></i></a>
     </small><br/>
 <a href="{% url 'student_list' %}" class="btn btn-primary" role="button">Back to all students</a>
 {% if exit_survey == None %}
-  <a href="{% url 'intake_update' survey.student_id %}?next={% url 'student_detail' survey.student_id %}&tab=enrollment" class="btn btn-info" role="button">Update this Student's Information?</a>
+  <a href="{% url 'intake_update' survey.student_id %}?next={% url 'student_detail' survey.student_id %}&tab=enrollment" class="btn btn-info" role="button">{% trans "Update this Student's Information?" %}
+</a>
   {% if current_grade == None %}
-  <a href="{% url 'intake_internal' survey.student_id %}" class="btn btn-success" role="button">Enroll this student in VDP</a>
+  <a href="{% url 'intake_internal' survey.student_id %}" class="btn btn-success" role="button">{% trans "Enroll this student in VDP" %}
+</a>
   {% else %}
-  <a href="{% url 'exit_survey' survey.student_id %}" class="btn btn-danger" role="button">Perform an exit survey for this student</a>
+  <a href="{% url 'exit_survey' survey.student_id %}" class="btn btn-danger" role="button">{% trans "Perform an exit survey for this student" %}
+</a>
   {% endif %}
 {% endif %}
 {% if post_exit_survey == None and exit_survey %}
-  <a href="{% url 'post_exit_survey' survey.student_id %}" class="btn btn-danger" role="button">Perform post-exit survey for this student</a>
+  <a href="{% url 'post_exit_survey' survey.student_id %}" class="btn btn-danger" role="button">{% trans "Perform post-exit survey for this student" %}</a>
 {% endif %}
 <br/>
 
@@ -35,33 +40,34 @@
 <div class="row">
   {% if exit_survey %}
     <div class = "col-md-12 text-center">
-    <h3>Exit Survey performed on {{exit_survey.survey_date|date:'d N Y'}}</h3>
-    <h3>Student will leave the program on {{exit_survey.exit_date|date:'d N Y'}}</h3>
-    {% if post_exit_survey %}<h3> A post-exit survey has been performed</h3> {% endif %}
+    <h3>{% trans "Exit Survey performed on " %} {{exit_survey.survey_date|date:'d N Y'}}</h3>
+    <h3>{% trans "Student will leave the program on " %}
+{{exit_survey.exit_date|date:'d N Y'}}</h3>
+    {% if post_exit_survey %}<h3>{% trans " A post-exit survey has been performed" %}</h3> {% endif %}
     <br/><br/>
     </div>
   {% endif %}
   <div class = "col-md-3"><div style="background-color: gray; border: 1px solid black; width:175px; height: 225px;"></div>
-    <small>Last Update: {{ survey.date|date:'d N Y' }}</small>
+    <small>{% trans "Last Update: " %} {{ survey.date|date:'d N Y' }}</small>
     </div>
     <div class = "col-md-4">
       <div class = "table-responsive">
         <table class="table table-striped table-hover">
             <tr>
-              <td>Gender: </td>
+              <td>{% trans "Gender: " %}</td>
               <td>{{ survey.gender }}</td>
             </tr>
             <tr>
-              <td>DOB: </td>
+              <td>{% trans "DOB: " %}</td>
               <td>{{ survey.dob|date:'d N Y'}} <br/>({{survey.dob|timesince}} old)</td>
             </tr>
             <tr>
-              <td>Enrolled: </td>
+              <td>{% trans "Enrolled: " %}</td>
               <td>{% firstof recent_intake.enrollment_date|date:'d N Y' "Not yet enrolled" %}</td>
             </tr>
             <tr>
-              <td>Expected 6th Grade Graduation: </td>
-              <td>Jul. {{ graduation|date:'Y' }}</td>
+              <td>{% trans "Expected 6th Grade Graduation: " %}</td>
+              <td>{% blocktrans %}Jul. {{ graduation|date:'Y' }}{% endblocktrans %}</td>
             </tr>
           </table>
         </div>
@@ -69,12 +75,12 @@
   <div class="col-md-4">
     <div class = "table-responsive">
       <table class="table table-striped table-hover">
-          <tr><td>VDP Grade when Enrolled: </td>  <td>{% firstof recent_intake.get_starting_grade_display "Not yet collected" %}</td></tr>
-          <tr><td>Current VDP Grade:</td>  <td> {% firstof current_grade|grade_by_id "No academic records found" %}</td></tr>
-          <tr><td>Public School Current Grade</td><td>{% firstof survey.grade_current|grade_by_id survey.grade_last|grade_by_id %}</td></tr>
+          <tr><td>{% trans "VDP Grade when Enrolled: " %}</td>  <td>{% firstof recent_intake.get_starting_grade_display "Not yet collected" %}</td></tr>
+          <tr><td>{% trans "Current VDP Grade:" %}</td>  <td> {% firstof current_grade|grade_by_id "No academic records found" %}</td></tr>
+          <tr><td>{% trans "Public School Current Grade" %}</td><td>{% firstof survey.grade_current|grade_by_id survey.grade_last|grade_by_id %}</td></tr>
           {% with grad_date=graduation|date:'Y' %}
           {% if current_grade <= 6 %}
-          <tr><td>Grades/Years to achieve</td><td>{{ 6|sub:current_grade }} / {{ grad_date|sub:cur_year }}</td>
+          <tr><td>{% trans "Grades/Years to achieve" %}</td><td>{{ 6|sub:current_grade }} / {{ grad_date|sub:cur_year }}</td>
           {%endif%}
           </tr>
             {% endwith %}
@@ -84,33 +90,33 @@
 
 </div>
 <ul class ="nav nav-tabs">
-  <li role = "presentation" class="active"><a href="#academic" aria-controls="academic" role="tab" data-toggle="tab">Academic Performance</a></li>
-  <li role = "presentation"><a href="#enrollment" aria-controls="contact" role="tab" data-toggle="tab">Course History</a></li>
-  <li role = "presentation"><a href="#contact" aria-controls="contact" role="tab" data-toggle="tab">Contact</a></li>
-  <li role = "presentation"><a href="#household" aria-controls="household" role="tab" data-toggle="tab">Household</a></li>
-  <li role = "presentation"><a href="#notes" aria-controls="notes" role="tab" data-toggle="tab">Notes</a></li>
-  <li role = "presentation"><a href="#health" aria-controls="health" role="tab" data-toggle="tab">Health</a></li>
+  <li role = "presentation" class="active"><a href="#academic" aria-controls="academic" role="tab" data-toggle="tab">{% trans "Academic Performance" %}</a></li>
+  <li role = "presentation"><a href="#enrollment" aria-controls="contact" role="tab" data-toggle="tab">{% trans "Course History" %}</a></li>
+  <li role = "presentation"><a href="#contact" aria-controls="contact" role="tab" data-toggle="tab">{% trans "Contact" %}</a></li>
+  <li role = "presentation"><a href="#household" aria-controls="household" role="tab" data-toggle="tab">{% trans "Household" %}</a></li>
+  <li role = "presentation"><a href="#notes" aria-controls="notes" role="tab" data-toggle="tab">{% trans "Notes" %}</a></li>
+  <li role = "presentation"><a href="#health" aria-controls="health" role="tab" data-toggle="tab">{% trans "Health" %}</a></li>
 </ul>
 
 <div class="tab-content">
   <div role="tabpanel" class="tab-pane active" id="academic">
     <div class = "col-md-12">
-      <h3>Academics <a href="{% url 'academic_form_single' survey.student_id %}" class="btn btn-xs btn-success" role="button">+ Add an achievement test</a></h3>
+      <h3>{% trans "Academics " %} <a href="{% url 'academic_form_single' survey.student_id %}" class="btn btn-xs btn-success" role="button">{% trans "+ Add an achievement test" %}</a></h3>
 
         <table class="table table-bordered table-striped table-hover" id="academicTable">
           <thead>
             <tr>
-              <th>Edit</th>
-              <th>Test Date</th>
-              <th>Test Grade</th>
-              <th>Math</th>
-              <th>Khmer</th>
-              <th>Promoted?</th>
+              <th>{% trans "Edit" %}</th>
+              <th>{% trans "Test Date" %}</th>
+              <th>{% trans "Test Grade" %}</th>
+              <th>{% trans "Math" %}</th>
+              <th>{% trans "Khmer" %}</th>
+              <th>{% trans "Promoted?" %}</th>
             </tr>
           </thead>
           <tbody>
             {% for test in academics %}
-            <tr><td><a href="{% url 'academic_form_single' survey.student_id test.id %}?next={% url 'student_detail' survey.student_id %}#academic" role="button" class="btn btn-xs btn-warning">Edit</a></td>
+            <tr><td><a href="{% url 'academic_form_single' survey.student_id test.id %}?next={% url 'student_detail' survey.student_id %}#academic" role="button" class="btn btn-xs btn-warning">{% trans "Edit" %}</a></td>
               <td>{{test.test_date|date:'d N Y'}}</td>
               <td>{{test.get_test_level_display}}</td>
               <td>{{test.test_grade_math}}</td>
@@ -124,10 +130,11 @@
 
     </div>
     <div class = "col-md-12">
-      <h3>Student Evaluations   <a href="{% url 'studentevaluation_form_single' survey.student_id %}" class="btn btn-xs btn-info" role="button">+ Add a student evaluation</a> </h3>
+      <h3>{% trans "Student Evaluations" %}   <a href="{% url 'studentevaluation_form_single' survey.student_id %}" class="btn btn-xs btn-info" role="button">{% trans "+ Add a student evaluation" %}</a> </h3>
       <table class="table table-bordered table-striped table-hover" id="evaluationTable">
         <thead>
-          <tr><th>Date</th><th>Evaluation</th>
+          <tr><th>{% trans "Date" %}</th><th>{% trans "Evaluation" %}
+</th>
         </thead>
         <tbody>
       {% for evaluation in evaluations %}
@@ -138,11 +145,11 @@
 
               <table class="table table-bordered table-striped table-hover">
                 <tr>
-                  <th>Academic</th>
-                  <th>Study/Learning Skills</th>
-                  <th>Life Skills/Personal Development</th>
-                  <th>Hygeine Knowledge</th>
-                  <th>Christian Growth</th>
+                  <th>{% trans "Academic" %}</th>
+                  <th>{% trans "Study/Learning Skills" %}</th>
+                  <th>{% trans "Life Skills/Personal Development" %}</th>
+                  <th>{% trans "Hygeine Knowledge" %}</th>
+                  <th>{% trans "Christian Growth" %}</th>
                 </tr>
 
                 <tr>
@@ -154,7 +161,7 @@
                 </tr>
                 <tr>
                   <td colspan=5>
-                    <strong>General Comments</strong>
+                    <strong>{% trans "General Comments" %}</strong>
                   </td>
                 </tr>
                 <tr>
@@ -171,12 +178,12 @@
 
     </div>
     <div class="col-md-6">
-      <h3>Discipline <a href="{% url 'discipline_form' survey.student_id %}" class="btn btn-xs btn-danger" role="button">+ Add Incident</a></h3>
+      <h3>{% trans "Discipline" %} <a href="{% url 'discipline_form' survey.student_id %}" class="btn btn-xs btn-danger" role="button">+ {% trans "Add Incident" %}</a></h3>
     <table class="table table-bordered table-striped table-hover" id="disciplineTable">
       <thead>
         <tr>
-          <th>Date of Incident</th>
-          <th>Code</th>
+          <th>{% trans "Date of Incident" %}</th>
+          <th>{% trans "Code" %}</th>
 
         </tr>
       </thead>
@@ -193,16 +200,16 @@
     </div>
     <div class="col-md-6">
       <h3>
-        Attendance
-        <a href="{% url 'attendance' %}" class="btn btn-xs btn-warning" role="button">+ Take Attendance</a>
-        <a href="{% url 'student_attendance_detail' survey.student_id %}" class="btn btn-xs btn-warning" role="button">Attendance Detail</a>
+        {% trans "Attendance" %}
+        <a href="{% url 'attendance' %}" class="btn btn-xs btn-warning" role="button">{% trans "+ Take Attendance" %}</a>
+        <a href="{% url 'student_attendance_detail' survey.student_id %}" class="btn btn-xs btn-warning" role="button">{% trans "Attendance Detail" %}</a>
       </h3>
     <table class="table table-bordered table-striped table-hover">
       <tr>
-        <th>Year</th>
-        <th>Present</th>
-        <th>Unapproved</th>
-        <th>Approved</th>
+        <th>{% trans "Year" %}</th>
+        <th>{% trans "Present" %}</th>
+        <th>{% trans "Unapproved" %}</th>
+        <th>{% trans "Approved" %}</th>
       </tr>
       {% for attendance_year in attendance_years %}
       <tr>
@@ -221,14 +228,14 @@
 
   <div role="tabpanel" class="tab-pane" id="enrollment">
     <div class ="col-md-12">
-      <h3>Course History   <a href="{% url 'classroomenrollment_form' %}" class="btn btn-xs btn-success" role="button">+ Add a course</a></h3>
+      <h3>{% trans "Course History" %}   <a href="{% url 'classroomenrollment_form' %}" class="btn btn-xs btn-success" role="button">{% trans "+ Add a course" %}</a></h3>
 
         <table class="table table-bordered table-striped table-hover" id="courseHistoryTable">
           <thead>
             <tr>
-              <th>Date Enrolled</th>
-              <th>Date Dropped</th>
-              <th>Course</th>
+              <th>{% trans "Date Enrolled" %}</th>
+              <th>{% trans "Date Dropped" %}</th>
+              <th>{% trans "Course" %}</th>
 
             </tr>
           </thead>
@@ -239,7 +246,7 @@
               {% if class.drop_date %}
                 <td>{{class.drop_date|date:'d N Y'}}</td>
               {% else %}
-                <td><a href="{% url 'classroomenrollment_individual' class.classroom_id.classroom_id survey.student_id %}?next={% url 'student_detail' survey.student_id %}" class="btn btn-danger btn-xs" role="button">Drop this class</a></td>
+                <td><a href="{% url 'classroomenrollment_individual' class.classroom_id.classroom_id survey.student_id %}?next={% url 'student_detail' survey.student_id %}" class="btn btn-danger btn-xs" role="button">{% trans "Drop this class" %}</a></td>
               {% endif %}
               <td>{{class.classroom_id}}</td>
             </tr>
@@ -249,25 +256,25 @@
 
     </div>
     <div class ="col-md-12">
-      <h3>Public School History   <a href="{% url 'publicschool_form' survey.student_id %}" class="btn btn-xs btn-success" role="button">+ Add a Public School History</a></h3>
+      <h3>{% trans "Public School History" %}   <a href="{% url 'publicschool_form' survey.student_id %}" class="btn btn-xs btn-success" role="button">{% trans "+ Add a Public School History" %</a></h3>
 
         <table class="table table-bordered table-striped table-hover" id="publicSchoolHistory">
           <thead>
             <tr>
-              <th>Edit</th>
-              <th>Acadimic Year</th>
-              <th>Grade</th>
-              <th>Status</th>
-              <th>Enroll Date</th>
-              <th>Drop Date</th>
-              <th>School Name</th>
-              <th>Reasons for not attending</th>
+              <th>{% trans "Edit" %}</th>
+              <th>{% trans "Acadimic Year" %}</th>
+              <th>{% trans "Grade" %}</th>
+              <th>{% trans "Status" %}</th>
+              <th>{% trans "Enroll Date" %}</th>
+              <th>{% trans "Drop Date" %}</th>
+              <th>{% trans "School Name" %}</th>
+              <th>{% trans "Reasons for not attending" %}</th>
             </tr>
           </thead>
           <tbody>
             {% for publich_school_history in publich_school_historys %}
             <tr>
-              <td><a href="{% url 'publicschool_form' survey.student_id publich_school_history.id%}" role="button" class="btn btn-xs btn-warning">Edit</a></td>
+              <td><a href="{% url 'publicschool_form' survey.student_id publich_school_history.id%}" role="button" class="btn btn-xs btn-warning">{% trans "Edit" %}</a></td>
               <td>{{publich_school_history.academic_year | get_academic_year}}</td>
               <td>{{publich_school_history.grade | grade_by_id}}</td>
               <td>{{publich_school_history.status | get_status}}</td>
@@ -283,29 +290,30 @@
     </div>
   </div>
   <div role="tabpanel" class="tab-pane" id="contact">
-    <h3>Contact Information <a href="{% url 'intake_update' survey.student_id %}?next={% url 'student_detail' survey.student_id %}&tab=contact" class="btn btn-xs btn-info" role="button"> +Update this information?</a></h3>
+    <h3>{% trans "Contact Information" %} <a href="{% url 'intake_update' survey.student_id %}?next={% url 'student_detail' survey.student_id %}&tab=contact" class="btn btn-xs btn-info" role="button"> {% trans "+Update this information?" %}</a></h3>
     <div class="col-md-12">
 
       <div class = "table-responsive">
         <table class="table table-bordered table-striped table-hover">
               <tr><td colspan=4 class="text-center">
-                    <strong>Guardian 1: {% firstof survey.guardian1_relationship|relationship_display "Not Entered" %}</strong>
+                    <strong>{% trans "Guardian 1:" %}
+ {% firstof survey.guardian1_relationship|relationship_display "Not Entered" %}</strong>
                   </td>
                   <td colspan=4 class="text-center">
-                    <strong>Guardian 2:  {% firstof survey.guardian2_relationship|relationship_display "Not Entered" %}</strong>
+                    <strong>{% trans "Guardian 2:" %}  {% firstof survey.guardian2_relationship|relationship_display "Not Entered" %}</strong>
                   </td></tr>
-              <td><strong>Name:</strong></td>
+              <td><strong>{% trans "Name:" %}</strong></td>
               <td>{% firstof survey.guardian1_name "Not Entered" %}</td>
 
-              <td><strong>Phone:</strong> </td>
+              <td><strong>{% trans "Phone:" %}</strong> </td>
               <td>{% firstof survey.guardian1_phone "Not Entered" %}</td>
 
-              <td><strong>Name:</strong> </td>
+              <td><strong>{% trans "Name:" %}</strong> </td>
               <td>{% firstof survey.guardian2_name "Not Entered" %}</td>
 
-              <td><strong>Phone:</strong> </td>
+              <td><strong>{% trans "Phone:" %}</strong> </td>
               <td>{% firstof survey.guardian2_phone "Not Entered" %}</td>
-            <tr><td colspan=8 class="text-center"><strong>Home Address</strong></td></tr>
+            <tr><td colspan=8 class="text-center"><strong>{% trans "Home Address" %}</strong></td></tr>
             <tr><td colspan=8 class="text-center">{% firstof survey.address "Not Entered" %}</td></tr>
           </table>
       </div>
@@ -314,15 +322,15 @@
 
   <div role="tabpanel" class="tab-pane" id="household">
     <div class="col-md-12">
-      <h3>Home of Origin <a href="{% url 'intake_update' survey.student_id %}?next={% url 'student_detail' survey.student_id %}&tab=household" class="btn btn-xs btn-info" role="button"> +Update this information?</a></h3>
+      <h3>{% trans "Home of Origin" %} <a href="{% url 'intake_update' survey.student_id %}?next={% url 'student_detail' survey.student_id %}&tab=household" class="btn btn-xs btn-info" role="button"> {% trans "+Update this information?" %}</a></h3>
         <div class = "table-responsive">
           <table class="table table-bordered table-striped table-hover text-center">
-              <tr><td colspan=2><strong>Guardian 1: {% firstof survey.guardian1_relationship|relationship_display "Not Entered" %}</strong></td>
-                  <td colspan=2><strong>Guardian 2: {% firstof survey.guardian2_relationship|relationship_display "Not Entered" %}</strong></td></tr>
-              <tr><td class="info"><strong>Profession</strong></td>
-                  <td class="success"><strong>Income</strong></td>
-                  <td class="info"><strong>Profession</strong></td>
-                  <td class="success"><strong>Income</strong></td></tr>
+              <tr><td colspan=2><strong>{% trans "Guardian 1:" %} {% firstof survey.guardian1_relationship|relationship_display "Not Entered" %}</strong></td>
+                  <td colspan=2><strong>{% trans "Guardian 2:" %} {% firstof survey.guardian2_relationship|relationship_display "Not Entered" %}</strong></td></tr>
+              <tr><td class="info"><strong>{% trans "Profession" %}</strong></td>
+                  <td class="success"><strong>{% trans "Income" %}</strong></td>
+                  <td class="info"><strong>{% trans "Profession" %}</strong></td>
+                  <td class="success"><strong>{% trans "Income" %}</strong></td></tr>
               <tr>
                 <td class="info">{% firstof survey.guardian1_profession "Not Entered" %}</td>
                 <td class="success">{% firstof survey.guardian1_employment "Not Entered" %}</td>
@@ -336,28 +344,29 @@
       <div class="table-responsive">
 
         <table class="table table-bordered table-striped table-hover">
-          <tr><td><strong>Minors in Household</strong></td><td colspan=3>{% firstof survey.minors "Not Entered"%}</td></tr>
-          <tr><!-- <td><strong>Working Minors</strong></td><td>{% firstof survey.minors_working "Not Entered"%}</td> !-->
-          <td><strong>Minors in School (Public | Private)</strong></td><td>{{survey.minors_in_public_school}} |
+          <tr><td><strong>{% trans "Minors in Household" %}</strong></td><td colspan=3>{% firstof survey.minors "Not Entered"%}</td></tr>
+          <tr><!-- <td><strong>{% trans "Working Minors" %}</strong></td><td>{% firstof survey.minors_working "Not Entered"%}</td> !-->
+          <td><strong>{% trans "Minors in School (Public | Private)" %}
+</strong></td><td>{{survey.minors_in_public_school}} |
                                                         {{survey.minors_in_other_school}}</td></tr>
         </table>
         <!--
         <table class="table table-bordered table-striped table-hover">
-          <tr><td><strong>What are they doing for work?</strong></td><td colspan=3>{% firstof survey.minors_profession "Not Entered"%}</td></tr>
-          <tr><td><strong>Were they encouraged?</strong></td><td>{% firstof survey.minors_encouraged "Not Entered"%}</td>
-              <td><strong>Did they receive any vocational training?</strong></td><td>{% firstof survey.minors_training "Not Entered"%}</td></tr>
-          <td><strong>What kind of vocational training did they receive?</strong></td><td colspan=3>{% firstof survey.minors_training_type "Not Entered"%}</td></tr>
+          <tr><td><strong>{% trans "What are they doing for work?" %}</strong></td><td colspan=3>{% firstof survey.minors_profession "Not Entered"%}</td></tr>
+          <tr><td><strong>{% trans "Were they encouraged?" %}</strong></td><td>{% firstof survey.minors_encouraged "Not Entered"%}</td>
+              <td><strong>{% trans "Did they receive any vocational training?" %}</strong></td><td>{% firstof survey.minors_training "Not Entered"%}</td></tr>
+          <td><strong>{% trans "What kind of vocational training did they receive?" %}</strong></td><td colspan=3>{% firstof survey.minors_training_type "Not Entered"%}</td></tr>
         </table>
         !-->
       </div>
     </div>
   </div>
   <div role="tabpanel" class="tab-pane" id="notes">
-    <h3>Notes <a href="{% url 'intake_update' survey.student_id %}?next={% url 'student_detail' survey.student_id %}&tab=notes" class="btn btn-xs btn-info" role="button"> +Update this information?</a></h3>
+    <h3>{% trans "Notes" %} <a href="{% url 'intake_update' survey.student_id %}?next={% url 'student_detail' survey.student_id %}&tab=notes" class="btn btn-xs btn-info" role="button"> {% trans "+Update this information?" %}</a></h3>
 
       <table class="table table-bordered table-striped table-hover" id="notesTable">
         <thead>
-          <tr><th>Date</th><th>Note</th></tr>
+          <tr><th>{% trans "Date" %}</th><th>{% trans "Notes" %}</th></tr>
         </thead>
         <tbody>
           {% for note in notes %}
@@ -368,15 +377,15 @@
 
   </div>
   <div role="tabpanel" class="tab-pane" id="health">
-    <h3>Checkups   <a href="{% url 'health_form' survey.student_id TODAY 'CHECKUP' %}?next={% url 'student_detail' survey.student_id %}#health" class="btn btn-xs btn-success" role="button">+ Add a checkup</a></h3>
+    <h3>{% trans "Checkups" %}   <a href="{% url 'health_form' survey.student_id TODAY 'CHECKUP' %}?next={% url 'student_detail' survey.student_id %}#health" class="btn btn-xs btn-success" role="button">{% trans "+ Add a checkup" %}</a></h3>
 
       <table class="table table-bordered table-striped table-hover" id="checkupTable">
         <thead>
-          <tr><th style="width:4em;">Edit</th><th>Date</th><th>Height</th><th>Weight</th><th>Notes</th></tr>
+          <tr><th style="width:4em;">{% trans "Edit" %}</th><th>{% trans "Date" %}</th><th>{% trans "Height" %}</th><th>{% trans "Weight" %}</th><th>{% trans "Notes" %}</th></tr>
         </thead>
         <tbody>
           {% for checkup in checkups %}
-          <tr><td><a href="{% url 'health_form' survey.student_id checkup.appointment_date|date:'Y-m-d' 'CHECKUP' %}" role="button" class="btn btn-xs btn-warning">Edit</a></td>
+          <tr><td><a href="{% url 'health_form' survey.student_id checkup.appointment_date|date:'Y-m-d' 'CHECKUP' %}" role="button" class="btn btn-xs btn-warning">{% trans "Edit" %}</a></td>
               <td>{{checkup.appointment_date |date:'d N Y'}}</td>
               <td>{{checkup.height}}</td>
               <td>{{checkup.weight}}</td>
@@ -386,25 +395,25 @@
         </tbody>
       </table>
 
-    <h3>Dentist Visits <a href="{% url 'health_form' survey.student_id TODAY 'DENTAL' %}?next={% url 'student_detail' survey.student_id %}#health" class="btn btn-xs btn-success" role="button">+ Add a dental visit</a></h3>
+    <h3>{% trans "Dentist Visits" %} <a href="{% url 'health_form' survey.student_id TODAY 'DENTAL' %}?next={% url 'student_detail' survey.student_id %}#health" class="btn btn-xs btn-success" role="button">{% trans "+ Add a dental visit" %}</a></h3>
 
       <table class="table table-bordered table-striped table-hover" id="dentalTable">
         <thead>
-          <tr><th style="width:4em;" >Edit</th>
-              <th>Date</th>
-              <th>Extractions</th>
-              <th>Sealent</th>
-              <th>Fillings</th>
-              <th>Endo</th>
-              <th>Scaling</th>
-              <th>Pulped</th>
-              <th>Xray</th>
-              <th>Notes</th>
+          <tr><th style="width:4em;" >{% trans "Edit" %}</th>
+              <th>{% trans "Date" %}</th>
+              <th>{% trans "Extractions" %}</th>
+              <th>{% trans "Sealent" %}</th>
+              <th>{% trans "Fillings" %}</th>
+              <th>{% trans "Endo" %}</th>
+              <th>{% trans "Scaling" %}</th>
+              <th>{% trans "Pulped" %}</th>
+              <th>{% trans "Xray" %}</th>
+              <th>{% trans "Notes" %}</th>
           </tr>
         </thead>
         <tbody>
           {% for checkup in dental %}
-          <tr><td><a href="{% url 'health_form' survey.student_id checkup.appointment_date|date:'Y-m-d' 'DENTAL' %}?next={% url 'student_detail' survey.student_id %}#health" role="button" class="btn btn-xs btn-warning">Edit</a></td>
+          <tr><td><a href="{% url 'health_form' survey.student_id checkup.appointment_date|date:'Y-m-d' 'DENTAL' %}?next={% url 'student_detail' survey.student_id %}#health" role="button" class="btn btn-xs btn-warning">{% trans "Edit" %}</a></td>
               <td>{{checkup.appointment_date |date:'d N Y'}}</td>
               <td>{{checkup.extractions}}</td>
               <td>{{checkup.sealent}}</td>

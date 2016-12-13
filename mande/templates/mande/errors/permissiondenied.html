@@ -1,10 +1,11 @@
 {% extends "base.html" %}
+{%load i18 %}
 {% load bootstrap %}
 {% block title %}
-Error - You can't do that!
+{% trans "Error - You can't do that!" %}
 {% endblock %}
 
 {% block content %}
-Hmm. Seems strange you ended up here! Maybe you're just not allowed to do what
-you were trying to do!
+{% blocktrans %} Hmm. Seems strange you ended up here! Maybe you're just not allowed to do what
+you were trying to do!{% endblocktrans %}
 {% endblock %}

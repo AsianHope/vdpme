@@ -1,15 +1,16 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load mandefilters %}
 {% block title %}
-Students daily absences
+{% trans "Students daily absences" %}
 {% endblock %}
 
 {% block content %}
 <div class="col-md-9">
       <table class="table table-bordered table-striped table-hover" id="attendanceReportTable">
         <thead><tr>
-          <th>Site</th>
-          <th>Student</th>
+          <th>{% trans "Site" %}</th>
+          <th>{% trans "Student" %}</th>
         {% for key,code in attendancecodes.items %}
           <th>{{code}}</th>
         {% endfor %}

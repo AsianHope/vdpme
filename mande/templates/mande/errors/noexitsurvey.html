@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% load bootstrap %}
 {% block title %}
-Error - No Exit Survey on Record
+{% trans "Error - No Exit Survey on Record"}
 {% endblock %}
 
 {% block content %}
-Please perform an <a href = "{%url 'exit_survey' student_id %}"> exit survey </a> first!
+{% blocktrans %}Please perform an <a href = "{%url 'exit_survey' student_id %}"> exit survey </a> first!{% endblocktrans %}
 {% endblock %}

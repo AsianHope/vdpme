@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load mandefilters %}
 {% block title %}
   Exit Surveys List
@@ -8,14 +9,14 @@
 <div class="col-md-9">
       <table class="table table-bordered table-striped table-hover" id="medicalReportTable">
         <thead><tr>
-          <th>Site</th>
-          <th>Student ID</th>
-          <th>Exit Date</th>
-          <th>Grade In VDP When Exit</th>
-          <th>Public School Grade at Exit</th>
-          <th>Reason</th>
-          <th>Comment</th>
-          <th>Post Exit Survey</th>
+          <th>{% trans "Site" %}</th>
+          <th>{% trans "Student ID" %}</th>
+          <th>{% trans "Exit Date" %}</th>
+          <th>{% trans "Grade In VDP When Exit" %}</th>
+          <th>{% trans "Public School Grade at Exit" %}</th>
+          <th>{% trans "Reason" %}</th>
+          <th>{% trans "Comment" %}</th>
+          <th>{% trans "Post Exit Survey" %}</th>
         </tr>
         </thead>
         <tbody>
@@ -31,11 +32,11 @@
             <td>
               {% if exit_survey.student_id|check_if_already_perform_post_exit:post_exit_surveys %}
                 <button class="btn btn-success btn-xs">
-                  Already Performed
+                  {% trans "Already Performed" %}
                 </button>
               {%else%}
               <a href = "{% url 'post_exit_survey' exit_survey.student_id.student_id %}" class="btn btn-danger btn-xs" role="button">
-                Perform
+                {% trans "Perform" %}
               </a>
               {%endif%}
             </td>
@@ -44,7 +45,7 @@
         </tbody>
         <tfooter>
           <tr>
-            <td>Total</td>
+            <td>{% trans "Total" %}</td>
             <td colspan="7">{{exit_surveys|length}}</td>
           </tr>
         </tfooter>
@@ -62,7 +63,7 @@
               <input type="date" name="to_exit_date" class="form-control" id="to_exit_date" required>
             </div>
             <div class="form-group">
-              <button type="submit" class="btn btn-primary form-control">Search</button>
+              <button type="submit" class="btn btn-primary form-control">{% trans "Search" %}</button>
             </div>
           </div>
       </form>
