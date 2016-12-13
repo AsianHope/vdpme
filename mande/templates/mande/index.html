@@ -1,29 +1,32 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load mathfilters %}
 {% load mandefilters %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}
+  {% trans "Dashboard" %}
+{% endblock %}
 
 {% block content %}
             <div class="row">
                 <div class = "col-lg-8">
                   <div class="panel panel-default">
                       <div class="panel-heading">
-                          <i class="fa fa-bar-chart-o fa-fw"></i> VDP by Grade
+                          <i class="fa fa-bar-chart-o fa-fw"></i> {% trans "VDP by Grade" %}
                           <div class="pull-right">
                               <div class="btn-group">
                                   <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                      Actions
+                                      {% trans "Actions" %}
                                       <span class="caret"></span>
                                   </button>
                                   <ul class="dropdown-menu pull-right" role="menu">
-                                      <li><a href="#">Action</a>
+                                      <li><a href="#">{% trans "Action" %}</a>
                                       </li>
-                                      <li><a href="#">Another action</a>
+                                      <li><a href="#">{% trans "Another action" %}</a>
                                       </li>
-                                      <li><a href="#">Something else here</a>
+                                      <li><a href="#">{% trans "Something else here"  %}</a>
                                       </li>
                                       <li class="divider"></li>
-                                      <li><a href="#">Separated link</a>
+                                      <li><a href="#">{% trans "Separated link" %}</a>
                                       </li>
                                   </ul>
                               </div>
@@ -47,22 +50,22 @@
                 <div class = "col-lg-4">
                   <div class="panel panel-default">
                       <div class="panel-heading">
-                          <i class="fa fa-bar-chart-o fa-fw"></i> Anomalous Data
+                          <i class="fa fa-bar-chart-o fa-fw"></i> {% trans "Anomalous Data" %}
                           <div class="pull-right">
                               <div class="btn-group">
                                   <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                      Unenrolled Students
+                                      {% trans "Unenrolled Students" %}
                                       <span class="caret"></span>
                                   </button>
                                   <ul class="dropdown-menu pull-right" role="menu">
-                                      <li><a data-target="undenrolled_panel" data-id="unenrolled_panel" data-panel="anamolous">Unenrolled Students</a>
+                                      <li><a data-target="undenrolled_panel" data-id="unenrolled_panel" data-panel="anamolous">{% trans "Unenrolled Students" %}</a>
                                       </li>
-                                      <li><a data-target="absence_panel" data-id="absence_panel" data-panel="anamolous">Unapproved Absences</a>
+                                      <li><a data-target="absence_panel" data-id="absence_panel" data-panel="anamolous">{% trans "Unapproved Absences" %}</a>
                                       </li>
-                                      <li><a href="#">Something else here</a>
+                                      <li><a href="#">{% trans "Something else here" %}</a>
                                       </li>
                                       <li class="divider"></li>
-                                      <li><a href="#">Separated link</a>
+                                      <li><a href="#">{% trans "Separated link" %}</a>
                                       </li>
                                   </ul>
                               </div>
@@ -73,14 +76,14 @@
                         <table class="table table-bordered table-striped table-hover" id="unenrolledStudentsTable">
                           <thead>
                             <tr>
-                              <th>Site</th><th>Student</th><th>Enroll</th>
+                              <th>{% trans "Site" %}</th><th>{% trans "Student" %}</th><th>{% trans "Enroll" %}</th>
                             </tr>
                           </thead>
                           {% for student in unenrolled_students %}
                           <tr>
                               <td>{{student.site}}</td>
                               <td>{{student}}</td>
-                              <td><a href="{% url 'intake_internal' student.student_id %}" role="button" class="btn btn-xsmall btn-success">Enroll</a></td>
+                              <td><a href="{% url 'intake_internal' student.student_id %}" role="button" class="btn btn-xsmall btn-success">{% trans "Enroll" %}</a></td>
                           </tr>
                           {% endfor %}
                         </table>
@@ -91,7 +94,7 @@
                         <table class="table table-bordered table-striped table-hover" id="unapprovedAbsenceNoCommentTable" >
                           <thead>
                             <tr>
-                              <th>Date</th><th>Site</th><th>Student</th>
+                              <th>{% trans "Date" %}</th><th>{% trans "Site" %}</th><th>{% trans "Student" %}</th>
                             </tr>
                           </thead>
                           {% for student in unapproved_absence_no_comment %}
@@ -116,22 +119,22 @@
                 <div class="col-lg-8">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <i class="fa fa-bar-chart-o fa-fw"></i> VDP at a Glance
+                            <i class="fa fa-bar-chart-o fa-fw"></i> {% trans "VDP at a Glance" %}
                             <div class="pull-right">
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                        Overview
+                                        {% trans "Overview" %}
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu pull-right" role="menu">
-                                        <li><a data-target="gender_panel" data-id="gender_panel" data-panel="objectives">Overview</a>
+                                        <li><a data-target="gender_panel" data-id="gender_panel" data-panel="objectives">{% trans "Overview" %}</a>
                                         </li>
-                                        <li><a data-target="skills_panel" data-id="skills_panel" data-panel="objectives">Objectives breakdown</a>
+                                        <li><a data-target="skills_panel" data-id="skills_panel" data-panel="objectives">{% trans "Objectives breakdown" %}</a>
                                         </li>
-                                        <li><a href="#">Something else here</a>
+                                        <li><a href="#">{% trans "Something else here" %}</a>
                                         </li>
                                         <li class="divider"></li>
-                                        <li><a href="#">Separated link</a>
+                                        <li><a href="#">{% trans "Separated link" %}</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -141,11 +144,11 @@
                         <div id="gender_panel" class="panel-body">
                             <div class="col-md-12">
                               <table class="table table-striped table-bordered table-hover">
-                                <tr><td colspan=3>Catch Up Students: <strong>{{surveys|length}}</strong> ({{females}} female)</td></tr>
+                                <tr><td colspan=3>{% trans "Catch Up Students" %}: <strong>{{surveys|length}}</strong>{% blocktrans %}({{females}} female){% endblocktrans %}</td></tr>
                                 <tr><td>
                                 {% for school,attributes in breakdown.items %}
                                 <div class="col-md-4">
-                                <strong>{{school}} <br/>(total: {{attributes.M|add:attributes.F}})</strong>
+                                <strong>{{school}} <br/>({% trans "total" %}: {{attributes.M|add:attributes.F}})</strong>
                                   <div id="morris-donut-chart-{{school}}"></div>
                                 </div>
                                 {% endfor %}
@@ -153,7 +156,7 @@
                               </table>
                               <div class ="table-responsive">
                                 <table class="table table-striped table-bordered table-hover">
-                                  <tr><td colspan=12>At Age Appropriate Grade Level/<strong>Total</strong>:</td></tr>
+                                  <tr><td colspan=12>{% trans "At Age Appropriate Grade Level" %}/<strong>{% trans "Total" %}</strong>:</td></tr>
                                   <tr>
                                   {% for key, value in students_by_grade.items %}
                                     {% if key <= 12 and key > 0 and value %}
@@ -174,11 +177,15 @@
                               </div>
 
                               <table class="table table-striped table-bordered table-hover">
-                                <tr><td colspan=3>Skill Training Students:</td></tr>
+                                <tr><td colspan=3>{% trans "Skill Training Students" %}:</td></tr>
                                 <tr>
                                   {% for key, value in students_by_grade.items %}
                                     {% if key > 12  and value %}
-                                      <td><strong>{{key | grade_by_id}}:</strong> {{value}}</td>
+                                      <td>
+                                        <strong>
+                                          {% blocktrans with myvar=key|grade_by_id %}{{ myvar }}{% endblocktrans %}:
+                                        </strong> {{value}}
+                                    </td>
                                     {% endif %}
                                   {% endfor %}
                                 </tr>
@@ -187,15 +194,15 @@
 
                         </div>
                         <!-- /.panel-body -->
-                        
+
                         <div id="skills_panel" class="panel-body" style="display:none">
                             <div class="col-md-12">
                               <table class="table table-striped table-bordered table-hover">
-                                <tr><td colspan=3>Catch Up Students: <strong>{{surveys|length}}</strong> ({{total_skills}} Skills Training)</td></tr>
+                                <tr><td colspan=3>{% trans "Catch Up Students" %}: <strong>{{surveys|length}}</strong> {% blocktrans %}({{total_skills}} Skills Training){% endblocktrans %}</td></tr>
                                 <tr><td>
                                 {% for school,attributes in program_breakdown.items %}
                                 <div class="col-md-4">
-                                <strong>{{school}} <br/>(total: {{attributes.Grades|add:attributes.Skills}})</strong>
+                                <strong>{{school}} <br/>({% trans "total" %}: {{attributes.Grades|add:attributes.Skills}})</strong>
                                   <div id="morris-donut-chart1-{{school}}"></div>
                                 </div>
                                 {% endfor %}
@@ -213,7 +220,7 @@
                 <div class="col-lg-4">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <i class="fa fa-bell fa-fw"></i> Recent Activity
+                            <i class="fa fa-bell fa-fw"></i> {% trans "Recent Activity" %}
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -229,18 +236,18 @@
                               {% endfor %}
                             </div>
                             <!-- /.list-group -->
-                            <a href="{% url 'notification_log' %}" class="btn btn-default btn-block">View All Alerts</a>
+                            <a href="{% url 'notification_log' %}" class="btn btn-default btn-block">{% trans "View All Alerts" %}</a>
                         </div>
                         <!-- /.panel-body -->
                     </div>
                     <!-- /.panel -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <i class="fa fa-bar-chart-o fa-fw"></i> Students at Grade Level
+                            <i class="fa fa-bar-chart-o fa-fw"></i> {% trans "Students at Grade Level" %}
                         </div>
                         <div class="panel-body">
                             <div id="morris-area-chart"></div>
-                            <a href="#" class="btn btn-default btn-block">View Details</a>
+                            <a href="#" class="btn btn-default btn-block">{% trans "View Details" %}</a>
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -256,7 +263,7 @@
    <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
    <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
    <script src="/static/mande/js/js.cookie.js"></script>
-   
+
     <script type="text/javascript">
 
     $(document).ready(function(){
@@ -281,7 +288,7 @@
     		  $('#' + panel).show();
     		  $(window).trigger('resize');
     		  $(this).closest('.panel-default').find('button.dropdown-toggle').html($(this).html() + '<span class="caret"></span>');
-    		  
+
     		  // Create cookie to save preference
     		  if ($(this).attr('data-panel') != undefined) {
             var cookie_name = $(this).attr('data-panel') + '_cookie';
