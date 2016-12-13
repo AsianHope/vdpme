@@ -2,22 +2,22 @@
 {% load i18n %}
 {% load mandefilters %}
 {% block title %}
- Student Dental Report for {{ current_site }}
+{% blocktrans %}Student Dental Report for {{current_site}}{% endblocktrans %}
 {% endblock %}
 
 {% block content %}
 <div class="col-md-9">
       <table class="table table-bordered table-striped table-hover" id="medicalReportTable">
         <thead><tr>
-          <th>Date</th>
-          <th>Number of Student</th>
-          <th>Extractions</th>
-          <th>Sealent</th>
-          <th>Fillings</th>
-          <th>Endo</th>
-          <th>Scaling</th>
-          <th>Pulped</th>
-          <th>Xray</th>
+          <th>{% trans "Date" %}</th>
+          <th>{% trans "Number of Student" %}</th>
+          <th>{% trans "Extractions" %}</th>
+          <th>{% trans "Sealent" %}</th>
+          <th>{% trans "Fillings" %}</th>
+          <th>{% trans "Endo" %}</th>
+          <th>{% trans "Scaling" %}</th>
+          <th>{% trans "Pulped" %}</th>
+          <th>{% trans "Xray" %}</th>
         </tr>
         </thead>
         <tbody>
@@ -51,7 +51,7 @@
         </tbody>
         <tfooter>
           <tr>
-            <td>Total:</td>
+            <td>{% trans "Total" %} :</td>
             <td>
               {{unique_students}}
             </td>
@@ -85,7 +85,7 @@
     <div class="col-md-3">
       <div class="col-md-12">
         <div class="form-group">
-          <a href = "{% url 'student_dental_summary_report' %}" class="btn btn-xs btn-warning" style="width:100%;">All Site</a>
+          <a href = "{% url 'student_dental_summary_report' %}" class="btn btn-xs btn-warning" style="width:100%;">{% trans "All Site" %}</a>
         </div>
         {% for site in sites %}
           <div class="form-group">
