@@ -15,7 +15,7 @@
         <td>{{survey.site.school_name}}</td>
         <td><a href ="{% url 'student_detail' survey.student_id %}">{{ survey.student_id }}</a></td>
         <td>{{survey.name}}</td>
-        <td>{{survey.date|date:"m, d, Y"}}</td>
+        <td>{{survey.date|date:"d M Y"}}</td>
         <td>{{survey.gender}}</td>
         <td>{{survey.dob}} ({{survey.dob|timesince}} old)</td>
         {% with current_grade=survey.student_id|student_current_grade_by_id %}
