@@ -99,8 +99,8 @@ DISCIPLINE_CODES = (
 
 
 APPOINTMENT_TYPES = (
-	('DENTAL', 'Dental'),
-	('CHECKUP', 'Check-up'),
+	('DENTAL', _('Dental')),
+	('CHECKUP', _('Check-up')),
 )
 
 EXIT_REASONS = (
@@ -111,14 +111,14 @@ EXIT_REASONS = (
 )
 
 RELATIONSHIPS = (
-	('FATHER','Father'),
-	('MOTHER','Mother'),
-	('GRANDFATHER','Grandfather'),
-	('GRANDMOTHER','Grandmother'),
-	('AUNT','Aunt'),
-	('UNCLE','Uncle'),
-	('OTHER','Other'),
-	('NONE','No guardian')
+	('FATHER',_('Father')),
+	('MOTHER',_('Mother')),
+	('GRANDFATHER',_('Grandfather')),
+	('GRANDMOTHER',_('Grandmother')),
+	('AUNT',_('Aunt')),
+	('UNCLE',_('Uncle')),
+	('OTHER',_('Other')),
+	('NONE',_('No guardian'))
 )
 PUBLIC_SCHOOL_GRADES = (
 	(1,'Grade 1'),
@@ -416,14 +416,14 @@ class StudentEvaluation(models.Model):
 
 
 class SpiritualActivitiesSurvey(models.Model):
-	student_id = models.ForeignKey(IntakeSurvey)
-	date = models.DateField('Survey Date')
-	family_attend_church = models.CharField('Does your family currently attend church?',max_length=2,choices=YN,default='NA')
-	personal_attend_church = models.CharField('Do you currently attend church?',max_length=2,choices=YN,default='NA')
-	personal_prayer = models.CharField('Have you prayed on your own within the last week?',max_length=2,choices=YN,default='NA')
-	personal_baptism = models.CharField('Have you been baptized?',max_length=2,choices=YN,default='NA')
-	personal_bible_reading = models.CharField('Have you spent time reading the Bible in the last week?',max_length=2,choices=YN,default='NA')
-	personal_prayer_aloud = models.CharField('Have you prayed aloud in the last week?',max_length=2,choices=YN,default='NA')
+	student_id = models.ForeignKey(IntakeSurvey,verbose_name=_('Student ID'))
+	date = models.DateField(_('Survey Date'))
+	family_attend_church = models.CharField(_('Does your family currently attend church?'),max_length=2,choices=YN,default='NA')
+	personal_attend_church = models.CharField(_('Do you currently attend church?'),max_length=2,choices=YN,default='NA')
+	personal_prayer = models.CharField(_('Have you prayed on your own within the last week?'),max_length=2,choices=YN,default='NA')
+	personal_baptism = models.CharField(_('Have you been baptized?'),max_length=2,choices=YN,default='NA')
+	personal_bible_reading = models.CharField(_('Have you spent time reading the Bible in the last week?'),max_length=2,choices=YN,default='NA')
+	personal_prayer_aloud = models.CharField(_('Have you prayed aloud in the last week?'),max_length=2,choices=YN,default='NA')
 	def __unicode__(self):
 		return unicode(self.date)+' - '+unicode(self.student_id)
 
@@ -441,24 +441,24 @@ class ExitSurvey(models.Model):
 		return unicode(self.exit_date)+' - '+unicode(self.student_id)
 
 class PostExitSurvey(models.Model):
-	student_id = models.ForeignKey(IntakeSurvey)
-	post_exit_survey_date = models.DateField('Date of Survey',default=datetime.date.today)
-	exit_date = models.DateField('Exit Date')
-	early_exit = models.CharField('Early (before achieving grade level) Exit',max_length=2,choices=YN,default='NA')
+	student_id = models.ForeignKey(IntakeSurvey,verbose_name=_('Student ID'))
+	post_exit_survey_date = models.DateField(_('Date of Survey'),default=datetime.date.today)
+	exit_date = models.DateField(_('Exit Date'))
+	early_exit = models.CharField(_('Early (before achieving grade level) Exit'),max_length=2,choices=YN,default='NA')
 
-	guardian1_relationship = models.CharField('Guardian 1\'s relationship to child',max_length=64,choices=RELATIONSHIPS,default='FATHER')
-	guardian1_profession = models.CharField('Guardian 1\'s Profession',max_length=64,default='NA')
-	guardian1_employment = models.CharField('Guardian 1\'s Employment',max_length=1,choices=EMPLOYMENT,default=1)
+	guardian1_relationship = models.CharField(_('Guardian 1\'s relationship to child'),max_length=64,choices=RELATIONSHIPS,default='FATHER')
+	guardian1_profession = models.CharField(_('Guardian 1\'s Profession'),max_length=64,default='NA')
+	guardian1_employment = models.CharField(_('Guardian 1\'s Employment'),max_length=1,choices=EMPLOYMENT,default=1)
 
-	guardian2_relationship = models.CharField('Guardian 2\'s relationship to child',max_length=64,blank=True,null=True,choices=RELATIONSHIPS,default='MOTHER')
-	guardian2_profession = models.CharField('Guardian 2\'s Profession',max_length=64,default='NA',blank=True,null=True)
-	guardian2_employment= models.CharField('Guardian 2\'s Employment',max_length=1,choices=EMPLOYMENT,default=1,blank=True,null=True)
+	guardian2_relationship = models.CharField(_('Guardian 2\'s relationship to child'),max_length=64,blank=True,null=True,choices=RELATIONSHIPS,default='MOTHER')
+	guardian2_profession = models.CharField(_('Guardian 2\'s Profession'),max_length=64,default='NA',blank=True,null=True)
+	guardian2_employment= models.CharField(_('Guardian 2\'s Employment'),max_length=1,choices=EMPLOYMENT,default=1,blank=True,null=True)
 
-	minors = models.IntegerField('How many children in the household?',default=0)
-	enrolled = models.CharField('Currently in school? [Primary Child]',max_length=2,choices=YN,default='NA')
-	grade_current = models.IntegerField('Current Grade in formal school (if in school)',choices=GRADES,default=1)
-	grade_previous = models.IntegerField('Last Grade attended (if not in school)',choices=GRADES,default=1)
-	reasons = models.TextField('Reasons for not attending',blank=True)
+	minors = models.IntegerField(_('How many children in the household?'),default=0)
+	enrolled = models.CharField(_('Currently in school? [Primary Child]'),max_length=2,choices=YN,default='NA')
+	grade_current = models.IntegerField(_('Current Grade in formal school (if in school)'),choices=GRADES,default=1)
+	grade_previous = models.IntegerField(_('Last Grade attended (if not in school)'),choices=GRADES,default=1)
+	reasons = models.TextField(_('Reasons for not attending'),blank=True)
 	def __unicode__(self):
 		return unicode(self.exit_date)+' - '+unicode(self.student_id)
 
@@ -507,19 +507,19 @@ class Academic(models.Model):
 		unique_together = (('student_id','test_date','test_level','promote'))
 
 class Health(models.Model):
-	student_id = models.ForeignKey(IntakeSurvey)
-	appointment_date = models.DateField(default=datetime.date.today)
-	appointment_type = models.CharField(choices=APPOINTMENT_TYPES,default='Check-up',max_length=16)
-	height = models.DecimalField(max_digits=5,decimal_places=2,null=True,blank=True) 	#Medical
-	weight = models.DecimalField(max_digits=5,decimal_places=2,null=True,blank=True) 	#Medical
-	extractions = models.IntegerField(default=0,null=True,blank=True) 	#dental
-	sealent = models.IntegerField(default=0,null=True,blank=True) 		#dental
-	filling = models.IntegerField(default=0,null=True,blank=True)		#dental
-	endo = models.IntegerField(default=0,null=True,blank=True)			#dental
-	scaling = models.IntegerField(default=0,null=True,blank=True)		#dental
-	pulped = models.IntegerField(default=0,null=True,blank=True)			#dental
-	xray = models.IntegerField(default=0,null=True,blank=True)			#dental
-	notes = models.TextField(blank=True)									#all
+	student_id = models.ForeignKey(IntakeSurvey,verbose_name=_('Student ID'))
+	appointment_date = models.DateField(_("Appointment date"),default=datetime.date.today)
+	appointment_type = models.CharField(_("Appointment type"),choices=APPOINTMENT_TYPES,default='Check-up',max_length=16)
+	height = models.DecimalField(_("Height"),max_digits=5,decimal_places=2,null=True,blank=True) 	#Medical
+	weight = models.DecimalField(_("Weight"),max_digits=5,decimal_places=2,null=True,blank=True) 	#Medical
+	extractions = models.IntegerField(_("Extractions"),default=0,null=True,blank=True) 	#dental
+	sealent = models.IntegerField(_("Sealent"),default=0,null=True,blank=True) 		#dental
+	filling = models.IntegerField(_("Filling"),default=0,null=True,blank=True)		#dental
+	endo = models.IntegerField(_("Endo"),default=0,null=True,blank=True)			#dental
+	scaling = models.IntegerField(_("Scaling"),default=0,null=True,blank=True)		#dental
+	pulped = models.IntegerField(_("Pulped"),default=0,null=True,blank=True)			#dental
+	xray = models.IntegerField(_("Xray"),default=0,null=True,blank=True)			#dental
+	notes = models.TextField(_("Notes"),blank=True)									#all
 
 	def __unicode__(self):
 		return unicode(self.appointment_date) + ': '+self.appointment_type+ ' - '+unicode(self.student_id)

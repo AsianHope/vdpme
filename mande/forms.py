@@ -106,14 +106,14 @@ class ExitSurveyForm(forms.ModelForm):
         exclude=[]
 
 class PostExitSurveyForm(forms.ModelForm):
-    post_exit_survey_date = forms.DateField(label="Post Exit Survey Date",widget=Html5DateInput)
-    exit_date = forms.DateField(label="Exit Date",widget=Html5DateInput)
+    post_exit_survey_date = forms.DateField(label=_("Post Exit Survey Date"),widget=Html5DateInput)
+    exit_date = forms.DateField(label=_("Exit Date"),widget=Html5DateInput)
     class Meta:
         model = PostExitSurvey
         exclude=[]
 
 class SpiritualActivitiesSurveyForm(forms.ModelForm):
-    date = forms.DateField(label="Survey Date",widget=Html5DateInput)
+    date = forms.DateField(label=_("Survey Date"),widget=Html5DateInput)
     class Meta:
         model = SpiritualActivitiesSurvey
         exclude=[]
@@ -191,7 +191,7 @@ class AcademicForm(forms.ModelForm):
         exclude = []
 
 class HealthForm(forms.ModelForm):
-    appointment_date = forms.DateField(label="Appointment Date",widget=Html5DateInput,initial=date.today().isoformat())
+    appointment_date = forms.DateField(label=_("Appointment Date"),widget=Html5DateInput,initial=date.today().isoformat())
     class Meta:
         model = Health
         exclude=[]
