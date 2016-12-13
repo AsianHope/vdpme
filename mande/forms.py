@@ -27,12 +27,14 @@ from django.forms.extras.widgets import SelectDateWidget
 from django.forms import CheckboxSelectMultiple
 from django.utils.safestring import mark_safe
 
+from django.utils.translation import ugettext_lazy as _
+
 class Html5DateInput(forms.DateInput):
         input_type = 'date'
 
 class IntakeSurveyForm(forms.ModelForm):
-    date = forms.DateField(label="Survey Date",widget=Html5DateInput,initial=date.today().isoformat())
-    dob =  forms.DateField(label="Date of Birth",widget=Html5DateInput)
+    date = forms.DateField(label=_("Survey Date"),widget=Html5DateInput,initial=date.today().isoformat())
+    dob =  forms.DateField(label=_("Date of Birth"),widget=Html5DateInput)
 
     def clean(self):
         cleaned_data = super(IntakeSurveyForm, self).clean()
@@ -97,8 +99,8 @@ class IntakeUpdateForm(forms.ModelForm):
         ]
 
 class ExitSurveyForm(forms.ModelForm):
-    survey_date = forms.DateField(label="Survey Date",widget=Html5DateInput)
-    exit_date = forms.DateField(label="Exit Date",widget=Html5DateInput)
+    survey_date = forms.DateField(label=_("Survey Date"),widget=Html5DateInput)
+    exit_date = forms.DateField(label=_("Exit Date"),widget=Html5DateInput)
     class Meta:
         model = ExitSurvey
         exclude=[]
