@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load mandefilters %}
 {% block title %}
-Attendance taken/available to be taken on {{ attendance_date }}
+  {%trans "Attendance taken/available to be taken on" %} {{ attendance_date }}
 {% endblock %}
 
 {% block content %}
@@ -9,12 +10,12 @@ Attendance taken/available to be taken on {{ attendance_date }}
 <div class="col-md-9">
       <table class="table table-bordered table-striped table-hover" id="attendanceReportTable">
         <thead><tr>
-          <th>Site</th>
-          <th>Grade</th>
-          <th>Description</th>
-          <th>Present</th>
-          <th>Absent</th>
-          <th>Take Attendance</th></tr></thead>
+          <th>{% trans "Site" %}</th>
+          <th>{% trans "Grade" %}Grade</th>
+          <th>{% trans "Description"%}</th>
+          <th>{% trans "Present" %}</th>
+          <th>{% trans "Absent" %}</th>
+          <th>{% trans "Take Attendance" %}</th></tr></thead>
         <tbody>
           {% for classroom,attendance in classroomattendance.items %}
           <tr>
@@ -24,9 +25,9 @@ Attendance taken/available to be taken on {{ attendance_date }}
               <td>{{ attendance.present }}</td>
               <td>{{ attendance.absent }}</td>
               {% if attendance %}
-              <td><a href = "{% url 'take_class_attendance' classroom.classroom_id attendance_date %}" role="button" class="btn btn-xs btn-success">Taken</a></td>
+              <td><a href = "{% url 'take_class_attendance' classroom.classroom_id attendance_date %}" role="button" class="btn btn-xs btn-success">{% trans "Taken" %}</a></td>
               {% else %}
-              <td><a href = "{% url 'take_class_attendance' classroom.classroom_id attendance_date %}" role="button" class="btn btn-xs btn-danger">Take Attendance</a></td>
+              <td><a href = "{% url 'take_class_attendance' classroom.classroom_id attendance_date %}" role="button" class="btn btn-xs btn-danger">{% trans "Take Attendance" %}</a></td>
               {% endif %}
           </tr>
           {% endfor %}

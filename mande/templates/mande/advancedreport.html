@@ -1,13 +1,15 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load mandefilters %}
 {% block title %}
-  Advanced Report
+  {% trans "Advanced Report" %}
 {% endblock %}
 
 {% block content %}
+{{list_of_fields}}
 {% if show_data == 'yes' %}
 <div class="col-md-12" id="resutl">
-    <button class="btn btn-primary" id="click_back" style="margin-bottom:20px;"><i class="fa fa-chevron-left" aria-hidden="true"></i> Go Back to Filter</button>
+    <button class="btn btn-primary" id="click_back" style="margin-bottom:20px;"><i class="fa fa-chevron-left" aria-hidden="true"></i> {% trans "Go Back to Filter" %}</button>
     <br/>
     {% if students|length > 0 %}
     <div id="all_field" style="padding-bottom:10px;">
@@ -15,15 +17,15 @@
     </div>
     <div style="margin-bottom:15px;">
       <select id="field_list">
-        <option selected="selected" value="">--- Choose a Column ---</option>
+        <option selected="selected" value="">--- {% trans "Choose a Column" %} ---</option>
         {% for key,value in list_of_fields %}
-          <option value="{{key}}">{{value}}</option>
+          <option value="{{key}}">{% trans value %}</option>
         {% endfor %}
       </select>
       &nbsp;
       <i id="add" style="color:#398439; margin-top: -3px; vertical-align: middle;" class="fa fa-plus-circle fa-3x" aria-hidden="true"></i>
     </div>
-    <button class="btn btn-primary" id="show_result" style="margin-top:15px;">Show Result</button>
+    <button class="btn btn-primary" id="show_result" style="margin-top:15px;">{% trans "Show Result" %}</button>
     {% else %}
      <p>No matching records found</p>
     {% endif %}
@@ -35,46 +37,46 @@
       <table style="width:100%; display:none;" class="table table-bordered table-striped table-hover" id="tbl_data">
            <thead>
              <tr>
-              <th class="site">Site</th>
-              <th class="id">ID</th>
-              <th class="name">Name</th>
-              <th class="gender">Gender</th>
-              <th class="date">Date of Intake</th>
-              <th class="dob">Date of birth</th>
-              <th class="address">Address</th>
-              <th class="grade_appropriate">Grade Appropriate</th>
+              <th class="site">{% trans "Site" %}</th>
+              <th class="id">{% trans "ID" %}</th>
+              <th class="name">{% trans "Name" %}</th>
+              <th class="gender">{% trans "Gender" %}</th>
+              <th class="date">{% trans "Date of Intake" %}</th>
+              <th class="dob">{% trans "Date of birth" %}</th>
+              <th class="address">{% trans "Address" %}</th>
+              <th class="grade_appropriate">{% trans "Grade Appropriate" %}</th>
 
-              <th class="vdp_grade">VDP Grade</th>
-              <th class="classroom">Classroom</th>
+              <th class="vdp_grade">{% trans "VDP Grade" %}</th>
+              <th class="classroom">{% trans "Classroom" %}</th>
 
-              <th class="guardian1_name">Guardian 1 Name</th>
-              <th class="guardian1_relationship">Guardian 1 Rrelationship</th>
-              <th class="guardian1_phone">Guardian 1 Phone</th>
-              <th class="guardian1_profession">Guardian 1 Profession</th>
-              <th class="guardian1_employment">Guardian 1 Employment</th>
+              <th class="guardian1_name">{% trans "Guardian 1 Name" %}</th>
+              <th class="guardian1_relationship">{% trans "Guardian 1 Rrelationship" %}</th>
+              <th class="guardian1_phone">{% trans "Guardian 1 Phone" %}</th>
+              <th class="guardian1_profession">{% trans "Guardian 1 Profession" %}</th>
+              <th class="guardian1_employment">{% trans "Guardian 1 Employment" %}</th>
 
-              <th class="guardian2_name">Guardian 2 Name</th>
-              <th class="guardian2_relationship">Guardian 2 Relationship</th>
-              <th class="guardian2_phone">Guardian 2 Phone</th>
-              <th class="guardian2_profession">Guardian 2 Profession</th>
-              <th class="guardian2_employment">Guardian 2 Employment</th>
+              <th class="guardian2_name">{% trans "Guardian 2 Name" %}</th>
+              <th class="guardian2_relationship">{% trans "Guardian 2 Relationship" %}</th>
+              <th class="guardian2_phone">{% trans "Guardian 2 Phone" %}</th>
+              <th class="guardian2_profession">{% trans "Guardian 2 Profession" %}</th>
+              <th class="guardian2_employment">{% trans "Guardian 2 Employment" %}</th>
 
-              <th class="minors">Minors</th>
-              <th class="minors_in_public_school">Minors in Public School</th>
-              <th class="minors_in_other_school">Minors in Other School</th>
-              <th class="minors_working">Minors Working</th>
-              <th class="minors_profession">Minors Profession</th>
-              <th class="minors_encouraged">Minors Encouraged</th>
-              <th class="minors_training">Minors Training</th>
-              <th class="minors_training_type">Minors Training Type</th>
+              <th class="minors">{% trans "Minors" %}</th>
+              <th class="minors_in_public_school">{% trans "Minors in Public School" %}</th>
+              <th class="minors_in_other_school">{% trans "Minors in Other School" %}</th>
+              <th class="minors_working">{% trans "Minors Working" %}</th>
+              <th class="minors_profession">{% trans "Minors Profession" %}</th>
+              <th class="minors_encouraged">{% trans "Minors Encouraged" %}</th>
+              <th class="minors_training">{% trans "Minors Training" %}</th>
+              <th class="minors_training_type">{% trans "Minors Training Type" %}</th>
 
-              <th class="enrolled">Enrolled</th>
-              <th class="grade_current">Current grade in Public School</th>
-              <th class="grade_last">Last grade in Public School</th>
-              <th class="public_school_name">Public School Name</th>
-              <th class="reasons">Reasons not Attending School</th>
+              <th class="enrolled">{% trans "Enrolled" %}</th>
+              <th class="grade_current">{% trans "Current grade in Public School" %}</th>
+              <th class="grade_last">{% trans "Last grade in Public School" %}</th>
+              <th class="public_school_name">{% trans "Public School Name" %}</th>
+              <th class="reasons">{% trans "Reasons not Attending School" %}</th>
 
-              <th class="notes">Notes</th>
+              <th class="notes">{% trans "Notes" %}</th>
 
              </tr>
            </thead>
@@ -143,22 +145,22 @@
      <div class="col-md-6">
      <table class="search">
        <tr>
-         <td>Name</td>
+         <td>{% trans "Name" %}</td>
          <td>
            <input type="text" class="form-control input-sm" name="name"/>
          </td>
        </tr>
        <tr>
-         <td>ID</td>
+         <td>{% trans "ID" %}</td>
          <td>
            <input type="text" class="form-control input-sm" name="studnet_id"/>
          </td>
        </tr>
        <tr>
-         <td>School</td>
+         <td>{% trans "School" %}</td>
          <td>
            <select name="school" class="form-control input-sm">
-             <option value="" selected="selected">Select Site</option>
+             <option value="" selected="selected">{% trans "Select Site" %}</option>
              {% for school in schools %}
              <option value="{{school.school_id}}">{{school}}</option>
              {% endfor %}
@@ -166,180 +168,180 @@
          </td>
        </tr>
        <tr>
-         <td>Date of Intake</td>
+         <td>{% trans "Date of Intake" %}</td>
          <td>
            <input type="date" class="form-control input-sm" name="intake_date"/>
          </td>
        </tr>
        <tr>
-         <td>Date of Intake (year)</td>
+         <td>{% trans "Date of Intake" %} ({% trans "year" %})</td>
          <td>
            <input type="number" class="form-control input-sm" name="intake_date_year"/>
          </td>
        </tr>
        <tr>
-         <td>Date of Birth</td>
+         <td>{% trans "Date of Birth" %}</td>
          <td>
            <input type="date" class="form-control input-sm" name="dob"/>
          </td>
        </tr>
        <tr>
-         <td>Date of Birth (year)</td>
+         <td>{% trans "Date of Birth" %} ({% trans "year" %})</td>
          <td>
            <input type="number" class="form-control input-sm" name="dob_year"/>
          </td>
        </tr>
        <tr>
-         <td>Gender</td>
+         <td>{% trans "Gender" %}</td>
          <td>
            <select name="gender" class="form-control input-sm">
-             <option value="" selected="selected">Select Gender</option>
+             <option value="" selected="selected">{% trans "Select Gender" %}</option>
              {% for key,value in genders.iteritems %}
-             <option value="{{key}}">{{value}}</option>
+             <option value="{{key}}">{% trans value %}</option>
              {% endfor %}
            </select>
          </td>
        </tr>
        <tr>
-         <td>Address</td>
+         <td>{% trans "Address" %}</td>
          <td>
            <input type="text" class="form-control input-sm" name="address"/>
          </td>
        </tr>
        <tr>
-         <td>Guardian 1 Name</td>
+         <td>{% trans "Guardian 1 Name" %}</td>
          <td>
            <input type="text" class="form-control input-sm" name="guardian1_name"/>
          </td>
        </tr>
        <tr>
-         <td>Guardian 1 Relationship</td>
+         <td>{% trans "Guardian 1 Relationship" %}</td>
          <td>
            <select name="guardian1_relationship" class="form-control input-sm">
-             <option value="" selected="selected">Select Guardian 1 Relationship</option>
+             <option value="" selected="selected">{% trans "Select Guardian 1 Relationship" %}</option>
              {% for id,relationship in relationships.items %}
-             <option value="{{id}}">{{relationship}}</option>
+             <option value="{{id}}">{% trans relationship %}</option>
              {% endfor %}
            </select>
          </td>
        </tr>
        <tr>
-         <td>Guardian 1 Phone</td>
+         <td>{% trans "Guardian 1 Phone" %}</td>
          <td>
            <input type="number" class="form-control input-sm" name="guardian1_phone"/>
          </td>
        </tr>
        <tr>
-         <td>Guardian 1 Profession</td>
+         <td>{% trans "Guardian 1 Profession" %}</td>
          <td>
            <input type="text" class="form-control input-sm" name="guardian1_profession"/>
          </td>
        </tr>
        <tr>
-         <td>Guardian 1 Employment</td>
+         <td>{% trans "Guardian 1 Employment" %}</td>
          <td>
            <select name="guardian1_employment" class="form-control input-sm">
-             <option value="" selected="selected">Select Guardian 1 Employment</option>
+             <option value="" selected="selected">{% trans "Select Guardian 1 Employment" %}</option>
              {% for id,employment in employments.items %}
-             <option value="{{id}}">{{employment}}</option>
+             <option value="{{id}}">{% trans employment %}</option>
              {% endfor %}
            </select>
          </td>
        </tr>
        <tr>
-         <td>Guardian 2 Name</td>
+         <td>{% trans "Guardian 2 Name" %}</td>
          <td>
            <input type="text" class="form-control input-sm" name="guardian2_name"/>
          </td>
        </tr>
        <tr>
-         <td>Guardian 2 Relationship</td>
+         <td>{% trans "Guardian 2 Relationship" %}</td>
          <td>
            <select name="guardian2_relationship" class="form-control input-sm">
-             <option value="" selected="selected">Select Guardian 2 Relationship</option>
+             <option value="" selected="selected">{% trans "Select Guardian 2 Relationship" %}</option>
              {% for id,relationship in relationships.items %}
-             <option value="{{id}}">{{relationship}}</option>
+             <option value="{{id}}">{% trans relationship %}</option>
              {% endfor %}
            </select>
          </td>
        </tr>
        <tr>
-         <td>Guardian 2 Phone</td>
+         <td>{% trans "Guardian 2 Phone" %}</td>
          <td>
            <input type="number" class="form-control input-sm" name="guardian2_phone"/>
          </td>
        </tr>
        <tr>
-         <td>Guardian 2 Profession</td>
+         <td>{% trans "Guardian 2 Profession" %}</td>
          <td>
            <input type="text" class="form-control input-sm" name="guardian2_profession"/>
          </td>
        </tr>
        <tr>
-         <td>Guardian 2 Employment</td>
+         <td>{% trans "Guardian 2 Employment" %}</td>
          <td>
            <select name="guardian2_employment" class="form-control input-sm">
-             <option value="" selected="selected">Select Guardian 2 Employment</option>
+             <option value="" selected="selected">{% trans "Select Guardian 2 Employment" %}</option>
              {% for id,employment in employments.items %}
-             <option value="{{id}}">{{employment}}</option>
+             <option value="{{id}}">{% trans employment %}</option>
              {% endfor %}
            </select>
          </td>
        </tr>
        <tr>
-         <td>Minors</td>
+         <td>{% trans "Minors" %}</td>
          <td>
            <input type="number" class="form-control input-sm" name="minors"/>
          </td>
        </tr>
        <tr>
-         <td>Minors in Public School</td>
+         <td>{% trans "Minors in Public School" %}</td>
          <td>
            <input type="number" class="form-control input-sm" name="minors_in_public_school"/>
          </td>
        </tr>
        <tr>
-         <td>Minors in Other School</td>
+         <td>{% trans "Minors in Other School" %}</td>
          <td>
            <input type="number" class="form-control input-sm" name="minors_in_other_school"/>
          </td>
        </tr>
        <tr>
-         <td>Minors Working</td>
+         <td>{% trans "Minors Working" %}</td>
          <td>
            <input type="number" class="form-control input-sm" name="minors_working"/>
          </td>
        </tr>
        <tr>
-         <td>Minors Profession</td>
+         <td>{% trans "Minors Profession" %}</td>
          <td>
            <input type="text" class="form-control input-sm" name="minors_profession"/>
          </td>
        </tr>
        <tr>
-         <td>Minors Encouraged</td>
+         <td>{% trans "Minors Encouraged" %}</td>
          <td>
            <select name="minors_encouraged" class="form-control input-sm">
-             <option value="" selected="selected">Select Minors Encouraged</option>
+             <option value="" selected="selected">{% trans "Select Minors Encouraged" %}</option>
              {% for id,yn in yns.items %}
-             <option value="{{id}}">{{yn}}</option>
+             <option value="{{id}}">{% trans yn %}</option>
              {% endfor %}
            </select>
          </td>
        </tr>
        <tr>
-         <td>Minors Training</td>
+         <td>{% trans "Minors Training" %}</td>
          <td>
            <select name="minors_training" class="form-control input-sm">
-             <option value="" selected="selected">Select Minors Training</option>
+             <option value="" selected="selected">{% trans "Select Minors Training" %}</option>
              {% for id,yn in yns.items %}
-             <option value="{{id}}">{{yn}}</option>
+             <option value="{{id}}">{% trans yn %}</option>
              {% endfor %}
            </select>
          </td>
        </tr>
        <tr>
-         <td>Minors Training Type</td>
+         <td>{% trans "Minors Training Type" %}</td>
          <td>
            <input type="text" class="form-control input-sm" name="minors_training_type"/>
          </td>
@@ -349,10 +351,10 @@
    <div class="col-md-6">
      <table class="search">
        <tr>
-         <td>Classroom</td>
+         <td>{% trans "Classroom" %}</td>
          <td>
            <select name="classroom" class="form-control input-sm" id="site">
-             <option value="" selected="selected">Select Classroom</option>
+             <option value="" selected="selected">{% trans "Select Classroom" %}</option>
              {% for classroom in classrooms %}
              <option value="{{classroom.classroom_id}}">{{classroom}}</option>
              {% endfor %}
@@ -360,10 +362,10 @@
          </td>
        </tr>
        <tr>
-         <td>VDP Grade</td>
+         <td>{% trans "VDP Grade" %}</td>
          <td>
            <select name="vdp_grade" class="form-control input-sm">
-             <option value="" selected="selected">Select VDP Grade</option>
+             <option value="" selected="selected">{% trans "Select VDP Grade" %}</option>
              {% for id,grade in grades.items %}
                <option value="{{id}}">{{grade}}</option>
              {% endfor %}
@@ -371,21 +373,21 @@
          </td>
        </tr>
        <tr>
-         <td>Enrolled</td>
+         <td>{% trans "Enrolled" %}</td>
          <td>
            <select name="enrolled" class="form-control input-sm">
-             <option value="" selected="selected">Select Enrolled</option>
+             <option value="" selected="selected">{% trans "Select Enrolled" %}</option>
              {% for id,yn in yns.items %}
-             <option value="{{id}}">{{yn}}</option>
+             <option value="{{id}}">{{% trans yn %}</option>
              {% endfor %}
            </select>
          </td>
        </tr>
        <tr>
-         <td>Current Grade in Public School</td>
+         <td>{% trans "Current Grade in Public School" %}</td>
          <td>
            <select name="grade_current" class="form-control input-sm">
-             <option value="" selected="selected">Select Current Grade in Public School</option>
+             <option value="" selected="selected">{% trans "Select Current Grade in Public School" %}</option>
              {% for id,grade in grades.items %}
                <option value="{{id}}">{{grade}}</option>
              {% endfor %}
@@ -393,10 +395,10 @@
          </td>
        </tr>
        <tr>
-         <td>Last Grade in Public School</td>
+         <td>{% trans "Last Grade in Public School" %}</td>
          <td>
            <select name="grade_last" class="form-control input-sm">
-             <option value="" selected="selected">Select Last Grade in Public Schoo</option>
+             <option value="" selected="selected">{% trans "Select Last Grade in Public School" %}</option>
              {% for id,grade in grades.items %}
                <option value="{{id}}">{{grade}}</option>
              {% endfor %}
@@ -404,7 +406,7 @@
          </td>
        </tr>
        <tr>
-         <td>Reasons not Attending School</td>
+         <td>{% trans "Reasons not Attending School" %}</td>
          <td>
            <input type="text" class="form-control input-sm" name="reasons"/>
          </td>
