@@ -1,9 +1,8 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load mathfilters %}
 {% load mandefilters %}
 {% block title %}
-{% trans "Detail" %}
-{% endblock %}
 
 {% if exit_survey != None %}<style>div{color: red;}</style>{% endif %}
 
