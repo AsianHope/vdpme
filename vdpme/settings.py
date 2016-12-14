@@ -13,8 +13,17 @@ import os
 from os.path import join
 from django.utils.translation import ugettext_lazy as _
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+from django.forms import Field
+
+Field.default_error_messages = {
+    'required': _("This field is required."),
+    'max_whole_digits':_('Ensure that there are no more than 3 digits before the decimal point.'),
+    'max_digits':_('Ensure that there are no more than 5 digits in total.'),
+    'invalid_choice':_('Select a valid choice. That choice is not one of the available choices.')
+}
 
 
+# print Field.default_error_messages
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 

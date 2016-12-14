@@ -37,19 +37,23 @@ class IntakeSurveyForm(forms.ModelForm):
     dob =  forms.DateField(label=_('Date of Birth'),widget=Html5DateInput)
 
     def clean(self):
+        print 'lalla'
+        print self.errors.as_json()
+
         cleaned_data = super(IntakeSurveyForm, self).clean()
         enrolled = cleaned_data.get("enrolled")
         grade_last = cleaned_data.get("grade_last")
         grade_current = cleaned_data.get("grade_current")
 
-        msg = u"Must select value other than Not Applicable"
-        top_msg = u"Enrollment status and grade data mismatch triggered"
+        msg = _(u"Must select value other than Not Applicable")
+        top_msg = _(u"Enrollment status and grade data mismatch triggered")
         if enrolled == 'N' and grade_last < 0:
             self.add_error('grade_last', msg)
             raise forms.ValidationError(top_msg)
         if enrolled == 'Y' and grade_current < 0:
             self.add_error('grade_current', msg)
             raise forms.ValidationError(top_msg)
+
 
     class Meta:
         model = IntakeSurvey
@@ -71,15 +75,14 @@ class IntakeInternalForm(forms.ModelForm):
 
 class IntakeUpdateForm(forms.ModelForm):
     date = forms.DateField(label=_('Survey Date'),widget=Html5DateInput)
-
     def clean(self):
         cleaned_data = super(IntakeUpdateForm, self).clean()
         enrolled = cleaned_data.get("enrolled")
         grade_last = cleaned_data.get("grade_last")
         grade_current = cleaned_data.get("grade_current")
 
-        msg = u"Must select value other than Not Applicable"
-        top_msg = u"Enrollment status and grade data mismatch triggered"
+        msg = _(u"Must select value other than Not Applicable")
+        top_msg = _(u"Enrollment status and grade data mismatch triggered")
         if enrolled == 'N' and grade_last < 0:
             self.add_error('grade_last', msg)
             raise forms.ValidationError(top_msg)
@@ -195,6 +198,16 @@ class HealthForm(forms.ModelForm):
     class Meta:
         model = Health
         exclude=[]
+        error_messages = {
+            'height': {
+                'max_whole_digits':_('nsure that there are no more than 3 digits before the decimal point.'),
+                'max_digits':_('Ensure that there are no more than 5 digits in total.')
+            },
+            'weight': {
+                'max_whole_digits':_('Ensure that there are no more than 3 digits before the decimal point.'),
+                'max_digits':_('Ensure that there are no more than 5 digits in total.')
+            },
+        }
 
 class HealthDentalForm(forms.ModelForm):
     appointment_date = forms.DateField(label=_('Appointment Date'),widget=Html5DateInput,initial=date.today().isoformat())
@@ -238,8 +251,8 @@ class StudentPublicSchoolHistoryForm(forms.ModelForm):
         reasons = cleaned_data.get("reasons")
         enroll_date = cleaned_data.get("enroll_date")
         drop_date = cleaned_data.get('drop_date')
-        msg = u"This field is required."
-        top_msg = u"Enrollment status and grade data mismatch triggered"
+        msg = _(u"This field is required.")
+        top_msg = _(u"Enrollment status and grade data mismatch triggered")
         if (status == 'DROPPED') & ((reasons=='') | (reasons==None)):
             self.add_error('reasons', msg)
 
@@ -247,7 +260,7 @@ class StudentPublicSchoolHistoryForm(forms.ModelForm):
             self.add_error('drop_date', msg)
         if (drop_date != None):
             if(drop_date < enroll_date):
-                msg = u"Drop date should be greater than enroll date."
+                msg = _(u"Drop date should be greater than enroll date")
                 self.add_error('drop_date',msg)
 
     class Meta:
