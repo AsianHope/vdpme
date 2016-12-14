@@ -402,7 +402,7 @@ class StudentEvaluation(models.Model):
 	#study_notes = models.CharField('Academic Growth Notes',blank=True,null=True)
 	personal_score = models.IntegerField(_('Life Skills/Personal Development Score'),blank=True,null=True,default=None)
 	#personal_notes = models.CharField('Life Skills/Personal Development Notes',blank=True,null=True)
-	hygiene_score = models.IntegerField(_('Hygeine Knowledge Score'),blank=True,null=True,default=None)
+	hygiene_score = models.IntegerField(_('Hygiene Knowledge Score'),blank=True,null=True,default=None)
 	#hygiene_notes = models.CharField('Hygeine Knowledge Notes',blank=True,null=True)
 	faith_score = models.IntegerField(_('Christian Growth Score'),blank=True,null=True,default=None)
 	#faith_notes = models.CharField('Christian Growth Notes',blank=True,null=True)
