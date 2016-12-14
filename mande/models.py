@@ -25,16 +25,16 @@ SITES = (
 
 )
 EMPLOYMENT = (
-	('1', '1 - Very Low Wage'),
-	('2', '2'),
-	('3', '3'),
-	('4', '4'),
-	('5', '5'),
-	('6', '6'),
-	('7', '7'),
-	('8', '8'),
-	('9', '9'),
-	('10', 'Middle Class (or higher)'),
+	('1', _('1 - Very Low Wage')),
+	('2', _('2')),
+	('3', _('3')),
+	('4', _('4')),
+	('5', _('5')),
+	('6', _('6')),
+	('7', _('7')),
+	('8', _('8')),
+	('9', _('9')),
+	('10', _('Middle Class (or higher)')),
 )
 
 GRADES = (
@@ -84,17 +84,17 @@ COHORTS = (
 )
 #Attendance codes with an A in their code are counted as absences
 ATTENDANCE_CODES = (
-	('P','Present'),
-	('UA','Unapproved Absence'),
-	('AA','Approved Absence'),
+	('P', _('Present')),
+	('UA', _('Unapproved Absence')),
+	('AA', _('Approved Absence')),
 )
 
 DISCIPLINE_CODES = (
-	(1,'Bullying'),
-	(2,'Cheating'),
-	(3,'Lying'),
-	(4,'Cursing'),
-	(5,'Other'),
+	(1, _('Bullying')),
+	(2, _('Cheating')),
+	(3, _('Lying')),
+	(4, _('Cursing')),
+	(5, _('Other')),
 )
 
 
@@ -121,23 +121,23 @@ RELATIONSHIPS = (
 	('NONE',_('No guardian'))
 )
 PUBLIC_SCHOOL_GRADES = (
-	(1,'Grade 1'),
-	(2,'Grade 2'),
-	(3,'Grade 3'),
-	(4,'Grade 4'),
-	(5,'Grade 5'),
-	(6,'Grade 6'),
-	(7,'Grade 7'),
-	(8,'Grade 8'),
-	(9,'Grade 9'),
-	(10,'Grade 10'),
-	(11,'Grade 11'),
-	(12,'Grade 12')
+	(1, _('Grade 1')),
+	(2, _('Grade 2')),
+	(3, _('Grade 3')),
+	(4, _('Grade 4')),
+	(5, _('Grade 5')),
+	(6, _('Grade 6')),
+	(7, _('Grade 7')),
+	(8, _('Grade 8')),
+	(9, _('Grade 9')),
+	(10, _('Grade 10')),
+	(11, _('Grade 11')),
+	(12, _('Grade 12'))
 )
 STATUS = (
-	('COMPLETED','Completed'),
-	('DROPPED','Dropped out'),
-	('ON_GOING','On going')
+	('COMPLETED', _('Completed')),
+	('DROPPED', _('Dropped out')),
+	('ON_GOING', _('On going'))
 )
 def generate_activity_permissions(perms_required):
 	perms = []
@@ -152,20 +152,20 @@ class JethroPerms(models.Model):
 		permissions = testperm
 
 class School(models.Model):
-	school_id = models.AutoField(primary_key=True)
-	school_name = models.CharField('School Code',max_length=128)
-	school_location = models.CharField('Location',max_length=128)
+	school_id = models.AutoField(_('School ID'),primary_key=True)
+	school_name = models.CharField(_('School Code'),max_length=128)
+	school_location = models.CharField(_('Location'),max_length=128)
 	def __unicode__(self):
 		return self.school_name
 
 class Classroom(models.Model):
-	classroom_id = models.AutoField(primary_key=True)
-	cohort = models.IntegerField('Target Grade',choices=GRADES,default=2014)
-	school_id = models.ForeignKey(School)
-	classroom_number = models.CharField('Description',max_length=16,blank=True)
-	classroom_location = models.CharField('Classroom Location',max_length=128,blank=True)
-	active = models.BooleanField('Active',default=True)
-	attendance_calendar = models.ForeignKey('self',default=None,blank=True,null=True)
+	classroom_id = models.AutoField(_('Classroom ID'),primary_key=True)
+	cohort = models.IntegerField(_('Target Grade'),choices=GRADES,default=2014)
+	school_id = models.ForeignKey(School,verbose_name=_('School ID'))
+	classroom_number = models.CharField(_('Description'),max_length=16,blank=True)
+	classroom_location = models.CharField(_('Classroom Location'),max_length=128,blank=True)
+	active = models.BooleanField(_('Active'),default=True)
+	attendance_calendar = models.ForeignKey('self',default=None,blank=True,null=True,verbose_name=_('Attendance calendar'))
 
 	def getAttendanceDayOfferings(self,attendance_date=None):
 
@@ -185,15 +185,15 @@ class Classroom(models.Model):
 		return unicode(self.school_id)+ ' - '+ unicode(self.get_cohort_display())+' - '+unicode(self.classroom_number)
 
 class Teacher(models.Model):
-	teacher_id = models.AutoField(primary_key=True)
-	name = models.CharField(max_length=32,default='',unique=True)
-	active = models.BooleanField(default=True)
+	teacher_id = models.AutoField(primary_key=True,verbose_name=_('Teacher ID'))
+	name = models.CharField(_('Name'),max_length=32,default='',unique=True)
+	active = models.BooleanField(_('Active'),default=True)
 	def __unicode__(self):
 		return unicode(self.teacher_id)+ ' - '+ unicode(self.name)
 
 class IntakeSurvey(models.Model):
 
-	student_id = models.AutoField('Student ID',primary_key=True)
+	student_id = models.AutoField(_('Student ID'),primary_key=True)
 	date = models.DateField(_('Date of Intake'))
 	site = models.ForeignKey('School',verbose_name=_('Site'))
 
@@ -348,66 +348,66 @@ class IntakeSurvey(models.Model):
 		return age_appropriate_grade
 
 class IntakeInternal(models.Model):
-	student_id = models.ForeignKey(IntakeSurvey,unique=True)
-	enrollment_date = models.DateField('Enrollment Date')
-	starting_grade = models.IntegerField(choices=GRADES,default=1)
+	student_id = models.ForeignKey(IntakeSurvey,unique=True,verbose_name=_('Student ID'))
+	enrollment_date = models.DateField(_('Enrollment Date'))
+	starting_grade = models.IntegerField(_('Starting grade'),choices=GRADES,default=1)
 
 	def __unicode__(self):
 		return unicode(self.student_id)
 
 class IntakeUpdate(models.Model):
 
-	student_id = models.ForeignKey(IntakeSurvey)
-	date = models.DateTimeField('Date of Update')
-	address = models.TextField('Home Address')
+	student_id = models.ForeignKey(IntakeSurvey,verbose_name=_('Student ID'))
+	date = models.DateTimeField(_('Date of Update'))
+	address = models.TextField(_('Home Address'))
 
-	guardian1_name = models.CharField('Guardian 1\'s Name',max_length=64,blank=True)
-	guardian1_relationship = models.CharField('Guardian 1\'s relationship to child',max_length=64,choices=RELATIONSHIPS,default='FATHER')
-	guardian1_phone = models.CharField('Guardian 1\'s Phone',max_length=128,blank=True)
-	guardian1_profession = models.CharField('Guardian 1\'s Profession',max_length=64,default='NA',blank=True)
-	guardian1_employment = models.CharField('Guardian 1\'s Employment',max_length=1,choices=EMPLOYMENT,default=1)
+	guardian1_name = models.CharField(_('Guardian 1\'s Name'),max_length=64,blank=True)
+	guardian1_relationship = models.CharField(_('Guardian 1\'s relationship to child'),max_length=64,choices=RELATIONSHIPS,default='FATHER')
+	guardian1_phone = models.CharField(_('Guardian 1\'s Phone'),max_length=128,blank=True)
+	guardian1_profession = models.CharField(_('Guardian 1\'s Profession'),max_length=64,default='NA',blank=True)
+	guardian1_employment = models.CharField(_('Guardian 1\'s Employment'),max_length=1,choices=EMPLOYMENT,default=1)
 
 
-	guardian2_name = models.CharField('Guardian 2\'s Name',max_length=64,blank=True,null=True)
-	guardian2_relationship = models.CharField('Guardian 2\'s relationship to child',max_length=64,blank=True,null=True,choices=RELATIONSHIPS,default='MOTHER')
-	guardian2_phone = models.CharField('Guardian 2\'s Phone',max_length=128,blank=True,null=True)
-	guardian2_profession = models.CharField('Guardian 2\'s Profession',max_length=64,default='NA',blank=True,null=True)
-	guardian2_employment= models.CharField('Guardian 2\'s Employment',max_length=1,choices=EMPLOYMENT,default=1,blank=True,null=True)
+	guardian2_name = models.CharField(_('Guardian 2\'s Name'),max_length=64,blank=True,null=True)
+	guardian2_relationship = models.CharField(_('Guardian 2\'s relationship to child'),max_length=64,blank=True,null=True,choices=RELATIONSHIPS,default='MOTHER')
+	guardian2_phone = models.CharField(_('Guardian 2\'s Phone'),max_length=128,blank=True,null=True)
+	guardian2_profession = models.CharField(_('Guardian 2\'s Profession'),max_length=64,default='NA',blank=True,null=True)
+	guardian2_employment= models.CharField(_('Guardian 2\'s Employment'),max_length=1,choices=EMPLOYMENT,default=1,blank=True,null=True)
 
-	minors = models.IntegerField('Number of children living in household (including student)',default=0)
-	minors_in_public_school = models.IntegerField('Number of children enrolled in public school last year',default=0)
-	minors_in_other_school = models.IntegerField('Number of children enrolled in private school last year',default=0)
-	minors_working = models.IntegerField('Number of minors working',default=0)
-	minors_profession = models.CharField('What are they doing for work?',max_length=256, default='NA')
-	minors_encouraged = models.CharField('Did you encourage them to take this job?',max_length=2,choices=YN,default='NA')
-	minors_training = models.CharField('Did they receive any vocational training?',max_length=2,choices=YN,default='NA')
-	minors_training_type = models.CharField('What kind of vocational training did they receive?',max_length=256,default='NA',blank=True)
+	minors = models.IntegerField(_('Number of children living in household (including student)'),default=0)
+	minors_in_public_school = models.IntegerField(_('Number of children enrolled in public school last year'),default=0)
+	minors_in_other_school = models.IntegerField(_('Number of children enrolled in private school last year'),default=0)
+	minors_working = models.IntegerField(_('Number of minors working'),default=0)
+	minors_profession = models.CharField(_('What are they doing for work?'),max_length=256, default='NA')
+	minors_encouraged = models.CharField(_('Did you encourage them to take this job?'),max_length=2,choices=YN,default='NA')
+	minors_training = models.CharField(_('Did they receive any vocational training?'),max_length=2,choices=YN,default='NA')
+	minors_training_type = models.CharField(_('What kind of vocational training did they receive?'),max_length=256,default='NA',blank=True)
 
-	enrolled = models.CharField('Currently enrolled in formal school?',max_length=2,choices=YN,default='N')
-	grade_current = models.IntegerField('Current grade in (public) school?',choices=GRADES,default=1)
-	grade_last = models.IntegerField('Last grade in public school (if not currently enrolled)',choices=GRADES,default='-1')
-	public_school_name = models.CharField('Public School Name',max_length=128,blank=True)
-	reasons = models.TextField('Reasons for not attending school',default='NA',blank=True,null=True)
-	notes = models.TextField(default='NA',blank=True)
+	enrolled = models.CharField(_('Currently enrolled in formal school?'),max_length=2,choices=YN,default='N')
+	grade_current = models.IntegerField(_('Current grade in (public) school?'),choices=GRADES,default=1)
+	grade_last = models.IntegerField(_('Last grade in public school (if not currently enrolled)'),choices=GRADES,default='-1')
+	public_school_name = models.CharField(_('Public School Name'),max_length=128,blank=True)
+	reasons = models.TextField(_('Reasons for not attending school'),default='NA',blank=True,null=True)
+	notes = models.TextField('Notes',default='NA',blank=True)
 
 	def __unicode__(self):
 		return unicode(self.date)+' - '+unicode(self.student_id)
 
 class StudentEvaluation(models.Model):
-	student_id = models.ForeignKey(IntakeSurvey)
-	date = models.DateField('Observation Date')
-	academic_score = models.IntegerField('Academic Growth Score',blank=True,null=True,default=None)
+	student_id = models.ForeignKey(IntakeSurvey,verbose_name=_('Student ID'))
+	date = models.DateField(_('Observation Date'))
+	academic_score = models.IntegerField(_('Academic Growth Score'),blank=True,null=True,default=None)
 	#academic_notes = models.CharField('Academic Growth Notes',blank=True,null=True)
-	study_score = models.IntegerField('Study/Learning Skills Score',blank=True,null=True,default=None)
+	study_score = models.IntegerField(_('Study/Learning Skills Score'),blank=True,null=True,default=None)
 	#study_notes = models.CharField('Academic Growth Notes',blank=True,null=True)
-	personal_score = models.IntegerField('Life Skills/Personal Development Score',blank=True,null=True,default=None)
+	personal_score = models.IntegerField(_('Life Skills/Personal Development Score'),blank=True,null=True,default=None)
 	#personal_notes = models.CharField('Life Skills/Personal Development Notes',blank=True,null=True)
-	hygiene_score = models.IntegerField('Hygeine Knowledge Score',blank=True,null=True,default=None)
+	hygiene_score = models.IntegerField(_('Hygeine Knowledge Score'),blank=True,null=True,default=None)
 	#hygiene_notes = models.CharField('Hygeine Knowledge Notes',blank=True,null=True)
-	faith_score = models.IntegerField('Christian Growth Score',blank=True,null=True,default=None)
+	faith_score = models.IntegerField(_('Christian Growth Score'),blank=True,null=True,default=None)
 	#faith_notes = models.CharField('Christian Growth Notes',blank=True,null=True)
 	#replacing individual notes fields with overall comments
-	comments = models.TextField('Overall comments',blank=True)
+	comments = models.TextField(_('Overall Comments'),blank=True)
 
 	def __unicode__(self):
 		return unicode(self.date)+' - '+unicode(self.student_id)
@@ -463,9 +463,9 @@ class PostExitSurvey(models.Model):
 		return unicode(self.exit_date)+' - '+unicode(self.student_id)
 
 class AttendanceDayOffering(models.Model):
-	classroom_id = models.ForeignKey(Classroom)
-	date = models.DateField()
-	offered = models.CharField(max_length=2,choices=YN,default='Y')
+	classroom_id = models.ForeignKey(Classroom,verbose_name=_('Classroom ID'))
+	date = models.DateField(_('Date'))
+	offered = models.CharField(_('Offered'),max_length=2,choices=YN,default='Y')
 	def __unicode__(self):
 		return unicode(self.classroom_id)+' - '+unicode(self.date)
 	class Meta:
@@ -473,33 +473,33 @@ class AttendanceDayOffering(models.Model):
 
 
 class Attendance(models.Model):
-	student_id = models.ForeignKey(IntakeSurvey)
-	classroom = models.ForeignKey(Classroom, blank=True,null=True)
-	date = models.DateField('Attendance Day',default=datetime.date.today)
-	attendance = models.CharField(max_length=2,choices=ATTENDANCE_CODES,default='P',null=True)
-	notes = models.CharField(max_length=256,blank=True)
+	student_id = models.ForeignKey(IntakeSurvey,verbose_name=_('Student ID'))
+	classroom = models.ForeignKey(Classroom, blank=True,null=True,verbose_name=_('Classroom'))
+	date = models.DateField(_('Attendance Day'),default=datetime.date.today)
+	attendance = models.CharField(_('Attendance'),max_length=2,choices=ATTENDANCE_CODES,default='P',null=True)
+	notes = models.CharField(_('Notes'),max_length=256,blank=True)
 	def __unicode__(self):
 		return unicode(self.date) + ': '+ self.attendance + ' - ' + unicode(self.student_id)
 	class Meta:
 		unique_together = (('student_id', 'date'),)
 
 class Discipline(models.Model):
-	student_id = models.ForeignKey(IntakeSurvey)
-	classroom_id = models.ForeignKey(Classroom)
-	incident_date = models.DateField('Incident Date',default=datetime.date.today)
-	incident_code = models.IntegerField(choices=DISCIPLINE_CODES,default=1)
-	incident_description = models.CharField(max_length=256,default='')
+	student_id = models.ForeignKey(IntakeSurvey,verbose_name=_('Student ID'))
+	classroom_id = models.ForeignKey(Classroom,verbose_name=_('Classroom ID'))
+	incident_date = models.DateField(_('Incident Date'),default=datetime.date.today)
+	incident_code = models.IntegerField(_('Incident code'),choices=DISCIPLINE_CODES,default=1)
+	incident_description = models.CharField(_('Incident description'),max_length=256,default='')
 
 	def __unicode__(self):
 			return unicode(self.incident_date)+ ':'+unicode(self.student_id)
 
 class Academic(models.Model):
-	student_id = models.ForeignKey(IntakeSurvey)
-	test_date = models.DateField(default=datetime.date.today)
-	test_level = models.IntegerField(choices=GRADES,default=0)
-	test_grade_math = models.IntegerField(null=True,blank=True)
-	test_grade_khmer = models.IntegerField(null=True,blank=True)
-	promote = models.BooleanField(default=False)
+	student_id = models.ForeignKey(IntakeSurvey,verbose_name=_('Student ID'))
+	test_date = models.DateField(_('Test Date'),default=datetime.date.today)
+	test_level = models.IntegerField(_('Level'),choices=GRADES,default=0)
+	test_grade_math = models.IntegerField(_('Math'),null=True,blank=True)
+	test_grade_khmer = models.IntegerField(_('Khmer'),null=True,blank=True)
+	promote = models.BooleanField(_('Promote'),default=False)
 
 	def __unicode__(self):
 		return unicode(self.test_date)+ ':'+unicode(self.student_id)
@@ -528,10 +528,10 @@ class Health(models.Model):
 		unique_together = (('student_id','appointment_date','appointment_type'))
 
 class ClassroomEnrollment(models.Model):
-	student_id = models.ForeignKey(IntakeSurvey)
-	classroom_id = models.ForeignKey(Classroom)
-	enrollment_date = models.DateField(default=datetime.date.today)
-	drop_date = models.DateField(null=True,blank=True)
+	student_id = models.ForeignKey(IntakeSurvey,verbose_name=_('Student ID'))
+	classroom_id = models.ForeignKey(Classroom,verbose_name=_('Classroom ID'))
+	enrollment_date = models.DateField('Enrollment Date',default=datetime.date.today)
+	drop_date = models.DateField(_('Drop Date'),null=True,blank=True)
 
 	def __unicode__(self):
 		return unicode(self.student_id)+unicode(self.classroom_id)
@@ -539,17 +539,17 @@ class ClassroomEnrollment(models.Model):
 		unique_together = (('student_id','classroom_id'))
 
 class ClassroomTeacher(models.Model):
-	classroom_id = models.ForeignKey(Classroom)
-	teacher_id = models.ForeignKey(Teacher)
+	classroom_id = models.ForeignKey(Classroom,verbose_name=_('Classroom ID'))
+	teacher_id = models.ForeignKey(Teacher,verbose_name=_('Teacher ID'))
 	def __unicode__(self):
 		return unicode(self.teacher_id)+unicode(self.classroom_id)
 
 class NotificationLog(models.Model):
-	date = models.DateTimeField(auto_now=True)
-	user = models.ForeignKey(User, blank=True)
-	user_generated = models.BooleanField(default=True)
-	text = models.TextField()
-	font_awesome_icon = models.TextField(max_length=16,default="fa-bolt") #a font-awesome icon name
+	date = models.DateTimeField(_('Date'),auto_now=True)
+	user = models.ForeignKey(User, blank=True,verbose_name=_('User'))
+	user_generated = models.BooleanField(_('User Generated'),default=True)
+	text = models.TextField(_('Text'))
+	font_awesome_icon = models.TextField('Font Awesome Icon',max_length=16,default="fa-bolt") #a font-awesome icon name
 
 	def __unicode__(self):
 		return unicode(self.date) + ' - '+ unicode(self.user) + ' ' + unicode(self.text)
@@ -558,10 +558,10 @@ class NotificationLog(models.Model):
 		get_latest_by = 'date'
 
 class AttendanceLog(models.Model):
-	classroom = models.ForeignKey(Classroom)
-	date = models.DateField()
-	absent = models.IntegerField(default=0)
-	present = models.IntegerField(default=0)
+	classroom = models.ForeignKey(Classroom,verbose_name=_('Classroom ID'))
+	date = models.DateField(_("Date"))
+	absent = models.IntegerField(_("Absent"),default=0)
+	present = models.IntegerField(_("Present"),default=0)
 
 	def __unicode__(self):
 		return unicode(self.classroom) + ': '+ unicode(self.date)
@@ -569,14 +569,14 @@ class AttendanceLog(models.Model):
 			unique_together = (('classroom','date'))
 
 class PublicSchoolHistory(models.Model):
-	student_id = models.ForeignKey(IntakeSurvey)
-	academic_year = models.IntegerField(choices=COHORTS)
-	grade = models.IntegerField('Public School Grade',choices=PUBLIC_SCHOOL_GRADES)
-	status = models.CharField(choices=STATUS,default='COMPLETED',max_length=16)
-	enroll_date = models.DateField(null=True,blank=True)
-	drop_date = models.DateField(null=True,blank=True)
-	school_name = models.CharField('Public School Name',max_length=128,blank=True)
-	reasons = models.TextField('Reasons for not attending',blank=True)
+	student_id = models.ForeignKey(IntakeSurvey,verbose_name=_('Student ID'))
+	academic_year = models.IntegerField(_('Academic Year'),choices=COHORTS)
+	grade = models.IntegerField(_('Public School Grade'),choices=PUBLIC_SCHOOL_GRADES)
+	status = models.CharField(_('Status'),choices=STATUS,default='COMPLETED',max_length=16)
+	enroll_date = models.DateField(_('Enroll Date'),null=True,blank=True)
+	drop_date = models.DateField(_('Drop Date'),null=True,blank=True)
+	school_name = models.CharField(_('Public School Name'),max_length=128,blank=True)
+	reasons = models.TextField(_('Reasons for not attending'),blank=True)
 	def __unicode__(self):
 		return unicode(self.student_id) + ' - '+ unicode(self.grade)
 	class Meta:

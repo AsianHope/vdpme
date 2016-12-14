@@ -33,8 +33,8 @@ class Html5DateInput(forms.DateInput):
         input_type = 'date'
 
 class IntakeSurveyForm(forms.ModelForm):
-    date = forms.DateField(label=_("Survey Date"),widget=Html5DateInput,initial=date.today().isoformat())
-    dob =  forms.DateField(label=_("Date of Birth"),widget=Html5DateInput)
+    date = forms.DateField(label=_('Survey Date'),widget=Html5DateInput,initial=date.today().isoformat())
+    dob =  forms.DateField(label=_('Date of Birth'),widget=Html5DateInput)
 
     def clean(self):
         cleaned_data = super(IntakeSurveyForm, self).clean()
@@ -63,14 +63,14 @@ class IntakeSurveyForm(forms.ModelForm):
         ]
 
 class IntakeInternalForm(forms.ModelForm):
-    enrollment_date = forms.DateField(label="Enrollment Date",widget=Html5DateInput)
+    enrollment_date = forms.DateField(label=_('Enrollment Date'),widget=Html5DateInput)
 
     class Meta:
         model = IntakeInternal
         exclude = []
 
 class IntakeUpdateForm(forms.ModelForm):
-    date = forms.DateField(label="Survey Date",widget=Html5DateInput)
+    date = forms.DateField(label=_('Survey Date'),widget=Html5DateInput)
 
     def clean(self):
         cleaned_data = super(IntakeUpdateForm, self).clean()
@@ -106,20 +106,20 @@ class ExitSurveyForm(forms.ModelForm):
         exclude=[]
 
 class PostExitSurveyForm(forms.ModelForm):
-    post_exit_survey_date = forms.DateField(label=_("Post Exit Survey Date"),widget=Html5DateInput)
+    post_exit_survey_date = forms.DateField(label=_('Post Exit Survey Date'),widget=Html5DateInput)
     exit_date = forms.DateField(label=_("Exit Date"),widget=Html5DateInput)
     class Meta:
         model = PostExitSurvey
         exclude=[]
 
 class SpiritualActivitiesSurveyForm(forms.ModelForm):
-    date = forms.DateField(label=_("Survey Date"),widget=Html5DateInput)
+    date = forms.DateField(label=_('Survey Date'),widget=Html5DateInput)
     class Meta:
         model = SpiritualActivitiesSurvey
         exclude=[]
 
 class DisciplineForm(forms.ModelForm):
-    incident_date = forms.DateField(label="Incident Date",widget=Html5DateInput)
+    incident_date = forms.DateField(label=_('Incident Date'),widget=Html5DateInput)
     class Meta:
         model = Discipline
         fields = ['student_id', 'classroom_id','incident_date','incident_code','incident_description']
@@ -154,7 +154,7 @@ class CheckboxSelectMultipleP(forms.CheckboxSelectMultiple):
 class ClassroomEnrollmentForm(forms.ModelForm):
     enrolled_students = getEnrolledStudents()
     student_id = forms.ModelMultipleChoiceField(widget=CheckboxSelectMultipleP,queryset=enrolled_students)
-    enrollment_date = forms.DateField(label="Enrollment Date",widget=Html5DateInput,initial=date.today().isoformat())
+    enrollment_date = forms.DateField(label=_('Enrollment Date'),widget=Html5DateInput,initial=date.today().isoformat())
 
     def __init__(self, *args, **kwargs):
          super(ClassroomEnrollmentForm, self).__init__(*args, **kwargs)
@@ -165,7 +165,7 @@ class ClassroomEnrollmentForm(forms.ModelForm):
         exclude=[]
 
 class IndividualClassroomEnrollmentForm(forms.ModelForm):
-    drop_date = forms.DateField(label="Drop Date",widget=Html5DateInput,initial=date.today().isoformat())
+    drop_date = forms.DateField(label=_('Drop Date'),widget=Html5DateInput,initial=date.today().isoformat())
 
     def __init__(self, *args, **kwargs):
          super(IndividualClassroomEnrollmentForm, self).__init__(*args, **kwargs)
@@ -191,19 +191,19 @@ class AcademicForm(forms.ModelForm):
         exclude = []
 
 class HealthForm(forms.ModelForm):
-    appointment_date = forms.DateField(label=_("Appointment Date"),widget=Html5DateInput,initial=date.today().isoformat())
+    appointment_date = forms.DateField(label=_('Appointment Date'),widget=Html5DateInput,initial=date.today().isoformat())
     class Meta:
         model = Health
         exclude=[]
 
 class HealthDentalForm(forms.ModelForm):
-    appointment_date = forms.DateField(label="Appointment Date",widget=Html5DateInput,initial=date.today().isoformat())
+    appointment_date = forms.DateField(label=_('Appointment Date'),widget=Html5DateInput,initial=date.today().isoformat())
     class Meta:
         model = Health
         exclude=['height','weight']
 
 class HealthCheckupForm(forms.ModelForm):
-    appointment_date = forms.DateField(label="Appointment Date",widget=Html5DateInput,initial=date.today().isoformat())
+    appointment_date = forms.DateField(label=_("Appointment Date"),widget=Html5DateInput,initial=date.today().isoformat())
     class Meta:
         model = Health
         exclude=[
