@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import PermissionDenied
 from django.forms.models import modelformset_factory
 from django.db.models import Q
+from django.db.models import Max,F
 
 from django.utils.html import conditional_escape as esc
 from django.utils.safestring import mark_safe
@@ -841,6 +842,38 @@ def publicschool_form(request, student_id=0,id=None):
             if form.is_valid():
                 #process
                 form.save()
+
+                pub_school_grade = form.cleaned_data['grade']
+                most_recent = survey.getRecentFields()
+                current_grade =  most_recent['grade_current']
+                current_school_name = most_recent['public_school_name']
+
+                if pub_school_grade >= current_grade:
+                    max_year = PublicSchoolHistory.objects.filter(student_id=student_id,grade=pub_school_grade).aggregate(max_year=Max('academic_year'))['max_year']
+                    p_schools = PublicSchoolHistory.objects.filter(student_id=student_id,grade=pub_school_grade,academic_year=max_year)
+                    p_school = p_schools[0]
+                    if len(p_schools) > 1:
+                        try:
+                            p_school = p_schools.filter(status="ON_GOING").latest('enroll_date')
+                        except ObjectDoesNotExist:
+                            try:
+                                p_school = p_schools.filter(status="COMPLETED").latest('enroll_date')
+                            except ObjectDoesNotExist:
+                                p_school = p_schools.filter(status="DROPPED").latest('enroll_date')
+
+                    if p_school.grade == current_grade:
+                        if p_school.school_name != current_school_name:
+                            most_recent['public_school_name'] = p_school.school_name
+                            most_recent['date'] = date.today().isoformat()
+                            intake_update_form = IntakeUpdateForm(most_recent)
+                            intake_update_form.save()
+                    else:
+                        most_recent['grade_current'] = p_school.grade
+                        most_recent['public_school_name'] = p_school.school_name
+                        most_recent['date'] = date.today().isoformat()
+                        intake_update_form = IntakeUpdateForm(most_recent)
+                        intake_update_form.save()
+
                 url = '/students/'+str(student_id)+'/#enrollment'
                 return HttpResponseRedirect(url)
             else:

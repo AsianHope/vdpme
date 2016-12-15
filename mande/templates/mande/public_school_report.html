@@ -26,7 +26,7 @@
                   <td>{{ student.current_vdp_grade | grade_by_id}}</td>
                   <!-- if attend in public school -->
                   {% if student.getRecentFields.enrolled == 'Y'%}
-                  <td>{{ student.grade_current|grade_by_id }}</td>
+                  <td>{{ student.getRecentFields.grade_current|grade_by_id }}</td>
                   <td>{{ student.getRecentFields.public_school_name }}</td>
                   <td></td>
                   {% else %}

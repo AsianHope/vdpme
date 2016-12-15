@@ -252,7 +252,8 @@ class IntakeSurvey(models.Model):
 			'guardian2_relationship',
 			'guardian2_phone',
 			'guardian2_profession',
-			'guardian2_employment'
+			'guardian2_employment',
+			'public_school_name'
 			]
 		recent = {}
 		#seed recent with the intake survey
@@ -580,4 +581,4 @@ class PublicSchoolHistory(models.Model):
 	def __unicode__(self):
 		return unicode(self.student_id) + ' - '+ unicode(self.grade)
 	class Meta:
-			unique_together = (('student_id','grade'))
+			unique_together = (('student_id','grade','academic_year','status'))
