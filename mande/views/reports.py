@@ -319,8 +319,8 @@ def data_audit(request,audit_type='ALL'):
             if ((field.data is None or len(unicode(field.data))==0) and
                 field.label!="Notes" and
                (field.name=='reasons' and student_data['enrolled']=='N')): #students who aren't enrolled and have no reason
-                    addAnomaly(anomalies, student, text+field.label, resolution)
-                    filters.append(text+field.label)
+                    addAnomaly(anomalies, student, text+unicode(field.label), resolution)
+                    filters.append(text+unicode(field.label))
 
         '''students who have grade and enrollment status mismatched'''
         if ((student_data['grade_last']<0 and student_data['enrolled']=='N') or #students who aren't enrolled and have no last grade
