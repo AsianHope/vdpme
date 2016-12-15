@@ -8,7 +8,12 @@
 {% block content %}
 
 <div class="col-md-9">
-  <form method="post" action="{% url 'take_class_attendance' classroom.classroom_id attendance_date %}?next={{next_url}}&limit={{limit}}">
+  {% if next_url %}
+    <form method="post" action="{% url 'take_class_attendance' classroom.classroom_id attendance_date %}?next={{next_url}}&limit={{limit}">
+  {% else %}
+    <form method="post" action="{% url 'take_class_attendance' classroom.classroom_id attendance_date %}">
+
+  {% endif %}
     {% csrf_token %}
     {{ formset.management_form }}
     <div class="form-group">
