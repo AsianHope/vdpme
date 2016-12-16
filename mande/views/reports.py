@@ -11,6 +11,7 @@ from django.forms.models import model_to_dict
 from django.utils.html import conditional_escape as esc
 from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
+import json
 
 from calendar import HTMLCalendar, monthrange
 from datetime import date
@@ -1113,6 +1114,29 @@ def advanced_report(request):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
+      all_intake_survey = IntakeSurvey.objects.all()
+      all_intake_updated = IntakeUpdate.objects.all()
+
+      data_guardian1_profession = list(all_intake_survey.values_list('guardian1_profession',flat=True).distinct())
+      guardian1_profession_intake_update = list(all_intake_updated.values_list('guardian1_profession',flat=True).distinct())
+      data_guardian1_profession.extend(guardian1_profession_intake_update)
+
+      data_guardian2_profession = list(all_intake_survey.values_list('guardian2_profession',flat=True).distinct())
+      guardian2_profession_intake_update = list(all_intake_updated.values_list('guardian2_profession',flat=True).distinct())
+      data_guardian2_profession.extend(guardian2_profession_intake_update)
+
+      data_minors_profession = list(all_intake_survey.values_list('minors_profession',flat=True).distinct())
+      minors_profession_intake_update = list(all_intake_updated.values_list('minors_profession',flat=True).distinct())
+      data_minors_profession.extend(minors_profession_intake_update)
+
+      data_minors_training_type = list(all_intake_survey.values_list('minors_training_type',flat=True).distinct())
+      minors_training_type_intake_update = list(all_intake_updated.values_list('minors_training_type',flat=True).distinct())
+      data_minors_training_type.extend(minors_training_type_intake_update)
+
+      data_reasons = list(all_intake_survey.values_list('reasons',flat=True).distinct())
+      reasons_intake_update = list(all_intake_updated.values_list('reasons',flat=True).distinct())
+      data_reasons.extend(reasons_intake_update)
+
       q=[]
       filter_query = Q()
       recent_field_list={}
@@ -1309,6 +1333,11 @@ def advanced_report(request):
                                 'employments':employments,
                                 'classrooms':classrooms,
                                 'show_data': show_data,
+                                'data_guardian1_profession' :json.dumps(list(set(data_guardian1_profession))),
+                                'data_guardian2_profession' :json.dumps(list(set(data_guardian2_profession))),
+                                'data_minors_profession' : json.dumps(list(set(data_minors_profession))),
+                                'data_minors_training_type' :json.dumps(list(set(data_minors_training_type))),
+                                'data_reasons' : json.dumps(list(set(data_reasons))),
                                 'list_of_fields':sorted(list_of_fields.iteritems())
                             })
     else:

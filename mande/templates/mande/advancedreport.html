@@ -233,7 +233,7 @@
        <tr>
          <td>{% trans "Guardian 1 Profession" %}</td>
          <td>
-           <input type="text" class="form-control input-sm" name="guardian1_profession"/>
+           <input type="text" class="form-control input-sm" name="guardian1_profession" id="guardian1_profession"/>
          </td>
        </tr>
        <tr>
@@ -273,7 +273,7 @@
        <tr>
          <td>{% trans "Guardian 2 Profession" %}</td>
          <td>
-           <input type="text" class="form-control input-sm" name="guardian2_profession"/>
+           <input type="text" class="form-control input-sm" name="guardian2_profession" id="guardian2_profession"/>
          </td>
        </tr>
        <tr>
@@ -314,7 +314,7 @@
        <tr>
          <td>{% trans "Minors Profession" %}</td>
          <td>
-           <input type="text" class="form-control input-sm" name="minors_profession"/>
+           <input type="text" class="form-control input-sm" name="minors_profession" id="minors_profession"/>
          </td>
        </tr>
        <tr>
@@ -342,7 +342,7 @@
        <tr>
          <td>{% trans "Minors Training Type" %}</td>
          <td>
-           <input type="text" class="form-control input-sm" name="minors_training_type"/>
+           <input type="text" class="form-control input-sm" name="minors_training_type" id="minors_training_type"/>
          </td>
        </tr>
      </table>
@@ -407,7 +407,7 @@
        <tr>
          <td>{% trans "Reasons not Attending School" %}</td>
          <td>
-           <input type="text" class="form-control input-sm" name="reasons"/>
+           <input type="text" class="form-control input-sm" name="reasons" id="reasons"/>
          </td>
        </tr>
        <tr>
@@ -419,7 +419,6 @@
    </div>
  </div>
  </form>
-
   <style>
     .search td{
       padding: 5px;
@@ -447,10 +446,32 @@
 {% endblock %}
 {% block script %}
 <script src="/static/mande/bower_components/select2/js/select2.js"></script>
+<script src="/static/mande/bower_components/jquery-ui/jquery-ui.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
   $('#field_list').select2({
     placeholder: "---Select a Column---",
+  });
+  
+  var data_guardian1_profession = {{ data_guardian1_profession | safe }}
+  var data_guardian2_profession = {{ data_guardian2_profession | safe }}
+  var data_minors_profession = {{ data_minors_profession | safe }}
+  var data_minors_training_type = {{ data_minors_training_type | safe }}
+  var data_reasons = {{ data_reasons | safe }}
+  $("#guardian1_profession" ).autocomplete({
+      source: data_guardian1_profession
+    });
+  $("#guardian2_profession" ).autocomplete({
+      source: data_guardian2_profession
+    });
+  $("#minors_profession" ).autocomplete({
+        source: data_minors_profession
+    });
+  $("#minors_training_type" ).autocomplete({
+        source: data_minors_training_type
+    });
+  $("#reasons" ).autocomplete({
+        source: data_reasons
   });
 
 });
