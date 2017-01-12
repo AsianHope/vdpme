@@ -2,3 +2,4 @@
 *.sql
 startdocker.sh
 *.mo
+mande/migrations/*
