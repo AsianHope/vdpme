@@ -203,6 +203,7 @@ def student_detail(request, student_id):
       current_grade = getStudentGradebyID(student_id)
       graduation = survey.dob +timedelta(days=365*12) if survey.dob is not None else "No birthday entered"
       publich_school_historys = survey.publicschoolhistory_set.all()
+      spiritual_activities = survey.spiritualactivitiessurvey_set.all()
       context = {
         'survey': survey.getRecentFields(),
         'recent_intake':recent_intake,
@@ -223,7 +224,9 @@ def student_detail(request, student_id):
         'notes':notes,
         'TODAY':date.today().isoformat(),
         'attendance_years':attendance_years,
-        'publich_school_historys':publich_school_historys}
+        'publich_school_historys':publich_school_historys,
+        'spiritual_activities':spiritual_activities,
+        }
       return render(request, 'mande/detail.html', context)
     else:
       raise PermissionDenied

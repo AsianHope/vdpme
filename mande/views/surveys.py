@@ -331,7 +331,7 @@ def spiritualactivities_survey(request,student_id=0):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
-
+      next_url = request.GET.get('next')
       if request.method == 'POST':
         form = SpiritualActivitiesSurveyForm(request.POST)
 
@@ -344,6 +344,8 @@ def spiritualactivities_survey(request,student_id=0):
                                     font_awesome_icon='fa-fire')
             log.save()
             #then return
+            if (next_url != None) & (next_url !='None'):
+                return HttpResponseRedirect(next_url+'#spiritual_activities')
             return HttpResponseRedirect(reverse('success'))
       else:
         if student_id > 0:
@@ -351,7 +353,7 @@ def spiritualactivities_survey(request,student_id=0):
         else:
             form = SpiritualActivitiesSurveyForm()
 
-      context = {'form': form,'student_id':student_id}
+      context = {'form': form,'student_id':student_id,'next_url':next_url}
       return render(request, 'mande/spiritualactivitiessurvey.html', context)
     else:
       raise PermissionDenied

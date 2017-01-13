@@ -96,6 +96,8 @@
   <li role = "presentation"><a href="#household" aria-controls="household" role="tab" data-toggle="tab">{% trans "Household" %}</a></li>
   <li role = "presentation"><a href="#notes" aria-controls="notes" role="tab" data-toggle="tab">{% trans "Notes" %}</a></li>
   <li role = "presentation"><a href="#health" aria-controls="health" role="tab" data-toggle="tab">{% trans "Health" %}</a></li>
+  <li role = "presentation"><a href="#spiritual_activities" aria-controls="health" role="tab" data-toggle="tab">{% trans "Spiritual Activities" %}</a></li>
+
 </ul>
 
 <div class="tab-content">
@@ -430,6 +432,25 @@
       </table>
 
   </div>
+  <div role="tabpanel" class="tab-pane" id="spiritual_activities">
+    <h3>{% trans "Spiritual Activities" %} <a href="{% url 'spiritualactivities_survey' survey.student_id %}?next={% url 'student_detail' survey.student_id %}#spiritual_activities" class="btn btn-xs btn-info" role="button"> {% trans "+Add spiritual activities?" %}</a></h3>
+
+      <table class="table table-bordered table-striped table-hover" id="spiritualActivitiesTable">
+        <thead>
+          <tr><th>{% trans "Date" %}</th><th>{% trans "Attend Church" %}</th><th>{% trans "Church Name" %}</th></tr>
+        </thead>
+        <tbody>
+          {% for spiritual_activitie in spiritual_activities %}
+          <tr>
+            <td>{{spiritual_activitie.date|date:'d N Y'}}</td>
+            <td>{{spiritual_activitie.personal_attend_church}}</td>
+            <td>{{spiritual_activitie.church_name}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+  </div>
 </div>
 {% endblock %}
 {% block script %}
@@ -520,6 +541,14 @@ $(document).ready( function() {
       bLengthChange: false,
       bInfo: false,
       order: [[ 1, "desc" ]]
+  });
+  var publicSchoolHistory = $('#spiritualActivitiesTable').DataTable({
+      responsive: true,
+      pageLength: 5,
+      searching: false,
+      bLengthChange: false,
+      bInfo: false,
+      order: [[ 0, "desc" ]]
   });
 });
 </script>

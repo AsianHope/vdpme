@@ -9,7 +9,7 @@
 
 <div class="col-md-3"></div>
 <div class="col-md-6">
-<form action = "{% url 'spiritualactivities_survey' student_id %}" method="post">
+<form action = "{% url 'spiritualactivities_survey' student_id %}?next={{next_url}}" method="post">
 
     {{ form|bootstrap }}
     {% csrf_token %}
@@ -21,8 +21,12 @@
 <div class="col-md-3"></div>
 {% endblock %}
 {% block script %}
+<script src="/static/mande/bower_components/select2/js/select2.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
+    $('#id_student_id').select2({
+      placeholder: "---Select a Student---",
+    });
     if($('#id_personal_attend_church').val()=='Y'){
       $('#id_church_name').closest('.form-group').show();
     }
