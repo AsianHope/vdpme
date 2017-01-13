@@ -20,3 +20,23 @@
 </div>
 <div class="col-md-3"></div>
 {% endblock %}
+{% block script %}
+<script type="text/javascript">
+  $(document).ready(function(){
+    if($('#id_personal_attend_church').val()=='Y'){
+      $('#id_church_name').closest('.form-group').show();
+    }
+    else{
+      $('#id_church_name').closest('.form-group').hide();
+    }
+  });
+  $('#id_personal_attend_church').change(function(){
+    if($(this).val()=='Y'){
+      $('#id_church_name').closest('.form-group').show();
+    }
+    else{
+      $('#id_church_name').closest('.form-group').hide();
+    }
+  });
+</script>
+{% endblock%}

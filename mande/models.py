@@ -418,9 +418,10 @@ class StudentEvaluation(models.Model):
 
 class SpiritualActivitiesSurvey(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey,verbose_name=_('Student ID'))
-	date = models.DateField(_('Survey Date'))
+	date = models.DateField(_('Survey Date'),default=datetime.date.today)
 	family_attend_church = models.CharField(_('Does your family currently attend church?'),max_length=2,choices=YN,default='NA')
 	personal_attend_church = models.CharField(_('Do you currently attend church?'),max_length=2,choices=YN,default='NA')
+	church_name = models.CharField(_('Church name'),max_length=128,blank=True)
 	personal_prayer = models.CharField(_('Have you prayed on your own within the last week?'),max_length=2,choices=YN,default='NA')
 	personal_baptism = models.CharField(_('Have you been baptized?'),max_length=2,choices=YN,default='NA')
 	personal_bible_reading = models.CharField(_('Have you spent time reading the Bible in the last week?'),max_length=2,choices=YN,default='NA')

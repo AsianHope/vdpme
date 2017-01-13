@@ -116,7 +116,7 @@ class PostExitSurveyForm(forms.ModelForm):
         exclude=[]
 
 class SpiritualActivitiesSurveyForm(forms.ModelForm):
-    date = forms.DateField(label=_('Survey Date'),widget=Html5DateInput)
+    date = forms.DateField(label=_('Survey Date'),widget=Html5DateInput,initial=date.today().isoformat())
     class Meta:
         model = SpiritualActivitiesSurvey
         exclude=[]
