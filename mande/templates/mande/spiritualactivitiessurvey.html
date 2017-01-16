@@ -26,6 +26,7 @@
     $('#id_student_id').select2({
       placeholder: "---Select a Student---",
     });
+    //hide or show church name
     if($('#id_personal_attend_church').val()=='Y'){
       $('#id_church_name').closest('.form-group').show();
       $('#id_church_name').attr('required', true);
@@ -34,15 +35,26 @@
       $('#id_church_name').closest('.form-group').hide();
       $('#id_church_name').attr('required', false);
     }
+    // hide or show frequency_of_attending church
+    if($('#id_personal_attend_church').val()=='Y'){
+      $('#id_frequency_of_attending').closest('.form-group').show();
+    }
+    else{
+      $('#id_frequency_of_attending').closest('.form-group').hide();
+    }
   });
   $('#id_personal_attend_church').change(function(){
     if($(this).val()=='Y'){
       $('#id_church_name').closest('.form-group').show();
       $('#id_church_name').attr('required', true);
+      $('#id_frequency_of_attending').closest('.form-group').show();
+
     }
     else{
       $('#id_church_name').closest('.form-group').hide();
       $('#id_church_name').attr('required', false);
+      $('#id_frequency_of_attending').closest('.form-group').hide();
+
     }
   });
 </script>

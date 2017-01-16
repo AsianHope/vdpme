@@ -139,6 +139,12 @@ STATUS = (
 	('DROPPED', _('Dropped out')),
 	('ON_GOING', _('On going'))
 )
+FREQUENCY = (
+	('NA',_('Not Applicable')),
+	('EVERY_WEEK', _('Almost every week')),
+	('EVERY_MONTH', _('Once every 1-2 months')),
+	('EVERY_YEAR', _('Once or twice per year'))
+)
 def generate_activity_permissions(perms_required):
 	perms = []
 	for key,activity in perms_required.iteritems():
@@ -429,6 +435,7 @@ class SpiritualActivitiesSurvey(models.Model):
 	date = models.DateField(_('Survey Date'),default=datetime.date.today)
 	family_attend_church = models.CharField(_('Does your family currently attend church?'),max_length=2,choices=YN,default='NA')
 	personal_attend_church = models.CharField(_('Do you currently attend church?'),max_length=2,choices=YN,default='NA')
+	frequency_of_attending = models.CharField(choices=FREQUENCY,default='NA',max_length=16)
 	church_name = models.CharField(_('Church name'),max_length=128,blank=True)
 	personal_prayer = models.CharField(_('Have you prayed on your own within the last week?'),max_length=2,choices=YN,default='NA')
 	personal_baptism = models.CharField(_('Have you been baptized?'),max_length=2,choices=YN,default='NA')

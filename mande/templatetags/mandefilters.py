@@ -7,6 +7,8 @@ from mande.models import IntakeInternal
 from mande.models import ClassroomEnrollment
 from mande.models import COHORTS
 from mande.models import STATUS
+from mande.models import FREQUENCY
+from mande.models import YN
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from datetime import date
@@ -15,6 +17,21 @@ from django.core.urlresolvers import resolve, reverse
 from django.utils.translation import activate, get_language
 
 register = template.Library()
+@register.filter(name='frequency_display')
+def frequency_display(value):
+    if value is None:
+        return "Unknown"
+    else:
+        rel_dict = dict(FREQUENCY)
+        return rel_dict.get(value, None)
+
+@register.filter(name='yn_display')
+def yn_display(value):
+    if value is None:
+        return "Unknown"
+    else:
+        rel_dict = dict(YN)
+        return rel_dict.get(value, None)
 @register.filter(name='name_by_sid')
 def name_by_sid(value):
     if value is None:

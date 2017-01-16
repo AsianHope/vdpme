@@ -458,13 +458,14 @@
 
       <table class="table table-bordered table-striped table-hover" id="spiritualActivitiesTable">
         <thead>
-          <tr><th>{% trans "Date" %}</th><th>{% trans "Attend Church" %}</th><th>{% trans "Church Name" %}</th></tr>
+          <tr><th>{% trans "Date" %}</th><th>{% trans "Attend Church" %}</th><th>{% trans "Frequency of Attending"%}</th><th>{% trans "Church Name" %}</th></tr>
         </thead>
         <tbody>
           {% for spiritual_activitie in spiritual_activities %}
           <tr>
             <td>{{spiritual_activitie.date|date:'d N Y'}}</td>
-            <td>{{spiritual_activitie.personal_attend_church}}</td>
+            <td>{{spiritual_activitie.personal_attend_church|yn_display}}</td>
+            <th>{{spiritual_activitie.frequency_of_attending|frequency_display}}</td>
             <td>{{spiritual_activitie.church_name}}</td>
           </tr>
           {% endfor %}

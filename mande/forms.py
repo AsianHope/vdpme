@@ -119,7 +119,7 @@ class SpiritualActivitiesSurveyForm(forms.ModelForm):
     date = forms.DateField(label=_('Survey Date'),widget=Html5DateInput,initial=date.today().isoformat())
     class Meta:
         model = SpiritualActivitiesSurvey
-        exclude=[]
+        exclude=['family_attend_church','personal_prayer','personal_baptism','personal_bible_reading','personal_prayer_aloud']
 
 class DisciplineForm(forms.ModelForm):
     incident_date = forms.DateField(label=_('Incident Date'),widget=Html5DateInput)

@@ -92,8 +92,8 @@ class StudentEvaluationAdmin(admin.ModelAdmin):
     search_fields = ['student_id__student_id']
 
 class SpiritualActivitiesSurveyAdmin(admin.ModelAdmin):
-    list_display = ('student_id','date','personal_attend_church','church_name')
-    list_filter = ('date','personal_attend_church')
+    list_display = ('student_id','date','personal_attend_church','frequency_of_attending','church_name')
+    list_filter = ('date','personal_attend_church','frequency_of_attending')
     raw_id_fields = ('student_id',)
     search_fields = ['student_id__student_id']
 
