@@ -6,7 +6,6 @@
 {% endblock %}
 
 {% block content %}
-
 <div class="col-md-3"></div>
 <div class="col-md-6">
 <form action = "{% url 'spiritualactivities_survey' student_id %}?next={{next_url}}" method="post">
@@ -29,17 +28,21 @@
     });
     if($('#id_personal_attend_church').val()=='Y'){
       $('#id_church_name').closest('.form-group').show();
+      $('#id_church_name').attr('required', true);
     }
     else{
       $('#id_church_name').closest('.form-group').hide();
+      $('#id_church_name').attr('required', false);
     }
   });
   $('#id_personal_attend_church').change(function(){
     if($(this).val()=='Y'){
       $('#id_church_name').closest('.form-group').show();
+      $('#id_church_name').attr('required', true);
     }
     else{
       $('#id_church_name').closest('.form-group').hide();
+      $('#id_church_name').attr('required', false);
     }
   });
 </script>

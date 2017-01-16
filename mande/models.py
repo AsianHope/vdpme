@@ -256,6 +256,13 @@ class IntakeSurvey(models.Model):
 			'public_school_name'
 			]
 		recent = {}
+		# get latest SpiritualActivitiesSurvey
+		try:
+			recent['church']=SpiritualActivitiesSurvey.objects.all().filter(student_id=self.student_id).latest('date')
+			pass
+		except:
+			pass
+
 		#seed recent with the intake survey
 		for field in self._meta.fields:
 			recent[field.name] = getattr(self,field.name)
@@ -281,6 +288,7 @@ class IntakeSurvey(models.Model):
 				except (AttributeError, TypeError) as e:
 					#print 'caught:  '+str(type(e))+' while processing '+field.name+'()'+str(type(attr))+')'
 					pass
+
 		return recent
 
 	def getNotes(self):

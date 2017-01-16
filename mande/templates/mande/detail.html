@@ -84,6 +84,16 @@
           {%endif%}
           </tr>
             {% endwith %}
+          <tr>
+            <td>{% trans "Church Name" %}:</td>
+            {% if survey.church.personal_attend_church == 'N' %}
+            <td>{% trans "Not Attend Church" %}</td>
+            {% else %}
+            <td> {% firstof survey.church.church_name "Not Entered" %}</td>
+            {% endif %}
+          </tr>
+
+
         </table>
     </div>
   </div>
