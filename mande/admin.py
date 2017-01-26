@@ -114,8 +114,8 @@ class DisciplineAdmin(admin.ModelAdmin):
     search_fields = ['student_id__student_id']
 
 class AcademicAdmin(admin.ModelAdmin):
-    list_display = ('test_date','student_id','test_level','promote')
-    list_filter = ('test_level','promote')
+    list_display = ('test_date','student_id','test_level','test_grade_khmer','test_grade_math','promote')
+    list_filter = ('test_level','promote','test_date')
     raw_id_fields = ('student_id',)
     search_fields = ['student_id__student_id']
 

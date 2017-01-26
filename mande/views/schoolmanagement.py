@@ -532,6 +532,7 @@ def academic_form(request, school_id, test_date=date.today().isoformat(), classr
                                                 test_date=test_date,
                                                 test_level=student.classroom_id.cohort)
 
+
       student_academics = Academic.objects.filter(student_id=students,
                                                     test_date=test_date,
                                                     test_level=student.classroom_id.cohort)
@@ -543,13 +544,6 @@ def academic_form(request, school_id, test_date=date.today().isoformat(), classr
         if formset.is_valid():
             formset.save()
             message = "Saved."
-            #clean up the mess we created making blank rows to update.
-            Academic.objects.filter(
-                                        Q(test_grade_khmer=None)&
-                                        Q(test_grade_math=None)
-                                    ).delete()
-
-
             message = ('Recorded semester tests for '+
                             str(classroom.get_cohort_display())+' - '
                             +str(classroom.classroom_number)+
