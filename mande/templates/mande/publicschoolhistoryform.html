@@ -31,8 +31,13 @@
 </div>
 {% endblock %}
 {% block script %}
+<script src="/static/mande/bower_components/jquery-ui/jquery-ui.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
+    var data_public_schools = {{ data_public_schools | safe }}
+    $("#id_school_name" ).autocomplete({
+        source: data_public_schools
+      });
     //  public school acedemic year start from 01/November, and end on 31/July
     $("#id_enroll_date").change(function(){
       date = new Date($(this).val())

@@ -25,8 +25,13 @@
 {% endblock %}
 
 {% block script %}
+<script src="/static/mande/bower_components/jquery-ui/jquery-ui.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
+  var data_public_schools = {{ data_public_schools | safe }}
+  $("#id_public_school_name" ).autocomplete({
+      source: data_public_schools
+    });
   if ($('#id_enrolled').length) {
     var enrolled = $('#id_enrolled');
     var current = $('#id_grade_current').closest('.form-group');

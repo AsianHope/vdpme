@@ -17,6 +17,8 @@ from datetime import date
 from datetime import datetime
 from datetime import timedelta
 
+import json
+
 from django.views.generic import ListView
 from mande.models import IntakeSurvey
 from mande.models import IntakeUpdate
@@ -83,6 +85,10 @@ def intake_survey(request,student_id=None):
     if user_permissions(method_name,request.user):
         next_url = request.GET.get('next') #where we're going next
         limit = request.GET.get('limit') #limit to a single field
+        data_public_schools = list(IntakeSurvey.objects.all().values_list('public_school_name',flat=True).distinct())
+        pschool_list = list(PublicSchoolHistory.objects.all().values_list('school_name',flat=True).distinct())
+        data_public_schools.extend(pschool_list)
+
         instance = IntakeSurvey.objects.get(pk=student_id) if student_id else None
         form = IntakeSurveyForm(request.POST or None,
                                 instance=instance)
@@ -107,7 +113,14 @@ def intake_survey(request,student_id=None):
 
                 return HttpResponseRedirect(next_url)
 
-        context = {'form': form, 'student':instance, 'next_url':next_url, 'limit':limit}
+        context = {
+            'form': form,
+            'student':instance,
+            'next_url':next_url,
+            'limit':limit,
+            'data_public_schools' :json.dumps(list(set(data_public_schools))),
+
+        }
         return render(request, 'mande/intakesurvey.html', context)
     else:
         raise PermissionDenied
@@ -159,6 +172,11 @@ def intake_update(request,student_id=0):
     if user_permissions(method_name,request.user):
       next_url = request.GET.get('next')
       next_tab = request.GET.get('tab')
+
+      data_public_schools = list(IntakeSurvey.objects.all().values_list('public_school_name',flat=True).distinct())
+      pschool_list = list(PublicSchoolHistory.objects.all().values_list('school_name',flat=True).distinct())
+      data_public_schools.extend(pschool_list)
+
       try:
         survey = IntakeSurvey.objects.get(pk=student_id)
         most_recent = survey.getRecentFields()
@@ -213,7 +231,14 @@ def intake_update(request,student_id=0):
         most_recent['date'] = date.today().isoformat()
         form = IntakeUpdateForm(most_recent)
 
-      context = {'form': form, 'survey':survey, 'student_id':student_id, 'next':next_url, 'tab':next_tab}
+      context = {
+          'form':form,
+          'survey':survey,
+          'student_id':student_id,
+          'next':next_url,
+          'tab':next_tab,
+          'data_public_schools' :json.dumps(list(set(data_public_schools))),
+      }
       return render(request, 'mande/intakeupdate.html', context)
     else:
       raise PermissionDenied
@@ -332,6 +357,8 @@ def spiritualactivities_survey(request,student_id=0):
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
       next_url = request.GET.get('next')
+      data_church_names = list(SpiritualActivitiesSurvey.objects.all().values_list('church_name',flat=True).distinct())
+
       if request.method == 'POST':
         form = SpiritualActivitiesSurveyForm(request.POST)
 
@@ -353,7 +380,11 @@ def spiritualactivities_survey(request,student_id=0):
         else:
             form = SpiritualActivitiesSurveyForm()
 
-      context = {'form': form,'student_id':student_id,'next_url':next_url}
+      context = {
+        'form': form,
+        'student_id':student_id,
+        'next_url':next_url,
+        'data_church_names' :json.dumps(list(set(data_church_names))),}
       return render(request, 'mande/spiritualactivitiessurvey.html', context)
     else:
       raise PermissionDenied

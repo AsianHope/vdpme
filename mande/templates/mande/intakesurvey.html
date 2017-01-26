@@ -30,8 +30,13 @@
 {% endblock %}
 
 {% block script %}
+<script src="/static/mande/bower_components/jquery-ui/jquery-ui.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
+  var data_public_schools = {{ data_public_schools | safe }}
+  $("#id_public_school_name" ).autocomplete({
+      source: data_public_schools
+    });
   var limit = 'id_{{limit}}';
   if(limit !== 'id_None'){
     //loop through all form groups and hide everything but our limit
@@ -77,7 +82,7 @@ $(document).ready(function(){
       }
     });
   }
-  
+
 });
 </script>
 

@@ -17,6 +17,7 @@ from calendar import HTMLCalendar, monthrange
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
+import json
 
 from django.views.generic import ListView
 from mande.models import IntakeSurvey
@@ -814,6 +815,9 @@ def publicschool_form(request, student_id=0,id=None):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
+      data_public_schools = list(IntakeSurvey.objects.all().values_list('public_school_name',flat=True).distinct())
+      pschool_list = list(PublicSchoolHistory.objects.all().values_list('school_name',flat=True).distinct())
+      data_public_schools.extend(pschool_list)
       try:
           survey = IntakeSurvey.objects.get(pk=student_id)
 
@@ -876,7 +880,13 @@ def publicschool_form(request, student_id=0,id=None):
             else:
                 print form.errors
 
-          context = {'form': form,'student_id':student_id,'action':action}
+          context = {
+              'form':form,
+              'student_id':student_id,
+              'action':action,
+              'data_public_schools' :json.dumps(list(set(data_public_schools)))
+
+          }
           return render(request, 'mande/publicschoolhistoryform.html',context)
       except IntakeSurvey.DoesNotExist as e:
           context = {

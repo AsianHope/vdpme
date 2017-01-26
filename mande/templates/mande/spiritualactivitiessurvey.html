@@ -21,8 +21,13 @@
 {% endblock %}
 {% block script %}
 <script src="/static/mande/bower_components/select2/js/select2.js"></script>
+<script src="/static/mande/bower_components/jquery-ui/jquery-ui.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
+    var data_church_names = {{ data_church_names | safe }}
+    $("#id_church_name" ).autocomplete({
+        source: data_church_names
+      });
     $('#id_student_id').select2({
       placeholder: "---Select a Student---",
     });
