@@ -86,15 +86,6 @@ msgstr "របាយការណ៍ចំនួនដងនៃការឡើង
 msgid "Students Not Enrolled in Public School Report"
 msgstr "របាយការណ៍សិស្សមិនចុះឈ្មោះទៅរៀននៅសាលារដ្ឋ"
 
-# todo
-# msgid "Public School Report"
-# msgstr ""
-# todo
-# msgid "Unapproved Absence With NO Comment"
-# msgstr
-# todo
-# msgid "Students Integrated in Public school Report "
-# msgstr ""
 msgid "Advanced Report"
 msgstr "Advanced Report"
 
@@ -268,22 +259,22 @@ msgid "Minors"
 msgstr "អនីតិជន"
 
 msgid "Minors Encouraged"
-msgstr "Minors Encouraged\"                 "
+msgstr "Minors Encouraged"
 
 msgid "Minors In Other School"
-msgstr "Minors In Other School\"            "
+msgstr "Minors In Other School"
 
 msgid "Minors In Public School"
-msgstr "Minors In Public School\"           "
+msgstr "Minors In Public School"
 
 msgid "Minors Profession"
-msgstr "Minors Profession\"                 "
+msgstr "Minors Profession"
 
 msgid "Minors Training"
-msgstr "Minors Training\"                   "
+msgstr "Minors Training"
 
 msgid "Minors Training Type"
-msgstr "Minors Training Type\"              "
+msgstr "Minors Training Type"
 
 msgid "Minors Working"
 msgstr "អនីតិជន កំពុងធ្វើការ"
@@ -373,7 +364,7 @@ msgid "Select Guardian 2 Relationship"
 msgstr "ជ្រើស​រើស​ ទំនាក់​ទំនង​ជាមួយ​អាណាព្យាបាលទី២"
 
 msgid "Select Minors Encouraged"
-msgstr "Select Minors Encouraged\"                     "
+msgstr "Select Minors Encouraged"
 
 msgid "Yes"
 msgstr "មាន"
@@ -385,7 +376,7 @@ msgid "Not Applicable"
 msgstr "មិនអាច​អនុវត្ត​បាន​"
 
 msgid "Select Minors Training"
-msgstr "Select Minors Training\"                              "
+msgstr "Select Minors Training"
 
 msgid "Select VDP Grade"
 msgstr "ជ្រើសរើសកម្រិតថ្នាក់​នៅ​ VDP"
@@ -400,7 +391,7 @@ msgid "Select Last Grade in Public School"
 msgstr "ជ្រើស​រើស​កម្រិត​ថ្នាក់​ចុង​ក្រោយ​នៅសាលា​រដ្ឋ"
 
 msgid "Lag"
-msgstr "ចន្លោះយឺត\"                               #not sure about this translatio"
+msgstr "ចន្លោះយឺត"
 
 # ---------------------------------------
 msgid "Input Achievement Test"
@@ -425,7 +416,7 @@ msgid "Student"
 msgstr "សិស្ស"
 
 msgid "Code"
-msgstr "វត្តមាន\"                               ###"
+msgstr "វត្តមាន"
 
 msgid "Guardian 1"
 msgstr "អាណាព្យាបាលទី១"
@@ -791,7 +782,7 @@ msgid "Scaling"
 msgstr "ដកកំបោរចេញពី​ធ្មេញ"
 
 msgid "Pulped"
-msgstr "Pulped\"                          ############"
+msgstr "Pulped"
 
 msgid "Xray"
 msgstr "ឆ្លុះកាំរស្មី X"
@@ -893,7 +884,7 @@ msgid "Clear Search"
 msgstr "លុបការស្វែងរក"
 
 msgid "Performing Spiritual Activities Survey"
-msgstr "អនុវត្ត​ការស្ទង់​មតិលើ​សកម្មភាពទាក់ទង​នឹង​​វិញ្ញាណ\"     ########"
+msgstr "អនុវត្ត​ការស្ទង់​មតិលើ​សកម្មភាពទាក់ទង​នឹង​​វិញ្ញាណ"
 
 msgid "Student Achievement Test Report"
 msgstr "របាយការណ៏នៃការសម្រេច​ការប្រលង​របស់​សិស្ស​"
@@ -1183,7 +1174,7 @@ msgid "How many children in the household?"
 msgstr "តើមាន​កុមារ​ប៉ុន្មាន​នាក់​នៅក្នុង​ផ្ទះ?"
 
 msgid "Currently in school? [Primary Child]"
-msgstr "ទៅសាលា​ក្នុង​ពេល​បច្ចុ​ប្បន្ន​? [កុមារ​ថ្នាក់​បឋមសិក្សា]\"     ######not sur"
+msgstr "ទៅសាលា​ក្នុង​ពេល​បច្ចុ​ប្បន្ន​? [កុមារ​ថ្នាក់​បឋមសិក្សា]"
 
 msgid "Current Grade in formal school (if in school)"
 msgstr "កម្រិត​ថ្នាក់​នៅ​សលារដ្ឋ​ (ប្រសិនបើ​​ទៅសាលា)"
@@ -1250,7 +1241,7 @@ msgid "Something else here"
 msgstr "អ្វីផ្សេង​ទៀត​ នៅទី​នេះ​"
 
 msgid "Separated link"
-msgstr "Separated link\"   #######"
+msgstr "Separated link"
 
 msgid "Unenrolled Students"
 msgstr "សិស្ស​ដែ​ល​ពុំទាន់​បាន​ចុះ​ឈ្មោះ​"
