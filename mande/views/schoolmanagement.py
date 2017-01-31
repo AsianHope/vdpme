@@ -72,6 +72,8 @@ from django.contrib.auth.models import User
 from mande.utils import user_permissions
 
 import inspect
+from icu import Locale, Collator
+
 
 '''
 *****************************************************************************
@@ -818,6 +820,11 @@ def publicschool_form(request, student_id=0,id=None):
       data_public_schools = list(IntakeSurvey.objects.all().values_list('public_school_name',flat=True).distinct())
       pschool_list = list(PublicSchoolHistory.objects.all().values_list('school_name',flat=True).distinct())
       data_public_schools.extend(pschool_list)
+      # sort khmer
+      data_public_schools = [x.encode('utf-8').strip() for x in data_public_schools]
+      locale = Locale('km_KH')
+      collator = Collator.createInstance(locale)
+      data_public_schools = sorted(set(data_public_schools),key=collator.getSortKey)
       try:
           survey = IntakeSurvey.objects.get(pk=student_id)
 
@@ -884,7 +891,7 @@ def publicschool_form(request, student_id=0,id=None):
               'form':form,
               'student_id':student_id,
               'action':action,
-              'data_public_schools' :json.dumps(list(set(data_public_schools)))
+              'data_public_schools' :json.dumps(data_public_schools)
 
           }
           return render(request, 'mande/publicschoolhistoryform.html',context)
