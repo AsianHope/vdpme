@@ -3,23 +3,23 @@
 # This file is distributed under the same license as the Jethro package.
 # SANG, Solida <ssang@asianhope.org>, 2016.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Jethro 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-12-08 08:43+0700\n"
-"PO-Revision-Date: 2016-12-08 08:43+0700\n"
+"PO-Revision-Date: 2017-01-31 10:45+0700\n"
 "Last-Translator: SANG, Solida <ssang@asianhope.org>\n"
 "Language-Team: Asian Hope MIS <mis@asianhope.org>\n"
-"Language: Khmer\n"
+"Language: km\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
 #: vdpme/settings.py:118
 msgid "English"
-msgstr "អគ្លេស"
+msgstr "អង់គ្លេស"
 
 #: vdpme/settings.py:119
 msgid "Khmer"
@@ -40,8 +40,7 @@ msgstr "ការវាស់ស្ទង់"
 msgid "School Management"
 msgstr "ប្រពន្ធគ្រប់គ្រងសាលា"
 
-#-----------------report----------------
-
+# -----------------report----------------
 msgid "Classroom Attendance"
 msgstr "វត្តមានតាមថ្នាក់"
 
@@ -87,19 +86,15 @@ msgstr "របាយការណ៍ចំនួនដងនៃការឡើង
 msgid "Students Not Enrolled in Public School Report"
 msgstr "របាយការណ៍សិស្សមិនចុះឈ្មោះទៅរៀននៅសាលារដ្ឋ"
 
-#todo
-#msgid "Public School Report"
-#msgstr ""
-
-#todo
-#msgid "Unapproved Absence With NO Comment"
-#msgstr
-
-#todo
-#msgid "Students Integrated in Public school Report "
-#msgstr ""
-
-
+# todo
+# msgid "Public School Report"
+# msgstr ""
+# todo
+# msgid "Unapproved Absence With NO Comment"
+# msgstr
+# todo
+# msgid "Students Integrated in Public school Report "
+# msgstr ""
 msgid "Advanced Report"
 msgstr "Advanced Report"
 
@@ -112,16 +107,14 @@ msgstr "របាយការណ៍សង្ខេបសិស្សរៀនម
 msgid "Anomalous Data"
 msgstr "ទិន្នន័យមិនពេញលេញ"
 
-#-----------------attendance----------------
-
+# -----------------attendance----------------
 msgid "Take Attendance"
 msgstr "យកវត្តមាន"
 
 msgid "Modify Attendance Calendars"
 msgstr "រៀបចំកាលវិភាគថ្ងៃរៀនរបស់សាលា"
 
-#-----------------Surveys----------------
-
+# -----------------Surveys----------------
 msgid "Intake Survey"
 msgstr "ចុះឈ្មោះសិស្សចូលរៀន"
 
@@ -137,8 +130,7 @@ msgstr "សកម្មភាពនៃសេចក្តីជំនឿ"
 msgid "Health Form"
 msgstr "បំពេញទម្រង់សុខភាព"
 
-#--------------School Management---------------
-
+# --------------School Management---------------
 msgid "Student Information"
 msgstr "ព័ត៌មានរបស់សិស្ស"
 
@@ -167,904 +159,1279 @@ msgid "Students Attendance on %(attendance_date)s to %(attendance_end_date)s"
 msgstr "វត្តមានសិស្សចាប់ពី​​ %(attendance_date)s​ ដល់ %(attendance_end_date)s"
 
 msgid "Site"
-msgstr "Site"
+msgstr "ទីតាំង"
 
 msgid "Grade"
-msgstr "Grade"
+msgstr "ថ្នាក់"
 
 msgid "Description"
-msgstr "Description"
+msgstr "ការរៀបរាប់"
 
 msgid "Present"
-msgstr "Present"
+msgstr "វត្តមាន"
 
 msgid "Absent"
-msgstr "Absent"
+msgstr "អវត្តមាន"
 
 msgid "Select Site"
-msgstr "Select Site"
+msgstr "ជ្រើសរើសទីតាំង"
 
 msgid "Select Classroom"
-msgstr "Select Classroom"
+msgstr "ជ្រើសរើសថ្នាក់"
 
 msgid "Name"
-msgstr "Name"
+msgstr "ឈ្មោះ"
 
 msgid "Recorded"
-msgstr "Recorded"
+msgstr "ត្រូវបានកត់ត្រា"
 
 msgid "Updated"
-msgstr "Updated"
+msgstr "ត្រូវបានបន្ទាន់សម័យ"
 
 msgid "a Semester Test for"
-msgstr "a Semester Test for"
+msgstr "ការប្រលងឆមាសមួយសម្រាប់"
 
 msgid "Date"
-msgstr "Date"
+msgstr "ការបរិច្ឆេទ"
 
 msgid "SID"
 msgstr "SID"
 
-#---------------- advanced report---------
-
+# ---------------- advanced report---------
 msgid "Go Back to Filter"
-msgstr "Go Back to Filter"
+msgstr "ត្រលប់ទៅ​តម្រង​ស្វែងរក"
 
 msgid "Choose a Column"
-msgstr "Choose a Column"
+msgstr "ជ្រើសរើសជួរឈរមួយ"
 
 msgid "Show Result"
-msgstr "Show Result"
+msgstr "បង្ហាញ​លទ្ធ​ផល​"
 
 msgid "Address"
-msgstr "Address"
+msgstr "អាស័យដ្ឋាន"
 
 msgid "Classroom"
-msgstr "Classroom"
+msgstr "ថ្នាក់រៀន"
 
 msgid "Dob"
-msgstr "Dob"
+msgstr "ថ្ងៃខែឆ្នាំកំណើត"
 
 msgid "Enrolled"
-msgstr "Enrolled"
+msgstr "ត្រូវបានចុះឈ្មោះ"
 
 msgid "Gender"
-msgstr "Gender"
+msgstr "ភេទ"
 
 msgid "Grade Appropriate"
-msgstr "Grade Appropriate"
+msgstr "កម្រិតថ្នាក់​ សមស្រប"
 
-msgid "Grade Current"
-msgstr "Grade Current"
+msgid "Current Grade"
+msgstr "កម្រិត​ថ្នាក់​ បច្ចុប្បន្ន"
 
-msgid "Grade Last"
-msgstr "Grade Last"
+msgid "Last Grade"
+msgstr "កម្រិតថ្នាក់​ចុងក្រោយ​"
 
 msgid "Guardian 1 Employment"
-msgstr "Guardian 1 Employment"
+msgstr "កម្រិតជីវភាព អាណាព្យាបាលទី​១"
 
 msgid "Guardian 1 Name"
-msgstr "Guardian 1 Name"
+msgstr "ឈ្មោះ អាណាព្យាបាលទី១"
 
 msgid "Guardian 1 Phone"
-msgstr "Guardian 1 Phone"
+msgstr "លេខទូរស័ព្ទ អាណាព្យាបាលទី១"
 
 msgid "Guardian 1 Profession"
-msgstr "Guardian 1 Profession"
+msgstr "អាជីព អាណាព្យាបាលទី១"
 
 msgid "Guardian 1 Relationship"
-msgstr "Guardian 1 Relationship"
+msgstr "ទំនាក់ទំនង អាណាព្យាបាលទី១"
 
 msgid "Guardian 2 Employment"
-msgstr "Guardian 2 Employment"
+msgstr "កម្រិតជីវភាព អាណាព្យាបាលទី២"
 
 msgid "Guardian 2 Name"
-msgstr "Guardian 2 Name"
+msgstr "ឈ្មោះ អាណាព្យាបាលទី២"
 
 msgid "Guardian 2 Phone"
-msgstr "Guardian 2 Phone"
+msgstr "ទូរស័ព្ទ អាណាព្យាបាលទី២"
 
 msgid "Guardian 2 Profession"
-msgstr "Guardian 2 Profession"
+msgstr "អាជីព អាណាព្យាបាលទី២"
 
 msgid "Guardian 2 Relationship"
-msgstr "Guardian 2 Relationship"
+msgstr "ទំនាក់ទំនង អាណាព្យាបាលទី២"
 
 msgid "ID"
 msgstr "ID"
 
 msgid "Minors"
-msgstr "Minors"
-
+msgstr "អនីតិជន"
 
 msgid "Minors Encouraged"
-msgstr "Minors Encouraged"
+msgstr "Minors Encouraged\"                 "
 
 msgid "Minors In Other School"
-msgstr "Minors In Other School"
+msgstr "Minors In Other School\"            "
 
 msgid "Minors In Public School"
-msgstr "Minors In Public School" 
+msgstr "Minors In Public School\"           "
 
 msgid "Minors Profession"
-msgstr "Minors Profession"
+msgstr "Minors Profession\"                 "
 
 msgid "Minors Training"
-msgstr "Minors Training"
+msgstr "Minors Training\"                   "
 
 msgid "Minors Training Type"
-msgstr "Minors Training Type"
+msgstr "Minors Training Type\"              "
 
 msgid "Minors Working"
-msgstr "Minors Working"
+msgstr "អនីតិជន កំពុងធ្វើការ"
 
 msgid "Public School Name"
-msgstr "Public School Name"
+msgstr "ឈ្មោះសាលារដ្ឋ"
 
 msgid "Reasons"
-msgstr "Reasons"
+msgstr "មូលហេតុ"
 
 msgid "VDP Grade"
-msgstr "VDP Grade"
+msgstr "កម្រិត​ថ្នាក់នៅ​ VDP"
 
 msgid "Date of Intake"
-msgstr "Date of Intake"
+msgstr "កាលបរិច្ឆេទចូល"
 
 msgid "Date of birth"
-msgstr "Date of birth"
+msgstr "ថ្ងៃ/ខែ/ឆ្នាំ កំណើត"
 
 msgid "Current grade in Public School"
-msgstr "Current grade in Public School"
+msgstr "កម្រិតថ្នាក់​បច្ចុប្បន្ននៅ​សាលារដ្ឋ"
 
 msgid "Last grade in Public School"
-msgstr "Last grade in Public School"
+msgstr "កម្រិតថ្នាក់​ចុងក្រោយ​នៅ​សាលារដ្ឋ"
 
 msgid "Reasons not Attending School"
-msgstr "Reasons not Attending School"
+msgstr "មូលហេតុអត់ទៅសាលារៀន"
 
 msgid "Notes"
-msgstr "Notes"
+msgstr "កំណត់ចំណាំ"
 
 msgid "School"
-msgstr "School"
+msgstr "សាលារៀន​"
 
 msgid "year"
-msgstr "year"
+msgstr "ឆ្នាំ"
 
 msgid "Select Gender"
-msgstr "Select Gender"
+msgstr "ជ្រើស​រើស​ភេទ"
 
 msgid "Male"
-msgstr "Male"
+msgstr "ប្រុស"
 
 msgid "Female"
-msgstr "Female"
+msgstr "ស្រី​"
 
 msgid "Select Guardian 1 Relationship"
-msgstr "Select Guardian 1 Relationship"
+msgstr "ជ្រើសរើស ​ទំនាក់​ទំនងជាមួយ​អាណាព្យាបាលទី១​"
 
 msgid "No guardian"
-msgstr "No guardian"
+msgstr "គ្មានអាណាព្យាបាល"
 
 msgid "Father"
-msgstr "Father"
+msgstr "ឳពុក"
 
 msgid "Grandfather"
-msgstr "Grandfather"
+msgstr "ជីតា"
 
 msgid "Grandmother"
-msgstr "Grandmother"
+msgstr "យាយ"
 
 msgid "Other"
-msgstr "Other"
+msgstr "ផ្សេងទៀត"
 
 msgid "Aunt"
-msgstr "Aunt"
+msgstr "មីង"
 
 msgid "Mother"
-msgstr "Mother"
+msgstr "ម្តាយ"
 
 msgid "Uncle"
-msgstr "Uncle"
+msgstr "ពូ"
 
 msgid "Select Guardian 1 Employment"
-msgstr "Select Guardian 1 Employment"
+msgstr "ជ្រើសរើស​កម្រិតជីវភាព អាណាព្យាបាល​ទី១"
 
 msgid "1 - Very Low Wage"
-msgstr "1 - Very Low Wage"
+msgstr "1 - ប្រាក់កម្រៃ​ទាប​បំផុត​"
 
 msgid "Middle Class (or higher)"
-msgstr "Middle Class (or higher)"
+msgstr "កម្រិតមធ្យម​ (ឬ ខ្ពស់)"
 
 msgid "Select Guardian 2 Employment"
-msgstr "Select Guardian 2 Employment"
+msgstr "ជ្រើសរើស​កម្រិតជីវភាព អាណាព្យាបាល​ទី២"
 
 msgid "Select Guardian 2 Relationship"
-msgstr "Select Guardian 2 Relationship"
+msgstr "ជ្រើស​រើស​ ទំនាក់​ទំនង​ជាមួយ​អាណាព្យាបាលទី២"
 
 msgid "Select Minors Encouraged"
-msgstr "Select Minors Encouraged"
+msgstr "Select Minors Encouraged\"                     "
 
 msgid "Yes"
-msgstr "Yes"
+msgstr "មាន"
 
 msgid "No"
-msgstr "No"
+msgstr "គ្មាន"
 
 msgid "Not Applicable"
-msgstr "Not Applicable"
+msgstr "មិនអាច​អនុវត្ត​បាន​"
 
 msgid "Select Minors Training"
-msgstr "Select Minors Training"
+msgstr "Select Minors Training\"                              "
 
 msgid "Select VDP Grade"
-msgstr "Select VDP Grade"
+msgstr "ជ្រើសរើសកម្រិតថ្នាក់​នៅ​ VDP"
 
 msgid "Select Enrolled"
-msgstr "Select Enrolled"
+msgstr "ជ្រើស​រើស​ការចុះឈ្មោះ"
 
 msgid "Select Current Grade in Public School"
-msgstr "Select Current Grade in Public School"
+msgstr "ជ្រើស​រើស​កម្រិត​ថ្នាក់​បច្ចុប្បន្ន​នៅសាលារដ្ឋ"
 
 msgid "Select Last Grade in Public School"
-msgstr "Select Last Grade in Public School"
-
-msgid "Current Grade"
-msgstr "Current Grade"
+msgstr "ជ្រើស​រើស​កម្រិត​ថ្នាក់​ចុង​ក្រោយ​នៅសាលា​រដ្ឋ"
 
 msgid "Lag"
-msgstr "Lag"
+msgstr "ចន្លោះយឺត\"                               #not sure about this translatio"
 
-
-
-#---------------------------------------
-
-msgid "Input Student Achievment Test"
-msgstr "Input Student Achievement test"
+# ---------------------------------------
+msgid "Input Achievement Test"
+msgstr "បញ្ចូលលទ្ធផល​នៃ​ការ​ប្រលង​​"
 
 msgid "Level"
-msgstr "Level"
+msgstr "កម្រិត"
 
 msgid "Math"
-msgstr "Math"
+msgstr "គណិតវិទ្យា"
 
 msgid "Promote?"
-msgstr "Promote?"
+msgstr "តម្លើង​ថ្នាក់​?"
 
 msgid "Submit"
-msgstr "Submit"
+msgstr "បញ្ជូន"
 
 msgid "Evaluation"
-msgstr "Evaluation"
+msgstr "ការវាយ​តម្លៃ​"
 
 msgid "Student"
-msgstr "Student"
+msgstr "សិស្ស"
 
 msgid "Code"
-msgstr "Code"
+msgstr "វត្តមាន\"                               ###"
 
 msgid "Guardian 1"
-msgstr "Guardian 1"
+msgstr "អាណាព្យាបាលទី១"
 
 msgid "Phone Number"
-msgstr "Phone Number"
- 
-msgid "Guardian 2"    
-msgstr "Guardian 2"
- 
+msgstr "លេខទូរស័ព្ទ"
+
+msgid "Guardian 2"
+msgstr "អាណាព្យាបាល​ទី២"
+
 msgid "Update"
-msgstr "Update"
- 
+msgstr "បន្ទាន់​សម័យ"
+
 msgid "Note"
-msgstr "Note"
- 
+msgstr "កំណត់ចំណាំ"
+
 msgid "Update Attendance"
-msgstr "Update Attendance"
+msgstr "បន្ទាន់សម័យ វត្តមាន"
 
 msgid "Intake Date"
-msgstr "Intake Date"
+msgstr "កាលបរិច្ឆេទចូល"
 
 msgid "Apply this calendar to all classes at %(classroom.school_id)s"
-msgstr "Apply this calendar to all classes at %(classroom.school_id)s"
+msgstr "អនុវត្តប្រតិទិននេះនៅ %(classroom.school_id)s"
 
 msgid "Edit"
-msgstr "Edit"
+msgstr "កែសម្រួល"
 
 msgid "Modify Attendance Calendar"
-msgstr "Modify Attendance Calendar"
+msgstr "កែប្រែ​ប្រតិទិន​វត្តមាន"
 
-msgid "Academic preformance for"
-msgstr "Academic preformance for"
-
+msgid "Academic performance for"
+msgstr "ប្រតិបត្តិការណ៏សិក្សា​សម្រាប់​"
 
 msgid "Attendance Summary Report"
-msgstr "Attendance Summary Report"
+msgstr "របាយការណ៏​វត្តមាន​សង្ខេប​"
 
 msgid "Unapproved"
-msgstr "Unapproved"
+msgstr "មិនបានអនុម័ត"
 
 msgid "Approved"
-msgstr "Approved"
+msgstr "បានអនុម័ត"
 
 msgid "Total"
-msgstr "Total"
-
+msgstr "សរុប"
 
 msgid "Teacher(s)"
-msgstr "Teacher("
+msgstr "គ្រូ"
 
 msgid "Classroom Enrollment"
-msgstr "Classroom Enrollment"
+msgstr "ការចុះ​ឈ្មោះ​តាម​ថ្នាក់​"
 
 msgid "Currently Selected Students"
-msgstr "Currently Selected Students"
+msgstr "សិស្ស​ដែល​កំពុង​ត្រូវ​បាន​ជ្រើ​ស​រើស​"
 
 msgid "Enroll"
-msgstr "Enroll"
+msgstr "ចុះ​ឈ្មោះ"
 
 msgid "Students Currently Enrolled in"
-msgstr "Students Currently Enrolled in"
+msgstr "សិស្ស​កំពុង​ត្រូវ​បាន​ចុះឈ្មោះក្នុង​"
 
 msgid "Enrollment Date"
-msgstr "Enrollment Date"
+msgstr "កាលបរិច្ឆេទ​ចុះ​ឈ្មោះ​"
 
 msgid "Drop Date"
-msgstr "Drop Date"
+msgstr "កាលបរិច្ឆេទបោះបង់​"
 
 msgid "Drop this class"
-msgstr "Drop this class"
+msgstr "បោះបង់​ថ្នាក់​នេះ"
 
 msgid "Editing Enrollment Record"
-msgstr "Editing Enrollment Record"
+msgstr "កំពុង​កែសម្រួល​កំណត់​ត្រា​ចុះ​ឈ្មោះ​"
 
 msgid "Unassigned Classrooms"
-msgstr "Unassigned Classrooms"
+msgstr "ថ្នាក់​រៀន​ដែលពុំទាន់​មាន​ការចាត់​តាំង"
 
 msgid "Current Assignments"
-msgstr "Current Assignments"
-
+msgstr "ចំណាត់​តាំង​បច្ចុប្បន្ន​"
 
 msgid "editing"
-msgstr "editing"
+msgstr "កំពុង​កែសម្រួល"
 
 msgid "Problem"
-msgstr "Problem"
+msgstr "បញ្ហា"
 
 msgid "adding a classroom"
-msgstr "adding a classroom"
+msgstr "ថែមថ្នាក់​រៀន​មួយ​ទៀត​"
 
 msgid "Active"
-msgstr "Active"
+msgstr "សកម្ម"
 
 msgid "Add a new classroom"
-msgstr "Add a new classroom"
+msgstr "ថែមថ្នាក់​រៀន​ថ្មី​មួយទៀត"
 
 msgid "Jul. %(graduation|date:'Y')s"
-msgstr "Jul. %(graduation|date:'Y')s"
+msgstr "ខែ​ កក្កដា​ %(graduation|date:'Y')s"
 
 msgid "Currently Enrolled Students"
-msgstr "Currently Enrolled Students"
+msgstr "សិស្ស​ដែល​បាន​ចុះឈ្មោះ​បច្ចុប្បន្ន"
 
 msgid "Error - IntakeSurvey does not exist"
-msgstr "Error - IntakeSurvey does not exist"
+msgstr "កំហុស - ពុំមាន​ការ​ចុះ​ឈ្មោះ​សិស្ស​ចូល​រៀន​នោះ​ទេ"
 
 msgid "Error - No Exit Survey on Record"
-msgstr "Error -No Exit Survey on Record"
+msgstr "កំហុស​ - គ្មាន​កំណត់​ត្រាការបញ្ឈប់ការសិក្សារបស់​សិស្ស"
 
 msgid "Error - You can't do that!"
-msgstr "Error - You can't do that!"
+msgstr "កំហុស - អ្នកមិនអាច​ធ្វើ​វា​បាន​ទេ!"
 
 msgid "Performing Exit Survey"
-msgstr "Performing Exit Survey"
+msgstr "ប្រតិបត្តិការ​បញ្ឈប់​ការសិក្សារបស់​សិស្ស"
 
 msgid "Student ID"
-msgstr "Student ID"
+msgstr "ID សិស្ស​"
 
 msgid "Exit Date"
-msgstr "Exit Date"
+msgstr "កាលបរិច្ឆេទ​ឈប់"
 
 msgid "Grade In VDP When Exit"
-msgstr "Grade In VDP When Exit"
+msgstr "កម្រិត​ថ្នាក់​នៅ​ VDP នៅ​ពេល​ឈប់​"
 
 msgid "Reason"
-msgstr "Reason"
+msgstr "មូល​ហេតុ"
 
 msgid "Comment"
-msgstr "Comment"
+msgstr "មតិ"
 
-msgid "Already Preformed"
-msgstr "Already Preformed"
+msgid "Already Performed"
+msgstr "បាន​អនុវត្តរួច​"
 
 msgid "Preform"
-msgstr "Preform"
+msgstr "អនុវត្ត"
 
 msgid "Search"
-msgstr "Search"
+msgstr "ស្វែងរក"
 
 msgid "Detail"
-msgstr "Detail"
- 
-msgid "Student ID:"
-msgstr "Student ID:"
- 
-msgid "Update this Student's Information?"
-msgstr "Update this Student's Information?"
- 
-msgid "Enroll this student in VDP"
-msgstr "Enroll this student in VDP"
- 
-msgid "Perform an exit survey for this student"
-msgstr "Perform an exit survey for this student"
- 
-msgid "Perform post-exit survey for this student"
-msgstr "Perform post-exit survey for this student"
- 
-msgid "Exit Survey performed on "
-msgstr "Exit Survey performed on "
- 
-msgid "Student will leave the program on "
-msgstr "Student will leave the program on "
- 
-msgid " A post-exit survey has been performed"
-msgstr " A post-exit survey has been performed"
- 
-msgid "Last Update: "
-msgstr "Last Update: "
- 
-msgid "Gender: "
-msgstr "Gender: "
- 
-msgid "DOB: "
-msgstr "DOB: "
- 
-msgid "Enrolled: "
-msgstr "Enrolled: "
- 
-msgid "Expected 6th Grade Graduation: "
-msgstr "Expected 6th Grade Graduation: "
- 
-msgid "VDP Grade when Enrolled: "
-msgstr "VDP Grade when Enrolled: "
- 
-msgid "Current VDP Grade:"
-msgstr "Current VDP Grade:"
- 
-msgid "Public School Current Grade"
-msgstr "Public School Current Grade"
- 
-msgid "Grades/Years to achieve"
-msgstr "Grades/Years to achieve"
- 
-msgid "Academic Performance"
-msgstr "Academic Performance"
- 
-msgid "Course History"
-msgstr "Course History"
- 
-msgid "Contact"
-msgstr "Contact"
- 
-msgid "Household"
-msgstr "Household"
- 
-msgid "Health"
-msgstr "Health"
- 
-msgid "Academics "
-msgstr "Academics "
- 
-msgid "+ Add an achievement test"
-msgstr "+ Add an achievement test"
- 
-msgid "Test Date"
-msgstr "Test Date"
- 
-msgid "Test Grade"
-msgstr "Test Grade"
- 
-msgid "Student Evaluations"
-msgstr "Student Evaluations"
- 
-msgid "+ Add a student evaluation"
-msgstr "+ Add a student evaluation"
- 
-msgid "Academic"
-msgstr "Academic"
- 
-msgid "Study/Learning Skills"
-msgstr "Study/Learning Skills"
- 
-msgid "Life Skills/Personal Development"
-msgstr "Life Skills/Personal Development"
- 
-msgid "Hygeine Knowledge"
-msgstr "Hygeine Knowledge"
- 
-msgid "Christian Growth"
-msgstr "Christian Growth"
- 
-msgid "General Comments"
-msgstr "General Comments"
- 
-msgid "Add Incident"
-msgstr "Add Incident"
- 
-msgid "Date of Incident"
-msgstr "Date of Incident"
- 
-msgid "Attendance Detail"
-msgstr "Attendance Detail"
- 
-msgid "Year"
-msgstr "Year"
- 
-msgid "+ Add a course"
-msgstr "+ Add a course"
- 
-msgid "Date Dropped"
-msgstr "Date Dropped"
- 
-msgid "Course"
-msgstr "Course"
- 
-msgid "Public School History"
-msgstr "Public School History"
- 
-msgid "+ Add a Public School History"
-msgstr "+ Add a Public School History"
- 
-msgid "Acadimic Year"
-msgstr "Acadimic Year"
- 
-msgid "Status"
-msgstr "Status"
- 
-msgid "Enroll Date"
-msgstr "Enroll Date"
- 
-msgid "School Name"
-msgstr "School Name"
- 
-msgid "Reasons for not attending"
-msgstr "Reasons for not attending"
- 
-msgid "Contact Information"
-msgstr "Contact Information"
- 
-msgid "+Update this information?"
-msgstr "+Update this information?"
- 
-msgid "Guardian 1:"
-msgstr "Guardian 1:"
- 
-msgid "Guardian 2:"
-msgstr "Guardian 2:"
- 
-msgid "Name:"
-msgstr "Name:"
- 
-msgid "Phone:"
-msgstr "Phone:"
- 
-msgid "Home Address"
-msgstr "Home Address"
- 
-msgid "Home of Origin"
-msgstr "Home of Origin"
- 
-msgid "Profession"
-msgstr "Profession"
- 
-msgid "Income"
-msgstr "Income"
- 
-msgid "Minors in Household"
-msgstr "Minors in Household"
- 
-msgid "Minors in School (Public | Private)"
-msgstr "Minors in School (Public | Private)"
- 
-msgid "Working Minors"
-msgstr "Working Minors"
- 
-msgid "What are they doing for work?"
-msgstr "What are they doing for work?"
+msgstr "ពត៌មានលម្អិត"
 
- 
+msgid "Student ID:"
+msgstr "ID សិស្ស:"
+
+msgid "Update this Student's Information?"
+msgstr "បន្ទាន់​សម័យ​ពត៌មាន​សិស្ស​នេះ?"
+
+msgid "Enroll this student in VDP"
+msgstr "ចុះឈ្មោះ​សិស្ស​នេះ​ទៅក្នុង​ VDP"
+
+msgid "Perform an exit survey for this student"
+msgstr "អនុវត្តការបញ្ឈប់ការសិក្សាសម្រាប់​សិស្សម្នាក់​នេះ​​"
+
+msgid "Perform post-exit survey for this student"
+msgstr "អនុវត្ត​ការ​លប់​ឈ្មោះ​សិស្ស​នេះ​ចេញ​ពី​សាលា​រៀន​"
+
+msgid "Exit Survey performed on "
+msgstr "ការបញ្ឈប់​ការ​សិក្សា​ត្រូវ​បាន​ធ្វើ​លើ​ "
+
+msgid "Student will leave the program on "
+msgstr "សិស្ស​នឹង​ចាក​ចេញ​ពី​កម្ម​វិធី​នៅ​កាល​បរិច្ឆេទ "
+
+msgid " A post-exit survey has been performed"
+msgstr " ការ​លុប​ឈ្មោះសិស្ស​ចេញ​ពីសាលារៀន​ត្រូវ​បាន​អនុវត្ត​"
+
+msgid "Last Update: "
+msgstr "បន្ទាន់​សម័យ​លើ​ក​ចុង​ក្រោយ: "
+
+msgid "Gender: "
+msgstr "ភេទ: "
+
+msgid "DOB: "
+msgstr "ថ្ងៃ​/ខែ​​/ឆ្នាំ កំណើត: "
+
+msgid "Enrolled: "
+msgstr "បាន​ចុះ​ឈ្មោះ​: "
+
+msgid "Expected 6th Grade Graduation: "
+msgstr "រំពឹង​បញ្ចប់​ថ្នាក់​ទី ៦​ នៅ: "
+
+msgid "VDP Grade when Enrolled: "
+msgstr "កម្រិត​ថ្នាក់​ VDP នៅ​ពេល​ចុះ​ឈ្មោះ​: "
+
+msgid "Current VDP Grade:"
+msgstr "កម្រិត​ថ្នាក់​ VDP ពេល​បច្ចុប្បន្ន:"
+
+msgid "Public School Current Grade"
+msgstr "កម្រិត​ថ្នាក់​បច្ចុប្បន្ន​នៅ​សាលា​រដ្ឋ​"
+
+msgid "Grades/Years to achieve"
+msgstr "ចំនួន ថ្នាក់​/ឆ្នាំ ដើម្បីសម្រេច​"
+
+msgid "Academic Performance"
+msgstr "ការអនុវត្ត​ក្នុង​ការសិក្សា​"
+
+msgid "Course History"
+msgstr "ប្រវត្តិវគ្គ​សិក្សា"
+
+msgid "Contact"
+msgstr "ទំនាក់​ទំនង​"
+
+msgid "Household"
+msgstr "ផ្ទះ"
+
+msgid "Health"
+msgstr "សុខភាព"
+
+msgid "Academics "
+msgstr "ការសិក្សា "
+
+msgid "+ Add an achievement test"
+msgstr "+ បន្ថែមការប្រលង​"
+
+msgid "Test Date"
+msgstr "កាលបរិច្ឆេទ​ប្រលង"
+
+msgid "Test Grade"
+msgstr "កម្រិត​លទ្ធ​ផល​នៃ​ការប្រលង"
+
+msgid "Student Evaluations"
+msgstr "ការវាយតម្លៃ​សិស្ស​"
+
+msgid "+ Add a student evaluation"
+msgstr "+ បន្ថែម​ការ​វាយ​តម្លៃ​សិស្ស​"
+
+msgid "Academic"
+msgstr "ការសិក្សា"
+
+msgid "Study/Learning Skills"
+msgstr "ជំនាញ​ សិក្សា/រៀន"
+
+msgid "Life Skills/Personal Development"
+msgstr "បំនិនជីវិត/ការអភិវឌ្ឍខ្លួន​"
+
+msgid "Hygiene Knowledge"
+msgstr "ចំណេះដឹង​ផ្នែក​អនាម័យ"
+
+msgid "Christian Growth"
+msgstr "កំណើន​គ្រឹះ​សាសនិក"
+
+msgid "General Comments"
+msgstr "មតិទូទៅ"
+
+msgid "Add Incident"
+msgstr "បន្ថែម​ហេតុ​ការណ៏​"
+
+msgid "Date of Incident"
+msgstr "កាលបរិច្ឆេទ​នៃ​ហេតុ​ការណ៏​"
+
+msgid "Attendance Detail"
+msgstr "ពត៌មាន​វត្ត​មាន​លម្អិត​"
+
+msgid "Year"
+msgstr "ឆ្នាំ​"
+
+msgid "+ Add a course"
+msgstr "+ បន្ថែម​វគ្គសិក្សា​មួយ​"
+
+msgid "Date Dropped"
+msgstr "កាល​បរិច្ឆេទ​នៃ​ការ​បោះ​បង់​"
+
+msgid "Course"
+msgstr "វគ្គ​សិក្សា​"
+
+msgid "Public School History"
+msgstr "ប្រវត្តិនៅ​សាលា​រដ្ឋ​"
+
+msgid "+ Add a Public School History"
+msgstr "+ បន្ថែម​ប្រវត្តិ​សាលា​រដ្ឋ​មួយ​"
+
+msgid "Acadimic Year"
+msgstr "ឆ្នាំ​សិក្សា​"
+
+msgid "Status"
+msgstr "ស្ថាន​ភាព​"
+
+msgid "Enroll Date"
+msgstr "កាលបរិច្ឆេទ​ចុះ​ឈ្មោះ​"
+
+msgid "School Name"
+msgstr "ឈ្មោះ​សាលា​រៀន"
+
+msgid "Reasons for not attending"
+msgstr "មូលហេតុនៃអវត្តមាន​"
+
+msgid "Contact Information"
+msgstr "ពត៌មាន​ទំនាក់​ទំនង​"
+
+msgid "+Update this information?"
+msgstr "+បន្ទាន់​សម័យ​ពត៌មាន​នេះ?"
+
+msgid "Guardian 1:"
+msgstr "អាណាព្យាបាល​ទី​១:"
+
+msgid "Guardian 2:"
+msgstr "អាណាព្យាបាលទី២:"
+
+msgid "Name:"
+msgstr "ឈ្មោះ​:"
+
+msgid "Phone:"
+msgstr "លេខទូរស័ព្ទ:"
+
+msgid "Home Address"
+msgstr "អាស័យដ្ឋាន​ស្នាក់​នៅ​"
+
+msgid "Home of Origin"
+msgstr "ស្រុក​កំណើត​"
+
+msgid "Profession"
+msgstr "អាជីព​"
+
+msgid "Income"
+msgstr "ប្រាក់​ចំណូល"
+
+msgid "Minors in Household"
+msgstr "អនីតិជន​ក្នុង​ផ្ទះ​"
+
+msgid "Minors in School (Public | Private)"
+msgstr "អនីតិជន​នៅសាលា (រដ្ឋ​ | ឯកជន)"
+
+msgid "Working Minors"
+msgstr "អនីតិជន​ កំពុង​ធ្វើ​ការ​"
+
+msgid "What are they doing for work?"
+msgstr "តើពួក​គេ​កំពុង​ធ្វើ​ការ​អ្វី?"
+
 msgid "Were they encouraged?"
-msgstr "Were they encouraged?"
- 
+msgstr "តើពួ​កគេ​ត្រូវ​បាន​ជំរុញ​ឲ្យ​ធ្វើ​ការ​ឬ?"
+
 msgid "Did they receive any vocational training?"
-msgstr "Did they receive any vocational training?"
- 
+msgstr "តើពួក​គេ​ត្រូវ​បាន​ផ្តល់នូវ​ការហ្វឹក​ហ្វឺន​ការងារដែរ​ឬទេ​?"
+
 msgid "What kind of vocational training did they receive?"
-msgstr "What kind of vocational training did they receive?"
- 
+msgstr "តើ​ពួក​គេ​ទទួល​បាន​នូវ​ការ​ហ្វឹកហ្វឺន​ការងារ​ប្រ​ភេទ​ណា​?"
+
 msgid "Checkups"
-msgstr "Checkups"
- 
+msgstr "ត្រួត​ពិនិត្យ​"
+
 msgid "Height"
-msgstr "Height"
- 
+msgstr "កំពស់"
+
 msgid "Weight"
-msgstr "Weight"
- 
+msgstr "ទម្ងន់"
+
 msgid "Dentist Visits"
-msgstr "Dentist Visits"
- 
+msgstr "ការ​ត្រួតពិនិត្យ​នៅ​ពេទ្យ​ធ្មេញ​"
+
 msgid "+ Add a dental visit"
-msgstr "+ Add a dental visit"
- 
+msgstr "+ បន្ថែម​កការ​ត្រួត​ពិនិត្យ​នៅ​ពេទ្យធ្មេញ​មួយ"
+
 msgid "Extractions"
-msgstr "Extractions"
- 
+msgstr "ការដកធ្មេញ"
+
 msgid "Sealent"
-msgstr "Sealent"
- 
+msgstr "បិទធ្មេញ"
+
 msgid "Fillings"
-msgstr "Fillings"
- 
+msgstr "ប៉ះធ្មេញ"
+
 msgid "Endo"
-msgstr "Endo"
- 
+msgstr "ព្យាបាល​ធ្មេញ"
+
 msgid "Scaling"
-msgstr "Scaling"
- 
+msgstr "ដកកំបោរចេញពី​ធ្មេញ"
+
 msgid "Pulped"
-msgstr "Pulped"
- 
+msgstr "Pulped\"                          ############"
+
 msgid "Xray"
-msgstr "Xray"
+msgstr "ឆ្លុះកាំរស្មី X"
 
 msgid "Performing Internal Intake"
-msgstr "Performing Internal Intake"
+msgstr "អនុវត្ត​ការចុះឈ្មោះ​សិស្ស​"
 
 msgid "Performing Intake Update"
-msgstr "Performing Intake Update"
+msgstr "អនុវត្ត​បន្ទាន់សម័យ​ការចុះឈ្មោះ​សិស្សចូល​រៀន​​"
 
 msgid "Editing Intake Survey for %(student)s"
-msgstr "Editing Intake Survey for %(student)s"
+msgstr "កែសម្រួល​ការចុះឈ្មោះចូល​រៀន​សម្រាប់​ %(student)s"
 
 msgid "Performing Intake Survey"
-msgstr "Performing Intake Survey"
+msgstr "អនុវត្ត​ការ​ចុះ​ឈ្មោះសិស្ស​ចូល​រៀន"
 
 msgid "M&E Summary Report in %(start_view_date)s to %(view_date)s"
-msgstr "M&E Summary Report in %(start_view_date)s to %(view_date)s"
+msgstr "ត្រួត​ពិនិត្យ​ និង​ វាយតម្លៃ​របាយការណ៏សង្ខេបក្នុង​ %(start_view_date)s ដល់ %(view_date)s"
 
 msgid "Vietnamese"
-msgstr "Vietnamese"
+msgstr "ភាសា​វៀតណាម​"
 
 msgid "Students enrolled in grade plus Vietnamese"
-msgstr "Students enrolled in grade plus vietnamese"
+msgstr "សិស្ស​បាន​ចុះ​ឈ្មោះ​រៀន​ក្នុង​ថ្នាក់​និងភាសាវៀតណាម​"
 
 msgid "Only Vietnamese"
-msgstr "Only Vietnamese"
+msgstr "ត្រឹមតែ​ភាសា​វៀតណាម​"
 
 msgid "Boys"
-msgstr "Boys"
+msgstr "ក្មេង​ប្រុស​"
 
 msgid "Girls"
-msgstr "Girls"
+msgstr "ក្មេង​ស្រី"
 
 msgid "English level"
-msgstr "English level"
+msgstr "កម្រិត​ភាសា​អង់គ្លេស"
 
 msgid "Students enrolled in English"
-msgstr "Students enrolled in English"
+msgstr "សិស្ស​ដែល​បាន​ចុះឈ្មោះរៀន​ភាសា​អង់​គ្លេស​"
 
 msgid "English level %(i)s"
-msgstr "English level %(i)s"
+msgstr "កម្រិត​ភាសា​អង់​គ្លេស %(i)s"
 
 msgid "Catch-up school"
-msgstr "Catch-up school"
- 
+msgstr "សាលា​ពន្លឿន​"
+
 msgid "Vietnamese only"
-msgstr "Vietnamese only"
- 
+msgstr "តែ​ភាសា​វៀត​ណាម​ប៉ុណ្ណោះ"
+
 msgid "Total:"
-msgstr "Total:"
- 
+msgstr "សរុប:"
+
 msgid "Total Students"
-msgstr "Total Students"
- 
+msgstr "សិស្ស​សរុប​"
+
 msgid "Achieved age appropriate level"
-msgstr "Achieved age appropriate level"
- 
+msgstr "សម្រេច​បាន​កម្រិត​សមស្រប​តាម​អាយុ"
+
 msgid "of total"
-msgstr "of total"
+msgstr "នៃ​ចំនួន​សរុប"
 
 msgid "Action"
-msgstr "Action"
+msgstr "សកម្មភាព"
 
 msgid "Performing Post Exit Survey"
-msgstr "Performing Post Exit Survey"
+msgstr "អនុវត្ត​ការ​លប់​ឈ្មោះសិស្ស​ពីសាលា​"
 
 msgid "Post-Exit Survey Eligible Students"
-msgstr "Post-Exit Survey Eligible Students"
+msgstr "ការលុបឈ្មោះសិស្ស​ចេញពីបញ្ជីសាលារៀន​ចំពោះសិស្ស​ដែលមាន​លក្ខណៈសម្បត្តិគ្រប់​គ្រាន់"
 
 msgid "Date of Exit"
-msgstr "Date of Exit"
+msgstr "កាលបរិច្ឆេទនៃការចាកចេញពីសាលា​"
 
 msgid "Perform"
-msgstr "Perform"
+msgstr "អនុវត្ត"
 
 msgid "Perform Post-Exit Survey"
-msgstr "Perform Post-Exit Survey"
+msgstr "អនុវត្ត​ការលុបឈ្មោះសិស្ស​ចេញ​ពី​បញ្ជីសាលា"
 
 msgid "Public School Report"
-msgstr "Public School Report"
- 
+msgstr "របាយការណ៏​សាលា​រដ្ឋ​"
+
 msgid "Enrollment Date In VDP"
-msgstr "Enrollment Date In VDP"
- 
-msgid "Pubic School Grade"
-msgstr "Pubic School Grade"
- 
+msgstr "កាលបរិច្ឆេទ​នៃការចុះឈ្មោះ​នៅ​ VDP"
+
+msgid "Public School Grade"
+msgstr "កម្រិត​ថ្នាក់​នៅ​សាលា​រដ្ឋ​"
+
 msgid "Reason Not Attend Public School"
-msgstr "Reason Not Attend Public School"
- 
+msgstr "មូលហេតុនៃការមិនទៅរៀន​សាលារដ្ឋ​"
+
 msgid "Not Attend"
-msgstr "Not Attend"
- 
+msgstr "មិនទៅ​"
+
 msgid "Filter by:"
-msgstr "Filter by:"
- 
+msgstr "ស្វែងរក​ដោយ:"
+
 msgid "Clear Search"
-msgstr "Clear Search"
+msgstr "លុបការស្វែងរក"
 
 msgid "Performing Spiritual Activities Survey"
-msgstr "Performing Spiritual Activities Survey"
+msgstr "អនុវត្ត​ការស្ទង់​មតិលើ​សកម្មភាពទាក់ទង​នឹង​​វិញ្ញាណ\"     ########"
 
 msgid "Student Achievement Test Report"
-msgstr "Student Achievement Test Report"
+msgstr "របាយការណ៏នៃការសម្រេច​ការប្រលង​របស់​សិស្ស​"
 
-msgid "Student daily absences"
-msgstr "Student daily absences"
+msgid "Students daily absences"
+msgstr "អវត្តមានប្រចាំ​ថ្ងៃរបស់​សិស្ស​"
 
 msgid "on"
-msgstr "on"
+msgstr "នៅ"
 
 msgid "All Classrooms"
-msgstr "All Classrooms"
+msgstr "គ្រប់​ថ្នាក់​រៀន​"
 
 msgid "Student Attendance Detail Report"
-msgstr "Student Attendance Detail Report"
+msgstr "របាយការណ៏វត្តមានសិស្ស​លម្អិត​"
 
 msgid "Promote"
-msgstr "Promote"
+msgstr "តម្លើងថ្នាក់"
 
 msgid "for"
-msgstr "for"
+msgstr "សម្រាប់​"
 
 msgid "to"
-msgstr "to"
+msgstr "ដល់"
 
 msgid "Filling"
-msgstr "Filling"
+msgstr "បំពេញ​"
 
 msgid "Absence code"
-msgstr "Absence code"
+msgstr "កូដវត្តមាន"
 
 msgid "Student Evaluations for"
-msgstr "Student Evaluations for"
+msgstr "ការវាយ​តម្លៃ​សិស្ស​សម្រាប់​"
 
 msgid "Adding a Student Evaluation for"
-msgstr "Adding a Student Evaluation for"
+msgstr "បន្ថែម​ការវាយ​តម្លៃសិស្ស​សម្រាប់​"
 
 msgid "Study/Learning"
-msgstr "Study/Learning"
+msgstr "សិក្សា/រៀន​"
 
 msgid "Life/Personal"
-msgstr "Life/Personal"
+msgstr "ជីវិត​/ខ្លួន"
 
 msgid "Hygiene"
-msgstr "Hygiene"
+msgstr "អនាម័យ"
 
 msgid "Please select a classroom."
-msgstr "Please select a classroom."
+msgstr "សូម​ជ្រើ​ស​រើស​ថ្នាក់​រៀន​មួយ​"
 
 msgid "Evaluation Date"
-msgstr "Evaluation Date"
-
-msgid "Hygeine"
-msgstr "Hygeine"
+msgstr "កាលបរិច្ឆេទ​ការវាយ​តម្លៃ"
 
 msgid "Comments"
-msgstr "Comments"
+msgstr "មតិ"
 
 msgid "Date Achieved Age Appropriate Level"
-msgstr "Date Achieved Age Appropriate Level"
+msgstr "កាលបរិច្ឆេទ​ទទួល​បាន​កម្រិតសមស្រប​នឹង​អាយុ​"
 
 msgid "Intake Surveys"
-msgstr "Intake Surveys"
+msgstr "ចុះឈ្មោះសិស្សចូលរៀន"
 
 msgid "At Grade Level?"
-msgstr "At Grade Level?"
+msgstr "នៅកម្រិតថ្នាក់​ទី?"
 
 msgid "In Public School?"
-msgstr "In Public School?"
+msgstr "នៅ​សាលា​រដ្ឋ?"
 
 msgid "Medical Visits"
-msgstr "Medical Visits"
-
-msgid "Student Promoted Times Report"
-msgstr "Student Promoted Times Report"
+msgstr "ជួបវេជ្ជបណ្ឌិត"
 
 msgid "How long in VDP Program"
-msgstr "How long in VDP Program"
+msgstr "រយៈពេល​នៅ​ក្នុង​កម្ម​វិធី​របស់​ VDP"
 
 msgid "The Last Promoted Date"
-msgstr "The Last Promoted Date"
+msgstr "កាលបរិច្ឆេទ​តម្លើង​ថ្នាក់​ចុង​ក្រោយ​បង្អស់"
 
 msgid "The Last Promoted Date and Now"
-msgstr "The Last Promoted Date and Now"
+msgstr "ចន្លោះរយៈពេល​ឡើង​ថ្នាក់​ចុងក្រោយ​រហូត​មកដល់​បច្ចុប្បន្ន​"
 
 msgid "Promoted Times"
-msgstr "Promoted Times"
+msgstr "ចំនួនឡើងថ្នាក់​ (ដង)"
 
-#-------Students Integrated In Public School Report----
-
+# -------Students Integrated In Public School Report----
 msgid "Students Integrated In Public School Report"
-msgstr "Students Integrated In Public School Report"
+msgstr "របាយការណ៏សិស្ស​រៀន​រួម​ជាមួយនិង​សាលា​រដ្ឋ​"
 
 msgid "All Site"
-msgstr "All Site"
+msgstr "គ្រប់​ទី​តាំង​"
 
 msgid "Success!"
-msgstr "Success!"
+msgstr "ជោគជ័យ!"
 
 msgid "Take attendance for"
-msgstr "Take attendance for"
+msgstr "កត់វត្តមាន​សម្រាប់​"
 
 msgid "This class does not meet today!"
-msgstr "This class does not meet today!"
+msgstr "ថ្នាក់​នេះ​មិនរៀន​ទេ​ថ្ងៃនេះ!"
 
 msgid "change the attendance calendar?"
-msgstr "change the attendance calendar?"
+msgstr "ផ្លាស់​ប្តូរ​ប្រតិទិន​វត្ត​មាន?"
 
 msgid "Taking attendance for"
-msgstr "Taking attendance for"
+msgstr "កំពុង​កត់​វត្ត​មាន​សម្រាប់​"
 
 msgid "Unapproved Absence"
-msgstr "Unapproved Absence"
+msgstr "អវត្តមាន​ដោយ​ គ្មាន ការ​អនុញ្ញាត្តិ​"
 
 msgid "Approved Absence"
-msgstr "Approved Absence"
+msgstr "អវត្តមាន​ដោយ​ មាន​ ការ​អនុញ្ញាត្តិ"
 
 msgid "Active Teacher"
-msgstr "Active Teacher"
+msgstr "គ្រូ​ សកម្ម"
 
 msgid "Inactive Teacher"
-msgstr "Inactive Teacher"
+msgstr "គ្រូ អសកម្ម"
 
 msgid "Adding a teacher"
-msgstr "Adding a teacher"
+msgstr "បន្ថែម​គ្រូ​"
 
 msgid "All Students"
-msgstr "All Students"
+msgstr "សិស្ស​ទាំង​អស់​"
 
 msgid "Add a teacher?"
-msgstr "Add a teacher?"
+msgstr "បន្ថែម​គ្រូ​?"
 
 msgid "Show Inactive Teacher"
-msgstr "Show Inactive Teacher"
+msgstr "បង្ហាញ​គ្រូ អសកម្ម"
 
 msgid "Current Students"
-msgstr "Current Students"
+msgstr "សិស្ស​បច្ចុប្បន្ន​"
 
 msgid "Show Active Teacher"
-msgstr "Show Active Teacher"
+msgstr "បង្ហាញ​គ្រូ​ សកម្ម​"
 
 msgid "Unapproved Absence With No Comment"
-msgstr "Unapproved Absence With No Comment"
+msgstr "អវត្តមាន​ដោយ​ គ្មាន​ ការអនុញ្ញាត្តិ គ្មាន​មតិ"
 
 msgid "Please perform an"
-msgstr "Please perform an"
+msgstr "សូម​អនុវត្ត​ "
 
 msgid "exit survey"
-msgstr "exit survey"
+msgstr "បញ្ឈប់ការសិក្សារបស់សិស្ស"
 
 msgid "first!"
-msgstr "first!"
+msgstr "ដំបូង!"
 
+# ---------------model and form field---------------------
+# ---------------- exit survey----------------
+msgid "Survey Date"
+msgstr "កាលបរិច្ឆេទ​ ការស្ទង់​មតិ​"
 
+msgid "Early Exit (before achieveing age appropriate level)"
+msgstr "ឈប់​មុន​ពេល​ (មិនទាន់​បាន​សម្រាច់​កម្រិច​សមស្របនឹងអាយុ​)"
+
+msgid "Public School Grade at exit"
+msgstr "កម្រិត​ថ្នាក់​សាលា​រដ្ឋ​នា​ពេល​ឈប់​"
+
+msgid "Reason for Leaving Early"
+msgstr "មូល​ហេតុ​នៃការ​ឈប់​មុន​ពេល​កំនត់​"
+
+msgid "Plan to enroll in secondary school?"
+msgstr "​គម្រោង​ចុះ​ឈ្មោះ​នៅ​ថ្នាក់​វិទ្យាល័យ?"
+
+msgid "Moving to another location"
+msgstr "ផ្លាស់​ប្តូរ​ទៅ​ទីតាំង​ផ្សេង​"
+
+msgid "Don't want to continue."
+msgstr "មិនចង់​បន្ត។"
+
+msgid "Got a job"
+msgstr "ទទួល​បាន​ការងារមួយ​"
+
+# --------- intake survey-----------
+msgid "Appropriate Grade"
+msgstr "កម្រិត​ថ្នាក់​សមស្រប"
+
+msgid "Currently enrolled in (public) school?"
+msgstr "បច្ចុប្បន្ន​បាន​ចុះ​ឈ្មោះ​ក្នុង​ សាលា​ (រដ្ឋ)?"
+
+msgid "Current grade in [public] school (if enrolled)"
+msgstr "កម្រិត​ថ្នាក់​នៅ​ក្នុង​ សាលា​ [រដ្ឋ​] (ប្រសិន​បាន​ចុះឈ្មោះ)"
+
+msgid "Last grade attended (if not enrolled)"
+msgstr "កម្រិត​ថ្នាក់​រៀ​នចុង​ក្រោយ​ (ប្រសិន​បើ​មិន​បាន​ចុះ​ឈ្មោះ​)"
+
+msgid "Not Enrolled"
+msgstr "មិន​បាន​ចុះ​ឈ្មោះ"
+
+msgid "Computers"
+msgstr "កុំព្យូទ័រ​"
+
+msgid "No Grade / Never Studied"
+msgstr "គ្មាន​ថ្នាក់​ / មិនដែល​បាន​រៀន​"
+
+msgid "Grade 1"
+msgstr "ថ្នាក់​ទី​ ១"
+
+msgid "Grade 2"
+msgstr "ថ្នាក់​ទី ២"
+
+msgid "Grade 3"
+msgstr "ថ្នាក់​ទី ៣"
+
+msgid "Grade 4"
+msgstr "ថ្នាក់​ទី​ ៤"
+
+msgid "Grade 5"
+msgstr "ថ្នាក់​ទី​ ៥"
+
+msgid "Grade 6"
+msgstr "ថ្នាក់​ទី ៦"
+
+msgid "Grade 7"
+msgstr "ថ្នាក់ទី​ ៧"
+
+msgid "Grade 8"
+msgstr "ថ្នាក់​ទី ៨"
+
+msgid "Grade 9"
+msgstr "ថ្នាក់​ទី​ ៩"
+
+msgid "Grade 10"
+msgstr "ថ្នាក់​ទី ១០"
+
+msgid "Grade 11"
+msgstr "ថ្នាក់​ទី​ ១១"
+
+msgid "Grade 12"
+msgstr "ថ្នាក់​ទី​ ១២"
+
+msgid "Guardian 1's Name"
+msgstr "ឈ្មោះរបស់​អាណា​ព្យាបាល​ទី១"
+
+msgid "Guardian 1's relationship to child"
+msgstr "ទំនាក់​ទំនង​រវាងអាណាព្យាបាល​ទី១ និង​ កុមារ"
+
+msgid "Guardian 1's Phone"
+msgstr "លេខទូរស័ព្ទ​របស់​អាណាព្យាបាល​ទី១"
+
+msgid "Guardian 1's Profession"
+msgstr "អាជីពរបស់​អាណាព្យាបាល​ទី១"
+
+msgid "Guardian 1's Employment"
+msgstr "កម្រិត​ជីវ​ភាព​របស់​អាណាព្យាបាល​ទី១"
+
+msgid "Guardian 2's Name"
+msgstr "ឈ្មោះរបស់​អាណាព្យា​បាល​ទី​២"
+
+msgid "Guardian 2's relationship to child"
+msgstr "ទំនាក់​ទំនង​រវាង​អាណាព្យាបាល​ទី២​ និង​ កុមារ"
+
+msgid "Guardian 2's Phone"
+msgstr "លេខទូរស័ព្ទ​របស់​អាណាព្យាបាល​ទី២"
+
+msgid "Guardian 2's Profession"
+msgstr "អាជីពរបស់​អាណាព្យាបាល​ទី១"
+
+msgid "Guardian 2's Employment"
+msgstr "កម្រិត​ជីវ​ភាព​របស់​អាណាព្យាបាល​ទី២"
+
+msgid "Number of children living in household (including student)"
+msgstr "ចំនួន​កុមារ​​ដែលរស់​នៅ​ក្នុង​ផ្ទះ (រួមទាំង​សិស្ស​)"
+
+msgid "Number of children enrolled in public school last year"
+msgstr "ចំនួនកុមារ​ដែល​ចុះ​ឈ្មោះ​ក្នុង​សាលា​រដ្ឋ​នៅ​ឆ្នាំ​មុន​"
+
+msgid "Number of children enrolled in private school last year"
+msgstr "ចំនួន​កុមារ​ដែ​ល​ចុះឈ្មោះក្នុង​សាលា​ឯក​ជន​នៅឆ្នាំ​មុន​"
+
+msgid "Number of children under 18 working 15+ hours per week"
+msgstr "ចំនួន​កុមារ​អាយុ​ក្រោម​ ១៨​ ឆ្នាំ​ កំពុង​ធ្វើការ​លើស​ ១៥ ម៉ោង​ ក្នុង​មួ​យ​សប្តាហ៍"
+
+msgid "Did you encourage them to take this job?"
+msgstr "តើអ្នកមាន​បាន​ជម្រុញគាត់​ឲ្យ​ធ្វើ​ការ​ងារ​នេះ​ទេ?"
+
+# --------------post exit survey-------------------
+msgid "Post Exit Survey Date"
+msgstr "កាលបរិច្ឆេទ​នៃ​ការលប់ឈ្មោះសិស្ស​ពី​បញ្ជីសាលា​"
+
+msgid "Date of Survey"
+msgstr "ការបរិច្ឆេទ​នៃ​ការ​ស្ទង់​មតិ"
+
+msgid "Early (before achieving grade level) Exit"
+msgstr "ការចេញមុនការកំណត់ (មុនពេល​សម្រេច​បាន​កម្រិត​ថ្នាក់​សមស្រប)"
+
+msgid "How many children in the household?"
+msgstr "តើមាន​កុមារ​ប៉ុន្មាន​នាក់​នៅក្នុង​ផ្ទះ?"
+
+msgid "Currently in school? [Primary Child]"
+msgstr "ទៅសាលា​ក្នុង​ពេល​បច្ចុ​ប្បន្ន​? [កុមារ​ថ្នាក់​បឋមសិក្សា]\"     ######not sur"
+
+msgid "Current Grade in formal school (if in school)"
+msgstr "កម្រិត​ថ្នាក់​នៅ​សលារដ្ឋ​ (ប្រសិនបើ​​ទៅសាលា)"
+
+msgid "Last Grade attended (if not in school)"
+msgstr "កម្រិត​ថ្នាក់ដែលបាន​ទៅ​រៀន​ចុង​ក្រោយ (ប្រសិន​បើ​មិនកំពុងទៅសាលា)"
+
+# --------------Spiritual Activities Survey-------------------
+msgid "Does your family currently attend church?"
+msgstr "តើគ្រួសារ​អ្នកមានទៅ​ព្រះវិហារ​ទេនាពេល​បច្ចុប្បន្ន?"
+
+msgid "Do you currently attend church?"
+msgstr "តើអ្នក​ទៅ​ព្រះវិហារ​ទេនាពេល​បច្ចុប្បន្ន?"
+
+msgid "Have you prayed on your own within the last week?"
+msgstr "តើ​អ្ន​កមាន​បាន​អធិដ្ឋាន​ដោយ​ខ្លួន​អ្នក​ទេ​ ក្នុង​កំឡុង​ពេល​មួយសប្តាហ៍កន្លងមក?"
+
+msgid "Have you been baptized?"
+msgstr "តើអ្នកមាន​ត្រូវ​បាន​ទទួល​ពិធីជ្រមុជ​ទឹក​ដែរ​ឬទេ?"
+
+msgid "Have you spent time reading the Bible in the last week?"
+msgstr "តើអ្នក​មាន​បាន​ចំណាយ​ពេល​អានព្រះ​គម្ពីរ​ទេ​ ក្នុង​កំឡុង​ពេល​មួយសប្តាហ៍កន្លងមក​?"
+
+msgid "Have you prayed aloud in the last week?"
+msgstr "តើ​អ្នក​មាន​បាន​អធិដ្ឋាន​លឺៗទេ ក្នុង​កំឡុង​ពេល​មួយសប្តាហ៍កន្លងមក?"
+
+# ---------------health form----------------
+msgid "Appointment date"
+msgstr "កាលបរិច្ឆេទ​ ការណាត់​ជួប"
+
+msgid "Appointment type"
+msgstr "ប្រភេទ​នៃ​ការ​ណាត់​ជួប"
+
+msgid "Dental"
+msgstr "ធ្មេញ"
+
+msgid "Check-up"
+msgstr "ពិនិត្យ"
+
+msgid "Editing Attendance Calendar For"
+msgstr "កំពុង​កែសម្រួល​ប្រតិទិន​ស្រង់​វត្ត​មាន​សម្រាប់"
+
+msgid "Notification Log"
+msgstr "កំណត់​ហេតុ​ សារជូនដំណឹង"
+
+# ------------- student dental summary report-------------
+msgid "Student Dental Report for %(current_site)s"
+msgstr "របាយការណ៏ធ្មេញ​របស់សិស្ស​នៅ​ %(current_site)s"
+
+msgid "Number of Student"
+msgstr "ចំនួនសិស្ស​"
+
+# ---------------- index.html / Dashboard----------------------
+msgid "VDP by Grade"
+msgstr "VDP តាមកម្រិត​ថ្នាក់​"
+
+msgid "Actions"
+msgstr "សកម្មភាព"
+
+msgid "Another action"
+msgstr "សកម្មភាព​ផ្សេងមួយទៀត"
+
+msgid "Something else here"
+msgstr "អ្វីផ្សេង​ទៀត​ នៅទី​នេះ​"
+
+msgid "Separated link"
+msgstr "Separated link\"   #######"
+
+msgid "Unenrolled Students"
+msgstr "សិស្ស​ដែ​ល​ពុំទាន់​បាន​ចុះ​ឈ្មោះ​"
+
+msgid "Unapproved Absences"
+msgstr "អវត្ត​មាន​ដោយ​ គ្មាន​ ការ​អនុញ្ញាត្តិ"
+
+msgid "VDP at a Glance"
+msgstr "ស្ថិតិ​សង្ខេប​ នៃ VDP"
+
+msgid "Overview"
+msgstr "ទិន្នន័យ​​ទូទៅ​​"
+
+msgid "Objectives breakdown"
+msgstr "ទិន្នន័យ​តាម​គោលបំណង"
+
+msgid "Catch Up Students"
+msgstr "សិស្ស​សាលា​ពន្លឿន​"
+
+msgid "(%(females)s female)"
+msgstr "(%(females)s ស្រី​)"
+
+msgid "total"
+msgstr "សរុប​"
+
+msgid "At Age Appropriate Grade Level"
+msgstr "នៅ​កម្រិត​ថ្នាក់​សមស្រប​នឹង​អាយុ"
+
+msgid "Skill Training Students"
+msgstr "សិស្ស​ហ្វឹកហាត់​ជំនាញ"
+
+msgid "(%(total_skills)s Skills Training)"
+msgstr "(%(total_skills)s ហ្វឹកហាត់​ជំនាញ)"
+
+msgid "Recent Activity"
+msgstr "សកម្មភាព​ថ្មីៗ"
+
+msgid "View All Alerts"
+msgstr "មើលការ​ជូន​ដំណឹង​ទាំង​អស់​"
+
+msgid "Students at Grade Level"
+msgstr "សិស្ស​នៅ​តាម​កម្រិត​ថ្នាក់​"
+
+msgid "View Details"
+msgstr "មើល​ពត៌មាន​លម្អិ​ត"
+
+# ---- intake internal--------------------------
+msgid "Starting grade"
+msgstr "កម្រិត​ថ្នាក់​ចាប់​ផ្តើម​"
+
+#  --- intake update  -------
+msgid "Date of Update"
+msgstr "កាលបរិច្ឆេទ​ បន្ទាន់​សម៍យ​"
+
+msgid "Currently enrolled in formal school?"
+msgstr "បច្ចុប្បន្ន​បាន​ចុះ​ឈ្មោះ​នៅ​សាលា​រដ្ឋ​?"
+
+msgid "Current grade in (public) school?"
+msgstr "កម្រិ​ត​ថ្នាក់​បច្ចុប្បន្ន​នៅ​សាលា​រដ្ឋ​?"
+
+msgid "Reasons for not attending school"
+msgstr "មូល​ហេតុ​ដែលមិនចូលសាលារៀន"
+
+# ---------Discipline-----------
+msgid "Incident Date"
+msgstr "កាលបរិច្ឆេទ​នៃ​ហេតុ​ការណ៏"
+
+msgid "Classroom ID"
+msgstr "ID ថ្នាក់​រៀន​"
+
+msgid "Incident code"
+msgstr "កូដ​នៃ​ហេតុការណ៏"
+
+msgid "Incident description"
+msgstr "ការរៀបរាប់​ ហេតុ​ការណ៏"
+
+msgid "Bullying"
+msgstr "ការសម្លុត"
+
+msgid "Cheating"
+msgstr "បន្លំ"
+
+msgid "Lying"
+msgstr "កុហក"
+
+msgid "Cursing"
+msgstr "ជេរ​"
+
+# -------Manage Classroom Assignments---------
+msgid "Teacher ID"
+msgstr "ID គ្រូ"
+
+# -----------Manage Classrooms-------
+msgid "Target Grade"
+msgstr "គោលដៅកម្រិត​ថ្នាក់​"
+
+msgid "Classroom Location"
+msgstr "ទីតាំង​ថ្នាក់​រៀន​"
+
+msgid "Attendance calendar"
+msgstr "ប្រតិទិន​វត្តមាន​"
+
+# -------- attendance-------
+msgid "Attendance Day"
+msgstr "ថ្ងៃ​វត្ត​មាន​"
+
+# ------- student evaluation------
+msgid "Observation Date"
+msgstr "កាល​បរិច្ឆេទ​នៃ​ការ​សង្កេត"
+
+msgid "Academic Growth Score"
+msgstr "ពិន្ទុនៃ​ការរើក​ចម្រើន​​ការសិក្សា"
+
+msgid "Study/Learning Skills Score"
+msgstr "ពិន្ទុ ​ជំនាញ​ សិក្សា/រៀន"
+
+msgid "Life Skills/Personal Development Score"
+msgstr "ពិន្ទុ​ បំនិនជីវិត​/ការអភិវឌ្ឍខ្លួន​"
+
+msgid "Hygiene Knowledge Score"
+msgstr "ពិន្ទុ​ ចំណេះដឹង​ អនាម័យ"
+
+msgid "Christian Growth Score"
+msgstr "ពិន្ទុ កំណើន​គ្រឹះ​សាសនិក"
+
+msgid "Overall Comments"
+msgstr "មតិ​សរុប​"
+
+# -----public school-------
+msgid "Academic Year"
+msgstr "ឆ្នាំសិក្សា​"
+
+msgid "Completed"
+msgstr "បញ្ចប់​"
+
+msgid "Dropped out"
+msgstr "បោះបង់​"
+
+msgid "On going"
+msgstr "កំពុង​ដំណើរ​ការ"
+
+# ------ NotificationLog,AttendanceDayOffering,school
+msgid "Offered"
+msgstr "បាន​ផ្តល់​ជូន​"
+
+msgid "User Generated"
+msgstr "បង្កើត​ដោយ​អ្នក​ប្រើ​ប្រាស់​"
+
+msgid "Text"
+msgstr "អត្ថបទ"
+
+msgid "Font Awesome Icon"
+msgstr "Font Awesome Icon"
+
+msgid "School ID"
+msgstr "ID សាលា"
+
+msgid "School Code"
+msgstr "កូដ​សាលា​"
+
+msgid "Location"
+msgstr "ទី​តាំង​"
+
+# ----------- form validation ------------
+msgid "This field is required"
+msgstr "ចន្លោះនេះ​តម្រូវ​ឲ្យ​បំពេញ​"
+
+msgid "Ensure that there are no more than 3 digits before the decimal point."
+msgstr "សូម​ពិនិត្យ​ថា វា​មាន​លេខ​មិនលើស​ពី ៣ ខ្ទង់​មុន​ក្បៀស​។"
+
+msgid "Ensure that there are no more than 5 digits in total."
+msgstr "សូមពិនិត្យថា​ វាមានលេខសរុប​មិនលើស​ពី ៥​ ខ្ទង់​។"
+
+msgid "Select a valid choice. That choice is not one of the available choices."
+msgstr "សូមជ្រើ​សរើស​យក ជម្រើស​ដែល​ត្រឹមត្រូវ​។ ជម្រើស​នេះមិនស្ថិត​ក្នុង ចំណោម​ជម្រើស​ដែលមាន​នោះទេ។"
+
+msgid "Must select value other than Not Applicable"
+msgstr "ត្រូវ​តែ​ជ្រើសរើ​ស​យក​តម្លៃ​ផ្សេង​ពី មិនអាច​អនុវត្ត​បាន​"
+
+msgid "Enrollment status and grade data mismatch triggered"
+msgstr "មានភាពមិនស្រុះគ្នា​ រវាង​ ស្ថានភាពនៃ​ការ​ចុះ​ឈ្មោះ​ និង​ ទិន្នន័យ​ថ្នាក់​​"
+
+msgid "Drop date should be greater than enroll date"
+msgstr "កាលបរិច្ឆេទ​បោះបង់ការសិក្សា​​ គួរ​តែ​ធំជាង​ កាលបរិច្ឆេទ​ចុះឈ្មោះចូលរៀន​"
