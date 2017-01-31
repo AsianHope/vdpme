@@ -12,7 +12,7 @@
         {% trans "Student ID:" %} <strong id="student_id">{{survey.student_id}}</strong>
       <a href="#"><i id="increment" class="fa fa-arrow-right"></i></a>
     </small><br/>
-<a href="{% url 'student_list' %}" class="btn btn-primary" role="button">Back to all students</a>
+<a href="{% url 'student_list' %}" class="btn btn-primary" role="button">{% trans "Back to all students" %} </a>
 {% if exit_survey == None %}
   <a href="{% url 'intake_update' survey.student_id %}?next={% url 'student_detail' survey.student_id %}&tab=enrollment" class="btn btn-info" role="button">{% trans "Update this Student's Information?" %}
 </a>
@@ -454,7 +454,7 @@
 
   </div>
   <div role="tabpanel" class="tab-pane" id="spiritual_activities">
-    <h3>{% trans "Spiritual Activities" %} <a href="{% url 'spiritualactivities_survey' survey.student_id %}?next={% url 'student_detail' survey.student_id %}#spiritual_activities" class="btn btn-xs btn-info" role="button"> {% trans "+ Add an spiritual activities?" %}</a></h3>
+    <h3>{% trans "Spiritual Activities" %} <a href="{% url 'spiritualactivities_survey' survey.student_id %}?next={% url 'student_detail' survey.student_id %}#spiritual_activities" class="btn btn-xs btn-info" role="button"> {% trans "+ Add a spiritual activities?" %}</a></h3>
 
       <table class="table table-bordered table-striped table-hover" id="spiritualActivitiesTable">
         <thead>

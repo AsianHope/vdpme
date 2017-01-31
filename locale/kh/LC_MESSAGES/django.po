@@ -207,6 +207,9 @@ msgstr "ថ្នាក់រៀន"
 msgid "Dob"
 msgstr "ថ្ងៃខែឆ្នាំកំណើត"
 
+msgid "DOB"
+msgstr "ថ្ងៃខែឆ្នាំកំណើត"
+
 msgid "Enrolled"
 msgstr "ត្រូវបានចុះឈ្មោះ"
 
@@ -1453,5 +1456,20 @@ msgstr "ម្តងរីពីដងក្នុងមួយអាទិត្
 msgid "Not Entered"
 msgstr "មិនបានបញ្ចូល"
 
-msgid "+ Add an spiritual activities?"
-msgstr "+ បន្ថែមសកម្មភាពនៃសេចក្តីជំនឿ​"
+msgid "+ Add a spiritual activities?"
+msgstr "+ បន្ថែមសកម្មភាពនៃសេចក្តីជំនឿ​?"
+
+msgid "Back to all students"
+msgstr "ត្រលប់ទៅបញ្ជីសិស្សទាំងអស់"
+
+msgid "+ Take Attendance"
+msgstr "+ យកវត្តមាន"
+
+msgid "Date Enrolled"
+msgstr "ការបរិច្ឆេទនៃការចុះឈ្មោះ"
+
+msgid "+ Add a checkup"
+msgstr "+ បន្ថែមការពិនិត្យ"
+
+msgid "Promoted?"
+msgstr "តម្លើងថ្នាក់?"

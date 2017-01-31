@@ -137,7 +137,7 @@ activity_map = [
             {'name':'daily_attendance_report','display':'Classroom Attendance'},
             {'name':'daily_absence_report','display':'Daily Attendance'},
 
-            {'name':'unapproved_absence_with_no_comment','display':'Unapproved Absence With NO Comment'},
+            {'name':'unapproved_absence_with_no_comment','display':'Unapproved Absence With No Comment'},
 
             {'name':'attendance_summary_report','display':'Attendance Summary'},
             {'name':'data_audit','display':'Data Audit'},
