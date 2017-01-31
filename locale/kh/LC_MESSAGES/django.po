@@ -144,7 +144,7 @@ msgid "Input Achievement Tests"
 msgstr "ដាក់បញ្ចូលភាគរយវិញ្ញាសារប្រឡងសិស្ស"
 
 msgid "Input Student Evaluations"
-msgstr "Input Student Evaluations"
+msgstr "បញ្ចូលការវាយតម្លៃសិស្ស"
 
 msgid "Students Attendance on %(attendance_date)s to %(attendance_end_date)s"
 msgstr "វត្តមានសិស្សចាប់ពី​​ %(attendance_date)s​ ដល់ %(attendance_end_date)s"
@@ -1426,3 +1426,32 @@ msgstr "មានភាពមិនស្រុះគ្នា​ រវាង�
 
 msgid "Drop date should be greater than enroll date"
 msgstr "កាលបរិច្ឆេទ​បោះបង់ការសិក្សា​​ គួរ​តែ​ធំជាង​ កាលបរិច្ឆេទ​ចុះឈ្មោះចូលរៀន​"
+
+msgid "Go back"
+msgstr "ត្រលប់ទៅវិញ"
+
+msgid "Church Name"
+msgstr "ឈ្មោះព្រះវិហារ"
+
+msgid "Attend Church"
+msgstr "ចូលព្រះវិហារ"
+msgid "Not Attend Church"
+msgstr "មិនចូលព្រះវិហារ"
+
+msgid "Frequency of Attending"
+msgstr "ភាពញឹកញាប់នៃការចូល"
+
+msgid "Almost every week"
+msgstr "ស្ទើរតែរាស់អាទិត្យ"
+
+msgid "Once every 1-2 months"
+msgstr "ម្តងក្នុងមួយរឺពីរខែ"
+
+msgid "Once or twice per year"
+msgstr "ម្តងរីពីដងក្នុងមួយអាទិត្យ"
+
+msgid "Not Entered"
+msgstr "មិនបានបញ្ចូល"
+
+msgid "+ Add an spiritual activities?"
+msgstr "+ បន្ថែមសកម្មភាពនៃសេចក្តីជំនឿ​"
