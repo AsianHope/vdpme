@@ -98,7 +98,7 @@
           <tr>
             <td>{% trans "Church Name" %}:</td>
             {% if survey.church.personal_attend_church == 'N' %}
-            <td>{% trans "Not Attend Church" %}</td>
+            <td>{% trans "Doesn't attend Church" %}</td>
             {% else %}
             <td> {% firstof survey.church.church_name "Not Entered" %}</td>
             {% endif %}
@@ -454,7 +454,7 @@
 
   </div>
   <div role="tabpanel" class="tab-pane" id="spiritual_activities">
-    <h3>{% trans "Spiritual Activities" %} <a href="{% url 'spiritualactivities_survey' survey.student_id %}?next={% url 'student_detail' survey.student_id %}#spiritual_activities" class="btn btn-xs btn-info" role="button"> {% trans "+ Add a spiritual activities?" %}</a></h3>
+    <h3>{% trans "Spiritual Activities" %} <a href="{% url 'spiritualactivities_survey' survey.student_id %}?next={% url 'student_detail' survey.student_id %}#spiritual_activities" class="btn btn-xs btn-info" role="button"> {% trans "+ Add spiritual activities?" %}</a></h3>
 
       <table class="table table-bordered table-striped table-hover" id="spiritualActivitiesTable">
         <thead>

@@ -1438,7 +1438,8 @@ msgstr "ឈ្មោះព្រះវិហារ"
 
 msgid "Attend Church"
 msgstr "ចូលព្រះវិហារ"
-msgid "Not Attend Church"
+
+msgid "Doesn't Attend Church"
 msgstr "មិនចូលព្រះវិហារ"
 
 msgid "Frequency of Attending"
@@ -1456,7 +1457,7 @@ msgstr "ម្តងរីពីដងក្នុងមួយអាទិត្
 msgid "Not Entered"
 msgstr "មិនបានបញ្ចូល"
 
-msgid "+ Add a spiritual activities?"
+msgid "+ Add spiritual activities?"
 msgstr "+ បន្ថែមសកម្មភាពនៃសេចក្តីជំនឿ​?"
 
 msgid "Back to all students"
