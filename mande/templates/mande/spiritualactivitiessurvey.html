@@ -1,17 +1,37 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load mandefilters %}
 {% load bootstrap %}
 {% block title %}
-{% trans "Performing Spiritual Activities Survey" %}
+{% if student_id and student_id != '0' %}
+{% blocktrans %}{{action}}Spiritual Activities Survey for {{student_id|name_by_sid}}{% endblocktrans %}
+{% else %}
+{% blocktrans %}{{action}} Spiritual Activities Survey{% endblocktrans %}
+{% endif%}
+
 {% endblock %}
 
 {% block content %}
 <div class="col-md-3"></div>
 <div class="col-md-6">
+{% if survey_id %}
+<form action = "{% url 'spiritualactivities_survey' student_id survey_id %}?next={{next_url}}" method="post">
+{% else %}
 <form action = "{% url 'spiritualactivities_survey' student_id %}?next={{next_url}}" method="post">
-
-    {{ form|bootstrap }}
+{% endif %}
     {% csrf_token %}
+
+    {% if survey_id %}
+    {{form.student_id.as_hidden}}
+    {% else %}
+    {{form.student_id|bootstrap}}
+    {% endif %}
+
+    {{form.date|bootstrap }}
+    {{form.personal_attend_church|bootstrap}}
+    {{form.frequency_of_attending|bootstrap}}
+    {{form.church_name|bootstrap}}
+
     <div class="col-md-12">
       <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
     </div>
@@ -28,9 +48,14 @@
     $("#id_church_name" ).autocomplete({
         source: data_church_names
       });
-    $('#id_student_id').select2({
-      placeholder: "---Select a Student---",
-    });
+    try {
+      $('#id_student_id').select2({
+        placeholder: "---Select a Student---",
+      });
+    }
+    catch(err) {
+     console.log(err)
+    }
     //hide or show church name
     if($('#id_personal_attend_church').val()=='Y'){
       $('#id_church_name').closest('.form-group').show();

@@ -79,6 +79,7 @@ urlpatterns = patterns('',
     url(r'^surveys/post_exit/(?P<student_id>\d+)/$', views.post_exit_survey, name='post_exit_survey'),
     url(r'^surveys/post_exit/$', views.post_exit_survey_list, name='post_exit_survey'),
 
+    url(r'^surveys/spiritualactivities/(?P<student_id>\d+)/(?P<survey_id>\d+)/$', views.spiritualactivities_survey, name='spiritualactivities_survey'),
     url(r'^surveys/spiritualactivities/(?P<student_id>\d+)/$', views.spiritualactivities_survey, name='spiritualactivities_survey'),
     url(r'^surveys/spiritualactivities/$', views.spiritualactivities_survey, name='spiritualactivities_survey'),
 

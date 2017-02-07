@@ -458,11 +458,12 @@
 
       <table class="table table-bordered table-striped table-hover" id="spiritualActivitiesTable">
         <thead>
-          <tr><th>{% trans "Date" %}</th><th>{% trans "Attend Church" %}</th><th>{% trans "Frequency of Attending"%}</th><th>{% trans "Church Name" %}</th></tr>
+          <tr><th>{% trans "Edit" %}</th><th>{% trans "Date" %}</th><th>{% trans "Attend Church" %}</th><th>{% trans "Frequency of Attending"%}</th><th>{% trans "Church Name" %}</th></tr>
         </thead>
         <tbody>
           {% for spiritual_activitie in spiritual_activities %}
           <tr>
+            <td><a href="{% url 'spiritualactivities_survey' survey.student_id spiritual_activitie.id %}?next={% url 'student_detail' survey.student_id %}#spiritual_activities" role="button" class="btn btn-xs btn-warning">{% trans "Edit" %}</a></td>
             <td>{{spiritual_activitie.date|date:'d N Y'}}</td>
             <td>{{spiritual_activitie.personal_attend_church|yn_display}}</td>
             <th>{{spiritual_activitie.frequency_of_attending|frequency_display}}</td>
@@ -564,13 +565,13 @@ $(document).ready( function() {
       bInfo: false,
       order: [[ 1, "desc" ]]
   });
-  var publicSchoolHistory = $('#spiritualActivitiesTable').DataTable({
+  var spiritualActivities = $('#spiritualActivitiesTable').DataTable({
       responsive: true,
       pageLength: 5,
       searching: false,
       bLengthChange: false,
       bInfo: false,
-      order: [[ 0, "desc" ]]
+      order: [[ 1, "desc" ]]
   });
 });
 </script>

@@ -361,7 +361,7 @@ Spiritual Acitivies Survey
  - process a SpiritualActivitiesSurveyForm and log the action
 *****************************************************************************
 '''
-def spiritualactivities_survey(request,student_id=0):
+def spiritualactivities_survey(request,student_id=0,survey_id=None):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
@@ -372,13 +372,35 @@ def spiritualactivities_survey(request,student_id=0):
       locale = Locale('km_KH')
       collator = Collator.createInstance(locale)
       data_public_schools = sorted(set(data_church_names),key=collator.getSortKey)
-
+      if int(student_id)>0:
+          if survey_id != None:
+               try:
+                   #editing
+                   instance = SpiritualActivitiesSurvey.objects.get(pk=survey_id)
+                   form = SpiritualActivitiesSurveyForm(instance=instance)
+                   action = "Editing"
+               except ObjectDoesNotExist:
+                   #adding form
+                   instance = None
+                   form = SpiritualActivitiesSurveyForm(initial={'student_id': student_id,'date':date.today().isoformat()})
+                   action = 'Adding'
+          else:
+              instance = None
+              form = SpiritualActivitiesSurveyForm(initial={'student_id':student_id,'date':date.today().isoformat()})
+              action = "Adding"
+      else:
+          instance = None
+          form = SpiritualActivitiesSurveyForm()
+          action = "Performing"
       if request.method == 'POST':
-        form = SpiritualActivitiesSurveyForm(request.POST)
-
+        if instance != None:
+            form = SpiritualActivitiesSurveyForm(request.POST,instance=instance)
+        else:
+            form = SpiritualActivitiesSurveyForm(request.POST)
         if form.is_valid():
             instance = form.save()
-            message = ('Performed spiritual activities survey for '+
+            sms = action.replace('ing', 'ed')
+            message = (sms+' spiritual activities survey for '+
                         unicode(instance.student_id.name))
             log = NotificationLog(  user=request.user,
                                     text=message,
@@ -388,16 +410,13 @@ def spiritualactivities_survey(request,student_id=0):
             if (next_url != None) & (next_url !='None'):
                 return HttpResponseRedirect(next_url+'#spiritual_activities')
             return HttpResponseRedirect(reverse('success'))
-      else:
-        if student_id > 0:
-            form = SpiritualActivitiesSurveyForm({'student_id':student_id})
-        else:
-            form = SpiritualActivitiesSurveyForm()
-
+    
       context = {
         'form': form,
         'student_id':student_id,
+        'survey_id':survey_id,
         'next_url':next_url,
+        'action':action,
         'data_church_names' :json.dumps(data_church_names),
       }
       return render(request, 'mande/spiritualactivitiessurvey.html', context)
