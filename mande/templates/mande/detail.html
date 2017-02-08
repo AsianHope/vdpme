@@ -455,10 +455,16 @@
   </div>
   <div role="tabpanel" class="tab-pane" id="spiritual_activities">
     <h3>{% trans "Spiritual Activities" %} <a href="{% url 'spiritualactivities_survey' survey.student_id %}?next={% url 'student_detail' survey.student_id %}#spiritual_activities" class="btn btn-xs btn-info" role="button"> {% trans "+ Add spiritual activities?" %}</a></h3>
-
+      {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
       <table class="table table-bordered table-striped table-hover" id="spiritualActivitiesTable">
         <thead>
-          <tr><th>{% trans "Edit" %}</th><th>{% trans "Date" %}</th><th>{% trans "Attend Church" %}</th><th>{% trans "Frequency of Attending"%}</th><th>{% trans "Church Name" %}</th></tr>
+          <tr><th>{% trans "Edit" %}</th><th>{% trans "Date" %}</th><th>{% trans "Attend Church" %}</th><th>{% trans "Frequency of Attending"%}</th><th>{% trans "Church Name" %}</th><th>{% trans "Delete" %}</th></tr>
         </thead>
         <tbody>
           {% for spiritual_activitie in spiritual_activities %}
@@ -468,6 +474,8 @@
             <td>{{spiritual_activitie.personal_attend_church|yn_display}}</td>
             <th>{{spiritual_activitie.frequency_of_attending|frequency_display}}</td>
             <td>{{spiritual_activitie.church_name}}</td>
+            <td><a id="delete_spiritualactivities_survey" href="{% url 'delete_spiritualactivities_survey' spiritual_activitie.id %}?next={% url 'student_detail' survey.student_id %}#spiritual_activities" role="button" class="btn btn-xs btn-danger">{% trans "Delete" %}</a></td>
+
           </tr>
           {% endfor %}
         </tbody>
@@ -482,6 +490,13 @@
    <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
 
 <script type="text/javascript">
+$("#delete_spiritualactivities_survey").click(function(event){
+    event.preventDefault();
+    if(confirm("Are you sure you want to delete?")) {
+      window.location = $(this).attr('href');
+    }
+});
+
 // Javascript to enable link to tab
 var url = document.location.toString();
 if (url.match('#')) {
@@ -575,4 +590,13 @@ $(document).ready( function() {
   });
 });
 </script>
+<style type="text/css">
+.error{
+  color: red;
+}
+.success{
+  color: green;
+}
+
+</style>
 {% endblock %}

@@ -36,6 +36,8 @@ perms_required = {
 	'exit_surveys_list': {'mande.view_exit_surveys_list'},
 	'daily_attendance_report': {'mande.view_daily_attendance_report'},
 	'spiritualactivities_survey': {'mande.view_spiritualactivities_survey'},
+	'delete_spiritualactivities_survey': {'mande.view_delete_spiritualactivities_survey'},
+
 	'student_medical_report': {'mande.view_student_medical_report'},
 	'attendance_calendar': {'mande.view_attendance_calendar'},
 	'teacher_form': {'mande.view_teacher_form'},
@@ -113,6 +115,8 @@ def generate_group_perms():
     group_perms['community_worker'] = __addperms(perms_required['post_exit_survey'],group_perms['community_worker'])
     #add spiritual activities
     group_perms['community_worker'] = __addperms(perms_required['spiritualactivities_survey'],group_perms['community_worker'])
+	#delete spiritual activities
+    group_perms['community_worker'] = __addperms(perms_required['delete_spiritualactivities_survey'],group_perms['community_worker'])
     #add/edit health
     group_perms['community_worker'] = __addperms(perms_required['health_form'],group_perms['community_worker'])
     #view student Information

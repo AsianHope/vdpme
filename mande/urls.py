@@ -83,6 +83,9 @@ urlpatterns = patterns('',
     url(r'^surveys/spiritualactivities/(?P<student_id>\d+)/$', views.spiritualactivities_survey, name='spiritualactivities_survey'),
     url(r'^surveys/spiritualactivities/$', views.spiritualactivities_survey, name='spiritualactivities_survey'),
 
+    url(r'^surveys/spiritualactivities/delete(?P<id>\d+)/$', views.delete_spiritualactivities_survey, name='delete_spiritualactivities_survey'),
+
+
     url(r'^surveys/health/(?P<student_id>\d+)/(?P<appointment_date>\d{4}-\d{1,2}-\d{1,2})/(?P<appointment_type>\w+)/$', views.health_form, name='health_form'),
     url(r'^surveys/health/(?P<student_id>\d+)/$', views.health_form, name='health_form'),
     url(r'^surveys/health/$', views.health_form, name='health_form'),

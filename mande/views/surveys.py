@@ -72,6 +72,7 @@ from django.contrib.auth.models import User
 from mande.utils import user_permissions
 
 from icu import Locale, Collator
+from django.contrib import messages
 '''
 *****************************************************************************
 Intake Survey
@@ -354,6 +355,26 @@ def post_exit_survey_list(request):
       return render(request, 'mande/postexitsurveylist.html',context)
     else:
       raise PermissionDenied
+'''
+*****************************************************************************
+Delete Spiritual Acitivies Survey
+ - process delete Spiritual Acitivies Survey and log the action
+*****************************************************************************
+'''
+def delete_spiritualactivities_survey(request,id):
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+        next_url = request.GET.get('next')
+        try:
+            SpiritualActivitiesSurvey.objects.get(pk=id).delete()
+            messages.success(request, 'Spiritual Activity Survey has been deleted successfully!')
+        except Exception as e:
+            messages.error(request,'Fail to delete Spiritual Activity Survey! ('+e.message+')')
+
+        return HttpResponseRedirect(next_url)
+    else:
+        raise PermissionDenied
+
 
 '''
 *****************************************************************************
@@ -410,7 +431,7 @@ def spiritualactivities_survey(request,student_id=0,survey_id=None):
             if (next_url != None) & (next_url !='None'):
                 return HttpResponseRedirect(next_url+'#spiritual_activities')
             return HttpResponseRedirect(reverse('success'))
-    
+
       context = {
         'form': form,
         'student_id':student_id,
