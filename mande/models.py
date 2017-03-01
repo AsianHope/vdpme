@@ -361,7 +361,14 @@ class IntakeSurvey(models.Model):
 		    age_appropriate_grade = approximate_age - 5
 
 		return age_appropriate_grade
-
+		
+	def get_intakeinternal(self):
+		intake = self.intakeinternal_set.all().filter().order_by('-enrollment_date')
+		if len(intake) > 0:
+			recent_intake = intake[0]
+		else:
+			recent_intake = 'Not enrolled'
+	    	return recent_intake
 class IntakeInternal(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey,unique=True,verbose_name=_('Student ID'))
 	enrollment_date = models.DateField(_('Enrollment Date'))
