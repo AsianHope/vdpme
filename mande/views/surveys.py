@@ -85,14 +85,6 @@ def intake_survey(request,student_id=None):
     if user_permissions(method_name,request.user):
         next_url = request.GET.get('next') #where we're going next
         limit = request.GET.get('limit') #limit to a single field
-        data_public_schools = list(IntakeSurvey.objects.all().values_list('public_school_name',flat=True).distinct())
-        pschool_list = list(PublicSchoolHistory.objects.all().values_list('school_name',flat=True).distinct())
-        data_public_schools.extend(pschool_list)
-        # sort khmer
-        data_public_schools = [x.encode('utf-8').strip() for x in data_public_schools]
-        locale = Locale('km_KH')
-        collator = Collator.createInstance(locale)
-        data_public_schools = sorted(set(data_public_schools),key=collator.getSortKey)
 
         instance = IntakeSurvey.objects.get(pk=student_id) if student_id else None
         form = IntakeSurveyForm(request.POST or None,
@@ -124,7 +116,6 @@ def intake_survey(request,student_id=None):
             'student':instance,
             'next_url':next_url,
             'limit':limit,
-            'data_public_schools' :json.dumps(data_public_schools),
         }
         return render(request, 'mande/intakesurvey.html', context)
     else:

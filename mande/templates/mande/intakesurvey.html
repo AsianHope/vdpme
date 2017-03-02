@@ -33,10 +33,6 @@
 <script src="/static/mande/bower_components/jquery-ui/jquery-ui.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-  var data_public_schools = {{ data_public_schools | safe }}
-  $("#id_public_school_name" ).autocomplete({
-      source: data_public_schools
-    });
   var limit = 'id_{{limit}}';
   if(limit !== 'id_None'){
     //loop through all form groups and hide everything but our limit
@@ -46,43 +42,7 @@ $(document).ready(function(){
       }
     });
   }
-
-  if ($('#id_enrolled').length) {
-    var enrolled = $('#id_enrolled');
-    var current = $('#id_grade_current').closest('.form-group');
-    var last = $('#id_grade_last').closest('.form-group');
-    if (!current.length || !last.length) {
-      return;
-    }
-    if (enrolled.val() == 'N') {
-      current.hide();
-      last.show();
-    }
-    if (enrolled.val() == 'Y') {
-      last.hide();
-      current.show();
-    }
-    if (enrolled.val() == 'NA') {
-      // show everything?
-      last.show();
-      current.show();
-    }
-    enrolled.change(function() {
-      if ($(this).val() == 'N') {
-        current.hide();
-        last.show();
-      }
-      if ($(this).val() == 'Y') {
-        last.hide();
-        current.show();
-      }
-      if ($(this).val() == 'NA') {
-        last.show();
-        current.show();
-      }
-    });
-  }
-
+  console.log(limit)
 });
 </script>
 

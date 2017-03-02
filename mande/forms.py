@@ -36,26 +36,6 @@ class Html5DateInput(forms.DateInput):
 class IntakeSurveyForm(forms.ModelForm):
     date = forms.DateField(label=_('Survey Date'),widget=Html5DateInput,initial=date.today().isoformat())
     dob =  forms.DateField(label=_('Date of Birth'),widget=Html5DateInput)
-
-    def clean(self):
-        print 'lalla'
-        print self.errors.as_json()
-
-        cleaned_data = super(IntakeSurveyForm, self).clean()
-        enrolled = cleaned_data.get("enrolled")
-        grade_last = cleaned_data.get("grade_last")
-        grade_current = cleaned_data.get("grade_current")
-
-        msg = _(u"Must select value other than Not Applicable")
-        top_msg = _(u"Enrollment status and grade data mismatch triggered")
-        if enrolled == 'N' and grade_last < 0:
-            self.add_error('grade_last', msg)
-            raise forms.ValidationError(top_msg)
-        if enrolled == 'Y' and grade_current < 0:
-            self.add_error('grade_current', msg)
-            raise forms.ValidationError(top_msg)
-
-
     class Meta:
         model = IntakeSurvey
         exclude=[
