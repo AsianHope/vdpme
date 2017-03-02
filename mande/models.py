@@ -17,6 +17,10 @@ YN = (
 	('N', _('No')),
 	('NA', _('Not Applicable')),
 )
+YESNO = (
+	('Y', _('Yes')),
+	('N', _('No')),
+)
 
 SITES = (
 	(1,'PKPN'),
@@ -361,7 +365,7 @@ class IntakeSurvey(models.Model):
 		    age_appropriate_grade = approximate_age - 5
 
 		return age_appropriate_grade
-		
+
 	def get_intakeinternal(self):
 		intake = self.intakeinternal_set.all().filter().order_by('-enrollment_date')
 		if len(intake) > 0:
@@ -594,14 +598,13 @@ class AttendanceLog(models.Model):
 
 class PublicSchoolHistory(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey,verbose_name=_('Student ID'))
-	academic_year = models.IntegerField(_('Academic Year'),choices=COHORTS)
-	grade = models.IntegerField(_('Public School Grade'),choices=PUBLIC_SCHOOL_GRADES)
-	status = models.CharField(_('Status'),choices=STATUS,default='COMPLETED',max_length=16)
-	enroll_date = models.DateField(_('Enroll Date'),null=True,blank=True)
-	drop_date = models.DateField(_('Drop Date'),null=True,blank=True)
-	school_name = models.CharField(_('Public School Name'),max_length=128,blank=True)
+	status = models.CharField(_('Enrolled in public school'),choices=YESNO,max_length=16)
+	enroll_date = models.DateField(_('From Date'))
+	drop_date = models.DateField(_('To Date'),null=True,blank=True)
+	grade = models.IntegerField(_('Grade'),choices=PUBLIC_SCHOOL_GRADES,null=True,blank=True)
+	school_name = models.CharField(_('School Name'),max_length=128,blank=True)
 	reasons = models.TextField(_('Reasons for not attending'),blank=True)
 	def __unicode__(self):
 		return unicode(self.student_id) + ' - '+ unicode(self.grade)
 	class Meta:
-			unique_together = (('student_id','grade','academic_year','status'))
+			unique_together = (('student_id','grade','enroll_date'))

@@ -138,8 +138,8 @@ class ClassroomTeacherAdmin(admin.ModelAdmin):
     list_filter = ('classroom_id','teacher_id')
 
 class PublicSchoolHistoryAdmin(admin.ModelAdmin):
-    list_display = ('student_id','academic_year','grade','status','enroll_date','drop_date','school_name')
-    list_filter = ('status','grade','academic_year')
+    list_display = ('student_id','status','enroll_date','drop_date','grade','school_name')
+    list_filter = ('status','grade')
 
 admin.site.register(School,SchoolAdmin)
 admin.site.register(Classroom,ClassroomAdmin)

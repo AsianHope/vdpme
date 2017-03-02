@@ -12,15 +12,15 @@
     <!-- {{ form|bootstrap }} -->
     {% csrf_token %}
     {{form.student_id.as_hidden}}
-    {{form.academic_year|bootstrap }}
-    {{form.grade|bootstrap}}
     {{form.status|bootstrap}}
     {{form.enroll_date|bootstrap}}
     {{form.drop_date|bootstrap}}
+    {{form.grade|bootstrap}}
     {{form.school_name|bootstrap}}
     {{form.reasons|bootstrap}}
     <div class="form-group">
       <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-warning" name="cancel" style="float:right;">Cancel</button>
     </div>
 </form>
 </div>
@@ -37,21 +37,36 @@
     var data_public_schools = {{ data_public_schools | safe }}
     $("#id_school_name" ).autocomplete({
         source: data_public_schools
-      });
-    //  public school acedemic year start from 01/November, and end on 31/July
-    $("#id_enroll_date").change(function(){
-      date = new Date($(this).val())
-      compare_date = new Date($(this).val());
-      //01-11
-      compare_date.setDate(1);
-      compare_date.setMonth(10);
-      if(date<compare_date){
-        year = date.getFullYear()-1
-        $("#id_academic_year").val(year);
+    });
+
+    $("#id_grade").closest('.form-group').hide();
+    $("#id_school_name").closest('.form-group').hide();
+    $("#id_reasons").closest('.form-group').hide();
+    var status = $("#id_status").val();
+    if(status == 'Y' ){
+      $("#id_grade").closest('.form-group').show();
+      $("#id_school_name").closest('.form-group').show();
+    }
+    else{
+      $("#id_reasons").closest('.form-group').show();
+    }
+
+    $("#id_status").change(function(){
+      var status = $("#id_status").val();
+      if(status == 'Y' ){
+        // show required field
+        $("#id_grade").closest('.form-group').show();
+        $("#id_school_name").closest('.form-group').show();
+        // hide not required field
+        $("#id_reasons").closest('.form-group').hide();
+
       }
       else{
-        year = date.getFullYear()
-        $("#id_academic_year").val(year);
+        // show required field
+        $("#id_reasons").closest('.form-group').show();
+        // hide not required field
+        $("#id_grade").closest('.form-group').hide();
+        $("#id_school_name").closest('.form-group').hide();
       }
     });
   });
