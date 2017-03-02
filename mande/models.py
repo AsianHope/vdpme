@@ -214,11 +214,6 @@ class IntakeSurvey(models.Model):
 
 	gender = models.CharField(_('Gender'),max_length=1,choices=GENDERS,default='M')
 	address = models.TextField(_('Home Address'))
-	enrolled = models.CharField(_('Currently enrolled in (public) school?'),max_length=2,choices=YN,default='N')
-	grade_current = models.IntegerField(_('Current grade in [public] school (if enrolled)'),choices=GRADES,default=-1)
-	grade_last = models.IntegerField(_('Last grade attended (if not enrolled)'),choices=GRADES,default=-1)
-	public_school_name = models.CharField(_('Public School Name'),max_length=128,blank=True)
-	reasons = models.TextField(_('Reasons for not attending'),blank=True)
 
 	#Guardian 1's Information
 	guardian1_name = models.CharField(_('Guardian 1\'s Name'),max_length=64)
@@ -263,7 +258,6 @@ class IntakeSurvey(models.Model):
 			'guardian2_phone',
 			'guardian2_profession',
 			'guardian2_employment',
-			'public_school_name'
 			]
 		recent = {}
 		# get latest SpiritualActivitiesSurvey
@@ -409,11 +403,6 @@ class IntakeUpdate(models.Model):
 	minors_training = models.CharField(_('Did they receive any vocational training?'),max_length=2,choices=YN,default='NA')
 	minors_training_type = models.CharField(_('What kind of vocational training did they receive?'),max_length=256,default='NA',blank=True)
 
-	enrolled = models.CharField(_('Currently enrolled in formal school?'),max_length=2,choices=YN,default='N')
-	grade_current = models.IntegerField(_('Current grade in (public) school?'),choices=GRADES,default=1)
-	grade_last = models.IntegerField(_('Last grade in public school (if not currently enrolled)'),choices=GRADES,default='-1')
-	public_school_name = models.CharField(_('Public School Name'),max_length=128,blank=True)
-	reasons = models.TextField(_('Reasons for not attending school'),default='NA',blank=True,null=True)
 	notes = models.TextField('Notes',default='NA',blank=True)
 
 	def __unicode__(self):
