@@ -169,15 +169,6 @@ def intake_update(request,student_id=0):
       next_url = request.GET.get('next')
       next_tab = request.GET.get('tab')
 
-      data_public_schools = list(IntakeSurvey.objects.all().values_list('public_school_name',flat=True).distinct())
-      pschool_list = list(PublicSchoolHistory.objects.all().values_list('school_name',flat=True).distinct())
-      data_public_schools.extend(pschool_list)
-      # sort khmer
-      data_public_schools = [x.encode('utf-8').strip() for x in data_public_schools]
-      locale = Locale('km_KH')
-      collator = Collator.createInstance(locale)
-      data_public_schools = sorted(set(data_public_schools),key=collator.getSortKey)
-
       try:
         survey = IntakeSurvey.objects.get(pk=student_id)
         most_recent = survey.getRecentFields()
@@ -210,7 +201,6 @@ def intake_update(request,student_id=0):
           'student_id':student_id,
           'next':next_url,
           'tab':next_tab,
-          'data_public_schools' :json.dumps(data_public_schools),
       }
       return render(request, 'mande/intakeupdate.html', context)
     else:

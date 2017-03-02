@@ -56,21 +56,7 @@ class IntakeInternalForm(forms.ModelForm):
 
 class IntakeUpdateForm(forms.ModelForm):
     date = forms.DateField(label=_('Survey Date'),widget=Html5DateInput)
-    def clean(self):
-        cleaned_data = super(IntakeUpdateForm, self).clean()
-        enrolled = cleaned_data.get("enrolled")
-        grade_last = cleaned_data.get("grade_last")
-        grade_current = cleaned_data.get("grade_current")
-
-        msg = _(u"Must select value other than Not Applicable")
-        top_msg = _(u"Enrollment status and grade data mismatch triggered")
-        if enrolled == 'N' and grade_last < 0:
-            self.add_error('grade_last', msg)
-            raise forms.ValidationError(top_msg)
-        if enrolled == 'Y' and grade_current < 0:
-            self.add_error('grade_current', msg)
-            raise forms.ValidationError(top_msg)
-
+    
     class Meta:
         model = IntakeUpdate
         exclude=[
