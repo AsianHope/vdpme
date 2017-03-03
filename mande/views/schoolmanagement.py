@@ -817,9 +817,7 @@ def publicschool_form(request, student_id=0,id=None):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
-      data_public_schools = list(IntakeSurvey.objects.all().values_list('public_school_name',flat=True).distinct())
-      pschool_list = list(PublicSchoolHistory.objects.all().values_list('school_name',flat=True).distinct())
-      data_public_schools.extend(pschool_list)
+      data_public_schools = list(PublicSchoolHistory.objects.all().values_list('school_name',flat=True).distinct())
       # sort khmer
       data_public_schools = [x.encode('utf-8').strip() for x in data_public_schools]
       locale = Locale('km_KH')
