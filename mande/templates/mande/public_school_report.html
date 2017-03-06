@@ -26,17 +26,19 @@
                   <td>{% firstof intake.enrollment_date|date:'d N Y' "Not yet enrolled" %}</td>
                   {% endwith %}
                   <td>{{ student.current_vdp_grade | grade_by_id}}</td>
-                  <!-- if attend in public school -->
-                  {% if student.getRecentFields.enrolled == 'Y'%}
-                  <td>{{ student.getRecentFields.grade_current|grade_by_id }}</td>
-                  <td>{{ student.getRecentFields.public_school_name }}</td>
-                  <td></td>
-                  {% else %}
-                  <!-- if not attend in public school -->
-                  <td>{% trans "Not Attend" %}</td>
-                  <td>{{ student.getRecentFields.public_school_name }}</td>
-                  <td>{{ student.getRecentFields.reasons}}</td>
-                  {% endif%}
+                  {% with pschool=student.latest_public_school %}
+                    <!-- if attend in public school -->
+                    {% if pschool and pschool.status == 'Y'%}
+                    <td>{% firstof pschool.get_grade_display "Not Entered" %}</td>
+                    <td>{{ pschool.school_name }}</td>
+                    <td></td>
+                    {% else %}
+                    <!-- if not attend in public school -->
+                    <td>{% trans "Not Attend" %}</td>
+                    <td>N/A</td>
+                    <td>{{pschool.reasons}}</td>
+                    {% endif%}
+                 {% endwith %}
               </tr>
           {% endfor %}
         </tbody>

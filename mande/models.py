@@ -315,6 +315,7 @@ class IntakeSurvey(models.Model):
 		else:
 			recent_intake = 'Not enrolled'
 
+
 		try:
 		    #their current grade is one more than that of the last test they passed
 			current_grade = (academics.filter(promote=True).latest('test_level').test_level)+1
@@ -367,6 +368,12 @@ class IntakeSurvey(models.Model):
 		else:
 			recent_intake = 'Not enrolled'
 	    	return recent_intake
+	def latest_public_school(self):
+		try:
+			pschool = self.publicschoolhistory_set.all().filter().latest('enroll_date')
+		except ObjectDoesNotExist:
+			pschool = None
+		return pschool
 class IntakeInternal(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey,unique=True,verbose_name=_('Student ID'))
 	enrollment_date = models.DateField(_('Enrollment Date'))
