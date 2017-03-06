@@ -20,6 +20,7 @@ from mande.models import GRADES
 from mande.models import SCORES
 from mande.models import PublicSchoolHistory
 from mande.models import COHORTS
+from mande.models import YESNO
 
 from mande.utils import getEnrolledStudents
 
@@ -35,26 +36,6 @@ class Html5DateInput(forms.DateInput):
 class IntakeSurveyForm(forms.ModelForm):
     date = forms.DateField(label=_('Survey Date'),widget=Html5DateInput,initial=date.today().isoformat())
     dob =  forms.DateField(label=_('Date of Birth'),widget=Html5DateInput)
-
-    def clean(self):
-        print 'lalla'
-        print self.errors.as_json()
-
-        cleaned_data = super(IntakeSurveyForm, self).clean()
-        enrolled = cleaned_data.get("enrolled")
-        grade_last = cleaned_data.get("grade_last")
-        grade_current = cleaned_data.get("grade_current")
-
-        msg = _(u"Must select value other than Not Applicable")
-        top_msg = _(u"Enrollment status and grade data mismatch triggered")
-        if enrolled == 'N' and grade_last < 0:
-            self.add_error('grade_last', msg)
-            raise forms.ValidationError(top_msg)
-        if enrolled == 'Y' and grade_current < 0:
-            self.add_error('grade_current', msg)
-            raise forms.ValidationError(top_msg)
-
-
     class Meta:
         model = IntakeSurvey
         exclude=[
@@ -75,21 +56,7 @@ class IntakeInternalForm(forms.ModelForm):
 
 class IntakeUpdateForm(forms.ModelForm):
     date = forms.DateField(label=_('Survey Date'),widget=Html5DateInput)
-    def clean(self):
-        cleaned_data = super(IntakeUpdateForm, self).clean()
-        enrolled = cleaned_data.get("enrolled")
-        grade_last = cleaned_data.get("grade_last")
-        grade_current = cleaned_data.get("grade_current")
-
-        msg = _(u"Must select value other than Not Applicable")
-        top_msg = _(u"Enrollment status and grade data mismatch triggered")
-        if enrolled == 'N' and grade_last < 0:
-            self.add_error('grade_last', msg)
-            raise forms.ValidationError(top_msg)
-        if enrolled == 'Y' and grade_current < 0:
-            self.add_error('grade_current', msg)
-            raise forms.ValidationError(top_msg)
-
+    
     class Meta:
         model = IntakeUpdate
         exclude=[
@@ -242,27 +209,32 @@ class StudentEvaluationForm(forms.ModelForm):
         exclude = []
 
 class StudentPublicSchoolHistoryForm(forms.ModelForm):
-    enroll_date = forms.DateField(widget=Html5DateInput)
-    drop_date = forms.DateField(widget=Html5DateInput,required=False)
-    reasons = forms.CharField( widget=forms.Textarea,required=False)
+    status = forms.ChoiceField(label='Enrolled in public school',choices=YESNO,initial='Y')
+    enroll_date = forms.DateField(label='From Date',widget=Html5DateInput)
+    drop_date = forms.DateField(label='To Date',widget=Html5DateInput,required=False)
+    reasons = forms.CharField( widget=forms.Textarea(attrs={'rows': 5}),required=False)
     def clean(self):
         cleaned_data = super(StudentPublicSchoolHistoryForm, self).clean()
         status = cleaned_data.get("status")
         reasons = cleaned_data.get("reasons")
+        grade = cleaned_data.get("grade")
+        school_name = cleaned_data.get("school_name")
         enroll_date = cleaned_data.get("enroll_date")
         drop_date = cleaned_data.get('drop_date')
         msg = _(u"This field is required.")
         top_msg = _(u"Enrollment status and grade data mismatch triggered")
-        if (status == 'DROPPED') & ((reasons=='') | (reasons==None)):
-            self.add_error('reasons', msg)
-
-        if (status == 'DROPPED') & ((drop_date=='') | (drop_date==None)):
-            self.add_error('drop_date', msg)
+        if (status == 'Y'):
+            if(grade==None):
+                self.add_error('grade', msg)
+            if(school_name==''):
+                self.add_error('school_name', msg)
+        else:
+            if(reasons==''):
+                self.add_error('reasons', msg)
         if (drop_date != None):
             if(drop_date < enroll_date):
-                msg = _(u"Drop date should be greater than enroll date")
-                self.add_error('drop_date',msg)
-
+                    msg = _(u"To date should be greater than From date")
+                    self.add_error('drop_date',msg)
     class Meta:
         model = PublicSchoolHistory
         exclude = []

@@ -44,7 +44,7 @@ class IntakeSurveyAdmin(admin.ModelAdmin):
         ('',
         {'fields': ['date','site']}),
         ('Student Biographical Information',
-        {'fields': ['name','dob','grade_appropriate','gender','address','enrolled','grade_current','grade_last','public_school_name','reasons']}),
+        {'fields': ['name','dob','grade_appropriate','gender','address']}),
         ('Information about Guadian 1',
         {'fields': ['guardian1_relationship','guardian1_name','guardian1_phone','guardian1_profession','guardian1_employment']}),
         ('Information about Guardian 2',
@@ -138,8 +138,8 @@ class ClassroomTeacherAdmin(admin.ModelAdmin):
     list_filter = ('classroom_id','teacher_id')
 
 class PublicSchoolHistoryAdmin(admin.ModelAdmin):
-    list_display = ('student_id','academic_year','grade','status','enroll_date','drop_date','school_name')
-    list_filter = ('status','grade','academic_year')
+    list_display = ('student_id','status','enroll_date','drop_date','grade','school_name')
+    list_filter = ('status','grade')
 
 admin.site.register(School,SchoolAdmin)
 admin.site.register(Classroom,ClassroomAdmin)

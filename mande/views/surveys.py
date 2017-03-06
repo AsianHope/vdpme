@@ -85,14 +85,6 @@ def intake_survey(request,student_id=None):
     if user_permissions(method_name,request.user):
         next_url = request.GET.get('next') #where we're going next
         limit = request.GET.get('limit') #limit to a single field
-        data_public_schools = list(IntakeSurvey.objects.all().values_list('public_school_name',flat=True).distinct())
-        pschool_list = list(PublicSchoolHistory.objects.all().values_list('school_name',flat=True).distinct())
-        data_public_schools.extend(pschool_list)
-        # sort khmer
-        data_public_schools = [x.encode('utf-8').strip() for x in data_public_schools]
-        locale = Locale('km_KH')
-        collator = Collator.createInstance(locale)
-        data_public_schools = sorted(set(data_public_schools),key=collator.getSortKey)
 
         instance = IntakeSurvey.objects.get(pk=student_id) if student_id else None
         form = IntakeSurveyForm(request.POST or None,
@@ -124,7 +116,6 @@ def intake_survey(request,student_id=None):
             'student':instance,
             'next_url':next_url,
             'limit':limit,
-            'data_public_schools' :json.dumps(data_public_schools),
         }
         return render(request, 'mande/intakesurvey.html', context)
     else:
@@ -178,15 +169,6 @@ def intake_update(request,student_id=0):
       next_url = request.GET.get('next')
       next_tab = request.GET.get('tab')
 
-      data_public_schools = list(IntakeSurvey.objects.all().values_list('public_school_name',flat=True).distinct())
-      pschool_list = list(PublicSchoolHistory.objects.all().values_list('school_name',flat=True).distinct())
-      data_public_schools.extend(pschool_list)
-      # sort khmer
-      data_public_schools = [x.encode('utf-8').strip() for x in data_public_schools]
-      locale = Locale('km_KH')
-      collator = Collator.createInstance(locale)
-      data_public_schools = sorted(set(data_public_schools),key=collator.getSortKey)
-
       try:
         survey = IntakeSurvey.objects.get(pk=student_id)
         most_recent = survey.getRecentFields()
@@ -201,34 +183,6 @@ def intake_update(request,student_id=0):
         form = IntakeUpdateForm(request.POST)
         if form.is_valid():
             instance = form.save()
-            # get academic_year base on intake update date
-            academic_year = instance.date.year
-            d = datetime.strptime(str(instance.date.year)+"-11-01", "%Y-%m-%d").date()
-            if instance.date.date() < d:
-                academic_year = instance.date.year - 1
-            else:
-                academic_year = instance.date.year
-            # if public school grade or name changed
-            if (instance.enrolled == 'Y') and ((int(initial_grade_current) != instance.grade_current) or (initial_public_school_name != instance.public_school_name)):
-                # if found p school with this student id and grade, update
-                try:
-                    pschool= PublicSchoolHistory.objects.get(
-                                student_id=instance.student_id,
-                                grade=instance.grade_current,
-                                )
-
-                    pschool.school_name=instance.public_school_name
-                    pschool.save()
-                # if cannot found p school with this student id and grade, create new one
-                except ObjectDoesNotExist:
-                    pschool = PublicSchoolHistory(
-                        student_id=instance.student_id,
-                        academic_year=academic_year,
-                        grade=instance.grade_current,
-                        status='ON_GOING',
-                        school_name=instance.public_school_name
-                        )
-                    pschool.save()
             message = 'Updated '+unicode(instance.student_id.name)+'\'s record'
             log = NotificationLog(  user=request.user,
                                     text=message,
@@ -247,7 +201,6 @@ def intake_update(request,student_id=0):
           'student_id':student_id,
           'next':next_url,
           'tab':next_tab,
-          'data_public_schools' :json.dumps(data_public_schools),
       }
       return render(request, 'mande/intakeupdate.html', context)
     else:
