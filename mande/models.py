@@ -374,6 +374,31 @@ class IntakeSurvey(models.Model):
 		except ObjectDoesNotExist:
 			pschool = None
 		return pschool
+
+	def get_pschool(self):
+		try:
+		  pschool = self.publicschoolhistory_set.all().filter().latest('enroll_date')
+		except ObjectDoesNotExist:
+		  pschool = None
+		if pschool == None:
+		  a = PublicSchoolHistory()
+		  a.status = 'N'
+		  a.last_grade = 0
+		  a.reasons = 'Not Entered'
+		  return a
+		else:
+		  if pschool.status == 'Y':
+		    return pschool
+		  else:
+			  try:
+	  		  	school = self.publicschoolhistory_set.all().filter(status='Y').latest('enroll_date')
+				pschool.last_grade=school.grade
+				return pschool
+	  		  except ObjectDoesNotExist:
+				pschool.last_grade=0
+			  	return pschool
+
+
 class IntakeInternal(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey,unique=True,verbose_name=_('Student ID'))
 	enrollment_date = models.DateField(_('Enrollment Date'))

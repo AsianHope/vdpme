@@ -74,6 +74,7 @@ from mande.utils import user_permissions
 import inspect
 import operator
 import re
+from icu import Locale, Collator
 
 TOO_YOUNG = 4
 TOO_OLD = 25
@@ -1133,9 +1134,14 @@ def advanced_report(request):
       minors_training_type_intake_update = list(all_intake_updated.values_list('minors_training_type',flat=True).distinct())
       data_minors_training_type.extend(minors_training_type_intake_update)
 
-      data_reasons = list(all_intake_survey.values_list('reasons',flat=True).distinct())
-      reasons_intake_update = list(all_intake_updated.values_list('reasons',flat=True).distinct())
-      data_reasons.extend(reasons_intake_update)
+      data_reasons = list(PublicSchoolHistory.objects.all().values_list('reasons',flat=True).distinct())
+
+      data_public_schools = list(PublicSchoolHistory.objects.all().values_list('school_name',flat=True).distinct())
+      # sort khmer
+      data_public_schools = [x.encode('utf-8').strip() for x in data_public_schools]
+      locale = Locale('km_KH')
+      collator = Collator.createInstance(locale)
+      data_public_schools = sorted(set(data_public_schools),key=collator.getSortKey)
 
       q=[]
       filter_query = Q()
@@ -1162,8 +1168,12 @@ def advanced_report(request):
 
       all_fields = IntakeSurvey._meta.fields
       list_of_fields = dict((field.name, convert_field_to_readable(field.name)) for field in all_fields if not field.primary_key)
-      list_of_fields.update({"vdp_grade":"VDP Grade", "classroom": "Classroom","id":"ID"})
-
+      list_of_fields.update({
+            "vdp_grade":"VDP Grade", "classroom": "Classroom","id":"ID",
+            "enrolled":"Enrolled","grade_current":"Grade Current",
+            "grade_last":"Grade Last","reasons":"Reasons",
+            "public_school_name":"Public School Name"
+            })
       if request.method == 'POST':
 
          student_id = request.POST['studnet_id']
@@ -1202,6 +1212,7 @@ def advanced_report(request):
          enrolled = request.POST['enrolled']
          grade_current = request.POST['grade_current']
          grade_last = request.POST['grade_last']
+         public_school_name = request.POST['public_school_name']
          reasons = request.POST['reasons']
 
          classroom = request.POST['classroom']
@@ -1275,21 +1286,11 @@ def advanced_report(request):
             recent_field_list['minors_training'] = minors_training
          if minors_training_type != '':
             recent_field_list['minors_training_type'] = minors_training_type
-        # education
-         if enrolled != '':
-            recent_field_list['enrolled'] = enrolled
-         if grade_current != '':
-            recent_field_list['grade_current'] = int(grade_current)
-         if grade_last != '':
-            recent_field_list['grade_last'] = int(grade_last)
-         if reasons != '':
-            recent_field_list['reasons'] = reasons
 
          equal_value_list = ['guardian1_relationship','guardian2_relationship',
                              'guardian1_employment','guardian2_employment',
                              'minors','minors_in_public_school','minors_in_other_school',
                              'minors_working','minors_encouraged','minors_training',
-                             'enrolled','grade_current','grade_last'
                             ]
          match_intakeUpdate = []
          for key, value in recent_field_list.iteritems():
@@ -1314,7 +1315,58 @@ def advanced_report(request):
                  if(student.current_vdp_grade() == int(vdp_grade)):
                      student_filter_by_vdp_grade.append(student.student_id)
              students = students.filter(student_id__in=student_filter_by_vdp_grade)
-         # -----end filter classroom and grede-----
+         #  -----end filter classroom and grede-----
+         #  ----- filter public school --------------
+         if enrolled != '':
+              if grade_current == '' and public_school_name == '' and grade_last == '' and reasons == '':
+                 student_filter_by_enrolled = []
+                 for student in students:
+                      pschool = student.get_pschool()
+                      if(pschool.status == enrolled):
+                          student_filter_by_enrolled.append(student.student_id)
+                 students = students.filter(student_id__in=student_filter_by_enrolled)
+              elif grade_current != '' and public_school_name != '':
+                   student_filter_by_enrolled = []
+                   for student in students:
+                        pschool = student.get_pschool()
+                        if pschool.status == enrolled and pschool.grade == int(grade_current) and re.search(public_school_name,pschool.school_name, re.IGNORECASE):
+                            student_filter_by_enrolled.append(student.student_id)
+                   students = students.filter(student_id__in=student_filter_by_enrolled)
+              elif grade_current != '':
+                   student_filter_by_enrolled = []
+                   for student in students:
+                      pschool = student.get_pschool()
+                      if pschool.status == enrolled and pschool.grade == int(grade_current):
+                          student_filter_by_enrolled.append(student.student_id)
+                   students = students.filter(student_id__in=student_filter_by_enrolled)
+              elif public_school_name != '':
+                   student_filter_by_enrolled = []
+                   for student in students:
+                        pschool = student.get_pschool()
+                        if pschool.status == enrolled and re.search(public_school_name,pschool.school_name, re.IGNORECASE):
+                            student_filter_by_enrolled.append(student.student_id)
+                   students = students.filter(student_id__in=student_filter_by_enrolled)
+              elif grade_last != '' and reasons != '':
+                   student_filter_by_enrolled = []
+                   for student in students:
+                      pschool = student.get_pschool()
+                      if pschool.status == enrolled and pschool.last_grade == int(grade_last) and re.search(reasons,pschool.reasons, re.IGNORECASE):
+                          student_filter_by_enrolled.append(student.student_id)
+                   students = students.filter(student_id__in=student_filter_by_enrolled)
+              elif grade_last != '':
+                   student_filter_by_enrolled = []
+                   for student in students:
+                       pschool = student.get_pschool()
+                       if pschool.status == enrolled and pschool.last_grade == int(grade_last):
+                           student_filter_by_enrolled.append(student.student_id)
+                   students = students.filter(student_id__in=student_filter_by_enrolled)
+              elif reasons != '':
+                   student_filter_by_enrolled = []
+                   for student in students:
+                       pschool = student.get_pschool()
+                       if pschool.status == enrolled and re.search(reasons,pschool.reasons, re.IGNORECASE):
+                           student_filter_by_enrolled.append(student.student_id)
+                   students = students.filter(student_id__in=student_filter_by_enrolled)
 
          show_data = 'yes'
 
@@ -1338,6 +1390,7 @@ def advanced_report(request):
                                 'data_minors_profession' : json.dumps(list(set(data_minors_profession))),
                                 'data_minors_training_type' :json.dumps(list(set(data_minors_training_type))),
                                 'data_reasons' : json.dumps(list(set(data_reasons))),
+                                'data_public_schools':json.dumps(list(set(data_public_schools))),
                                 'list_of_fields':sorted(list_of_fields.iteritems())
                             })
     else:

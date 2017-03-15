@@ -118,13 +118,25 @@
                <td class="minors_encouraged">{{student.getRecentFields.minors_encouraged}}</td>
                <td class="minors_training">{{student.getRecentFields.minors_training}}</td>
                <td class="minors_training_type">{{student.getRecentFields.minors_training_type}}</td>
-
-               <td class="enrolled">{{student.getRecentFields.enrolled}}</td>
-               <td class="grade_current">{{student.getRecentFields.grade_current}}</td>
-               <td class="grade_last">{{student.getRecentFields.grade_last}}</td>
-               <td class="public_school_name">{{student.getRecentFields.public_school_name}}</td>
-               <td class="reasons">{{student.getRecentFields.reasons}}</td>
-
+               {% with pschool=student.get_pschool %}
+               <td class="enrolled">{{pschool.get_status_display}}</td>
+               <td class="grade_current">
+                 {% if pschool.grade == None %}
+                  N/A
+                 {%else%}
+                  {{pschool.grade | grade_by_id}}
+                 {%endif%}
+               </td>
+               <td class="grade_last">
+                 {% if pschool.last_grade == None %}
+                  N/A
+                 {%else%}
+                  {{pschool.last_grade | grade_by_id}}
+                 {%endif%}
+               </td>
+               <td class="public_school_name">{{pschool.school_name}}</td>
+               <td class="reasons">{{pschool.reasons}}</td>
+               {% endwith%}
                <td class="notes">
                    {% for note in student.getNotes %}
                      {{note.date|date:'d N Y'}} : {{note.note}}
@@ -374,10 +386,12 @@
        <tr>
          <td>{% trans "Enrolled" %}</td>
          <td>
-           <select name="enrolled" class="form-control input-sm">
+           <select name="enrolled" class="form-control input-sm" id="search_enrolled">
              <option value="" selected="selected">{% trans "Select Enrolled" %}</option>
              {% for id,yn in yns.items %}
-             <option value="{{id}}">{{% trans yn %}</option>
+              {% if id != 'NA'%}
+              <option value="{{id}}">{% trans yn %}</option>
+              {% endif %}
              {% endfor %}
            </select>
          </td>
@@ -385,10 +399,12 @@
        <tr>
          <td>{% trans "Current Grade in Public School" %}</td>
          <td>
-           <select name="grade_current" class="form-control input-sm">
+           <select name="grade_current" class="form-control input-sm" id="search_c_g_pschool">
              <option value="" selected="selected">{% trans "Select Current Grade in Public School" %}</option>
              {% for id,grade in grades.items %}
+              {% if id >= 0 and id <= 12 %}
                <option value="{{id}}">{{grade}}</option>
+              {% endif %}
              {% endfor %}
            </select>
          </td>
@@ -396,18 +412,26 @@
        <tr>
          <td>{% trans "Last Grade in Public School" %}</td>
          <td>
-           <select name="grade_last" class="form-control input-sm">
+           <select name="grade_last" class="form-control input-sm" id="search_l_g_pschool">
              <option value="" selected="selected">{% trans "Select Last Grade in Public School" %}</option>
              {% for id,grade in grades.items %}
+              {% if id >= 0 and id <= 12 %}
                <option value="{{id}}">{{grade}}</option>
+              {% endif %}
              {% endfor %}
            </select>
          </td>
        </tr>
        <tr>
+         <td>{% trans "Public School Name" %}</td>
+         <td>
+           <input type="text" class="form-control input-sm" name="public_school_name" id="search_pschool_name"/>
+         </td>
+       </tr>
+       <tr>
          <td>{% trans "Reasons not Attending School" %}</td>
          <td>
-           <input type="text" class="form-control input-sm" name="reasons" id="reasons"/>
+           <input type="text" class="form-control input-sm" name="reasons" id="search_reasons"/>
          </td>
        </tr>
        <tr>
@@ -449,15 +473,60 @@
 <script src="/static/mande/bower_components/jquery-ui/jquery-ui.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
+  var search_enrolled = $("#search_enrolled").val()
+  $("#search_c_g_pschool").closest('tr').hide();
+  $("#search_l_g_pschool").closest('tr').hide();
+  $("#search_reasons").closest('tr').hide();
+  $("#search_pschool_name").closest('tr').hide();
+  if (search_enrolled=='Y'){
+    $("#search_c_g_pschool").closest('tr').show();
+    $("#search_pschool_name").closest('tr').show();
+    $("#search_l_g_pschool").closest('tr').hide();
+    $("#search_reasons").closest('tr').hide();
+  }
+  else if (search_enrolled=='N') {
+    $("#search_l_g_pschool").closest('tr').show();
+    $("#search_reasons").closest('tr').show();
+    $("#search_c_g_pschool").closest('tr').hide();
+    $("#search_pschool_name").closest('tr').hide();
+
+  }else{
+    $("#search_c_g_pschool").closest('tr').hide();
+    $("#search_pschool_name").closest('tr').hide();
+    $("#search_l_g_pschool").closest('tr').hide();
+    $("#search_reasons").closest('tr').hide();
+  }
+  $("#search_enrolled").click(function(){
+    var search_enrolled = $('#search_enrolled').val()
+    if (search_enrolled=='Y'){
+      $("#search_c_g_pschool").closest('tr').show();
+      $("#search_pschool_name").closest('tr').show();
+      $("#search_l_g_pschool").closest('tr').hide();
+      $("#search_reasons").closest('tr').hide();
+    }
+    else if (search_enrolled=='N') {
+      $("#search_l_g_pschool").closest('tr').show();
+      $("#search_reasons").closest('tr').show();
+      $("#search_c_g_pschool").closest('tr').hide();
+      $("#search_pschool_name").closest('tr').hide();
+    }else{
+      $("#search_c_g_pschool").closest('tr').hide();
+      $("#search_pschool_name").closest('tr').hide();
+      $("#search_l_g_pschool").closest('tr').hide();
+      $("#search_reasons").closest('tr').hide();
+    }
+  });
+
   $('#field_list').select2({
     placeholder: "---Select a Column---",
   });
-  
+
   var data_guardian1_profession = {{ data_guardian1_profession | safe }}
   var data_guardian2_profession = {{ data_guardian2_profession | safe }}
   var data_minors_profession = {{ data_minors_profession | safe }}
   var data_minors_training_type = {{ data_minors_training_type | safe }}
   var data_reasons = {{ data_reasons | safe }}
+  var data_public_schools = {{ data_public_schools | safe}}
   $("#guardian1_profession" ).autocomplete({
       source: data_guardian1_profession
     });
@@ -470,8 +539,11 @@ $(document).ready(function(){
   $("#minors_training_type" ).autocomplete({
         source: data_minors_training_type
     });
-  $("#reasons" ).autocomplete({
+  $("#search_reasons" ).autocomplete({
         source: data_reasons
+  });
+  $("#search_pschool_name" ).autocomplete({
+        source: data_public_schools
   });
 
 });
