@@ -55,6 +55,7 @@ perms_required = {
 	'advanced_report':{'mande.view_advanced_report'},
 	'unapproved_absence_with_no_comment':{'mande.view_unapproved_absence_with_no_comment'},
 	'publicschool_form': {'mande.view_publicschool_form'},
+	'delete_public_school': {'mande.view_delete_public_school'},
 
 
 }
@@ -129,6 +130,8 @@ def generate_group_perms():
     group_perms['community_worker'] = __addperms(perms_required['student_detail'],group_perms['community_worker'])
 	#view Advanced report
     group_perms['community_worker'] = __addperms(perms_required['advanced_report'],group_perms['community_worker'])
+	#delete public school
+    group_perms['community_worker'] = __addperms(perms_required['delete_public_school'],group_perms['community_worker'])
 
     #teachers can:
 	#add student public school history
@@ -178,6 +181,8 @@ def generate_group_perms():
     group_perms['teacher'] = __addperms(perms_required['attendance'],group_perms['teacher'])
 	#view Advanced report
     group_perms['teacher'] = __addperms(perms_required['advanced_report'],group_perms['teacher'])
+	#delete public school
+    group_perms['teacher'] = __addperms(perms_required['delete_public_school'],group_perms['teacher'])
 
     return group_perms
 

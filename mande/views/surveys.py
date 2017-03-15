@@ -320,9 +320,9 @@ def delete_spiritualactivities_survey(request,id):
         next_url = request.GET.get('next')
         try:
             SpiritualActivitiesSurvey.objects.get(pk=id).delete()
-            messages.success(request, 'Spiritual Activity Survey has been deleted successfully!')
+            messages.success(request, 'Spiritual Activity Survey has been deleted successfully!',extra_tags='delete_spiritualactivities_survey')
         except Exception as e:
-            messages.error(request,'Fail to delete Spiritual Activity Survey! ('+e.message+')')
+            messages.error(request,'Fail to delete Spiritual Activity Survey! ('+e.message+')',extra_tags='delete_spiritualactivities_survey')
 
         return HttpResponseRedirect(next_url)
     else:

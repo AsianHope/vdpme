@@ -280,31 +280,51 @@
     </div>
     <div class ="col-md-12">
         <h3>{% trans "Public School History" %}   <a href="{% url 'publicschool_form' survey.student_id %}" class="btn btn-xs btn-success" role="button">{% trans "+ Add a Public School History" %}</a></h3>
-
+        {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+            {%if "delete_public_school" in message.tags %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+        {% endif %}
         <table class="table table-bordered table-striped table-hover" id="publicSchoolHistory">
           <thead>
             <tr>
-              <th>{% trans "Edit" %}</th>
-              <th>{% trans "Acadimic Year" %}</th>
+              <th>{% trans "Edit" %}{% trans "Delete" %}</th>
+              <th>{% trans "From Date" %}</th>
+              <th>{% trans "To Date" %}</th>
               <th>{% trans "Grade" %}</th>
-              <th>{% trans "Status" %}</th>
-              <th>{% trans "Enroll Date" %}</th>
-              <th>{% trans "Drop Date" %}</th>
-              <th>{% trans "School Name" %}</th>
+              <th>{% trans "School" %}</th>
               <th>{% trans "Reasons for not attending" %}</th>
             </tr>
           </thead>
           <tbody>
             {% for publich_school_history in publich_school_historys %}
             <tr>
-              <td><a href="{% url 'publicschool_form' survey.student_id publich_school_history.id%}" role="button" class="btn btn-xs btn-warning">{% trans "Edit" %}</a></td>
-              <td>{{publich_school_history.academic_year | get_academic_year}}</td>
-              <td>{{publich_school_history.grade | grade_by_id}}</td>
-              <td>{{publich_school_history.status | get_status}}</td>
+              <td>
+                <a href="{% url 'publicschool_form' survey.student_id publich_school_history.id%}" role="button" class="btn btn-xs btn-warning">{% trans "Edit" %}</a>
+                <a id="delete_public_school" href="{% url 'delete_public_school' publich_school_history.id %}?next={% url 'student_detail' survey.student_id %}#enrollment" role="button" class="btn btn-xs btn-danger">{% trans "Delete" %}</a>
+
+              </td>
               <td>{{publich_school_history.enroll_date | date:'d N Y'}}</td>
-              <td>{{publich_school_history.drop_date | date:'d N Y'}}</td>
-              <td>{{publich_school_history.school_name}}</td>
-              <td>{{publich_school_history.reasons}}</td>
+              <td>
+                {% if publich_school_history.status and publich_school_history.status == 'Y' and not publich_school_history.drop_date%}
+                  On going
+                {% else %}
+                    {{publich_school_history.drop_date | date:'d N Y'}}
+                {% endif %}
+              </td>
+              {% if publich_school_history.status and publich_school_history.status == 'Y' %}
+                <td>{{publich_school_history.get_grade_display}}</td>
+                <td>{{publich_school_history.school_name}}</td>
+                <td>N/A</td>
+              {% else %}
+                <td>N/A</td>
+                <td>N/A</td>
+                <td>{{publich_school_history.reasons}}</td>
+              {% endif %}
             </tr>
             {% endfor %}
           </tbody>
@@ -458,7 +478,9 @@
       {% if messages %}
       <ul class="messages">
         {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {%if "delete_spiritualactivities_survey" in message.tags %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endif %}
         {% endfor %}
       </ul>
       {% endif %}
@@ -496,7 +518,12 @@ $("#delete_spiritualactivities_survey").click(function(event){
       window.location = $(this).attr('href');
     }
 });
-
+$("#delete_public_school").click(function(event){
+    event.preventDefault();
+    if(confirm("Are you sure you want to delete?")) {
+      window.location = $(this).attr('href');
+    }
+});
 // Javascript to enable link to tab
 var url = document.location.toString();
 if (url.match('#')) {

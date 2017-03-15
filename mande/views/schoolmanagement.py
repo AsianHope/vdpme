@@ -73,7 +73,7 @@ from mande.utils import user_permissions
 
 import inspect
 from icu import Locale, Collator
-
+from django.contrib import messages
 
 '''
 *****************************************************************************
@@ -601,7 +601,6 @@ Academic Form Single
  - process a single AcademicForm for requested student and log the action
 *****************************************************************************
 '''
-from django.contrib import messages
 def academic_form_single(request, student_id=0,test_id=None):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
@@ -876,3 +875,16 @@ def publicschool_form(request, student_id=0,id=None):
           return render(request, 'mande/errors/intakesurveynotexist.html', context)
     else:
       raise PermissionDenied
+def delete_public_school(request,id):
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+        next_url = request.GET.get('next')
+        try:
+            PublicSchoolHistory.objects.get(pk=id).delete()
+            messages.success(request, 'Public School History has been deleted successfully!', extra_tags='delete_public_school')
+        except Exception as e:
+            messages.error(request,'Fail to delete Public School History! ('+e.message+')',extra_tags='delete_public_school')
+
+        return HttpResponseRedirect(next_url)
+    else:
+        raise PermissionDenied
