@@ -93,7 +93,10 @@ def student_list(request):
                                  ).exclude(student_id__in=exit_surveys)
       surveys = []
       for active_survey in active_surveys:
-        surveys.append(active_survey.getRecentFields())
+        survey = active_survey
+        recent_survey = survey.getRecentFields()
+        recent_survey['in_public_school'] = survey.get_pschool().get_status_display
+        surveys.append(recent_survey)
       at_grade_level = {}
       for student in surveys:
             at_grade_level[student['student_id']] = (
