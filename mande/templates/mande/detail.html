@@ -57,16 +57,33 @@
               <td>{{ survey.gender }}</td>
             </tr>
             <tr>
+              <td>{% trans "VDP Class: " %}</td>
+              <td>
+                {% with classroom=survey.student_id|student_classroom%}
+                  {% if classroom|length > 0%}
+                    {% for classroom in survey.student_id|student_classroom %}
+                      {{classroom.classroom_id.get_cohort_display}} - {{classroom.classroom_id.classroom_number}}
+                      {% if not forloop.last %}
+                      ,<br/>
+                      {% endif %}
+                    {% endfor%}
+                  {% else %}
+                    N/A
+                  {% endif %}
+                {% endwith %}
+              </td>
+            </tr>
+            <tr>
               <td>{% trans "DOB: " %}</td>
-              <td>{{ survey.dob|date:'d N Y'}} <br/>({{survey.dob|timesince}} old)</td>
+              <td>{{ survey.dob|date:'d N Y'}}</td>
             </tr>
             <tr>
-              <td>{% trans "Enrolled: " %}</td>
+              <td>{% trans "Age: " %}</td>
+              <td>{{survey.dob|timesince}} old</td>
+            </tr>
+            <tr>
+              <td>{% trans "VDP Enrollment Date: " %}</td>
               <td>{% firstof recent_intake.enrollment_date|date:'d N Y' "Not yet enrolled" %}</td>
-            </tr>
-            <tr>
-              <td>{% trans "Expected 6th Grade Graduation: " %}</td>
-              <td>{% blocktrans %}Jul. {{ graduation|date:'Y' }}{% endblocktrans %}</td>
             </tr>
           </table>
         </div>
@@ -74,31 +91,37 @@
   <div class="col-md-4">
     <div class = "table-responsive">
       <table class="table table-striped table-hover">
-          <tr><td>{% trans "VDP Grade when Enrolled: " %}</td>  <td>{% firstof recent_intake.get_starting_grade_display "Not yet collected" %}</td></tr>
-          <tr><td>{% trans "Current VDP Grade:" %}</td>  <td> {% firstof current_grade|grade_by_id "No academic records found" %}</td></tr>
           <tr>
-            <td>{% trans "Public School Current Grade" %}</td>
-            {% if survey.enrolled == 'N'%}
-            <td>
-              {% trans "Not Attend" %}<br/>
-              {% trans "Last Grade" %}: {% firstof survey.grade_last|grade_by_id 'Not Entered' %}
-              {% trans "Reason" %}: {% firstof survey.reasons 'Not Entered' %}<br/>
-            </td>
-            {% else %}
-              <td>{% firstof survey.grade_current|grade_by_id 'Not Entered' %} </td>
-            {% endif %}
+            <td>{% trans "Guardian 1: " %} ({% firstof survey.guardian1_relationship|relationship_display "Not Entered"%})</td>
+            <td>{% firstof survey.guardian1_name "Not Entered"%} - {% firstof survey.guardian1_phone "Not Entered"%}</td>
           </tr>
-          <tr><td>{% trans "Public School Name" %}:</td>  <td> {% firstof survey.public_school_name "Not Entered" %}</td></tr>
-          {% with grad_date=graduation|date:'Y' %}
-          {% if current_grade <= 6 %}
-          <tr><td>{% trans "Grades/Years to achieve" %}</td><td>{{ 6|sub:current_grade }} / {{ grad_date|sub:cur_year }}</td>
-          {%endif%}
+          <tr>
+            <td>{% trans "Guardian 2: " %} ({% firstof survey.guardian2_relationship|relationship_display "Not Entered"%})</td>
+            <td>{% firstof survey.guardian2_name "Not Entered"%} - {% firstof survey.guardian2_phone "Not Entered"%}</td>
           </tr>
-            {% endwith %}
+          {% if pschool and pschool.status == 'Y' %}
+          <tr>
+            <td>{% trans "Public School Grade: " %}</td>
+            <td>{% firstof pschool.grade|grade_by_id "Not Entered"%}</td>
+          </tr>
+          <tr>
+            <td>{% trans "Public School Name: " %}</td>
+            <td>{% firstof pschool.school_name "Not Entered"%}</td>
+          </tr>
+          {% else %}
+          <tr>
+            <td>{% trans "Public School Grade: " %}</td>
+            <td>Not Enrolled</td>
+          </tr>
+          <tr>
+            <td>{% trans "Reasons: " %}</td>
+            <td>{% firstof pschool.reasons "Not Entered"%}</td>
+          </tr>
+          {% endif %}
           <tr>
             <td>{% trans "Church Name" %}:</td>
             {% if survey.church.personal_attend_church == 'N' %}
-            <td>{% trans "Doesn't attend Church" %}</td>
+            <td>{% trans "Doesn't Attend Church" %}</td>
             {% else %}
             <td> {% firstof survey.church.church_name "Not Entered" %}</td>
             {% endif %}
