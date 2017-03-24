@@ -3,3 +3,4 @@
 startdocker.sh
 *.mo
 mande/migrations/*
+media/*

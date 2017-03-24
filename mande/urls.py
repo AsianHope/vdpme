@@ -123,6 +123,7 @@ urlpatterns = patterns('',
     url(r'^school-management/student_publicschool/(?P<student_id>\d+)/$', views.publicschool_form, name='publicschool_form'),
     url(r'^school-management/student_publicschool/(?P<student_id>\d+)/(?P<id>\d+)$', views.publicschool_form, name='publicschool_form'),
     url(r'^school-management/student_publicschool/delete(?P<id>\d+)/$', views.delete_public_school, name='delete_public_school'),
+    url(r'^school-management/save_photo/$', views.save_photo, name='save_photo'),
 
 
     url(r'^success/$', views.survey_success, name='success'),

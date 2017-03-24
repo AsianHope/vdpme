@@ -34,8 +34,67 @@
 
 {% block content %}
 
-
-
+<div class="popup" data-popup="popup-1">
+    <div class="popup-inner">
+      <div class="col-md-12">
+        <div class="col-md-5">
+          <ul class ="nav nav-tabs">
+            <li role = "presentation" class="active"><a href="#upload_file" aria-controls="academic" role="tab" data-toggle="tab">{% trans "Upload Picture" %}</a></li>
+            <li role = "presentation"><a href="#take_picture" aria-controls="contact" role="tab" data-toggle="tab">{% trans "Take Picture" %}</a></li>
+          </ul>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="upload_file">
+              <div style="margin-top:10px; margin-bottom:10px;">
+                <input type="file" id="file" name="photo" onchange="readURL(this);">
+              </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="take_picture">
+              <div style="margin-top:10px; margin-bottom:10px;">
+                <div id="my_camera"></div>
+                <input type="button" value="Take Photo" onclick="take_photo();" class="btn btn-primary" style="margin-top: 20px;">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-5 crop_area">
+            <div class="img-container" style="margin-bottom:20px;">
+              <img id="photo" src="{{MEDIA_URL}}{{survey.student_id}}.jpg" onerror="hide_crop_area(this);"/>
+            </div>
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary" onclick="save_photo();">
+                <i class="fa fa-floppy-o" aria-hidden="true"></i> Save photo
+              </button>
+            </div>
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary" title="Rotate" onclick="rotate()">
+                <span class="docs-tooltip" data-toggle="tooltip">
+                  <span class="fa fa-repeat" aria-hidden="true"></span>
+                </span>
+              </button>
+            </div>
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary" title="Zoom In" onclick="zoom_in()">
+                <span class="docs-tooltip" data-toggle="tooltip">
+                  <span class="fa fa-search-plus"></span>
+                </span>
+              </button>
+              <button type="button" class="btn btn-primary" title="Zoom Out" onclick="zoom_out()">
+                <span class="docs-tooltip" data-toggle="tooltip">
+                  <span class="fa fa-search-minus"></span>
+                </span>
+              </button>
+            </div>
+       </div>
+       <div class="col-md-2 crop_area">
+         <div style="width:170px; height:225px;">
+           <img id="preview" src="" style="max-width:100%; background: #f7f7f7;"/>
+         </div>
+      </div>
+      </div>
+        <p style="text-align:right;"><a data-popup-close="popup-1" href="#" >Close</a></p>
+        <a class="popup-close" data-popup-close="popup-1" href="#">x</a>
+    </div>
+</div>
 <div class="row">
   {% if exit_survey %}
     <div class = "col-md-12 text-center">
@@ -46,9 +105,25 @@
     <br/><br/>
     </div>
   {% endif %}
-  <div class = "col-md-3"><div style="background-color: gray; border: 1px solid black; width:175px; height: 225px;"></div>
-    <small>{% trans "Last Update: " %} {{ survey.date|date:'d N Y' }}</small>
+  <div class="col-md-12">
+    {% if messages %}
+    <ul class="messages messages_upload">
+      {% for message in messages %}
+        {%if "save_photo" in message.tags %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+  <div class = "col-md-3">
+    <div style="background-color: gray;border: 1px solid black; width:170px; height: 225px;">
+      <img id="profile_pic" src="{{MEDIA_URL}}{{survey.student_id}}.jpg" onerror="this.src='/static/image/no_image_available.gif'"style="width:100%; height:100%;"/>
     </div>
+    <br/>
+    <button data-popup-open="popup-1" id="upload_photo" type"button" class="btn btn-warning" style="margin-bottom:20px;">Update Photo</button>
+    <!-- <small>{% trans "Last Update: " %} {{ survey.date|date:'d N Y' }}</small> -->
+  </div>
     <div class = "col-md-4">
       <div class = "table-responsive">
         <table class="table table-striped table-hover">
@@ -534,6 +609,113 @@
    <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
    <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
 
+   <script language="JavaScript">
+   //  popup window
+   //----- OPEN
+   var $image = $("#photo")
+   $('[data-popup-open]').on('click', function(e)  {
+     var targeted_popup_class = jQuery(this).attr('data-popup-open');
+     $('[data-popup="' + targeted_popup_class + '"]').fadeIn(350);
+     $(".messages_upload").hide();
+    //  adding webcam when start popup
+     Webcam.set({
+      width: 320,
+      height: 240,
+     });
+     Webcam.attach('#my_camera');
+
+     //  set image with new image
+     var d = new Date();
+     $image.attr('src','{{MEDIA_URL}}{{survey.student_id}}.jpg?'+d.getTime());
+     //  crop image
+     $image.cropper({
+      aspectRatio: 2/3,
+      cropBoxResizable: false,
+      crop: function(e) {
+        // get cropped image data url, and set src to preview image
+        var croppedCanvas = $(this).cropper('getCroppedCanvas', {
+              width: 340, // resize the cropped area
+              height: 510
+            });
+        var preview_data_url = croppedCanvas.toDataURL(); // Get the 340 * 510 image.
+        $("#preview").attr('src',preview_data_url)
+      },
+    });
+    e.preventDefault();
+   });
+   //----- CLOSE
+   $('[data-popup-close]').on('click', function(e)  {
+     var targeted_popup_class = jQuery(this).attr('data-popup-close');
+     $('[data-popup="' + targeted_popup_class + '"]').fadeOut(350);
+     e.preventDefault();
+
+     $image.cropper("destroy");
+     $("#file").val("");
+   });
+   function hide_crop_area(){
+     $(".crop_area").hide();
+   }
+   //  take photo with Webcam and preview
+    function take_photo() {
+        $(".crop_area").show();
+        Webcam.snap( function(data_uri) {
+         //  src = data_uri
+          $image.cropper("replace", data_uri)
+        });
+    }
+    // preview upload image before save
+    function readURL(input) {
+       $(".crop_area").show();
+      if (input.files && input.files[0]) {
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+          //  replace cropper with new upload image
+           $image.cropper("replace", e.target.result)
+          };
+          reader.readAsDataURL(input.files[0]);
+      }
+    }
+    //  save upload or cropped photo
+    function post(path, params, method) {
+    method = method || "post"; // Set method to post by default if not specified.
+    // The rest of this code assumes you are not using a library.
+    // It can be made less wordy if you use one.
+    var form = document.createElement("form");
+    form.setAttribute("method", method);
+    form.setAttribute("action", path);
+
+    for(var key in params) {
+        if(params.hasOwnProperty(key)) {
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", key);
+            hiddenField.setAttribute("value", params[key]);
+
+            form.appendChild(hiddenField);
+         }
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+}
+    function save_photo(){
+      var img_url = $("#preview").attr("src")
+      post("{% url 'save_photo' %}", {'img_url': img_url,'student_id':'{{survey.student_id}}','csrfmiddlewaretoken':'{{csrf_token}}'});
+      d = new Date();
+      $("#profile_pic").attr('src',"{{MEDIA_URL}}{{survey.student_id}}.jpg?"+d.getTime())
+   }
+    // rotate cropping image
+    function rotate(){
+      $image.cropper("rotate",90)
+    }
+    function zoom_in(){
+      $image.cropper("zoom",0.1)
+    }
+    function zoom_out(){
+      $image.cropper("zoom",-0.1)
+    }
+</script>
 <script type="text/javascript">
 $("#delete_spiritualactivities_survey").click(function(event){
     event.preventDefault();

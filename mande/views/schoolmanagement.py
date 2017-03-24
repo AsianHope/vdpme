@@ -18,7 +18,6 @@ from datetime import date
 from datetime import datetime
 from datetime import timedelta
 import json
-
 from django.views.generic import ListView
 from mande.models import IntakeSurvey
 from mande.models import IntakeUpdate
@@ -74,6 +73,8 @@ from mande.utils import user_permissions
 import inspect
 from icu import Locale, Collator
 from django.contrib import messages
+from PIL import Image
+import urllib, cStringIO
 
 '''
 *****************************************************************************
@@ -888,5 +889,31 @@ def delete_public_school(request,id):
             messages.error(request,'Fail to delete Public School History! ('+e.message+')',extra_tags='delete_public_school')
 
         return HttpResponseRedirect(next_url)
+    else:
+        raise PermissionDenied
+
+'''
+*****************************************************************************
+Save photo
+ - save cropped picture from jquery Cropper
+*****************************************************************************
+'''
+def save_photo(request):
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+        student_id = 00000
+        storage= 'test'
+        if request.method == 'POST':
+           student_id = request.POST['student_id']
+           url = request.POST['img_url']
+           file_name = student_id+".jpg"
+           try:
+               file = cStringIO.StringIO(urllib.urlopen(url).read())
+               img = Image.open(file)
+               img.save("media/"+file_name)
+               messages.success(request, 'Student photo has been updated successfully!', extra_tags='save_photo')
+           except Exception as e:
+               messages.error(request,'Fail to update student photo! ('+str(e)+')',extra_tags='save_photo')
+        return HttpResponseRedirect(reverse('student_detail',kwargs={'student_id':student_id}))
     else:
         raise PermissionDenied
