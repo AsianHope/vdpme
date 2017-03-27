@@ -92,7 +92,7 @@ def daily_attendance_report(request,attendance_date=date.today().isoformat()):
       classrooms = Classroom.objects.all().filter(active=True)
       classrooms_who_take_attendance = []
       for classroom in classrooms:
-          if classroom.getAttendanceDayOfferings(date.today().isoformat()):
+          if classroom.getAttendanceDayOfferings(attendance_date):
               classrooms_who_take_attendance.append(classroom)
 
     #   takesattendance = AttendanceDayOffering.objects.filter(
