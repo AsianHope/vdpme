@@ -75,6 +75,7 @@ from icu import Locale, Collator
 from django.contrib import messages
 from PIL import Image
 import urllib, cStringIO
+from django.conf import settings
 
 '''
 *****************************************************************************
@@ -902,7 +903,7 @@ def save_photo(request):
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
         student_id = 00000
-        storage= 'test'
+        upload_directory = settings.MEDIA_ROOT
         if request.method == 'POST':
            student_id = request.POST['student_id']
            url = request.POST['img_url']
@@ -910,7 +911,7 @@ def save_photo(request):
            try:
                file = cStringIO.StringIO(urllib.urlopen(url).read())
                img = Image.open(file)
-               img.save("media/"+file_name)
+               img.save(upload_directory+"/"+file_name)
                messages.success(request, 'Student photo has been updated successfully!', extra_tags='save_photo')
            except Exception as e:
                messages.error(request,'Fail to update student photo! ('+str(e)+')',extra_tags='save_photo')
