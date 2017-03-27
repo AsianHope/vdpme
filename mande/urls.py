@@ -158,7 +158,7 @@ activity_map = [
             {'name':'student_promoted_report','display':'Student Promoted Report'},
             {'name':'students_promoted_times_report','display':'Students Promoted Times Report'},
             {'name':'public_school_report','display':'Public School Report'},
-            {'name':'students_intergrated_in_public_school','display':'Students Intergrated In Public School Report'},
+            # {'name':'students_intergrated_in_public_school','display':'Students Intergrated In Public School Report'},
             {'name':'mande_summary_report','display':'M&E Summary Report'},
             {'name':'students_lag_summary','display':'Students Lag Summary Report'},
             {'name':'anomalous_data','display':'Anomalous Data'},
