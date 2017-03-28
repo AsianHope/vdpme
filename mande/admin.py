@@ -27,6 +27,7 @@ from mande.models import ClassroomEnrollment
 from mande.models import ClassroomTeacher
 
 from mande.models import PublicSchoolHistory
+from mande.models import AcademicMarkingPeriod
 
 class SchoolAdmin(admin.ModelAdmin):
         list_display = ('school_name','school_location')
@@ -141,6 +142,10 @@ class PublicSchoolHistoryAdmin(admin.ModelAdmin):
     list_display = ('student_id','status','enroll_date','drop_date','grade','school_name')
     list_filter = ('status','grade')
 
+class AcademicMarkingPeriodAdmin(admin.ModelAdmin):
+    list_display = ('description','test_date','marking_period_start','marking_period_end')
+    list_filter = ('test_date',)
+
 admin.site.register(School,SchoolAdmin)
 admin.site.register(Classroom,ClassroomAdmin)
 admin.site.register(Teacher,TeacherAdmin)
@@ -165,3 +170,4 @@ admin.site.register(ClassroomEnrollment,ClassroomEnrollmentAdmin)
 admin.site.register(ClassroomTeacher,ClassroomTeacherAdmin)
 
 admin.site.register(PublicSchoolHistory,PublicSchoolHistoryAdmin)
+admin.site.register(AcademicMarkingPeriod,AcademicMarkingPeriodAdmin)

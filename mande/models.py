@@ -629,3 +629,11 @@ class PublicSchoolHistory(models.Model):
 		return unicode(self.student_id) + ' - '+ unicode(self.grade)
 	class Meta:
 			unique_together = (('student_id','grade','enroll_date'))
+
+class AcademicMarkingPeriod(models.Model):
+	description = models.CharField(_('Description'),max_length=128,blank=True)
+	test_date = models.DateField(_('Test Date'))
+	marking_period_start = models.DateField(_('Marking Period Start'))
+	marking_period_end =  models.DateField(_('Marking Period End'))
+	def __unicode__(self):
+		return unicode(self.description) + ' - '+ unicode(self.test_date)

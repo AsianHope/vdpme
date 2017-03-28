@@ -8,6 +8,9 @@ Please select a classroom.
 {% block content %}
 
   <div class="col-md-9">
+    {% if locked == True %}
+     {% trans ' Academic tests currently locked' %}
+    {% else %}
     <table id="classroomDataTable" class="table table-bordered table-hover">
       <thead>
         <tr><th>{% trans "Site" %}</th><th>{% trans "Grade" %}</th><th>{% trans "Description" %}</th><th>{% trans "Evaluation" %}</th></tr>
@@ -26,7 +29,8 @@ Please select a classroom.
           </tr>
         {% endfor %}
         </tbody>
-    </table>
+      </table>
+      {% endif %}
   </div>
 {% endblock %}
 {% block script %}

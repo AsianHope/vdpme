@@ -6,7 +6,9 @@
 {% endblock %}
 
 {% block content %}
-
+{% if locked == True %}
+  {% trans ' Academic tests currently locked' %}
+{% else %}
 <div class="col-md-9">
   <form method="post" action="{% url 'academic_form' classroom.school_id.school_id test_date classroom.classroom_id %}">
     {% csrf_token %}
@@ -52,7 +54,6 @@
     </div>
   </form>
 </div>
-
 <div class="col-md-3">
       <input type="date" name="attendance_date" class="form-control" id="datePicker"/>
       <p style="color:red">{{ warning }}</p>
@@ -66,8 +67,7 @@
 
       </ul>
 </div>
-
-
+{% endif %}
 {% endblock %}
 
 {% block script %}

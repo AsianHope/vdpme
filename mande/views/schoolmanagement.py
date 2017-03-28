@@ -38,6 +38,7 @@ from mande.models import AttendanceLog
 from mande.models import IntakeInternal
 from mande.models import StudentEvaluation
 from mande.models import PublicSchoolHistory
+from mande.models import AcademicMarkingPeriod
 
 
 from mande.models import GRADES
@@ -529,7 +530,11 @@ def academic_form(request, school_id, test_date=date.today().isoformat(), classr
       classroom = Classroom.objects.get(pk=classroom_id)
       warning = ''
       message = ''
-
+      locked = True
+      today = date.today().isoformat()
+      making_period = AcademicMarkingPeriod.objects.all().filter(Q(marking_period_start__lte=today) & Q(marking_period_end__gte=today))
+      if len(making_period) >=1 :
+        locked = False
       #find only currently enrolled students
       exit_surveys = ExitSurvey.objects.all().filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
       students = ClassroomEnrollment.objects.exclude(student_id__in=exit_surveys).exclude(drop_date__lt=date.today().isoformat()).filter(classroom_id=classroom_id,student_id__date__lte=date.today().isoformat())
@@ -542,28 +547,35 @@ def academic_form(request, school_id, test_date=date.today().isoformat(), classr
                                                 test_date=test_date,
                                                 test_level=student.classroom_id.cohort)
 
-
-      student_academics = Academic.objects.filter(student_id=students,
+      try:
+          student_academics = Academic.objects.filter(student_id=students,
                                                     test_date=test_date,
                                                     test_level=student.classroom_id.cohort)
+      except Exception as e:
+          student_academics = Academic.objects.filter(student_id=students,
+                                                    test_date=test_date,
+                                                    test_level=classroom.cohort)
       AcademicFormSet = modelformset_factory(Academic, form=AcademicForm, extra=0)
 
       if request.method == 'POST':
         formset = AcademicFormSet(request.POST)
 
+
         if formset.is_valid():
-            formset.save()
-            message = "Saved."
-            message = ('Recorded semester tests for '+
-                            str(classroom.get_cohort_display())+' - '
-                            +str(classroom.classroom_number)+
-                            ' at '+str(classroom.school_id))
-            log = NotificationLog(  user=request.user,
-                                    text=message,
-                                    font_awesome_icon='fa-calculator')
-            log.save()
-
-
+            period = AcademicMarkingPeriod.objects.all().filter(test_date=test_date)
+            if len(period)>=1:
+                formset.save()
+                message = "Saved."
+                message = ('Recorded semester tests for '+
+                                str(classroom.get_cohort_display())+' - '
+                                +str(classroom.classroom_number)+
+                                ' at '+str(classroom.school_id))
+                log = NotificationLog(  user=request.user,
+                                        text=message,
+                                        font_awesome_icon='fa-calculator')
+                log.save()
+            else:
+                 warning = "Test date doesn't match with AcademicMarkingPeriod date."
       else:
         formset = AcademicFormSet(queryset = student_academics)
       context= {
@@ -573,7 +585,8 @@ def academic_form(request, school_id, test_date=date.today().isoformat(), classr
                 'test_date':test_date,
                 'formset':formset,
                 'warning': mark_safe(warning),
-                'message': message
+                'message': message,
+                'locked':locked,
       }
 
       return render(request, 'mande/academicform.html', context)
@@ -589,11 +602,18 @@ def academic_select(request):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
+
       schools = School.objects.all()
       classrooms = Classroom.objects.filter(cohort__lt=50)
+      locked = True
+      today = date.today().isoformat()
+      making_period = AcademicMarkingPeriod.objects.all().filter(Q(marking_period_start__lte=today) & Q(marking_period_end__gte=today))
+      if len(making_period) >=1 :
+          locked = False
       context = {
                 'classrooms':classrooms,
-                'today': date.today().isoformat(),
+                'today': today,
+                'locked':locked,
       }
       return render(request, 'mande/academicselect.html',context)
     else:
@@ -610,6 +630,11 @@ def academic_form_single(request, student_id=0,test_id=None):
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
       form_error_message= {}
+      locked = True
+      today = date.today().isoformat()
+      making_period = AcademicMarkingPeriod.objects.all().filter(Q(marking_period_start__lte=today) & Q(marking_period_end__gte=today))
+      if len(making_period) >=1 :
+            locked = False
       if request.method == 'POST':
         if test_id == None:
             form = AcademicForm(request.POST)
@@ -625,17 +650,24 @@ def academic_form_single(request, student_id=0,test_id=None):
 
         if form.is_valid():
             #process
-            instance = form.save()
-            action = 'Recorded ' if created else 'Updated '
-            message = (action+'semester test for '+instance.student_id.name)
-            log = NotificationLog(user=request.user,
-                                  text=message,
-                                  font_awesome_icon='fa-calculator')
-            log.save()
-            # then return
-            return HttpResponseRedirect(
-                        reverse('student_detail',
-                                kwargs={'student_id':instance.student_id.student_id}))
+            test_date = request.POST['test_date']
+            period = AcademicMarkingPeriod.objects.all().filter(test_date=test_date)
+            if len(period)>=1:
+                instance = form.save()
+                action = 'Recorded ' if created else 'Updated '
+                message = (action+'semester test for '+instance.student_id.name)
+                log = NotificationLog(user=request.user,
+                                      text=message,
+                                      font_awesome_icon='fa-calculator')
+                log.save()
+                # then return
+                return HttpResponseRedirect(
+                            reverse('student_detail',
+                                    kwargs={'student_id':instance.student_id.student_id}))
+            else:
+               action = 'Adding ' if created else 'Editing '
+               form.add_error(None, "")
+               form_error_message= "Test date doesn't match with AcademicMarkingPeriod date."
         else:
             action = 'Adding ' if created else 'Editing '
             form_error_message= form.errors.as_text()
@@ -662,7 +694,8 @@ def academic_form_single(request, student_id=0,test_id=None):
                 action = 'Adding'
                 form = AcademicForm()
 
-      context = {'form': form,'student_id':student_id,'test_id':test_id,'action':action,'form_error_message':form_error_message}
+      context = {'form': form,'student_id':student_id,'test_id':test_id,'action':action,
+                'form_error_message':form_error_message,'locked':locked}
 
       return render(request, 'mande/academicformsingle.html',context)
     else:
