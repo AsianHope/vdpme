@@ -30,8 +30,14 @@
 {% endblock %}
 
 {% block script %}
+<script src="/static/mande/bower_components/jquery-ui/jquery-ui.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
+  var data_guardian_profession = {{ data_guardian_profession | safe }}
+  $("#id_guardian1_profession,#id_guardian2_profession" ).autocomplete({
+      source: data_guardian_profession
+  });
+
   var limit = 'id_{{limit}}';
   if(limit !== 'id_None'){
     //loop through all form groups and hide everything but our limit

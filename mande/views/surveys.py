@@ -73,6 +73,10 @@ from mande.utils import user_permissions
 
 from icu import Locale, Collator
 from django.contrib import messages
+
+locale = Locale('km_KH')
+collator = Collator.createInstance(locale)
+
 '''
 *****************************************************************************
 Intake Survey
@@ -85,6 +89,20 @@ def intake_survey(request,student_id=None):
     if user_permissions(method_name,request.user):
         next_url = request.GET.get('next') #where we're going next
         limit = request.GET.get('limit') #limit to a single field
+        intake_surveys = IntakeSurvey.objects.all()
+        intake_update = IntakeUpdate.objects.all()
+        data_guardian_profession = []
+        intake_surveys_guardian1=  list(intake_surveys.values_list('guardian1_profession',flat=True))
+        intake_surveys_guardian2 = list(intake_surveys.values_list('guardian2_profession',flat=True))
+        intake_update_guardian1=  list(intake_update.values_list('guardian1_profession',flat=True))
+        intake_update_guardian2 = list(intake_update.values_list('guardian2_profession',flat=True))
+        data_guardian_profession.extend(intake_surveys_guardian1)
+        data_guardian_profession.extend(intake_surveys_guardian2)
+        data_guardian_profession.extend(intake_update_guardian1)
+        data_guardian_profession.extend(intake_update_guardian2)
+        # sort khmer
+        data_guardian_profession = [x.encode('utf-8').strip() for x in set(data_guardian_profession)]
+        data_guardian_profession = sorted(set(data_guardian_profession),key=collator.getSortKey)
 
         instance = IntakeSurvey.objects.get(pk=student_id) if student_id else None
         form = IntakeSurveyForm(request.POST or None,
@@ -116,6 +134,7 @@ def intake_survey(request,student_id=None):
             'student':instance,
             'next_url':next_url,
             'limit':limit,
+            'data_guardian_profession':json.dumps(data_guardian_profession)
         }
         return render(request, 'mande/intakesurvey.html', context)
     else:
@@ -169,6 +188,21 @@ def intake_update(request,student_id=0):
       next_url = request.GET.get('next')
       next_tab = request.GET.get('tab')
 
+      intake_surveys = IntakeSurvey.objects.all()
+      intake_update = IntakeUpdate.objects.all()
+      data_guardian_profession = []
+      intake_surveys_guardian1=  list(intake_surveys.values_list('guardian1_profession',flat=True))
+      intake_surveys_guardian2 = list(intake_surveys.values_list('guardian2_profession',flat=True))
+      intake_update_guardian1=  list(intake_update.values_list('guardian1_profession',flat=True))
+      intake_update_guardian2 = list(intake_update.values_list('guardian2_profession',flat=True))
+      data_guardian_profession.extend(intake_surveys_guardian1)
+      data_guardian_profession.extend(intake_surveys_guardian2)
+      data_guardian_profession.extend(intake_update_guardian1)
+      data_guardian_profession.extend(intake_update_guardian2)
+      # sort khmer
+      data_guardian_profession = [x.encode('utf-8').strip() for x in set(data_guardian_profession)]
+      data_guardian_profession = sorted(set(data_guardian_profession),key=collator.getSortKey)
+
       try:
         survey = IntakeSurvey.objects.get(pk=student_id)
         most_recent = survey.getRecentFields()
@@ -201,6 +235,7 @@ def intake_update(request,student_id=0):
           'student_id':student_id,
           'next':next_url,
           'tab':next_tab,
+          'data_guardian_profession':json.dumps(data_guardian_profession)
       }
       return render(request, 'mande/intakeupdate.html', context)
     else:
@@ -343,9 +378,7 @@ def spiritualactivities_survey(request,student_id=0,survey_id=None):
       data_church_names = list(SpiritualActivitiesSurvey.objects.all().values_list('church_name',flat=True).distinct())
       # sort khmer
       data_church_names = [x.encode('utf-8').strip() for x in data_church_names]
-      locale = Locale('km_KH')
-      collator = Collator.createInstance(locale)
-      data_public_schools = sorted(set(data_church_names),key=collator.getSortKey)
+      data_church_names = sorted(set(data_church_names),key=collator.getSortKey)
       if int(student_id)>0:
           if survey_id != None:
                try:
