@@ -36,6 +36,11 @@ class Html5DateInput(forms.DateInput):
 class IntakeSurveyForm(forms.ModelForm):
     date = forms.DateField(label=_('Survey Date'),widget=Html5DateInput,initial=date.today().isoformat())
     dob =  forms.DateField(label=_('Date of Birth'),widget=Html5DateInput)
+    address = forms.CharField( widget=forms.Textarea(attrs={'rows': 4}))
+    notes = forms.CharField( widget=forms.Textarea(attrs={'rows': 4}),required=False)
+    enrollment_date = forms.DateField(label=_('Enrollment Date'),widget=Html5DateInput)
+    starting_grade = forms.ChoiceField(choices=GRADES)
+
     class Meta:
         model = IntakeSurvey
         exclude=[
@@ -56,7 +61,7 @@ class IntakeInternalForm(forms.ModelForm):
 
 class IntakeUpdateForm(forms.ModelForm):
     date = forms.DateField(label=_('Survey Date'),widget=Html5DateInput)
-    
+
     class Meta:
         model = IntakeUpdate
         exclude=[

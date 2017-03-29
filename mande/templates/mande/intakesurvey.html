@@ -11,19 +11,45 @@
 
 {% block content %}
 
-<div class="col-md-3"></div>
-<div class="col-md-6">
+<!-- <div class="col-md-3"></div> -->
+<div class="col-md-12">
 
 {% if student %}
 <form action = "{% url 'intake_survey' student.student_id %}?next={{next_url}}&limit={{limit}}" method="post">
 {% else %}
 <form action = "{% url 'intake_survey' %}" method="post">
 {% endif %}
-    {{ form | bootstrap }}
-    {% csrf_token %}
-    <div class="col-md-12">
-      <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
+    <div class="col-md-6">
+      {{ form.date.as_hidden}}
+      {{ form.site | bootstrap }}
+      {{ form.name | bootstrap }}
+      {{ form.dob | bootstrap }}
+      {{ form.gender | bootstrap }}
+      {{ form.address | bootstrap }}
+      {{ form.guardian1_name | bootstrap }}
+      {{ form.guardian1_relationship | bootstrap }}
+      {{ form.guardian1_phone | bootstrap }}
+      {{ form.guardian1_profession | bootstrap }}
+      {{ form.guardian1_employment | bootstrap }}
+      {{ form.guardian2_name | bootstrap }}
+      {{ form.guardian2_relationship | bootstrap }}
+      {{ form.guardian2_phone | bootstrap }}
+      {{ form.guardian2_profession | bootstrap }}
+      {{ form.guardian2_employment | bootstrap }}
+      {{ form.minors | bootstrap }}
+      {{ form.minors_in_public_school | bootstrap }}
+      {{ form.minors_in_other_school | bootstrap }}
+      {{ form.notes | bootstrap }}
     </div>
+    <div class="col-md-6">
+      {{ form.enrollment_date | bootstrap }}
+      {{ form.starting_grade | bootstrap }}
+      {% csrf_token %}
+      <div class="form-group" style="text-align:right;">
+        <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
+      </div>
+    </div>
+
 </form>
 </div>
 <div class="col-md-3"></div>

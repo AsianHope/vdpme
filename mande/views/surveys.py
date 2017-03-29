@@ -109,8 +109,13 @@ def intake_survey(request,student_id=None):
                                 instance=instance)
 
         if request.method == 'POST':
+            enrollment_date = request.POST['enrollment_date']
+            starting_grade = request.POST['starting_grade']
+
             if form.is_valid():
                 instance = form.save()
+                intake_internal = IntakeInternal(student_id=instance, enrollment_date=enrollment_date,starting_grade=starting_grade)
+                intake_internal.save()
                 icon = 'fa-female' if instance.gender == 'F' else 'fa-male'
                 if student_id:
                     action = 'Updated'
@@ -118,15 +123,15 @@ def intake_survey(request,student_id=None):
                         action = action+' '+limit+ 'on' #Updated dob on intake...
                 else:
                     action='Performed'
-                message = action+' intake survey for '+unicode(instance.name)
+                message = action+' intake survey and intake internal for '+unicode(instance.name)
                 log = NotificationLog(  user=request.user,
                                         text=message,
                                         font_awesome_icon=icon)
                 log.save()
                 #then return, defaulting to an intake internal
-                if next_url is None:
-                    next_url = reverse('intake_internal',kwargs={'student_id':instance.student_id})
-
+                # if next_url is None:
+                #     next_url = reverse('intake_internal',kwargs={'student_id':instance.student_id})
+                next_url = reverse('student_detail',kwargs={'student_id':instance.student_id})
                 return HttpResponseRedirect(next_url)
 
         context = {
