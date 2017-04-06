@@ -144,7 +144,6 @@ STATUS = (
 	('ON_GOING', _('On going'))
 )
 FREQUENCY = (
-	('NA',_('Not Applicable')),
 	('EVERY_WEEK', _('Almost every week')),
 	('EVERY_MONTH', _('Once every 1-2 months')),
 	('EVERY_YEAR', _('Once or twice per year'))
@@ -466,8 +465,8 @@ class SpiritualActivitiesSurvey(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey,verbose_name=_('Student ID'))
 	date = models.DateField(_('Survey Date'),default=datetime.date.today)
 	family_attend_church = models.CharField(_('Does your family currently attend church?'),max_length=2,choices=YN,default='NA')
-	personal_attend_church = models.CharField(_('Do you currently attend church?'),max_length=2,choices=YN,default='NA')
-	frequency_of_attending = models.CharField(_('Frequency of Attending'),choices=FREQUENCY,default='NA',max_length=16)
+	personal_attend_church = models.CharField(_('Did the student attend church within the past 6 months?'),max_length=2,choices=YESNO)
+	frequency_of_attending = models.CharField(_('Frequency of Attending'),choices=FREQUENCY,max_length=16,blank=True)
 	church_name = models.CharField(_('Church Name'),max_length=128,blank=True,null=True)
 	personal_prayer = models.CharField(_('Have you prayed on your own within the last week?'),max_length=2,choices=YN,default='NA')
 	personal_baptism = models.CharField(_('Have you been baptized?'),max_length=2,choices=YN,default='NA')

@@ -92,7 +92,14 @@ class SpiritualActivitiesSurveyForm(forms.ModelForm):
     class Meta:
         model = SpiritualActivitiesSurvey
         exclude=['family_attend_church','personal_prayer','personal_baptism','personal_bible_reading','personal_prayer_aloud']
-
+    def clean(self):
+       cleaned_data = super(SpiritualActivitiesSurveyForm, self).clean()
+       personal_attend_church = cleaned_data.get("personal_attend_church")
+       frequency_of_attending = cleaned_data.get("frequency_of_attending")
+       msg = _(u"This field is required.")
+       if (personal_attend_church == 'Y'):
+           if(frequency_of_attending==None or frequency_of_attending==''):
+               self.add_error('frequency_of_attending', msg)
 class DisciplineForm(forms.ModelForm):
     incident_date = forms.DateField(label=_('Incident Date'),widget=Html5DateInput)
     class Meta:
