@@ -16,6 +16,9 @@ from datetime import date
 from django.core.urlresolvers import resolve, reverse
 from django.utils.translation import activate, get_language
 
+import subprocess
+import os
+
 register = template.Library()
 @register.filter(name='frequency_display')
 def frequency_display(value):
@@ -175,3 +178,8 @@ def change_lang(context, lang=None, *args, **kwargs):
         activate(cur_language)
 
     return "%s" % url
+
+@register.simple_tag(takes_context=False)
+def get_version():
+  os.chdir('/var/www/jethro-staging') 
+  return subprocess.check_output(["git","describe"]) 
