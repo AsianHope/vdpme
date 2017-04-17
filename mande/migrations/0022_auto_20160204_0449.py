@@ -82,5 +82,9 @@ class Migration(migrations.Migration):
             name='grade_previous',
             field=models.IntegerField(default=1, verbose_name=b'Last Grade attended (if not in school)', choices=[(-1, b'Not Applicable'), (0, b'Not Enrolled'), (1, b'Grade 1'), (2, b'Grade 2'), (3, b'Grade 3'), (4, b'Grade 4'), (5, b'Grade 5'), (6, b'Grade 6'), (50, b'English'), (60, b'Computers'), (70, b'Vietnamese'), (999, b'No Grade / Never Studied')]),
             preserve_default=True,
-        )
+        ),
+        migrations.AlterUniqueTogether(
+            name='attendancedayoffering',
+            unique_together=set([('classroom_id', 'date')]),
+        ),
     ]
