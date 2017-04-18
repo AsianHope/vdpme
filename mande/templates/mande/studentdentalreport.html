@@ -2,7 +2,12 @@
 {% load i18n %}
 {% load mandefilters %}
 {% block title %}
-{% blocktrans %}Student Dental Report for {{current_site}}{% endblocktrans %}
+{% trans 'Student Dental Report for' %}​
+{% if current_site and current_site == 'All Site' %}
+{% trans current_site%}
+{%else%}
+{{current_site}}
+{%endif%}
 {% endblock %}
 
 {% block content %}

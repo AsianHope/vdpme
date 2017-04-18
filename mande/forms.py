@@ -36,10 +36,10 @@ class Html5DateInput(forms.DateInput):
 class IntakeSurveyForm(forms.ModelForm):
     date = forms.DateField(label=_('Survey Date'),widget=Html5DateInput,initial=date.today().isoformat())
     dob =  forms.DateField(label=_('Date of Birth'),widget=Html5DateInput)
-    address = forms.CharField( widget=forms.Textarea(attrs={'rows': 4}))
-    notes = forms.CharField( widget=forms.Textarea(attrs={'rows': 4}),required=False)
+    address = forms.CharField(label=_('Home Address'),widget=forms.Textarea(attrs={'rows': 4}))
+    notes = forms.CharField(label=_('Notes'),widget=forms.Textarea(attrs={'rows': 4}),required=False)
     enrollment_date = forms.DateField(label=_('Enrollment Date'),widget=Html5DateInput)
-    starting_grade = forms.ChoiceField(choices=GRADES)
+    starting_grade = forms.ChoiceField(label=_('Starting Grade'),choices=GRADES)
 
     class Meta:
         model = IntakeSurvey
@@ -173,7 +173,7 @@ class AcademicForm(forms.ModelForm):
         exclude = []
 
 class HealthForm(forms.ModelForm):
-    appointment_date = forms.DateField(label=_('Appointment Date'),widget=Html5DateInput,initial=date.today().isoformat())
+    appointment_date = forms.DateField(label=_('Appointment date'),widget=Html5DateInput,initial=date.today().isoformat())
     class Meta:
         model = Health
         exclude=[]
@@ -221,10 +221,10 @@ class StudentEvaluationForm(forms.ModelForm):
         exclude = []
 
 class StudentPublicSchoolHistoryForm(forms.ModelForm):
-    status = forms.ChoiceField(label='Enrolled in public school',choices=YESNO,initial='Y')
-    enroll_date = forms.DateField(label='From Date',widget=Html5DateInput)
-    drop_date = forms.DateField(label='To Date',widget=Html5DateInput,required=False)
-    reasons = forms.CharField( widget=forms.Textarea(attrs={'rows': 5}),required=False)
+    status = forms.ChoiceField(label=_('Enrolled in Public School'),choices=YESNO,initial='Y')
+    enroll_date = forms.DateField(label=_('From Date'),widget=Html5DateInput)
+    drop_date = forms.DateField(label=_('To Date'),widget=Html5DateInput,required=False)
+    reasons = forms.CharField(label=_('Reasons'),widget=forms.Textarea(attrs={'rows': 5}),required=False)
     def clean(self):
         cleaned_data = super(StudentPublicSchoolHistoryForm, self).clean()
         status = cleaned_data.get("status")

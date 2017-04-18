@@ -12,6 +12,7 @@ from mande.models import YN
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from datetime import date
+from django.conf import settings
 
 from django.core.urlresolvers import resolve, reverse
 from django.utils.translation import activate, get_language
@@ -20,6 +21,11 @@ import subprocess
 import os
 
 register = template.Library()
+
+@register.filter(name='trim')
+def trim(value):
+    return value.strip()
+
 @register.filter(name='frequency_display')
 def frequency_display(value):
     if value is None:
@@ -181,5 +187,5 @@ def change_lang(context, lang=None, *args, **kwargs):
 
 @register.simple_tag(takes_context=False)
 def get_version():
-  os.chdir('/var/www/jethro-staging') 
-  return subprocess.check_output(["git","describe"]) 
+    os.chdir(settings.BASE_DIR)
+    return subprocess.check_output(["git","describe"])

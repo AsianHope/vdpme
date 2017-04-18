@@ -186,7 +186,7 @@ msgid "Date"
 msgstr "ការបរិច្ឆេទ"
 
 msgid "SID"
-msgstr "SID"
+msgstr "ID សិស្ស​"
 
 # ---------------- advanced report---------
 msgid "Go Back to Filter"
@@ -262,25 +262,25 @@ msgid "Minors"
 msgstr "អនីតិជន"
 
 msgid "Minors Encouraged"
-msgstr "Minors Encouraged"
+msgstr "ការលើកទឹកចិត្តលើការងាររបស់អនីតិជន"
 
 msgid "Minors In Other School"
-msgstr "Minors In Other School"
+msgstr "អនីតិជនដែលរៀនសាលាផ្សេង"
 
 msgid "Minors In Public School"
-msgstr "Minors In Public School"
+msgstr "អនីតិជនដែលរៀនសាលារដ្ឌ"
 
 msgid "Minors Profession"
-msgstr "Minors Profession"
+msgstr "ការងាររបស់អនីតិជន"
 
 msgid "Minors Training"
-msgstr "Minors Training"
+msgstr "ការទទូលបានការបណ្តុះបណ្តាលបស់អនីតិជន"
 
 msgid "Minors Training Type"
-msgstr "Minors Training Type"
+msgstr "ប្រភេទនៃការបណ្តុះបណ្តាលបស់អនីតិជន"
 
 msgid "Minors Working"
-msgstr "អនីតិជន កំពុងធ្វើការ"
+msgstr "អនីតិជនកំពុងធ្វើការ"
 
 msgid "Public School Name"
 msgstr "ឈ្មោះសាលារដ្ឋ"
@@ -292,15 +292,21 @@ msgid "VDP Grade"
 msgstr "កម្រិត​ថ្នាក់នៅ​ VDP"
 
 msgid "Date of Intake"
-msgstr "កាលបរិច្ឆេទចូល"
+msgstr "កាលបរិច្ឆេទចូល​VDP"
 
-msgid "Date of birth"
+msgid "Date of Birth"
 msgstr "ថ្ងៃ/ខែ/ឆ្នាំ កំណើត"
 
-msgid "Current grade in Public School"
+msgid "Current Grade in Public School"
 msgstr "កម្រិតថ្នាក់​បច្ចុប្បន្ននៅ​សាលារដ្ឋ"
 
-msgid "Last grade in Public School"
+msgid "Grade Current"
+msgstr "កម្រិតថ្នាក់​បច្ចុប្បន្ននៅ​សាលារដ្ឋ"
+
+msgid "Last Grade in Public School"
+msgstr "កម្រិតថ្នាក់​ចុងក្រោយ​នៅ​សាលារដ្ឋ"
+
+msgid "Grade Last"
 msgstr "កម្រិតថ្នាក់​ចុងក្រោយ​នៅ​សាលារដ្ឋ"
 
 msgid "Reasons not Attending School"
@@ -367,7 +373,7 @@ msgid "Select Guardian 2 Relationship"
 msgstr "ជ្រើស​រើស​ ទំនាក់​ទំនង​ជាមួយ​អាណាព្យាបាលទី២"
 
 msgid "Select Minors Encouraged"
-msgstr "Select Minors Encouraged"
+msgstr "ជ្រើសរើសការលើកទឹកចិត្តលើការងាររបស់អនីតិជន"
 
 msgid "Yes"
 msgstr "មាន"
@@ -379,7 +385,7 @@ msgid "Not Applicable"
 msgstr "មិនអាច​អនុវត្ត​បាន​"
 
 msgid "Select Minors Training"
-msgstr "Select Minors Training"
+msgstr "ជ្រើសរើសការទទូលបានការបណ្តុះបណ្តាលបស់អនីតិជន"
 
 msgid "Select VDP Grade"
 msgstr "ជ្រើសរើសកម្រិតថ្នាក់​នៅ​ VDP"
@@ -440,19 +446,19 @@ msgid "Update Attendance"
 msgstr "បន្ទាន់សម័យ វត្តមាន"
 
 msgid "Intake Date"
-msgstr "កាលបរិច្ឆេទចូល"
+msgstr "កាលបរិច្ឆេទចូល VDP"
 
 msgid "Apply this calendar to all classes at "
-msgstr "អនុវត្តប្រតិទិននេះនៅ "
+msgstr "អនុវត្តកាលវិភាគនេះទៅកាន់ថ្នាក់ទាំងអស់នៅ"
 
 msgid "Edit"
 msgstr "កែសម្រួល"
 
 msgid "Modify Attendance Calendar"
-msgstr "កែប្រែ​ប្រតិទិន​វត្តមាន"
+msgstr "កែប្រែ​កាលវិភាគ"
 
 msgid "Academic performance for"
-msgstr "ប្រតិបត្តិការណ៏សិក្សា​សម្រាប់​"
+msgstr "ការបញ្ចូូលលទ្ធិផលប្រលងសម្រាប់"
 
 msgid "Attendance Summary Report"
 msgstr "របាយការណ៏​វត្តមាន​សង្ខេប​"
@@ -575,10 +581,10 @@ msgid "Perform post-exit survey for this student"
 msgstr "អនុវត្ត​ការ​លប់​ឈ្មោះ​សិស្ស​នេះ​ចេញ​ពី​សាលា​រៀន​"
 
 msgid "Exit Survey performed on "
-msgstr "ការបញ្ឈប់​ការ​សិក្សា​ត្រូវ​បាន​ធ្វើ​លើ​ "
+msgstr "ការបញ្ឈប់​ការ​សិក្សា​ត្រូវ​បាន​ធ្វើ​នៅ​ថ្ថៃ "
 
 msgid "Student will leave the program on "
-msgstr "សិស្ស​នឹង​ចាក​ចេញ​ពី​កម្ម​វិធី​នៅ​កាល​បរិច្ឆេទ "
+msgstr "សិស្ស​នឹង​ចាក​ចេញ​ពី​កម្ម​វិធី​នៅ​ថ្ថៃ "
 
 msgid " A post-exit survey has been performed"
 msgstr " ការ​លុប​ឈ្មោះសិស្ស​ចេញ​ពីសាលារៀន​ត្រូវ​បាន​អនុវត្ត​"
@@ -887,7 +893,16 @@ msgid "Clear Search"
 msgstr "លុបការស្វែងរក"
 
 msgid "Performing Spiritual Activities Survey"
-msgstr "អនុវត្ត​ការស្ទង់​មតិលើ​សកម្មភាពទាក់ទង​នឹង​​វិញ្ញាណ"
+msgstr "អនុវត្តការស្ទង់​មតិលើ​សកម្មភាពនៃសេចក្តីជំនឿ"
+
+msgid "Adding Spiritual Activities Survey"
+msgstr "បន្ថែម​ការស្ទង់​មតិលើ​សកម្មភាពនៃសេចក្តីជំនឿ"
+
+msgid "Adding Spiritual Activities Survey for"
+msgstr "បន្ថែម​ការស្ទង់​មតិលើ​សកម្មភាពនៃសេចក្តីជំនឿសម្រាប់"
+
+msgid "Editing Spiritual Activities Survey for"
+msgstr "កែសម្រួលការស្ទង់​មតិលើ​សកម្មភាពនៃសេចក្តីជំនឿសម្រាប់"
 
 msgid "Student Achievement Test Report"
 msgstr "របាយការណ៏នៃការសម្រេច​ការប្រលង​របស់​សិស្ស​"
@@ -935,7 +950,7 @@ msgid "Hygiene"
 msgstr "អនាម័យ"
 
 msgid "Please select a classroom."
-msgstr "សូម​ជ្រើ​ស​រើស​ថ្នាក់​រៀន​មួយ​"
+msgstr "សូម​ជ្រើ​ស​រើស​ថ្នាក់​រៀន​មួយ​។"
 
 msgid "Evaluation Date"
 msgstr "កាលបរិច្ឆេទ​ការវាយ​តម្លៃ"
@@ -1042,7 +1057,7 @@ msgstr "កាលបរិច្ឆេទ​ ការស្ទង់​មត�
 msgid "Early Exit (before achieveing age appropriate level)"
 msgstr "ឈប់​មុន​ពេល​ (មិនទាន់​បាន​សម្រាច់​កម្រិច​សមស្របនឹងអាយុ​)"
 
-msgid "Public School Grade at exit"
+msgid "Public School Grade at Exit"
 msgstr "កម្រិត​ថ្នាក់​សាលា​រដ្ឋ​នា​ពេល​ឈប់​"
 
 msgid "Reason for Leaving Early"
@@ -1218,7 +1233,7 @@ msgid "Check-up"
 msgstr "ពិនិត្យ"
 
 msgid "Editing Attendance Calendar For"
-msgstr "កំពុង​កែសម្រួល​ប្រតិទិន​ស្រង់​វត្ត​មាន​សម្រាប់"
+msgstr "កែសម្រួល​កាលវិភាគ​សម្រាប់"
 
 msgid "Notification Log"
 msgstr "កំណត់​ហេតុ​ សារជូនដំណឹង"
@@ -1292,7 +1307,7 @@ msgid "View Details"
 msgstr "មើល​ពត៌មាន​លម្អិ​ត"
 
 # ---- intake internal--------------------------
-msgid "Starting grade"
+msgid "Starting Grade"
 msgstr "កម្រិត​ថ្នាក់​ចាប់​ផ្តើម​"
 
 #  --- intake update  -------
@@ -1452,7 +1467,7 @@ msgid "Once every 1-2 months"
 msgstr "ម្តងក្នុងមួយរឺពីរខែ"
 
 msgid "Once or twice per year"
-msgstr "ម្តងរីពីដងក្នុងមួយអាទិត្យ"
+msgstr "ម្តងរីពីដងក្នុងមួយឆ្នាំ"
 
 msgid "Not Entered"
 msgstr "មិនបានបញ្ចូល"
@@ -1474,3 +1489,90 @@ msgstr "+ បន្ថែមការពិនិត្យ"
 
 msgid "Promoted?"
 msgstr "តម្លើងថ្នាក់?"
+
+msgid "Did the student attend church within the past 6 months?"
+msgstr "តើសិស្សបាន​ទៅ​ព្រះវិហារ​ទេនៅក្នុងរយះពេល៦ខែកន្លងមក?"
+
+msgid "Attendance taken/available to be taken on"
+msgstr "វត្តមានបានស្រងរឺអាចស្រងបាននៅថ្ងៃ"
+
+msgid "Modify attendance calendar for"
+msgstr "កែប្រែកាលវិភាគសម្រាប់"
+
+msgid "Modify Master Attendance Calendar"
+msgstr "កែប្រែកាលវិភាគមេ"
+
+msgid "Clear"
+msgstr "លុបការស្វែងរក"
+
+msgid "Filters"
+msgstr "ច្រោះយក"
+
+msgid "No Public School History"
+msgstr "គ្មានប្រវត្តិសាលារដ្ឌ"
+
+msgid "Missing"
+msgstr "បាត់"
+
+msgid "Incorrect DOB"
+msgstr "ខុសថ្ថៃខែឆ្នាំកំណើត"
+
+msgid "Not enrolled in any classes"
+msgstr "មិនបានចុះឈ្មោះចូលរៀនក្នុងថ្នាក់ណាមួយ"
+
+msgid "Has never attended class"
+msgstr "មិនដែលចូលរៀន"
+
+msgid "Unapproved absence with no comment"
+msgstr "អវត្តមាន​ដោយ​គ្មាន​ការអនុញ្ញាត្តិហើយ​គ្មាន​មតិ"
+
+msgid "Unapproved abscence with no comment - missing class id"
+msgstr "អវត្តមាន​ដោយ​គ្មាន​ការអនុញ្ញាត្តិហើយ​គ្មាន​មតិ-បាត់ថ្នាក់ ID"
+
+msgid "Post Exit Survey"
+msgstr "​ការ​លប់​ឈ្មោះសិស្ស​ពីសាលា​"
+
+msgid "Filter Classrooms"
+msgstr "ច្រោះតាមថ្នាក់រៀន"
+
+msgid "Student Dental Report for"
+msgstr "របាយការណ៏ធ្មេញ​របស់សិស្ស​សម្រាប់"
+
+msgid "VDP Class"
+msgstr "ថ្នាក់ VDP"
+
+msgid "Age"
+msgstr "អាយុ"
+
+msgid "VDP Enrollment Date"
+msgstr "កាលបរិច្ឆេទ​ចុះ​ឈ្មោះ​នៅ​ VDP"
+
+msgid "From Date"
+msgstr "ចាប់ពី"
+
+msgid "To Date"
+msgstr "រហូតដល់"
+
+msgid "Delete"
+msgstr "លុប"
+
+msgid "Teacher"
+msgstr "គ្រូ​"
+
+msgid "Adding"
+msgstr "បន្ថែម"
+
+msgid "Academic test currently locked"
+msgstr "ការបញ្ចូូលលទ្ធិផលប្រលងគឺត្រូវបានចាក់សោ"
+
+msgid "Academic tests currently locked"
+msgstr "ការបញ្ចូូលលទ្ធិផលប្រលងគឺត្រូវបានចាក់សោ"
+
+msgid "a Public School History for"
+msgstr "បន្ថែម​ប្រវត្តិ​សាលា​រដ្ឋ​មួយ​សម្រាប់"
+
+msgid "Enrolled in Public School"
+msgstr "ចុះ​ឈ្មោះ​ចូលរៀនក្នុង​សាលា​រដ្ឋ"
+
+msgid "Select School Year"
+msgstr "ជ្រើសរើសឆ្នាំសិក្សា"

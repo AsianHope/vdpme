@@ -3,9 +3,8 @@
 {% load bootstrap %}
 {% load mandefilters %}
 {% block title %}
-{{action}} a Public School History for {{student_id|name_by_sid}}
+{% trans action %} {% trans 'a Public School History for'%} {{student_id|name_by_sid}}
 {% endblock %}
-
 {% block content %}
 <div class="col-md-9">
 <form method="post">
@@ -19,8 +18,8 @@
     {{form.school_name|bootstrap}}
     {{form.reasons|bootstrap}}
     <div class="form-group">
-      <button type="submit" class="btn btn-primary">Submit</button>
-      <button type="submit" class="btn btn-warning" name="cancel" style="float:right;">Cancel</button>
+      <button type="submit" class="btn btn-primary">{% trans 'Submit' %}</button>
+      <button type="submit" class="btn btn-warning" name="cancel" style="float:right;">{% trans 'Cancel' %}</button>
     </div>
 </form>
 </div>

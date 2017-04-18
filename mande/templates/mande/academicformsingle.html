@@ -14,7 +14,7 @@
 <form action = "{% url 'academic_form_single' student_id %}?next={{next_url}}" method="post">
 {% endif %}
 {% if locked == True %}
-  {% trans ' Academic test currently locked' %}
+  {% trans 'Academic test currently locked' %}
 {% else %}
 <div class="form-group table-responsive">
   <table class="table table-bordered table-striped table-hover" id="academicTable">

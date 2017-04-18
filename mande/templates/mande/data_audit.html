@@ -27,13 +27,18 @@
       </table>
     </div>
 <div class="col-md-3">
-  <h3>Filters</h3>
+  <h3>{% trans "Filters" %}</h3>
   <ul class = "buttonlist">
 
     {% for filter in filters %}
-    <li><a role = "button" class="btn btn-sm btn-info" onclick ="table.search('{{filter|escapejs}}').draw();" href='#'>{{filter}}</a></li>
+    <li>
+      <a role = "button" class="btn btn-sm btn-info" onclick ="table.search('{{filter|escapejs}}').draw();" href='#'>
+        {% with foo=filter|trim %}
+            {% trans foo %}
+        {% endwith %}
+    </a></li>
     {% endfor %}
-    <li><a role = "button" class="btn btn-sm btn-warning" onclick="table.search('').draw()" href="#">Clear Search</a></li>
+    <li><a role = "button" class="btn btn-sm btn-warning" onclick="table.search('').draw()" href="#">{% trans 'Clear Search' %}</a></li>
   </ul>
   </div>
 

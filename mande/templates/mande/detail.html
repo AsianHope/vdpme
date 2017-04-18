@@ -132,7 +132,7 @@
               <td>{{ survey.gender }}</td>
             </tr>
             <tr>
-              <td>{% trans "VDP Class: " %}</td>
+              <td>{% trans "VDP Class" %}:</td>
               <td>
                 {% with classroom=survey.student_id|student_classroom%}
                   {% if classroom|length > 0%}
@@ -153,11 +153,11 @@
               <td>{{ survey.dob|date:'d N Y'}}</td>
             </tr>
             <tr>
-              <td>{% trans "Age: " %}</td>
+              <td>{% trans "Age" %}:</td>
               <td>{{survey.dob|timesince}} old</td>
             </tr>
             <tr>
-              <td>{% trans "VDP Enrollment Date: " %}</td>
+              <td>{% trans "VDP Enrollment Date" %}:</td>
               <td>{% firstof recent_intake.enrollment_date|date:'d N Y' "Not yet enrolled" %}</td>
             </tr>
           </table>
@@ -167,16 +167,16 @@
     <div class = "table-responsive">
       <table class="table table-striped table-hover">
           <tr>
-            <td>{% trans "Guardian 1: " %} ({% firstof survey.guardian1_relationship|relationship_display "Not Entered"%})</td>
+            <td>{% trans "Guardian 1" %}: ({% firstof survey.guardian1_relationship|relationship_display "Not Entered"%})</td>
             <td>{% firstof survey.guardian1_name "Not Entered"%} - {% firstof survey.guardian1_phone "Not Entered"%}</td>
           </tr>
           <tr>
-            <td>{% trans "Guardian 2: " %} ({% firstof survey.guardian2_relationship|relationship_display "Not Entered"%})</td>
+            <td>{% trans "Guardian 2" %}: ({% firstof survey.guardian2_relationship|relationship_display "Not Entered"%})</td>
             <td>{% firstof survey.guardian2_name "Not Entered"%} - {% firstof survey.guardian2_phone "Not Entered"%}</td>
           </tr>
           {% if pschool and pschool.status == 'Y' %}
           <tr>
-            <td>{% trans "Public School Grade: " %}</td>
+            <td>{% trans "Public School Grade" %}:</td>
             <td>{% firstof pschool.grade|grade_by_id "Not Entered"%}</td>
           </tr>
           <tr>
@@ -185,11 +185,11 @@
           </tr>
           {% else %}
           <tr>
-            <td>{% trans "Public School Grade: " %}</td>
+            <td>{% trans "Public School Grade" %}:</td>
             <td>Not Enrolled</td>
           </tr>
           <tr>
-            <td>{% trans "Reasons: " %}</td>
+            <td>{% trans "Reasons" %}:</td>
             <td>{% firstof pschool.reasons "Not Entered"%}</td>
           </tr>
           {% endif %}
@@ -390,7 +390,7 @@
         <table class="table table-bordered table-striped table-hover" id="publicSchoolHistory">
           <thead>
             <tr>
-              <th>{% trans "Edit" %}{% trans "Delete" %}</th>
+              <th>{% trans "Edit" %} {% trans "Delete" %}</th>
               <th>{% trans "From Date" %}</th>
               <th>{% trans "To Date" %}</th>
               <th>{% trans "Grade" %}</th>

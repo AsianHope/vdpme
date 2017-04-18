@@ -143,8 +143,9 @@ class PublicSchoolHistoryAdmin(admin.ModelAdmin):
     list_filter = ('status','grade')
 
 class AcademicMarkingPeriodAdmin(admin.ModelAdmin):
-    list_display = ('description','test_date','marking_period_start','marking_period_end')
+    list_display = ('test_date','marking_period_start','marking_period_end','description',)
     list_filter = ('test_date',)
+    search_fields = ['description']
 
 admin.site.register(School,SchoolAdmin)
 admin.site.register(Classroom,ClassroomAdmin)

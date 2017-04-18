@@ -4,9 +4,14 @@
 {% load bootstrap %}
 {% block title %}
 {% if student_id and student_id != '0' %}
-{% blocktrans %}{{action}}Spiritual Activities Survey for {{student_id|name_by_sid}}{% endblocktrans %}
+{% with spi=action|add:' Spiritual Activities Survey for' %}
+    {% trans spi %} {{student_id|name_by_sid}}
+{% endwith %}
 {% else %}
-{% blocktrans %}{{action}} Spiritual Activities Survey{% endblocktrans %}
+{% with foo=action|add:' Spiritual Activities Survey' %}
+    {% trans foo %}
+{% endwith %}
+<!-- {% trans action %}{% trans 'Spiritual Activities Survey' %} -->
 {% endif%}
 
 {% endblock %}

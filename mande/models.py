@@ -401,7 +401,7 @@ class IntakeSurvey(models.Model):
 class IntakeInternal(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey,unique=True,verbose_name=_('Student ID'))
 	enrollment_date = models.DateField(_('Enrollment Date'))
-	starting_grade = models.IntegerField(_('Starting grade'),choices=GRADES,default=1)
+	starting_grade = models.IntegerField(_('Starting Grade'),choices=GRADES,default=1)
 
 	def __unicode__(self):
 		return unicode(self.student_id)
@@ -434,7 +434,7 @@ class IntakeUpdate(models.Model):
 	minors_training = models.CharField(_('Did they receive any vocational training?'),max_length=2,choices=YN,default='NA')
 	minors_training_type = models.CharField(_('What kind of vocational training did they receive?'),max_length=256,default='NA',blank=True)
 
-	notes = models.TextField('Notes',default='NA',blank=True)
+	notes = models.TextField(_('Notes'),default='NA',blank=True)
 
 	def __unicode__(self):
 		return unicode(self.date)+' - '+unicode(self.student_id)
@@ -481,7 +481,7 @@ class ExitSurvey(models.Model):
 	survey_date = models.DateField(_('Exit Survey Performed'),default=datetime.date.today)
 	exit_date = models.DateField(_('Exit Date'))
 	early_exit = models.CharField(_('Early Exit (before achieveing age appropriate level)'),max_length=2,choices=YN,default='NA')
-	last_grade = models.IntegerField(_('Public School Grade at exit'),choices=GRADES,default=1)
+	last_grade = models.IntegerField(_('Public School Grade at Exit'),choices=GRADES,default=1)
 	early_exit_reason = models.CharField(_('Reason for Leaving Early'),choices=EXIT_REASONS,max_length=32)
 	early_exit_comment = models.TextField(_('Comment'),blank=True)
 	secondary_enrollment = models.CharField(_('Plan to enroll in secondary school?'),max_length=2,choices=YN,default='NA')

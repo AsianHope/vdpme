@@ -2,12 +2,12 @@
 {% load i18n %}
 {% load mandefilters %}
 {% block title %}
-{% trans "Academic performace for " %}{{classroom.school_id}} ({{ classroom.get_cohort_display }} - {{classroom.classroom_number}})
+{% trans "Academic performance for" %} {{classroom.school_id}} ({{ classroom.get_cohort_display }} - {{classroom.classroom_number}})
 {% endblock %}
 
 {% block content %}
 {% if locked == True %}
-  {% trans ' Academic tests currently locked' %}
+  {% trans 'Academic tests currently locked' %}
 {% else %}
 <div class="col-md-9">
   <form method="post" action="{% url 'academic_form' classroom.school_id.school_id test_date classroom.classroom_id %}">
@@ -46,7 +46,7 @@
         </tbody>
         <tfoot>
           <tr><td colspan=6>
-              <button class="btn btn-primary">Submit</button>
+              <button class="btn btn-primary">{% trans 'Submit' %}</button>
           </td></tr>
         </tfoot>
 
@@ -56,7 +56,7 @@
 </div>
 <div class="col-md-3">
       <input type="date" name="attendance_date" class="form-control" id="datePicker"/>
-      <p style="color:red">{{ warning }}</p>
+      <p style="color:red">{{warning}}</p>
       <p style="color:green">{{ message }}</p>
       <ul>
         {% for classroom_by_school in classrooms_by_school %}

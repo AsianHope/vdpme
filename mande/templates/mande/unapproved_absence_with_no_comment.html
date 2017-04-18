@@ -34,11 +34,11 @@
     <form method="post" action="{% url 'unapproved_absence_with_no_comment' %}">
       {% csrf_token %}
       <select class="form-control" id="school_year">
-          <option value="" selected="selected">---Select School Year---</option>
+          <option value="" selected="selected">---{% trans "Select School Year" %}---</option>
           {% for school_year in school_year_list %}
           <option value="{{school_year}}">{{school_year}}-{{school_year|add:"1"}}</option>
           {% endfor%}
-          <option value="">Clear</option>
+          <option value="">{% trans "Clear" %}</option>
       <select>
     </form>
 </div>

@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load mandefilters %}
 {% block title %}
-{% trans "Student Evaluation Report " %}{% if selected_classroom %} {{selected_classroom}} {% endif %}
+{% trans "Student Evaluation Report" %}{% if selected_classroom %} {{selected_classroom}} {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -92,7 +92,7 @@ $(document).ready(function(){
       buttons: [
       ],
       oLanguage: {
-         "sSearch": "Filter Classrooms: "
+         "sSearch": "{% trans 'Filter Classrooms'%}: "
        }
   });
 });
