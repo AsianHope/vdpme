@@ -21,6 +21,7 @@ from mande.models import SCORES
 from mande.models import PublicSchoolHistory
 from mande.models import COHORTS
 from mande.models import YESNO
+from mande.models import AcademicMarkingPeriod
 
 from mande.utils import getEnrolledStudents
 
@@ -249,4 +250,12 @@ class StudentPublicSchoolHistoryForm(forms.ModelForm):
                     self.add_error('drop_date',msg)
     class Meta:
         model = PublicSchoolHistory
+        exclude = []
+class AcademicMarkingPeriodForm(forms.ModelForm):
+    test_date = forms.DateField(label=_('Test Date'),widget=Html5DateInput)
+    marking_period_start = forms.DateField(label=_('Marking Period Start Date'),widget=Html5DateInput)
+    marking_period_end = forms.DateField(label=_('Marking Period End Date'),widget=Html5DateInput)
+
+    class Meta:
+        model = AcademicMarkingPeriod
         exclude = []

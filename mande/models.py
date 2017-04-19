@@ -630,7 +630,7 @@ class PublicSchoolHistory(models.Model):
 			unique_together = (('student_id','grade','enroll_date'))
 
 class AcademicMarkingPeriod(models.Model):
-	description = models.CharField(_('Description'),max_length=128,blank=True)
+	description = models.CharField(_('Description'),max_length=128)
 	test_date = models.DateField(_('Test Date'))
 	marking_period_start = models.DateField(_('Marking Period Start'))
 	marking_period_end =  models.DateField(_('Marking Period End'))

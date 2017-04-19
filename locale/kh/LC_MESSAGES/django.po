@@ -1576,3 +1576,15 @@ msgstr "ចុះ​ឈ្មោះ​ចូលរៀនក្នុង​សា
 
 msgid "Select School Year"
 msgstr "ជ្រើសរើសឆ្នាំសិក្សា"
+
+msgid "Academic Marking Period"
+msgstr "ការសម្គាល់រយះពេលការបញ្ចូូលលទ្ធិផលប្រលង"
+
+msgid "Adding an Academic Marking Period"
+msgstr "បន្ថែមការសម្គាល់រយះពេលការបញ្ចូូលលទ្ធិផលប្រលង"
+
+msgid "Marking Period Start Date"
+msgstr "ថ្ងៃ​ចាប់ផ្តើមនៃការសម្គាល់រយះពេល"
+
+msgid "Marking Period End Date"
+msgstr "ថ្ងៃ​បញ្ចប់នៃការសម្គាល់រយះពេល"

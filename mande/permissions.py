@@ -57,6 +57,7 @@ perms_required = {
 	'publicschool_form': {'mande.view_publicschool_form'},
 	'delete_public_school': {'mande.view_delete_public_school'},
 	'save_photo': {'mande.view_save_photo'},
+	'academic_making_period': {'mande.view_academic_making_period'},
 
 
 }

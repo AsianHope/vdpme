@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load bootstrap %}
+{% load mandefilters %}
+{% block title %}
+{% trans 'Adding an Academic Marking Period'%}
+{% endblock %}
+{% block content %}
+<div class="col-md-9">
+<form method="post">
+    {{ form|bootstrap }}
+    {% csrf_token %}
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">{% trans 'Submit' %}</button>
+    </div>
+</form>
+</div>
+<div class="col-md-3">
+  {% if form_message.status == 'success'%}
+  <span  style="color:green;">{{form_message.sms}}</span>
+  {% else %}
+  <span  style="color:red;">{{form_message.sms}}</span>
+  {% endif %}
+</div>
+<div class="col-md-12">
+  <div class="col-md-12">
+    <h2>{% trans "Academic Marking Period" %}</h2>
+    <table id="marking_period" class="table table-border table-striped table-hover">
+      <thead>
+          <tr>
+            <th>{% trans "Description" %}</th>
+            <th>{% trans "Test Date" %}</th>
+            <th>{% trans "Marking Period Start Date" %}</th>
+            <th>{% trans "Marking Period End Date" %}</th>
+          </tr>
+        </thead>
+        {% for marking_period in marking_periods %}
+        <tr>
+          <td>{{marking_period.description}}</td>
+          <td>{{marking_period.test_date}}</td>
+          <td>{{marking_period.marking_period_start}}</td>
+          <td>{{marking_period.marking_period_end}}</td>
+        </tr>
+        {% endfor %}
+      </table>
+  </div>
+</div>
+{% endblock %}
+{% block script %}
+<script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#marking_period').DataTable({
+      responsive: true,
+      pageLength: 5,
+  });
+});
+</script>
+{% endblock %}

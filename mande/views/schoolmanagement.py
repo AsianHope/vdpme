@@ -62,6 +62,7 @@ from mande.forms import IntakeInternalForm
 from mande.forms import HealthForm
 from mande.forms import StudentEvaluationForm
 from mande.forms import StudentPublicSchoolHistoryForm
+from mande.forms import AcademicMarkingPeriodForm
 
 from mande.utils import getEnrolledStudents
 from mande.utils import getStudentGradebyID
@@ -949,5 +950,39 @@ def save_photo(request):
            except Exception as e:
                messages.error(request,'Fail to update student photo! ('+str(e)+')',extra_tags='save_photo')
         return HttpResponseRedirect(reverse('student_detail',kwargs={'student_id':student_id}))
+    else:
+        raise PermissionDenied
+
+'''
+*****************************************************************************
+Academic Marking Period
+ - Academic Making Period Form
+*****************************************************************************
+'''
+def academic_making_period(request):
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+        marking_periods = AcademicMarkingPeriod.objects.all()
+        form = AcademicMarkingPeriodForm()
+        form_message = {'status':''};
+        if request.method == 'POST':
+          form = AcademicMarkingPeriodForm(request.POST)
+          if form.is_valid():
+              #process
+              instance = form.save()
+              message = 'Added an Academics Marking Period ('+instance.description+')'
+              log = NotificationLog(user=request.user,
+                                    text=message,
+                                    font_awesome_icon='fa-calendar')
+              log.save()
+              form_message = {'status':'success','sms':'Successfully added an Academic Marking Period'};
+          else:
+              form_message = {'status':'error','sms':form.errors.as_text()};
+        context = {
+                'form': form,
+                'marking_periods':marking_periods,
+                'form_message':form_message
+                }
+        return render(request, 'mande/academicmarkingperiodform.html',context)
     else:
         raise PermissionDenied
