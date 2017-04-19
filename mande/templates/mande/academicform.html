@@ -2,7 +2,11 @@
 {% load i18n %}
 {% load mandefilters %}
 {% block title %}
-{% trans "Academic performance for" %} {{classroom.school_id}} ({{ classroom.get_cohort_display }} - {{classroom.classroom_number}})
+{% if locked == True %}
+  {% trans 'Sorry, you cannot change Academic Tests.' %}
+{% else %}
+  {% trans "Academic performance for" %} {{classroom.school_id}} ({{ classroom.get_cohort_display }} - {{classroom.classroom_number}})
+{% endif %}
 {% endblock %}
 
 {% block content %}

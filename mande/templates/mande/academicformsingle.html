@@ -3,7 +3,11 @@
 {% load bootstrap %}
 {% load mandefilters %}
 {% block title %}
-{% trans action %} {% trans "a Semester Test for" %} {{student_id|name_by_sid}}
+{% if locked == True %}
+  {% trans 'Sorry, you cannot change Academic Tests.' %}
+{% else %}
+  {% trans action %} {% trans "a Semester Test for" %} {{student_id|name_by_sid}}
+{% endif %}
 {% endblock %}
 
 {% block content %}

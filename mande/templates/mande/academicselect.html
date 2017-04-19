@@ -2,14 +2,18 @@
 {% load i18n %}
 {% load mandefilters %}
 {% block title %}
-{% trans 'Please select a classroom.' %}
+{% if locked == True %}
+ {% trans 'Sorry, you cannot change Academic Tests.' %}
+{% else %}
+  {% trans 'Please select a classroom.' %}
+{% endif %}
 {% endblock %}
 
 {% block content %}
 
   <div class="col-md-9">
     {% if locked == True %}
-     {% trans ' Academic tests currently locked' %}
+     {% trans 'Academic tests currently locked' %}
     {% else %}
     <table id="classroomDataTable" class="table table-bordered table-hover">
       <thead>

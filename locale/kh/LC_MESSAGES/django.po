@@ -1588,3 +1588,6 @@ msgstr "ថ្ងៃ​ចាប់ផ្តើមនៃការសម្គា
 
 msgid "Marking Period End Date"
 msgstr "ថ្ងៃ​បញ្ចប់នៃការសម្គាល់រយះពេល"
+
+msgid "Sorry, you cannot change Academic Tests."
+msgstr "សូមអភ័យទោសអក្នមិនអាចផ្លាស់ប្តូរលទ្ធិផលប្រលងបានទេ។"
