@@ -22,6 +22,11 @@ import os
 
 register = template.Library()
 
+@register.filter(name='concate')
+def concate(value,arg):
+    print arg
+    print '--------------'
+    return str(value)+str(arg)
 @register.filter(name='trim')
 def trim(value):
     return value.strip()

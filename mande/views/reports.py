@@ -710,7 +710,7 @@ M&E summary Report
  -
 *****************************************************************************
 '''
-def mande_summary_report(request,start_view_date=(date.today().replace(day=1)-timedelta(days=1 * 365/12)).isoformat(),view_date=(date.today().replace(day=1)-timedelta(days=1)).isoformat()):
+def mande_summary_report(request,start_view_date=date.today().isoformat(),view_date=date.today().isoformat()):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
@@ -718,153 +718,111 @@ def mande_summary_report(request,start_view_date=(date.today().replace(day=1)-ti
         schools = School.objects.all()
         exit_surveys = ExitSurvey.objects.filter(exit_date__lte=start_view_date).values_list('student_id',flat=True)
         students = IntakeSurvey.objects.exclude(student_id__in=exit_surveys).filter(date__lte=view_date)
-        enrolled_students = ClassroomEnrollment.objects.filter( Q( Q( Q(drop_date__gte=view_date) | Q(drop_date__gte=start_view_date) ) | Q(drop_date=None)) & Q(enrollment_date__lte=view_date) ).order_by('student_id')
 
-        students_by_site_grade =[]
-        students_by_site=[]
-        students_by_site_grade_plus_skill_vietnamese = []
-        students_enrolled_in_english_by_level = []
-        all_students = []
-        # get grades
-        get_grade = 0;
-        for grade in dict(GRADES):
-            if grade> 0 and grade<=6:
-                get_grade+=1
+        students_by_site_grade = {}
+        students_by_site_grade_plus_skill_vietnamese = {}
+        students_enrolled_in_english_by_level = {}
+        students_by_site= {}
+
         # get biggest english levle
         english_class_latest_level = Classroom.objects.filter(cohort=50).latest('classroom_number');
         english_biggest_level = int(english_class_latest_level.classroom_number.rsplit(None, 1)[-1])
         # generate_list of students group by site and grade
+
+        grades_level = range(1,7)
+        english_level = ['Level '+str(x) for x in range(1,english_biggest_level+1)]
+
+        # generate dict
         for school in schools:
-            students_by_site_grade.extend(
-                [
-                    {
-                    'school':school,
-                    'total':[],
-                    'total_student_appropriate_level':[],
-                    'grades':[{'grade'+str(i+1)+'':{'grade':i+1,'students':[],'students_appropriate_level':[],'not':[]}} for i in range(get_grade)],
-                    'vietnamese_only':[],
-                    }
-                ]
-            )
+           name = school.school_name
+           students_by_site_grade[name] = {}
+           students_by_site_grade_plus_skill_vietnamese[name] = {}
+           students_enrolled_in_english_by_level[name] = {}
+           students_by_site[name] = {'M':0,'F':0}
 
-            # students by site
-            students_by_site.extend([{'school':school,'students':[]}])
-            # student by site grade plus vietnamese
-            students_by_site_grade_plus_skill_vietnamese.extend(
-                [
-                    {
-                    'school':school,
-                    'vietnamese_only':[],
-                    'total':[],
-                    'grades':[{'grade'+str(i+1)+'':{'grade':i+1,'students':[]}} for i in range(get_grade)],
-                    }
-                ]
-            )
+           for a in grades_level:
+               students_by_site_grade[name][a] = {'M':0,'F':0}
+               students_by_site_grade[name]['appropriate'+str(a)] = {'M':0,'F':0}
 
-            students_enrolled_in_english_by_level.extend(
-                [
-                    {
-                        'school':school,
-                        'total':[],
-                        'english_classes':[{'english_level'+str(i+1)+'':{'level':'Level '+str(i+1),'students':[]}} for i in range(english_biggest_level)],
-                    }
-                ]
-            )
+               students_by_site_grade_plus_skill_vietnamese[name][a] = {'M':0,'F':0}
+
+           students_by_site_grade[name][70] = {'M':0,'F':0}
+           students_by_site_grade[name]['total'] = {'M':0,'F':0}
+
+           students_by_site_grade[name]['appropriate_total'] = {'M':0,'F':0}
+
+           students_by_site_grade_plus_skill_vietnamese[name][70] = {'M':0,'F':0}
+           students_by_site_grade_plus_skill_vietnamese[name]['total'] = {'M':0,'F':0}
+
+           for a in english_level:
+               students_enrolled_in_english_by_level[name][a] = {'M':0,'F':0}
+           students_enrolled_in_english_by_level[name]['total'] = {'M':0,'F':0}
 
         for student in students:
-            if student.current_vdp_grade(view_date) != 50:
-                # get student by site and grade
-                for student_by_site_grade in students_by_site_grade:
-                    if student_by_site_grade['school'] == student.getRecentFields(view_date)['site']:
-                        for grade in  student_by_site_grade['grades']:
-                            for i in range(get_grade):
-                                try:
-                                    if grade['grade'+str(i+1)+'']['grade'] == student.current_vdp_grade(view_date):
-                                        # Achieved age appropriate level
-                                        if (student.age_appropriate_grade(view_date) - student.current_vdp_grade(view_date)) < 1:
-                                            grade['grade'+str(i+1)+'']['students_appropriate_level'].append(student)
-                                            student_by_site_grade['total_student_appropriate_level'].append(student)
-                                        student_by_site_grade['total'].append(student)
-                                        grade['grade'+str(i+1)+'']['students'].append(student)
-                                    else:
-                                        if student.current_vdp_grade(view_date) == 70:
-                                            if i == get_grade-1:
-                                                student_by_site_grade['total'].append(student)
-                                                student_by_site_grade['vietnamese_only'].append(student)
-                                except:
-                                    pass
+            grade = student.current_vdp_grade(view_date)
+            site = student.site
+            gender = student.gender
 
-                # get student enrolleds plus skill vietnamese
-                for student_by_site_grade_plus_skill in students_by_site_grade_plus_skill_vietnamese:
-                    if student_by_site_grade_plus_skill['school'] == student.getRecentFields(view_date)['site']:
-                        for grade in  student_by_site_grade_plus_skill['grades']:
-                            only_vietnamese = []
-                            for i in range(get_grade):
-                                try:
-                                    if grade['grade'+str(i+1)+'']['grade'] == student.current_vdp_grade(view_date):
-                                        enrolleds = ClassroomEnrollment.objects.filter(Q(student_id=student) & Q(Q(classroom_id__cohort=student.current_vdp_grade(view_date)) | Q(classroom_id__cohort=70)) & Q( Q( Q(drop_date__gte=start_view_date) | Q(drop_date__gte=view_date)) | Q(drop_date=None)) &Q(enrollment_date__lte=view_date)
-                                            ).order_by('classroom_id__cohort')
-                                        # if student enrolled in more than class (grade + vietnamese)
-                                        if len(enrolleds)>1:
-                                            if(enrolleds[0].classroom_id.cohort==grade['grade'+str(i+1)+'']['grade']):
-                                                if(enrolleds[1].classroom_id.cohort==70):
-                                                    student_by_site_grade_plus_skill['total'].append(student)
-                                                    grade['grade'+str(i+1)+'']['students'].append(student)
+            # total student
+            students_by_site[unicode(site)][gender] +=1
 
-                                    else:
-                                        if student.current_vdp_grade(view_date) == 70:
-                                            if i == get_grade-1:
-                                                student_by_site_grade_plus_skill['total'].append(student)
-                                                student_by_site_grade_plus_skill['vietnamese_only'].append(student)
-                                except:
-                                    pass
+            if (grade >= 1 and grade <= 6) or grade == 70:
+               #    -----students_by_site_grade (catch-up school)----
+               students_by_site_grade[unicode(site)][grade][gender] +=1
+               students_by_site_grade[unicode(site)]['total'][gender] +=1
 
-            # if enrolled student is english class
-            if student.current_vdp_grade(view_date) == 50:
-                for student_enrolled_in_english_by_level in students_enrolled_in_english_by_level:
-                    if student_enrolled_in_english_by_level['school'] == student.site:
-                        english_student = None
-                        enrolleds = ClassroomEnrollment.objects.filter(Q(student_id=student) & Q(classroom_id__cohort=50) & Q( Q(Q(drop_date__gte=view_date)| Q(drop_date__gte=start_view_date)) | Q(drop_date=None) ) &Q(enrollment_date__lte=view_date)
-                            ).order_by('drop_date')
-                        # print enrolleds.filter(drop_date=None)
-                        if len(enrolleds) > 1:
-                            if len(enrolleds.filter(drop_date=None)) != 0:
-                                english_student = enrolleds.filter(drop_date=None).latest('enrollment_date')
-                            else:
-                                english_student = enrolleds.latest('drop_date')
-                        else:
-                            try:
-                                english_student = enrolleds[0]
-                            except:
-                                pass
-                        if english_student is not None:
-                            for english_class in  student_enrolled_in_english_by_level['english_classes']:
+               if grade in grades_level:
+                   #student appropriate level
+                   if (student.age_appropriate_grade(view_date) - grade < 1):
+                       students_by_site_grade[unicode(site)]["appropriate"+str(grade)][gender] +=1
+                       students_by_site_grade[unicode(site)]["appropriate_total"][gender] +=1
 
-                                for i in range(english_biggest_level):
-                                    try:
-                                        if(english_class['english_level'+str(i+1)+'']['level'] == english_student.classroom_id.classroom_number):
-                                            english_class['english_level'+str(i+1)+'']['students'].append(english_student.student_id)
-                                            student_enrolled_in_english_by_level['total'].append(english_student.student_id)
-                                    except:
-                                        pass
+                   #-------------students_by_site_grade_plus_skill_vietnamese-------------
 
+                   enrolleds = ClassroomEnrollment.objects.filter(Q(student_id=student) & Q(Q(classroom_id__cohort=grade) | Q(classroom_id__cohort=70)) & Q( Q( Q(drop_date__gte=start_view_date) | Q(drop_date__gte=view_date)) | Q(drop_date=None)) &Q(enrollment_date__lte=view_date)
+                        ).order_by('classroom_id__cohort')
+                   if len(enrolleds)>1:
+                     classroom_number = enrolleds[0].classroom_id.cohort
+                     classroom_number1 = enrolleds[1].classroom_id.cohort
 
-            # get all students by site
-            for student_by_site in students_by_site:
-                if student_by_site['school'] == student.getRecentFields(view_date)['site']:
-                    student_by_site['students'].append(student)
+                     if(classroom_number in grades_level) and (classroom_number1==70):
+                        students_by_site_grade_plus_skill_vietnamese[unicode(site)][grade][gender] +=1
+                        students_by_site_grade_plus_skill_vietnamese[unicode(site)]['total'][gender] +=1
+               else:
+                #    ------------vietnamese only (catch-up school)----------------
+                   students_by_site_grade_plus_skill_vietnamese[unicode(site)][grade][gender] +=1
+                   students_by_site_grade_plus_skill_vietnamese[unicode(site)]['total'][gender] +=1
+            # english student by level
+            elif grade == 50:
+                english_student = None
+                enrolleds = ClassroomEnrollment.objects.filter(Q(student_id=student) & Q(classroom_id__cohort=50) & Q( Q(Q(drop_date__gte=view_date)| Q(drop_date__gte=start_view_date)) | Q(drop_date=None) ) &Q(enrollment_date__lte=view_date)
+                ).order_by('drop_date')
+                if len(enrolleds) > 1:
+                    if len(enrolleds.filter(drop_date=None)) != 0:
+                        english_student = enrolleds.filter(drop_date=None).latest('enrollment_date')
+                    else:
+                        english_student = enrolleds.latest('drop_date')
+                else:
+                    try:
+                        english_student = enrolleds[0]
+                    except:
+                        pass
+                if english_student is not None:
+                    level = english_student.classroom_id.classroom_number
+                    students_enrolled_in_english_by_level[unicode(site)][level][gender] +=1
+                    students_enrolled_in_english_by_level[unicode(site)]['total'][gender] +=1
+
         return render(request, 'mande/mandesummaryreport.html',
                                 {
-                                    'students' : students,
                                     'view_date':view_date,
                                     'start_view_date':start_view_date,
                                     'schools':schools,
-                                    'grades':dict(GRADES),
                                     'students_by_site_grade' : students_by_site_grade,
                                     'students_by_site' : students_by_site,
                                     'students_by_site_grade_plus_skill_vietnamese':students_by_site_grade_plus_skill_vietnamese,
                                     'students_enrolled_in_english_by_level':students_enrolled_in_english_by_level,
-                                    'level':range(1,english_biggest_level+1)
+                                    'grades_level':grades_level,
+                                    'english_level':english_level
                                 })
     else:
       raise PermissionDenied

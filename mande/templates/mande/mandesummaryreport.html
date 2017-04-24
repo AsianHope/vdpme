@@ -9,57 +9,57 @@
     <div class="col-md-9">
       <h3>{% trans "Catch-up school" %}</h3>
       <table>
+        <tr>
         <td>
           <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
             <tr><th>&nbsp;</th></tr>
             <tr><td>&nbsp;</td></tr>
-            {% for grade_id,grade in grades.items %}
-              {% if grade_id >= 1 and grade_id <= 6 %}
+            {% for grade in grades_level %}
                 <tr>
                   <td>
-                    {{grade}}
+                    {%with "Grade "|concate:grade as g%}
+                    {% trans g %}
+                    {% endwith %}
                   </td>
                 </tr>
-              {% endif %}
             {% endfor %}
+            <tr><td>{% trans 'Vietnamese only' %}</td></tr>
+            <tr><td>{% trans 'Total' %}</td></tr>
+          </table>
+        </td>
+        {%for school,value in students_by_site_grade.items%}
+        <td>
+          <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
             <tr>
-              <td>{% trans "Vietnamese only" %}</td>
+              <th colspan="2">{{school}}</th>
             </tr>
             <tr>
-              <td>{% trans "Total:" %}</td>
+              <td>{% trans "Boys" %}</td><td>{% trans "Girls" %}</td>
+            </tr>
+            {% for grade in grades_level %}
+                <tr>
+                  <td>
+                    {%with data=value|get_item:grade%}
+                    {{ data.M }}
+                    {%endwith%}
+                  </td>
+                  <td>
+                    {%with data=value|get_item:grade%}
+                    {{ data.F }}
+                    {%endwith%}
+                  </td>
+                </tr>
+            {% endfor %}
+            <tr>
+              <td>{{value.70.M}}</td><td>{{value.70.F}}</td>
+            </tr>
+            <tr>
+              <td>{{value.total.M}}</td><td>{{value.total.F}}</td>
             </tr>
           </table>
         </td>
-        {% for student_by_site_grade in students_by_site_grade %}
-        <td>
-          <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
-              <tr>
-                <th colspan="2">{{student_by_site_grade.school}}</th>
-              </tr>
-              <tr>
-                <td>{% trans "Boys" %}</td><td>{% trans "Girls" %}</td>
-              </tr>
-              {% for grade in student_by_site_grade.grades %}
-              <tr>
-                  {% for k, v in grade.items %}
-                  <!-- <td>{{ k }}</td> -->
-                  <td>{{v.students | get_students_length_by_gender:'M'}}</td>
-                  <td>{{v.students | get_students_length_by_gender:'F'}}</td>
-                  {% endfor %}
-              </tr>
-              {% endfor %}
-              <tr>
-                <td>{{student_by_site_grade.vietnamese_only | get_students_length_by_gender:'M'}}</td>
-                <td>{{student_by_site_grade.vietnamese_only | get_students_length_by_gender:'F'}}</td>
-              </tr>
-              <tr>
-                <td>{{student_by_site_grade.total | get_students_length_by_gender:'M'}}</td>
-                <td>{{student_by_site_grade.total | get_students_length_by_gender:'F'}}</td>
-              </tr>
-            </table>
-          </td>
-          {% endfor %}
-        </tr>
+        {%endfor%}
+      </tr>
       </table>
     </div>
     <div class="col-md-3">
@@ -86,56 +86,51 @@
           <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
             <tr><th>&nbsp;</th></tr>
             <tr><td>&nbsp;</td></tr>
-            {% for grade_id,grade in grades.items %}
-              {% if grade_id >= 1 and grade_id <= 6 %}
+            {% for grade in grades_level %}
                 <tr>
                   <td>
-                    {{grade}} + {% trans "Vietnamese" %}
+                    {%with "Grade "|concate:grade as g%}
+                    {% trans g %} + {% trans "Vietnamese" %}
+                    {% endwith %}
                   </td>
                 </tr>
-              {% endif %}
             {% endfor %}
-            <tr>
-              <td>{% trans "Only Vietnamese" %}</td>
-            </tr>
-            <tr>
-              <td>{% trans "Total:" %}</td>
-            </tr>
+            <tr><td>{% trans 'Vietnamese only' %}</td></tr>
+            <tr><td>{% trans 'Total' %}</td></tr>
           </table>
         </td>
-        {% for student_by_site_grade_plus_skill_vietnamese in students_by_site_grade_plus_skill_vietnamese %}
-        <td>
-          <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
+          {%for school,value in students_by_site_grade_plus_skill_vietnamese.items%}
+          <td>
+            <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
               <tr>
-                <th colspan="2">{{student_by_site_grade_plus_skill_vietnamese.school}}</th>
+                <th colspan="2">{{school}}</th>
               </tr>
               <tr>
                 <td>{% trans "Boys" %}</td><td>{% trans "Girls" %}</td>
               </tr>
-              {% for grade in student_by_site_grade_plus_skill_vietnamese.grades %}
-              <tr>
-                  {% for k, v in grade.items %}
-                  <!-- <td>{{ k }}</td> -->
-                  <td>{{v.students | get_students_length_by_gender:'M'}}</td>
-                  <td>{{v.students | get_students_length_by_gender:'F'}}</td>
-                  {% endfor %}
-              </tr>
+              {% for grade in grades_level %}
+                  <tr>
+                    <td>
+                      {%with data=value|get_item:grade%}
+                      {{ data.M }}
+                      {%endwith%}
+                    </td>
+                    <td>
+                      {%with data=value|get_item:grade%}
+                      {{ data.F }}
+                      {%endwith%}
+                    </td>
+                  </tr>
               {% endfor %}
               <tr>
-                <td>
-                  {{student_by_site_grade_plus_skill_vietnamese.vietnamese_only | get_students_length_by_gender:'M'}}</td>
-                </td>
-                <td>
-                  {{student_by_site_grade_plus_skill_vietnamese.vietnamese_only | get_students_length_by_gender:'F'}}
-                </td>
+                <td>{{value.70.M}}</td><td>{{value.70.F}}</td>
               </tr>
               <tr>
-                <td>{{student_by_site_grade_plus_skill_vietnamese.total | get_students_length_by_gender:'M'}}</td>
-                <td>{{student_by_site_grade_plus_skill_vietnamese.total | get_students_length_by_gender:'F'}}</td>
+                <td>{{value.total.M}}</td><td>{{value.total.F}}</td>
               </tr>
             </table>
           </td>
-          {% endfor %}
+          {%endfor%}
         </tr>
       </table>
     </div>
@@ -146,42 +141,47 @@
           <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
             <tr><th>&nbsp;</th></tr>
             <tr><td>&nbsp;</td></tr>
-            {% for i in level %}
+            {% for level in english_level %}
                 <tr>
                   <td>
-                    {% blocktrans %}English level {{i}}{% endblocktrans %}
+                    {% trans level%}
                   </td>
                 </tr>
             {% endfor %}
             <tr>
-              <td>{% trans "Total:" %}</td>
+              <td>{% trans "Total" %}</td>
             </tr>
           </table>
         </td>
-        {% for student_enrolled_in_english_by_level in students_enrolled_in_english_by_level %}
+        {%for school,value in students_enrolled_in_english_by_level.items%}
         <td>
           <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
-              <tr>
-                <th colspan="2">{{student_enrolled_in_english_by_level.school}}</th>
-              </tr>
-              <tr>
-                <td>{% trans "Boys" %}</td><td>{% trans "Girls" %}</td>
-              </tr>
-              {% for english_class in student_enrolled_in_english_by_level.english_classes %}
-              <tr>
-                  {% for k, v in english_class.items %}
-                  <td>{{v.students | get_students_length_by_gender:'M'}}</td>
-                  <td>{{v.students | get_students_length_by_gender:'F'}}</td>
-                  {% endfor %}
-              </tr>
-              {% endfor %}
-              <tr>
-                <td>{{student_enrolled_in_english_by_level.total | get_students_length_by_gender:'M'}}</td>
-                <td>{{student_enrolled_in_english_by_level.total | get_students_length_by_gender:'F'}}</td>
-              </tr>
-            </table>
-          </td>
-          {% endfor %}
+            <tr>
+              <th colspan="2">{{school}}</th>
+            </tr>
+            <tr>
+              <td>{% trans "Boys" %}</td><td>{% trans "Girls" %}</td>
+            </tr>
+            {% for level in english_level %}
+                <tr>
+                  <td>
+                    {%with data=value|get_item:level%}
+                    {{ data.M }}
+                    {%endwith%}
+                  </td>
+                  <td>
+                    {%with data=value|get_item:level%}
+                    {{ data.F }}
+                    {%endwith%}
+                  </td>
+                </tr>
+            {% endfor %}
+            <tr>
+              <td>{{value.total.M}}</td><td>{{value.total.F}}</td>
+            </tr>
+          </table>
+        </td>
+        {%endfor%}
         </tr>
       </table>
     </div>
@@ -189,23 +189,23 @@
         <h3>{% trans "Total Students" %}</h3>
         <table>
           <tr>
-            {% for student_by_site in students_by_site %}
+            {%for school,value in students_by_site.items%}
             <td>
               <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
-                  <tr>
-                    <th colspan="2">{{student_by_site.school}}</th>
-                  </tr>
-                  <tr>
-                    <td>{% trans "Boys" %}</td>
-                    <td>{% trans "Girls" %}</td>
-                    </tr>
-                  <tr>
-                    <td>{{student_by_site.students | get_students_length_by_gender:'M'}}</td>
-                    <td>{{student_by_site.students | get_students_length_by_gender:'F'}}</td>
-                  </tr>
+                <tr>
+                  <th colspan="2">{{school}}</th>
+                </tr>
+                <tr>
+                  <td>{% trans "Boys" %}</td><td>{% trans "Girls" %}</td>
+                </tr>
+              </tr>
+              <tr>
+                <td>{{value.M}}</td>
+                <td>{{value.F}}</td>
+              </tr>
               </table>
             </td>
-            {% endfor %}
+            {%endfor%}
           </tr>
         </table>
     </div>
@@ -215,60 +215,72 @@
           <td>
             <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
               <tr><th>&nbsp;</th></tr>
-              <tr><td>{% trans "Grade" %}<br/>&nbsp;</td></tr>
-              {% for grade_id,grade in grades.items %}
-                {% if grade_id >= 1 and grade_id <= 6 %}
+              <tr><th>{% trans 'Grade' %}&nbsp;<br/><br/></th></tr>
+
+              {% for grade in grades_level %}
                   <tr>
                     <td>
-                      {{grade_id}}
+                      {{grade}}
                     </td>
                   </tr>
-                {% endif %}
               {% endfor %}
-              <tr>
-                <td>{% trans "Total:" %}</td>
-              </tr>
+              <tr><td>{% trans 'Total' %}</td></tr>
             </table>
           </td>
-          {% for student_by_site_grade in students_by_site_grade %}
+          {% for school,value in students_by_site_grade.items %}
           <td>
             <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
                 <tr>
-                  <th colspan="4">{{student_by_site_grade.school}}</th>
+                  <th colspan="4">{{school}}</th>
                 </tr>
                 <tr>
                   <td>{% trans "Boys" %}</td><td>% {% trans "of total" %}</td>
                   <td>{% trans "Girls" %}</td><td>% {% trans "of total" %}</td>
                 </tr>
-                {% for grade in student_by_site_grade.grades %}
-                <tr>
-                    {% for k, v in grade.items %}
-                    <!-- <td>{{ k }}</td> -->
-                    <td> {{v.students_appropriate_level | get_students_length_by_gender:'M'}} </td>
-                    <!--boys % of total  -->
-                    <td>
-                      {% widthratio v.students_appropriate_level|get_students_length_by_gender:'M' v.students|get_students_length_by_gender:'M' 100 %}
-                       %
-                    </td>
-                    <td> {{v.students_appropriate_level | get_students_length_by_gender:'F'}}</td>
-                    <!-- girls % of total -->
-                    <td>
-                      {% widthratio v.students_appropriate_level|get_students_length_by_gender:'F' v.students|get_students_length_by_gender:'F' 100 %}
-                       %
-                    </td>
-                    {% endfor %}
-                </tr>
+                {% for grade in grades_level %}
+                    <tr>
+                      <td>
+                        {%with g_appropriate='appropriate'|concate:grade%}
+                          {%with appropriate_data=value|get_item:g_appropriate%}
+                          {{ appropriate_data.M }}
+                          {%endwith%}
+                        {%endwith%}
+                      </td>
+                      <td>
+                        {%with g_appropriate='appropriate'|concate:grade%}
+                          {%with appropriate_data=value|get_item:g_appropriate data=value|get_item:grade%}
+                            {% widthratio appropriate_data.M data.M 100 %}%
+                          {%endwith%}
+                        {%endwith%}
+                      </td>
+                      <td>
+                        {%with g_appropriate='appropriate'|concate:grade%}
+                          {%with appropriate_data=value|get_item:g_appropriate%}
+                          {{ appropriate_data.F }}
+                          {%endwith%}
+                        {%endwith%}
+                      </td>
+                      <td>
+                        {%with g_appropriate='appropriate'|concate:grade%}
+                          {%with appropriate_data=value|get_item:g_appropriate data=value|get_item:grade%}
+                            {% widthratio appropriate_data.F data.F 100 %}%
+                          {%endwith%}
+                        {%endwith%}
+                      </td>
+                    </tr>
                 {% endfor %}
                 <tr>
-                  <td>{{student_by_site_grade.total_student_appropriate_level | get_students_length_by_gender:'M'}}</td>
                   <td>
-                    {% widthratio student_by_site_grade.total_student_appropriate_level|get_students_length_by_gender:'M' student_by_site_grade.total|get_students_length_by_gender:'M' 100 %}
-                     %
+                    {{value.appropriate_total.M}}
                   </td>
-                  <td>{{student_by_site_grade.total_student_appropriate_level | get_students_length_by_gender:'F'}}</td>
                   <td>
-                    {% widthratio student_by_site_grade.total_student_appropriate_level|get_students_length_by_gender:'F' student_by_site_grade.total|get_students_length_by_gender:'F' 100 %}
-                     %
+                    {% widthratio value.appropriate_total.M value.total.M 100 %}%
+                  </td>
+                  <td>
+                    {{value.appropriate_total.F}}
+                  </td>
+                  <td>
+                    {% widthratio value.appropriate_total.F value.total.F 100 %}%
                   </td>
                 </tr>
               </table>
