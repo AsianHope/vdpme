@@ -135,9 +135,10 @@ def dashboard(request):
       for school in schools:
          name = school.school_name
          total = surveys.filter(site=school)
-         females = total.filter(gender='F').count()
-         males = total.filter(gender='M').count()
-         breakdown[name] = {'F':females, 'M':males}
+        #  females = total.filter(gender='F').count()
+        #  males = total.filter(gender='M').count()
+        #  breakdown[name] = {'F':females, 'M':males}
+         breakdown[name] = {'F':0, 'M':0}
          program_breakdown[name] = {'Grades': 0, 'Skills': 0}
 
       #loop through students and figure out what grades they're currently in
@@ -149,9 +150,14 @@ def dashboard(request):
         if studentAtAgeAppropriateGradeLevel(student.student_id):
             students_at_gl_by_grade[grade] +=1
             students_at_gl_by_grade_by_site[grade][unicode(student.site)] +=1
-
+        # Catch Up Students
         if grade >= 1 and grade <= 12:
             program_breakdown[unicode(student.site)]['Grades'] +=1
+            if student.gender == 'F':
+                breakdown[unicode(student.site)]['F'] +=1
+            elif student.gender == 'M':
+                breakdown[unicode(student.site)]['M'] +=1
+
         if grade > 12 and grade < 999:
             program_breakdown[unicode(student.site)]['Skills'] +=1
             total_skills +=1
