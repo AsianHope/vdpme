@@ -219,7 +219,7 @@ class IntakeSurvey(models.Model):
 	guardian1_relationship = models.CharField(_('Guardian 1\'s relationship to child'),max_length=64,choices=RELATIONSHIPS,default='FATHER')
 	guardian1_phone = models.CharField(_('Guardian 1\'s Phone'),max_length=128)
 	guardian1_profession = models.CharField(_('Guardian 1\'s Profession'),max_length=64)
-	guardian1_employment = models.CharField(_('Guardian 1\'s Employment'),max_length=1,choices=EMPLOYMENT,default=1)
+	guardian1_employment = models.CharField(_('Guardian 1\'s Employment'),max_length=2,choices=EMPLOYMENT,default=1)
 
 
 	#Guardian 2's Information
@@ -227,7 +227,7 @@ class IntakeSurvey(models.Model):
 	guardian2_relationship = models.CharField(_('Guardian 2\'s relationship to child'),max_length=64,blank=True,null=True,choices=RELATIONSHIPS,default='MOTHER')
 	guardian2_phone = models.CharField(_('Guardian 2\'s Phone'),max_length=128,blank=True,null=True)
 	guardian2_profession = models.CharField(_('Guardian 2\'s Profession'),max_length=64,default='NA',blank=True,null=True)
-	guardian2_employment= models.CharField(_('Guardian 2\'s Employment'),max_length=1,choices=EMPLOYMENT,default=1,blank=True,null=True)
+	guardian2_employment= models.CharField(_('Guardian 2\'s Employment'),max_length=2,choices=EMPLOYMENT,default=1,blank=True,null=True)
 
 	#Household Information
 	minors = models.IntegerField(_('Number of children living in household (including student)'),default=0)
@@ -416,14 +416,14 @@ class IntakeUpdate(models.Model):
 	guardian1_relationship = models.CharField(_('Guardian 1\'s relationship to child'),max_length=64,choices=RELATIONSHIPS,default='FATHER')
 	guardian1_phone = models.CharField(_('Guardian 1\'s Phone'),max_length=128,blank=True)
 	guardian1_profession = models.CharField(_('Guardian 1\'s Profession'),max_length=64,default='NA',blank=True)
-	guardian1_employment = models.CharField(_('Guardian 1\'s Employment'),max_length=1,choices=EMPLOYMENT,default=1)
+	guardian1_employment = models.CharField(_('Guardian 1\'s Employment'),max_length=2,choices=EMPLOYMENT,default=1)
 
 
 	guardian2_name = models.CharField(_('Guardian 2\'s Name'),max_length=64,blank=True,null=True)
 	guardian2_relationship = models.CharField(_('Guardian 2\'s relationship to child'),max_length=64,blank=True,null=True,choices=RELATIONSHIPS,default='MOTHER')
 	guardian2_phone = models.CharField(_('Guardian 2\'s Phone'),max_length=128,blank=True,null=True)
 	guardian2_profession = models.CharField(_('Guardian 2\'s Profession'),max_length=64,default='NA',blank=True,null=True)
-	guardian2_employment= models.CharField(_('Guardian 2\'s Employment'),max_length=1,choices=EMPLOYMENT,default=1,blank=True,null=True)
+	guardian2_employment= models.CharField(_('Guardian 2\'s Employment'),max_length=2,choices=EMPLOYMENT,default=1,blank=True,null=True)
 
 	minors = models.IntegerField(_('Number of children living in household (including student)'),default=0)
 	minors_in_public_school = models.IntegerField(_('Number of children enrolled in public school last year'),default=0)
@@ -496,11 +496,11 @@ class PostExitSurvey(models.Model):
 
 	guardian1_relationship = models.CharField(_('Guardian 1\'s relationship to child'),max_length=64,choices=RELATIONSHIPS,default='FATHER')
 	guardian1_profession = models.CharField(_('Guardian 1\'s Profession'),max_length=64,default='NA')
-	guardian1_employment = models.CharField(_('Guardian 1\'s Employment'),max_length=1,choices=EMPLOYMENT,default=1)
+	guardian1_employment = models.CharField(_('Guardian 1\'s Employment'),max_length=2,choices=EMPLOYMENT,default=1)
 
 	guardian2_relationship = models.CharField(_('Guardian 2\'s relationship to child'),max_length=64,blank=True,null=True,choices=RELATIONSHIPS,default='MOTHER')
 	guardian2_profession = models.CharField(_('Guardian 2\'s Profession'),max_length=64,default='NA',blank=True,null=True)
-	guardian2_employment= models.CharField(_('Guardian 2\'s Employment'),max_length=1,choices=EMPLOYMENT,default=1,blank=True,null=True)
+	guardian2_employment= models.CharField(_('Guardian 2\'s Employment'),max_length=2,choices=EMPLOYMENT,default=1,blank=True,null=True)
 
 	minors = models.IntegerField(_('How many children in the household?'),default=0)
 	enrolled = models.CharField(_('Currently in school? [Primary Child]'),max_length=2,choices=YN,default='NA')

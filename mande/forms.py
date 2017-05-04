@@ -30,6 +30,7 @@ from django.forms import CheckboxSelectMultiple
 from django.utils.safestring import mark_safe
 
 from django.utils.translation import ugettext_lazy as _
+VDP_GRADES = [g for g in GRADES if (g[0]>=1 and g[0]<=6) or (g[0] in [50,70])]
 
 class Html5DateInput(forms.DateInput):
         input_type = 'date'
@@ -40,7 +41,7 @@ class IntakeSurveyForm(forms.ModelForm):
     address = forms.CharField(label=_('Home Address'),widget=forms.Textarea(attrs={'rows': 4}))
     notes = forms.CharField(label=_('Notes'),widget=forms.Textarea(attrs={'rows': 4}),required=False)
     enrollment_date = forms.DateField(label=_('Enrollment Date'),widget=Html5DateInput)
-    starting_grade = forms.ChoiceField(label=_('Starting Grade'),choices=GRADES)
+    starting_grade = forms.ChoiceField(label=_('Starting Grade'),choices=VDP_GRADES)
 
     class Meta:
         model = IntakeSurvey
@@ -113,6 +114,7 @@ class TeacherForm(forms.ModelForm):
         exclude=[]
 
 class ClassroomForm(forms.ModelForm):
+    cohort = forms.ChoiceField(label=_('Target Grade'),choices=VDP_GRADES)
     class Meta:
         model = Classroom
         exclude=['classroom_location']
@@ -168,7 +170,7 @@ class AcademicForm(forms.ModelForm):
     test_grade_math = forms.IntegerField(label='',widget=forms.TextInput(attrs={'size':'3'}), required=False)
     test_grade_khmer = forms.IntegerField(label='',widget=forms.TextInput(attrs={'size':'3'}), required=False)
     test_date = forms.DateField(label='',widget=Html5DateInput)
-    test_level = forms.ChoiceField(label='',choices=GRADES)
+    test_level = forms.ChoiceField(label='',choices=VDP_GRADES)
     class Meta:
         model = Academic
         exclude = []
