@@ -1,4 +1,4 @@
-"""
+'''
 Django settings for vdpme project.
 
 For more information on this file, see
@@ -6,7 +6,7 @@ https://docs.djangoproject.com/en/1.7/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.7/ref/settings/
-"""
+'''
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
@@ -16,7 +16,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 from django.forms import Field
 
 Field.default_error_messages = {
-    'required': _("This field is required."),
+    'required': _('This field is required.'),
     'max_whole_digits':_('Ensure that there are no more than 3 digits before the decimal point.'),
     'max_digits':_('Ensure that there are no more than 5 digits in total.'),
     'invalid_choice':_('Select a valid choice. That choice is not one of the available choices.')
@@ -33,31 +33,44 @@ SECRET_KEY = 'hm#&=u&2%*)-#^p!p@bd08wj80s6#n4i(3)!fom#ko8x!7*4^)'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
-TEMPLATE_DIRS = (
-    join(BASE_DIR, 'templates'),
-)
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.contrib.messages.context_processors.messages",
-    "mande.context_processors.menu",
-    "django.core.context_processors.request"
-)
+# TEMPLATE_DEBUG = True
+# TEMPLATE_DIRS = (
+#     join(BASE_DIR, 'templates'),
+# )
+#
+# TEMPLATE_CONTEXT_PROCESSORS = (
+#     "django.contrib.auth.context_processors.auth",
+#     "django.core.context_processors.debug",
+#     "django.core.context_processors.i18n",
+#     "django.core.context_processors.media",
+#     "django.contrib.messages.context_processors.messages",
+#     "mande.context_processors.menu",
+#     "django.core.context_processors.request"
+# )
 TEMPLATES = [
     {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            join(BASE_DIR, 'templates/'),
+            join(BASE_DIR, 'mande/templates'),
+        ],
+        'APP_DIRS': True,
         'OPTIONS': {
+            'debug': True,
             'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
                 'django.template.context_processors.i18n',
                 'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.contrib.messages.context_processors.messages',
+                'mande.context_processors.menu',
+                'django.template.context_processors.request'
             ],
         },
     },
 ]
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -72,6 +85,7 @@ INSTALLED_APPS = (
     'mathfilters',
     'bootstrapform',
     'mande',
+    'bootstrap3'
 )
 
 MIDDLEWARE_CLASSES = (

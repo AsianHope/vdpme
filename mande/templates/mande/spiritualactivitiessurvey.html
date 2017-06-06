@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load mandefilters %}
-{% load bootstrap %}
+{% load bootstrap3 %}
 {% block title %}
 {% if student_id and student_id != '0' %}
 {% with spi=action|add:' Spiritual Activities Survey for' %}
@@ -29,13 +29,14 @@
     {% if survey_id %}
     {{form.student_id.as_hidden}}
     {% else %}
-    {{form.student_id|bootstrap}}
+    {% bootstrap_field form.student_id placeholder=False %}
+
     {% endif %}
 
-    {{form.date|bootstrap }}
-    {{form.personal_attend_church|bootstrap}}
-    {{form.frequency_of_attending|bootstrap}}
-    {{form.church_name|bootstrap}}
+    {% bootstrap_field form.date placeholder=False %}
+    {% bootstrap_field form.personal_attend_church placeholder=False %}
+    {% bootstrap_field form.frequency_of_attending placeholder=False %}
+    {% bootstrap_field form.church_name placeholder=False %}
 
     <div class="col-md-12">
       <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>

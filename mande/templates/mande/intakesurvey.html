@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load bootstrap %}
+{% load bootstrap3 %}
 {% block title %}
   {% if student %}
     {% blocktrans %}Editing Intake Survey for {{student}}{% endblocktrans %}
@@ -21,29 +21,29 @@
 {% endif %}
     <div class="col-md-6">
       {{ form.date.as_hidden}}
-      {{ form.site | bootstrap }}
-      {{ form.name | bootstrap }}
-      {{ form.dob | bootstrap }}
-      {{ form.gender | bootstrap }}
-      {{ form.address | bootstrap }}
-      {{ form.guardian1_name | bootstrap }}
-      {{ form.guardian1_relationship | bootstrap }}
-      {{ form.guardian1_phone | bootstrap }}
-      {{ form.guardian1_profession | bootstrap }}
-      {{ form.guardian1_employment | bootstrap }}
-      {{ form.guardian2_name | bootstrap }}
-      {{ form.guardian2_relationship | bootstrap }}
-      {{ form.guardian2_phone | bootstrap }}
-      {{ form.guardian2_profession | bootstrap }}
-      {{ form.guardian2_employment | bootstrap }}
-      {{ form.minors | bootstrap }}
-      {{ form.minors_in_public_school | bootstrap }}
-      {{ form.minors_in_other_school | bootstrap }}
-      {{ form.notes | bootstrap }}
+      {% bootstrap_field form.site placeholder=False %}
+      {% bootstrap_field form.name placeholder=False %}
+      {% bootstrap_field form.dob placeholder=False %}
+      {% bootstrap_field form.gender placeholder=False %}
+      {% bootstrap_field form.address placeholder=False %}
+      {% bootstrap_field form.guardian1_name placeholder=False %}
+      {% bootstrap_field form.guardian1_relationship placeholder=False %}
+      {% bootstrap_field form.guardian1_phone placeholder=False %}
+      {% bootstrap_field form.guardian1_profession placeholder=False %}
+      {% bootstrap_field form.guardian1_employment placeholder=False %}
+      {% bootstrap_field form.guardian2_name placeholder=False %}
+      {% bootstrap_field form.guardian2_relationship placeholder=False %}
+      {% bootstrap_field form.guardian2_phone placeholder=False %}
+      {% bootstrap_field form.guardian2_profession placeholder=False %}
+      {% bootstrap_field form.guardian2_employment placeholder=False %}
+      {% bootstrap_field form.minors placeholder=False %}
+      {% bootstrap_field form.minors_in_public_school placeholder=False %}
+      {% bootstrap_field form.minors_in_other_school placeholder=False %}
+      {% bootstrap_field form.notes placeholder=False %}
     </div>
     <div class="col-md-6">
-      {{ form.enrollment_date | bootstrap }}
-      {{ form.starting_grade | bootstrap }}
+      {% bootstrap_field form.enrollment_date placeholder=False %}
+      {% bootstrap_field form.starting_grade placeholder=False %}
       {% csrf_token %}
       <div class="form-group" style="text-align:right;">
         <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>

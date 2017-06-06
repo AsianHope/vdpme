@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load bootstrap %}
+{% load bootstrap3 %}
 {% block title %}
 {% trans "Classroom Enrollment" %}
 {% if classroom != None %}
@@ -14,8 +14,9 @@
   <form action = "{% url 'classroomenrollment_form' %}" method="post">
       {% csrf_token %}
       <div class = "col-md-4">
-      {{form.classroom_id | bootstrap}}
-      {{form.enrollment_date | bootstrap}}
+      {% bootstrap_field form.classroom_id placeholder=False %}
+      {% bootstrap_field form.enrollment_date placeholder=False %}
+
       <label for "selectedstudents">{% trans "Currently Selected Students" %}</label>
       <ol id="selectedstudents">
       </ol>
@@ -85,8 +86,7 @@ $('#id_classroom_id').change(function(){
   window.location.href=url
 });
 $("[type=checkbox]").change(function(){
-      // varible to hold string
-      if($(this).is(':checked')){
+      // varible to hold string      if($(this).is(':checked')){
           $('#selectedstudents').append('<li id="'+this.id+'student">'+$('label[for="'+this.id+'"]').text()+'</li>');
       } else {
           $('#'+this.id+'student').remove();

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load bootstrap %}
+{% load bootstrap3 %}
 {% load mandefilters %}
 {% block title %}
 {% trans 'Adding an Academic Marking Period'%}
@@ -8,7 +8,7 @@
 {% block content %}
 <div class="col-md-9">
 <form method="post">
-    {{ form|bootstrap }}
+    {% bootstrap_form form set_placeholder=False %}
     {% csrf_token %}
     <div class="form-group">
       <button type="submit" class="btn btn-primary">{% trans 'Submit' %}</button>

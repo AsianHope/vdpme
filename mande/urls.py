@@ -1,10 +1,10 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.views.decorators.cache import cache_page
 
 from mande import views
 #to add a new item to the side menu, map the URL in urlpatterns, assign permissions
 # in perms_required (permissions.py) and add its name and display name to the activity map below
-urlpatterns = patterns('',
+urlpatterns = [
     # ex: /mande/
     url(r'^$', cache_page(300)(views.dashboard), name='index'),
     # ex: /mande/students/
@@ -133,7 +133,7 @@ urlpatterns = patterns('',
 
 
 
-)
+]
 
 #map out where activities should show up in the menus
 activity_map = [

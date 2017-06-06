@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load mandefilters %}
-{% load bootstrap %}
+{% load bootstrap3 %}
 {% block title %}
 {% trans "Student Evaluations for" %} {{classroom.school_id}} ({{classroom.get_cohort_display}} - {{classroom.classroom_number}})
 {% endblock %}
@@ -36,14 +36,14 @@
               </tr></thead>
             <tbody>
               <tr>
-                <td>{{ form.academic_score|bootstrap }}</td>
-                <td>{{ form.study_score|bootstrap }}</td>
-                <td>{{ form.personal_score|bootstrap }}</td>
-                <td>{{ form.hygiene_score|bootstrap }}</td>
-                <td>{{ form.faith_score|bootstrap }}</td>
+                <td>{% bootstrap_field form.academic_score placeholder=False %}</td>
+                <td>{% bootstrap_field form.study_score placeholder=False %}</td>
+                <td>{% bootstrap_field form.personal_score placeholder=False %}</td>
+                <td>{% bootstrap_field form.hygiene_score placeholder=False %}</td>
+                <td>{% bootstrap_field form.faith_score placeholder=False %}</td>
             </tr>
             <tr>
-              <td colspan=7>{{form.comments|bootstrap}}</strong>  <button class="btn btn-primary">{% trans "Submit" %}</button></td>
+              <td colspan=7>{% bootstrap_field form.comments placeholder=False %}</strong>  <button class="btn btn-primary">{% trans "Submit" %}</button></td>
             </tr>
           </tbody>
 

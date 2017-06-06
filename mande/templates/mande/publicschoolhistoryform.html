@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load bootstrap %}
+{% load bootstrap3 %}
 {% load mandefilters %}
 {% block title %}
 {% trans action %} {% trans 'a Public School History for'%} {{student_id|name_by_sid}}
@@ -8,15 +8,14 @@
 {% block content %}
 <div class="col-md-9">
 <form method="post">
-    <!-- {{ form|bootstrap }} -->
     {% csrf_token %}
     {{form.student_id.as_hidden}}
-    {{form.status|bootstrap}}
-    {{form.enroll_date|bootstrap}}
-    {{form.drop_date|bootstrap}}
-    {{form.grade|bootstrap}}
-    {{form.school_name|bootstrap}}
-    {{form.reasons|bootstrap}}
+    {% bootstrap_field form.status placeholder=False %}
+    {% bootstrap_field form.enroll_date placeholder=False %}
+    {% bootstrap_field form.drop_date placeholder=False %}
+    {% bootstrap_field form.grade placeholder=False %}
+    {% bootstrap_field form.school_name placeholder=False %}
+    {% bootstrap_field form.reasons placeholder=False %}
     <div class="form-group">
       <button type="submit" class="btn btn-primary">{% trans 'Submit' %}</button>
       <button type="submit" class="btn btn-warning" name="cancel" style="float:right;">{% trans 'Cancel' %}</button>

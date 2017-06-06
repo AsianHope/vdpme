@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load bootstrap %}
+{% load bootstrap3 %}
 {% block title %}
 {% trans "Manage Classroom Assignments" %}
 {% endblock %}
@@ -20,7 +20,7 @@
 <div class="col-md-6">
 <form action = "{% url 'classroomteacher_form' teacher_id %}" method="post">
 
-    {{ form|bootstrap }}
+    {% bootstrap_form form set_placeholder=False %}
     {% csrf_token %}
     <div class="col-md-12">
       <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>

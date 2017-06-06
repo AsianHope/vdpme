@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load bootstrap %}
+{% load bootstrap3 %}
 {% load mandefilters %}
 {% block title %}
 {% if locked == True %}
@@ -37,15 +37,15 @@
         {% else %}
           <tr>
         {% endif %}
-            <td>{{form.test_date|bootstrap}}</td>
+            <td>{% bootstrap_field form.test_date placeholder=False %}</td>
             <td style="vertical-align:middle;"><a href="{%url 'student_detail' form.student_id.value %}">{{form.student_id.value}}</a>
               {{ form.student_id.as_hidden }}{{form.id}}
             </td>
             <td style="vertical-align:middle;">{{form.student_id.value | name_by_sid}}</td>
-            <td>{{ form.test_level|bootstrap }}</td>
-            <td>{{ form.test_grade_math|bootstrap }}</td>
-            <td>{{ form.test_grade_khmer|bootstrap }}</td>
-            <td style="vertical-align:middle;">{{ form.promote|bootstrap }}</td>
+            <td>{% bootstrap_field form.test_level placeholder=False %}</td>
+            <td>{% bootstrap_field form.test_grade_math placeholder=False %}</td>
+            <td>{% bootstrap_field form.test_grade_khmer placeholder=False %}</td>
+            <td style="vertical-align:middle;">{% bootstrap_field form.promote placeholder=False %}</td>
         </tr>
     </tbody>
 

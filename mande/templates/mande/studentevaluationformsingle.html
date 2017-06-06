@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load bootstrap %}
+{% load bootstrap3 %}
 {% load mandefilters %}
 {% block title %}
 {% trans "Adding a Student Evaluation for" %} {{student_id|name_by_sid}}
@@ -12,7 +12,8 @@
 
   <div class="form-group table-responsive">
     <table class="table table-bordered table-striped table-hover" id="academicTable">
-      <thead><tr>  <th class="col-md-8" colspan=4><h3>{{student_id}} - {{student_id|name_by_sid}}{{ form.student_id.as_hidden }}</h3></th><th class="col-md-4">{{form.date|bootstrap}}</th>
+      <thead><tr>  <th class="col-md-8" colspan=4><h3>{{student_id}} - {{student_id|name_by_sid}}{{ form.student_id.as_hidden }}</h3></th>
+        <th class="col-md-4">{% bootstrap_field form.date placeholder=False %}</th>
       </tr>
         <tr>
         <th class="col-md-3">{% trans "Academic" %}</th>
@@ -23,14 +24,14 @@
         </tr></thead>
       <tbody>
         <tr>
-          <td>{{ form.academic_score|bootstrap }}</td>
-          <td>{{ form.study_score|bootstrap }}</td>
-          <td>{{ form.personal_score|bootstrap }}</td>
-          <td>{{ form.hygiene_score|bootstrap }}</td>
-          <td>{{ form.faith_score|bootstrap }}</td>
+          <td>{% bootstrap_field form.academic_score placeholder=False %}</td>
+          <td>{% bootstrap_field form.study_score placeholder=False %}</td>
+          <td>{% bootstrap_field form.personal_score placeholder=False %}</td>
+          <td>{% bootstrap_field form.hygiene_score placeholder=False %}</td>
+          <td>{% bootstrap_field form.faith_score placeholder=False %}</td>
       </tr>
       <tr>
-        <td colspan=7>{{form.comments|bootstrap}}</strong></td>
+        <td colspan=7>{% bootstrap_field form.comments placeholder=False %}</strong></td>
       </tr>
     </tbody>
       <tfoot>

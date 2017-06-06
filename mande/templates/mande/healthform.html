@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load bootstrap %}
+{% load bootstrap3 %}
 {% block title %}
 {% trans "Health Form" %}
 {% endblock %}
@@ -10,7 +10,7 @@
 <div class="col-md-6">
 <form action = "{% url 'health_form' student_id %}?next={{next_url}}" method="post">
 
-    {{ form|bootstrap }}
+    {% bootstrap_form form set_placeholder=False %}
     {% csrf_token %}
     <div class="col-md-12">
       <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
