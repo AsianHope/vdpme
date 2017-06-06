@@ -9,7 +9,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login/$', login),
-    url(r'^logout/$', logout),
+    url(r'^logout/$', logout,name='logout'),
 ]
 new_patterns = i18n_patterns(url(r'^', include('mande.urls')))
 urlpatterns = urlpatterns+new_patterns
