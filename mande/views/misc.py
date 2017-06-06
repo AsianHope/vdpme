@@ -36,6 +36,7 @@ from mande.models import Health
 from mande.models import AttendanceLog
 from mande.models import IntakeInternal
 from mande.models import PublicSchoolHistory
+from mande.models import CurrentStudentInfo
 
 from mande.models import GRADES
 from mande.models import ATTENDANCE_CODES
@@ -87,15 +88,7 @@ def dashboard(request):
               - have an exit survey with an exit date after today
 
       '''
-      #get a flat list of student_ids to exclude
-      exit_surveys = ExitSurvey.objects.all().filter(
-                        exit_date__lte=date.today().isoformat()
-                        ).values_list('student_id',flat=True)
-
-      #filter out students who have exit surveys
-      surveys = IntakeSurvey.objects.all().filter(date__lte=date.today().isoformat()).order_by('student_id'
-                                 ).exclude(student_id__in=exit_surveys)
-
+      surveys = CurrentStudentInfo.objects.all()
       #figure out students who have internal intakes with enrollment dates before today
       enrolled_students = IntakeInternal.objects.all(
                                              ).values_list('student_id',flat=True)
@@ -106,6 +99,7 @@ def dashboard(request):
       surveys = surveys.exclude(student_id__in=not_enrolled)
 
       tot_females = surveys.filter(gender='F').count()
+      total_skills = surveys.filter(vdp_grade__gte=50,vdp_grade__lte=70).count()
 
       #set up for collecting school breakdowns
       schools = School.objects.all()
@@ -114,53 +108,32 @@ def dashboard(request):
       students_by_grade = dict(GRADES)
       students_at_gl_by_grade = dict(GRADES)
       students_by_grade_by_site  = dict(GRADES)
-      students_at_gl_by_grade_by_site = dict(GRADES)
 
       program_breakdown = {}
-      total_skills = 0
 
       #zero things out for accurate counts
       for key,grade in students_by_grade.iteritems():
-        students_by_grade[key] = 0
-        students_at_gl_by_grade[key] = 0
         students_by_grade_by_site[key] = {}
-        students_at_gl_by_grade_by_site[key] = {}
+
+        students_by_grade[key] = surveys.filter(vdp_grade=key).count()
+        students_at_gl_by_grade[key] = surveys.filter(at_grade_level=True,vdp_grade=key).count()
 
         for school in schools:
             name = school.school_name
-            students_by_grade_by_site[key][unicode(name)] = 0
-            students_at_gl_by_grade_by_site[key][unicode(name)] = 0
+            students_by_grade_by_site[key][unicode(name)] = surveys.filter(site=school.school_id,vdp_grade=key).count()
 
       #get information for morris donut charts
       for school in schools:
-         name = school.school_name
-         total = surveys.filter(site=school)
-        #  females = total.filter(gender='F').count()
-        #  males = total.filter(gender='M').count()
-        #  breakdown[name] = {'F':females, 'M':males}
-         breakdown[name] = {'F':0, 'M':0}
-         program_breakdown[name] = {'Grades': 0, 'Skills': 0}
+        name = school.school_name
+        school_id = school.school_id
 
-      #loop through students and figure out what grades they're currently in
-      for student in surveys:
-        grade = getStudentGradebyID(student.student_id)
-        students_by_grade[grade] += 1
-        students_by_grade_by_site[grade][unicode(student.site)] +=1
+        breakdown[name] = {'F':0, 'M':0}
+        breakdown[name]['F'] = surveys.filter(site=school_id,vdp_grade__gte=1,vdp_grade__lte=6,gender='F').count()
+        breakdown[name]['M'] = surveys.filter(site=school_id,vdp_grade__gte=1,vdp_grade__lte=6,gender='M').count()
 
-        if studentAtAgeAppropriateGradeLevel(student.student_id):
-            students_at_gl_by_grade[grade] +=1
-            students_at_gl_by_grade_by_site[grade][unicode(student.site)] +=1
-        # Catch Up Students
-        if grade >= 1 and grade <= 12:
-            program_breakdown[unicode(student.site)]['Grades'] +=1
-            if student.gender == 'F':
-                breakdown[unicode(student.site)]['F'] +=1
-            elif student.gender == 'M':
-                breakdown[unicode(student.site)]['M'] +=1
-
-        if grade > 12 and grade < 999:
-            program_breakdown[unicode(student.site)]['Skills'] +=1
-            total_skills +=1
+        program_breakdown[name] = {'Grades': 0, 'Skills': 0}
+        program_breakdown[name]['Grades'] = surveys.filter(site=school_id,vdp_grade__gte=1,vdp_grade__lte=6).count()
+        program_breakdown[name]['Skills'] = surveys.filter(site=school_id,vdp_grade__gte=50,vdp_grade__lte=70).count()
 
       #clean up students_by_grade_by_site so we're not displaying a bunch of blank data
       clean_students_by_grade_by_site = dict(students_by_grade_by_site)
@@ -188,7 +161,6 @@ def dashboard(request):
                 'students_by_grade':students_by_grade,
                 'students_at_gl_by_grade': students_at_gl_by_grade,
                 'students_by_grade_by_site':clean_students_by_grade_by_site,
-                'students_at_gl_by_grade_by_site': students_at_gl_by_grade_by_site,
                 'schools':schools,
                 'notifications':notifications,
                 'unenrolled_students':unenrolled_students,

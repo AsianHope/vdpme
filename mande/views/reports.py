@@ -37,6 +37,7 @@ from mande.models import AttendanceLog
 from mande.models import IntakeInternal
 from mande.models import StudentEvaluation
 from mande.models import PublicSchoolHistory
+from mande.models import CurrentStudentInfo
 
 from mande.models import GRADES
 from mande.models import GENDERS
@@ -1362,5 +1363,37 @@ def unapproved_absence_with_no_comment(request,school_year=None):
                                 'school_year_list':school_year_list,
                                 'school_year':school_year
                             })
+    else:
+      raise PermissionDenied
+def generate(request):
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+    #    delete all CurrentStudentInfo
+       CurrentStudentInfo.objects.all().delete()
+       exit_surveys = ExitSurvey.objects.all().filter(
+                       exit_date__lte=date.today().isoformat()
+                       ).values_list('student_id',flat=True)
+       active_surveys = IntakeSurvey.objects.filter(date__lte=date.today().isoformat()).order_by('student_id'
+                                ).exclude(student_id__in=exit_surveys)
+       for survey in active_surveys:
+            recent_survey = survey.getRecentFields()
+            student = CurrentStudentInfo(
+                student_id=recent_survey['student_id'],
+                name = recent_survey['name'],
+                site = recent_survey['site'],
+                date = recent_survey['date'],
+                dob = recent_survey['dob'],
+                gender = recent_survey['gender'],
+                age_appropriate_grade = survey.age_appropriate_grade(),
+                in_public_school = True if survey.get_pschool().status=='Y' else False,
+                at_grade_level = studentAtAgeAppropriateGradeLevel(recent_survey['student_id']),
+                vdp_grade = survey.current_vdp_grade()
+            )
+            student.save()
+    #    return HttpResponseRedirect(reverse('student_list'))
+       return render(request, 'mande/generatestudentinfo.html',
+                              {
+                               'students':active_surveys.count()
+                              })
     else:
       raise PermissionDenied

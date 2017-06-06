@@ -4,3 +4,4 @@ startdocker.sh
 *.mo
 mande/migrations/*
 media/*
+generatestudentcachetable.log

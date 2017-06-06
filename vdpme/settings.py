@@ -85,7 +85,8 @@ INSTALLED_APPS = (
     'mathfilters',
     'bootstrapform',
     'mande',
-    'bootstrap3'
+    'bootstrap3',
+    'django_crontab'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -165,3 +166,10 @@ STATIC_URL = '/static/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/student_photos/'
 MEDIA_ROOT ='/opt/student_photos'
+
+CRONJOBS = [
+    ('00 01 * * *', 'mande.cron.my_scheduled_job','>> '+BASE_DIR+'/generatestudentcachetable.log')
+]
+# CRONJOBS = [
+#     ('* * * * *', 'mande.cron.my_scheduled_job','>> '+BASE_DIR+'/generatestudentcachetable.log')
+# ]

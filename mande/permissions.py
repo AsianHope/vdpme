@@ -58,7 +58,7 @@ perms_required = {
 	'delete_public_school': {'mande.view_delete_public_school'},
 	'save_photo': {'mande.view_save_photo'},
 	'academic_making_period': {'mande.view_academic_making_period'},
-
+	'generate': {'mande.view_generate'},
 
 }
 #this is a function to help test that the permissions above are

@@ -636,3 +636,18 @@ class AcademicMarkingPeriod(models.Model):
 	marking_period_end =  models.DateField(_('Marking Period End'))
 	def __unicode__(self):
 		return unicode(self.description) + ' - '+ unicode(self.test_date)
+
+class CurrentStudentInfo(models.Model):
+	student_id = models.IntegerField(_('Stduent ID'),unique=True)
+	name = models.CharField(_('Name'),max_length=64,default='')
+	site = models.ForeignKey('School',verbose_name=_('Site'))
+	date = models.DateField(_('Date of Intake'))
+	dob = models.DateField(_('DOB'))
+	gender = models.CharField(_('Gender'),max_length=1,choices=GENDERS,default='M')
+	refresh = models.DateField(_('Refresh Date'),default=datetime.date.today)
+	age_appropriate_grade = models.IntegerField(_('Age Appropriate Grade'))
+	at_grade_level = models.BooleanField(_('At Grade Level?'),default=True)
+	in_public_school = models.BooleanField(_('In Public School?'),default=True)
+	vdp_grade = models.IntegerField(_('VDP Grade'),choices=GRADES)
+	def __unicode__(self):
+	   return unicode(self.student_id)+' - '+self.name

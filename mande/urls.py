@@ -6,9 +6,10 @@ from mande import views
 # in perms_required (permissions.py) and add its name and display name to the activity map below
 urlpatterns = [
     # ex: /mande/
-    url(r'^$', cache_page(300)(views.dashboard), name='index'),
+    url(r'^generate/$', views.generate, name='generate'),
+    url(r'^$', views.dashboard, name='index'),
     # ex: /mande/students/
-    url(r'^students/$', cache_page(120)(views.student_list), name='student_list'),
+    url(r'^students/$', views.student_list, name='student_list'),
     # ex: /mande/students/4
     url(r'^students/(?P<student_id>\d+)/$', views.student_detail, name='student_detail'),
 
