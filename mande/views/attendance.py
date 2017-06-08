@@ -132,7 +132,7 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
                                                 & Q(student_id__date__lte=date.today().isoformat())
                                                 & Q(Q(drop_date__gte=attendance_date) | Q(drop_date=None)))
       #find out if any student attendance has been taken, excluding placeholder attendance
-      student_attendance = Attendance.objects.filter(student_id=students,
+      student_attendance = Attendance.objects.filter(student_id__in=students.values_list('student_id'),
                                                    date=attendance_date
                                                    ).exclude(attendance=None)
       if len(student_attendance) > 0:
@@ -155,7 +155,7 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
         #Attendance.objects.filter(attendance=None).delete()
 
       #now get the whole set of attendance objects and create the formset
-      student_attendance = Attendance.objects.filter(student_id=students,
+      student_attendance = Attendance.objects.filter(student_id__in=students.values_list('student_id'),
                                                    date=attendance_date)
       AttendanceFormSet = modelformset_factory(Attendance,
                                              form=AttendanceForm,
