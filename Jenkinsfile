@@ -75,7 +75,6 @@ pipeline{
 	    }
             always {
 		script {
-				sh "make check || true"
 //				junit '**/target/*.xml'
 //				archive 'target/*.jar'
 				notifySlack(currentBuild.result)
