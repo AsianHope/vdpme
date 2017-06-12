@@ -67,10 +67,10 @@ pipeline{
 		script {
 				currentBuild.result = "SUCCESS"
 				echo "build success"
-//				sh'''git checkout master
-//				     git merge test
-//                                     git push origin master'''
-//                                sh'ansible-playbook /opt/jenkins/jethro/site.yml'
+				sh'''git checkout master
+				     git merge test
+                                     git push origin master'''
+                                sh'ansible-playbook /opt/jenkins/jethro/site.yml'
 		}
 	    }
             always {
