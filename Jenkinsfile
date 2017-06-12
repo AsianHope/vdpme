@@ -70,7 +70,7 @@ pipeline{
 //				sh'''git checkout master
 //				     git merge test
 //                                     git push origin master'''
-                                sh'ansible-playbook /opt/jenkins/jethro/site.yml'
+//                                sh'ansible-playbook /opt/jenkins/jethro/site.yml'
 		}
 	    }
             always {
