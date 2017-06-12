@@ -84,7 +84,7 @@ urlpatterns = [
     url(r'^surveys/spiritualactivities/(?P<student_id>\d+)/$', views.spiritualactivities_survey, name='spiritualactivities_survey'),
     url(r'^surveys/spiritualactivities/$', views.spiritualactivities_survey, name='spiritualactivities_survey'),
 
-    url(r'^surveys/spiritualactivities/delete(?P<id>\d+)/$', views.delete_spiritualactivities_survey, name='delete_spiritualactivities_survey'),
+    url(r'^surveys/spiritualactivities/delete/(?P<id>\d+)/$', views.delete_spiritualactivities_survey, name='delete_spiritualactivities_survey'),
 
 
     url(r'^surveys/health/(?P<student_id>\d+)/(?P<appointment_date>\d{4}-\d{1,2}-\d{1,2})/(?P<appointment_type>\w+)/$', views.health_form, name='health_form'),
@@ -123,7 +123,7 @@ urlpatterns = [
 
     url(r'^school-management/student_publicschool/(?P<student_id>\d+)/$', views.publicschool_form, name='publicschool_form'),
     url(r'^school-management/student_publicschool/(?P<student_id>\d+)/(?P<id>\d+)$', views.publicschool_form, name='publicschool_form'),
-    url(r'^school-management/student_publicschool/delete(?P<id>\d+)/$', views.delete_public_school, name='delete_public_school'),
+    url(r'^school-management/student_publicschool/delete/(?P<id>\d+)/$', views.delete_public_school, name='delete_public_school'),
     url(r'^school-management/save_photo/$', views.save_photo, name='save_photo'),
     url(r'^school-management/academic_making_period/$', views.academic_making_period, name='academic_making_period'),
 
