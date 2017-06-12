@@ -40,7 +40,7 @@ pipeline{
 	                            	virtualenv --no-site-packages $PYENV_HOME
 	                            	. $PYENV_HOME/bin/activate
 	                            	pip install --quiet -r requirements.txt
-					ssh root@jethro.asianhope.org 'bash /opt/scripts/picklatestbackup.sh'
+					ssh root@jethro.asianhope.org 'bash /opt/scripts/pickbackup.sh'
                                         gunzip -d /opt/jenkins/*.gz
                                         mv /opt/jenkins/*.sql /opt/jenkins/vdpme.sql
 					mysql -udjango -pdjango vdpme < /opt/jenkins/vdpme.sql
