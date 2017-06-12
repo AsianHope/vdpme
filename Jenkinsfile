@@ -68,7 +68,7 @@ pipeline{
 				currentBuild.result = "SUCCESS"
 				echo "build success"
 				sh'''git checkout master
-				     git merge test
+				     git merge next 
                                      git push origin master'''
                                 sh'ansible-playbook /opt/jenkins/jethro/site.yml'
 		}
