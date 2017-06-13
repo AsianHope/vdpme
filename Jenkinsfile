@@ -45,7 +45,6 @@ pipeline{
                                         mv /opt/jenkins/*.sql /opt/jenkins/vdpme.sql
 					mysql -udjango -pdjango vdpme < /opt/jenkins/vdpme.sql
 					python manage.py migrate
-					rm -rf .pyenv
 					'''
 			}
 		}
@@ -80,7 +79,7 @@ pipeline{
 //				junit '**/target/*.xml'
 //				archive 'target/*.jar'
 				notifySlack(currentBuild.result)
-				sh 'rm /opt/jenkins/vdpme.sql'
+//				sh 'rm /opt/jenkins/vdpme.sql'
 				echo "end of build"
 		}
 	   }
