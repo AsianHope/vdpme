@@ -21,6 +21,7 @@ def notifySlack(String buildStatus = 'STARTED') {
 
 pipeline{
 	agent any
+	deleteDir()
 	options {
 		buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
 	}
