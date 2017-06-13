@@ -25,7 +25,7 @@ pipeline{
             stage("Preparation") {
 		steps {
 			notifySlack()
-                	git branch: 'next', credentialsId: '35d41123-6975-4d00-9bd7-67177509f1f0', url: 'https://github.com/AsianHope/vdpme.git'
+                	git branch: 'next', credentialsId: '35d41123-6975-4d00-9bd7-67177509f1f0', url: 'git@github.com:AsianHope/vdpme.git'
 		}
             }
             stage("Build") { 
