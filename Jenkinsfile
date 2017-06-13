@@ -21,7 +21,9 @@ def notifySlack(String buildStatus = 'STARTED') {
 
 pipeline{
 	agent any
-	options {[[$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', artifactDaysToKeepStr: '', artifactNumToKeepStr: '10', daysToKeepStr: '', numToKeepStr: '10']]]};
+	options {
+		buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
+	}
 	stages {
             stage("Preparation") {
 		steps {
