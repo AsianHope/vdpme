@@ -71,7 +71,8 @@ pipeline{
 				sh'''git checkout master
 				     git merge next 
                                      git push origin master'''
-                                sh'ansible-playbook /opt/jenkins/jethro/site.yml'
+                                sh'''cd /opt/jenkins/jethro/
+				     ansible-playbook /opt/jenkins/jethro/site.yml'''
 		}
 	    }
             always {
