@@ -45,6 +45,7 @@ pipeline{
                                         mv /opt/jenkins/*.sql /opt/jenkins/vdpme.sql
 					mysql -udjango -pdjango vdpme < /opt/jenkins/vdpme.sql
 					python manage.py migrate
+					rm -rf .pyenv
 					'''
 			}
 		}
