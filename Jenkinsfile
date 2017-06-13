@@ -51,12 +51,6 @@ pipeline{
             }
 	}
         post {
-	    failure {
-		script{
-				currentBuild.result = "FAILED"	
-                        	echo "build failed"
-		}
-            }
 	    unstable {
 		script {
 				currentBuild.result = "UNSTABLE"
@@ -74,12 +68,18 @@ pipeline{
 				     ansible-playbook /opt/jenkins/jethro/site.yml'''
 		}
 	    }
+            failure {
+                script{
+                                currentBuild.result = "FAILED"
+                                echo "build failed" 
+                }               
+            }   
             always {
 		script {
 //				junit '**/target/*.xml'
 //				archive 'target/*.jar'
 				notifySlack(currentBuild.result)
-//				sh 'rm /opt/jenkins/vdpme.sql'
+				sh 'rm /opt/jenkins/vdpme.sql'
 				echo "end of build"
 		}
 	   }
