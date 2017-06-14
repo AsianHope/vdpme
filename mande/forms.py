@@ -144,7 +144,6 @@ class ClassroomEnrollmentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
          super(ClassroomEnrollmentForm, self).__init__(*args, **kwargs)
          self.fields['classroom_id'].queryset = Classroom.objects.filter(active=True).order_by('school_id')
-
     class Meta:
         model = ClassroomEnrollment
         exclude=[]
@@ -182,7 +181,7 @@ class HealthForm(forms.ModelForm):
         exclude=[]
         error_messages = {
             'height': {
-                'max_whole_digits':_('nsure that there are no more than 3 digits before the decimal point.'),
+                'max_whole_digits':_('Ensure that there are no more than 3 digits before the decimal point.'),
                 'max_digits':_('Ensure that there are no more than 5 digits in total.')
             },
             'weight': {
