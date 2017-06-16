@@ -86,7 +86,8 @@ $('#id_classroom_id').change(function(){
   window.location.href=url
 });
 $("[type=checkbox]").change(function(){
-      // varible to hold string      if($(this).is(':checked')){
+      // varible to hold string
+      if($(this).is(':checked')){
           $('#selectedstudents').append('<li id="'+this.id+'student">'+$('label[for="'+this.id+'"]').text()+'</li>');
       } else {
           $('#'+this.id+'student').remove();
