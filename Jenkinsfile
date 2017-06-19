@@ -72,7 +72,7 @@ pipeline{
 					     ansible-playbook /opt/jenkins/jethro/site.yml''')
 				} catch (e) {
 				     currentBuild.result = "FAILED"
-				     echo e
+				     println(e.getMessage()) 
 				}
 		}
 	    }
