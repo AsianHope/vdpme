@@ -69,7 +69,7 @@ pipeline{
 	                             git push origin master
 	                             cd /opt/jenkins/jethro/
 				     ansible-playbook /opt/jenkins/jethro/site.yml''')
-				def state = Integer.toString(status)
+				def state = status.toString()
 				if (state != "0") {
 					currentBuild.result = "FAILED"
 					echo status
