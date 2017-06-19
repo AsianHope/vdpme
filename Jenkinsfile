@@ -89,10 +89,12 @@ pipeline{
 		}
 	   }
         }
-	stage("last one"){
-		steps{
-			script{
-                                notifySlack(currentBuild.result)
+	stages{
+		stage{"notify slack"
+			steps{
+				script{
+                                	notifySlack(currentBuild.result)
+				}
 			}	
 		}
 	}
