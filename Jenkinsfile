@@ -69,10 +69,8 @@ pipeline{
 	                             git push origin master
 	                             cd /opt/jenkins/jethro/
 				     ansible-playbook /opt/jenkins/jethro/site.yml''')
-				def state = status.toString()
-				if (state != "0") {
+				if (status != "0") {
 					currentBuild.result = "FAILED"
-					echo status
 				}
 				notifySlack(currentBuild.result)
 		}
