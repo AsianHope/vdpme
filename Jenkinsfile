@@ -46,7 +46,7 @@ pipeline{
 
                                         gunzip -f -d /opt/jenkins/*.gz
 
-                                        mv -fT /opt/jenkins/*.sql /opt/jenkins/vdpme.sql
+                                        mv -fT /opt/jenkins/jethro-live*.sql /opt/jenkins/vdpme.sql
 
 					mysql -udjango -pdjango vdpme < /opt/jenkins/vdpme.sql
 
