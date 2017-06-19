@@ -36,9 +36,7 @@ pipeline{
 			script{
 				sh'''	PYENV_HOME=$WORKSPACE/.pyenv/
 	                             	# Delete previously built virtualenv
-	                            	if [ -d $PYENV_HOME ]; then
-	                                	rm -rf $PYENV_HOME
-	                            	fi
+	                            	if [ -d $PYENV_HOME ]; then rm -rf $PYENV_HOME fi
 	                                # Create virtualenv and install necessary packages
 	                            	virtualenv --no-site-packages $PYENV_HOME
 	                            	. $PYENV_HOME/bin/activate
@@ -85,11 +83,18 @@ pipeline{
 		script {
 //				junit '**/target/*.xml'
 //				archive 'target/*.jar'
-				notifySlack(currentBuild.result)
+//				notifySlack(currentBuild.result)
 				echo "end of build"
 				sh "rm /opt/jenkins/vdpme.sql"
 		}
 	   }
         }
+	stage("last one"){
+		steps{
+			script{
+                                notifySlack(currentBuild.result)
+			}	
+		}
+	}
 }
 //
