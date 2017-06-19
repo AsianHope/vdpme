@@ -43,13 +43,10 @@ pipeline{
 	                            	. $PYENV_HOME/bin/activate
 	                            	pip install --quiet -r requirements.txt
 					ssh root@jethro.asianhope.org 'bash /opt/scripts/pickbackup.sh'
-
                                         gunzip -f -d /opt/jenkins/*.gz
-
                                         mv -fT /opt/jenkins/jethro-live*.sql /opt/jenkins/vdpme.sql
-
 					mysql -udjango -pdjango vdpme < /opt/jenkins/vdpme.sql
-
+					python manage.py makemigrations
 					python manage.py migrate
 					'''
 			}
@@ -92,7 +89,6 @@ pipeline{
 //				archive 'target/*.jar'
 //				notifySlack(currentBuild.result)
 				echo "end of build"
-				deleteDir()
 //				sh "rm /opt/jenkins/vdpme.sql"
 		}
 	   }
