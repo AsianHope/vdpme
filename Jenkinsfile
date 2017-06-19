@@ -45,7 +45,8 @@ pipeline{
 					rm /opt/jenkins/vdpme.sql
 					ssh root@jethro.asianhope.org 'bash /opt/scripts/pickbackup.sh'
                                         gunzip -d /opt/jenkins/*.gz
-                                        mv /opt/jenkins/*.sql /opt/jenkins/vdpme.sql mysql -udjango -pdjango vdpme < /opt/jenkins/vdpme.sql
+                                        mv /opt/jenkins/*.sql /opt/jenkins/vdpme.sql 
+					mysql -udjango -pdjango vdpme < /opt/jenkins/vdpme.sql
 					python manage.py migrate
 					'''
 			}
