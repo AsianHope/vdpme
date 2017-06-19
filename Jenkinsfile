@@ -56,6 +56,7 @@ pipeline{
 		script {
 				currentBuild.result = "UNSTABLE"
 				echo "build unstable"
+				notifySlack(currentBuild.result)
 		}
 	    }
 	    success {
@@ -71,12 +72,14 @@ pipeline{
 					currentBuild.result = "FAILED"
 					echo status
 				}
+				notifySlack(currentBuild.result)
 		}
 	    }
             failure {
                 script{
                                 currentBuild.result = "FAILED"
                                 echo "build failed" 
+				notifySlack(currentBuild.result)
                 }               
             }   
             always {
@@ -89,14 +92,4 @@ pipeline{
 		}
 	   }
         }
-	stages{
-		stage{"notify slack"
-			steps{
-				script{
-                                	notifySlack(currentBuild.result)
-				}
-			}	
-		}
-	}
 }
-//
