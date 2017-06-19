@@ -65,15 +65,15 @@ pipeline{
 		script {
 				currentBuild.result = "SUCCESS"
 				echo "build success"
-//				def status = sh(returnStatus: true, script:'''git checkout master
-//				     git merge next 
-//	                             git push origin master
-//	                             cd /opt/jenkins/jethro/
-//				     ansible-playbook /opt/jenkins/jethro/site.yml''')
-//				if (status != "0") {
-//					currentBuild.result = "FAILED"
-//				}
-//				notifySlack(currentBuild.result)
+				def status = sh(returnStatus: true, script:'''git checkout master
+				     git merge next 
+	                             git push origin master
+	                             cd /opt/jenkins/jethro/
+				     ansible-playbook /opt/jenkins/jethro/site.yml''')
+				if (status != 0) {
+					currentBuild.result = "FAILED"
+				}
+				notifySlack(currentBuild.result)
 		}
 	    }
             failure {
