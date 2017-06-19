@@ -88,7 +88,7 @@ pipeline{
 //				archive 'target/*.jar'
 //				notifySlack(currentBuild.result)
 				echo "end of build"
-				deleteDir($WORKSPACE)
+				deleteDir()
 //				sh "rm /opt/jenkins/vdpme.sql"
 		}
 	   }
