@@ -69,9 +69,10 @@ pipeline{
 					     git merge next 
 	                                     git push origin master
 	                                     cd /opt/jenkins/jethro/
-					     ansible-playbook afd/opt/jenkins/jethro/site.yml''')
+					     ansible-playbook /opt/jenkins/jethro/site.yml''')
 				} catch (e) {
 				     currentBuild.result = "FAILED"
+				     echo e
 				}
 		}
 	    }
