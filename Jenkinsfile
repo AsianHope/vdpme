@@ -64,15 +64,14 @@ pipeline{
 		script {
 				currentBuild.result = "SUCCESS"
 				echo "build success"
-				try{
-					sh(returnStatus: true, script:'''git checkout master
-					     git merge next 
-	                                     git push origin master
-	                                     cd /opt/jenkins/jethro/
-					     ansible-playbook /opt/jenkins/jethro/site.yml''')
-				} catch (e) {
-				     currentBuild.result = "FAILED"
-				     println(e.getMessage()) 
+				def status = sh(returnStatus: true, script:'''git checkout master
+				     git merge next 
+	                             git push origin master
+	                             cd /opt/jenkins/jethro/
+				     ansible-playbook /opt/jenkins/jethro/site.yml''')
+				if (status != 0) {
+					currentBuild.result = "FAILED"
+					echo status
 				}
 		}
 	    }
