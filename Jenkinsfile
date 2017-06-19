@@ -36,7 +36,8 @@ pipeline{
 			script{
 				sh'''	PYENV_HOME=$WORKSPACE/.pyenv/
 	                             	# Delete previously built virtualenv
-	                            	if [ -d $PYENV_HOME ]; then rm -rf $PYENV_HOME fi
+	                            	if [ -d $PYENV_HOME ]; then rm -rf $PYENV_HOME
+					fi
 	                                # Create virtualenv and install necessary packages
 	                            	virtualenv --no-site-packages $PYENV_HOME
 	                            	. $PYENV_HOME/bin/activate
@@ -68,10 +69,10 @@ pipeline{
 	                             git push origin master
 	                             cd /opt/jenkins/jethro/
 				     ansible-playbook /opt/jenkins/jethro/site.yml''')
-				if (status != 0) 
+				if (status != 0) {
 					currentBuild.result = "FAILED"
 					echo status
-				fi
+				}
 				notifySlack(currentBuild.result)
 		}
 	    }
