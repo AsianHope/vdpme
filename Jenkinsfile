@@ -43,8 +43,8 @@ pipeline{
 	                            	. $PYENV_HOME/bin/activate
 	                            	pip install --quiet -r requirements.txt
 					ssh root@jethro.asianhope.org 'bash /opt/scripts/pickbackup.sh'
-                                        gunzip -d /opt/jenkins/*.gz
-                                        mv /opt/jenkins/*.sql /opt/jenkins/vdpme.sql 
+                                        gunzip -f -d /opt/jenkins/*.gz
+                                        mv -f /opt/jenkins/*.sql /opt/jenkins/vdpme.sql 
 					mysql -udjango -pdjango vdpme < /opt/jenkins/vdpme.sql
 					python manage.py migrate
 					'''
