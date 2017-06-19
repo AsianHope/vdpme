@@ -88,10 +88,9 @@ pipeline{
 //				junit '**/target/*.xml'
 //				archive 'target/*.jar'
 //				notifySlack(currentBuild.result)
-				echo "end of build"
+//				echo "end of build"
 //				sh "rm /opt/jenkins/vdpme.sql"
 		}
 	   }
         }
 }
-//
