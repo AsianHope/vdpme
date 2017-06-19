@@ -42,6 +42,7 @@ pipeline{
 	                            	virtualenv --no-site-packages $PYENV_HOME
 	                            	. $PYENV_HOME/bin/activate
 	                            	pip install --quiet -r requirements.txt
+					rm /opt/jenkins/vdpme.sql
 					ssh root@jethro.asianhope.org 'bash /opt/scripts/pickbackup.sh'
                                         gunzip -d /opt/jenkins/*.gz
                                         mv /opt/jenkins/*.sql /opt/jenkins/vdpme.sql
@@ -88,7 +89,7 @@ pipeline{
 //				archive 'target/*.jar'
 //				notifySlack(currentBuild.result)
 				echo "end of build"
-				sh "rm /opt/jenkins/vdpme.sql"
+//				sh "rm /opt/jenkins/vdpme.sql"
 		}
 	   }
         }
