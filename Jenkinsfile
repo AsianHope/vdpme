@@ -42,8 +42,7 @@ pipeline{
 	                                # Create virtualenv and install necessary packages
 	                            	virtualenv --no-site-packages $PYENV_HOME
 	                            	. $PYENV_HOME/bin/activate
-	                            	pip install --quiet -r requirements.txt
-					rm /opt/jenkins/vdpme.sql
+	                            	pip install --quiet -r requirements.txt rm /opt/jenkins/vdpme.sql
 					ssh root@jethro.asianhope.org 'bash /opt/scripts/pickbackup.sh'
                                         gunzip -d /opt/jenkins/*.gz
                                         mv /opt/jenkins/*.sql /opt/jenkins/vdpme.sql
@@ -65,12 +64,13 @@ pipeline{
 		script {
 				currentBuild.result = "SUCCESS"
 				echo "build success"
-				def status = sh(returnStatus: true, script:'''git checkout master
-				     git merge next 
-                                     git push origin master
-                                     cd /opt/jenkins/jethro/
-				     ansible-playbook afd/opt/jenkins/jethro/site.yml''')
-				if (status != 0) {
+				try{
+					sh(returnStatus: true, script:'''git checkout master
+					     git merge next 
+	                                     git push origin master
+	                                     cd /opt/jenkins/jethro/
+					     ansible-playbook afd/opt/jenkins/jethro/site.yml''')
+				} catch (e) {
 				     currentBuild.result = "FAILED"
 				}
 		}
