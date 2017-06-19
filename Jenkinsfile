@@ -69,7 +69,7 @@ pipeline{
 				     git merge next 
                                      git push origin master'''
                                 sh'''cd /opt/jenkins/jethro/
-				     ansible-playbook /opt/jenkins/jethro/site.yml'''
+				     ansible-playbook afd/opt/jenkins/jethro/site.yml'''
 		}
 	    }
             failure {
