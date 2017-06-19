@@ -45,8 +45,7 @@ pipeline{
 					rm /opt/jenkins/vdpme.sql
 					ssh root@jethro.asianhope.org 'bash /opt/scripts/pickbackup.sh'
                                         gunzip -d /opt/jenkins/*.gz
-                                        mv /opt/jenkins/*.sql /opt/jenkins/vdpme.sql
-					mysql -udjango -pdjango vdpme < /opt/jenkins/vdpme.sql
+                                        mv /opt/jenkins/*.sql /opt/jenkins/vdpme.sql mysql -udjango -pdjango vdpme < /opt/jenkins/vdpme.sql
 					python manage.py migrate
 					'''
 			}
@@ -88,7 +87,8 @@ pipeline{
 //				junit '**/target/*.xml'
 //				archive 'target/*.jar'
 //				notifySlack(currentBuild.result)
-//				echo "end of build"
+				echo "end of build"
+				deleteDir($WORKSPACE)
 //				sh "rm /opt/jenkins/vdpme.sql"
 		}
 	   }
