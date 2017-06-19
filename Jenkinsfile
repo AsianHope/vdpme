@@ -88,7 +88,7 @@ pipeline{
 //				archive 'target/*.jar'
 //				notifySlack(currentBuild.result)
 				echo "end of build"
-				sh "rm /opt/jenkins/vdpme.sql"
+//				sh "rm /opt/jenkins/vdpme.sql"
 		}
 	   }
         }
