@@ -36,18 +36,17 @@ pipeline{
 			script{
 				sh'''	PYENV_HOME=$WORKSPACE/.pyenv/
 	                             	# Delete previously built virtualenv
-	                            	if [ -d $PYENV_HOME ]; then
-	                                	rm -rf $PYENV_HOME
-	                            	fi
+	                            	if [ -d $PYENV_HOME ]; then rm -rf $PYENV_HOME
+					fi
 	                                # Create virtualenv and install necessary packages
 	                            	virtualenv --no-site-packages $PYENV_HOME
 	                            	. $PYENV_HOME/bin/activate
 	                            	pip install --quiet -r requirements.txt
-					rm /opt/jenkins/vdpme.sql
 					ssh root@jethro.asianhope.org 'bash /opt/scripts/pickbackup.sh'
-                                        gunzip -d /opt/jenkins/*.gz
-                                        mv /opt/jenkins/*.sql /opt/jenkins/vdpme.sql
+                                        gunzip -f -d /opt/jenkins/*.gz
+                                        mv -fT /opt/jenkins/jethro-live*.sql /opt/jenkins/vdpme.sql
 					mysql -udjango -pdjango vdpme < /opt/jenkins/vdpme.sql
+					python manage.py makemigrations
 					python manage.py migrate
 					'''
 			}
@@ -59,32 +58,40 @@ pipeline{
 		script {
 				currentBuild.result = "UNSTABLE"
 				echo "build unstable"
+				notifySlack(currentBuild.result)
 		}
 	    }
 	    success {
 		script {
 				currentBuild.result = "SUCCESS"
 				echo "build success"
-				sh'''git checkout master
+				def status = sh(returnStatus: true, script:'''git checkout master
 				     git merge next 
-                                     git push origin master'''
-                                sh'''cd /opt/jenkins/jethro/
-				     ansible-playbook /opt/jenkins/jethro/site.yml'''
+	                             git push origin master
+	                             cd /opt/jenkins/jethro/
+				     ansible-playbook /opt/jenkins/jethro/site.yml''')
+				if (status != 0) {
+					currentBuild.result = "FAILED"
+				}
+				notifySlack(currentBuild.result)
 		}
 	    }
             failure {
                 script{
                                 currentBuild.result = "FAILED"
                                 echo "build failed" 
+				notifySlack(currentBuild.result)
                 }               
             }   
             always {
 		script {
 //				junit '**/target/*.xml'
 //				archive 'target/*.jar'
-				notifySlack(currentBuild.result)
+//				notifySlack(currentBuild.result)
 				echo "end of build"
+//				sh "rm /opt/jenkins/vdpme.sql"
 		}
 	   }
         }
 }
+//
