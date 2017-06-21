@@ -1,9 +1,7 @@
 [{
 	"fields": {
 		"minors_training": "NA",
-		"grade_current": 1,
 		"minors": 0,
-		"reasons": "123",
 		"minors_in_public_school": 0,
 		"date": "2016-03-29T17:00:00Z",
 		"minors_in_other_school": 0,
@@ -13,12 +11,10 @@
 		"guardian1_relationship": "FATHER",
 		"guardian1_profession": "456",
 		"minors_working": 0,
-		"enrolled": "Y",
 		"guardian2_profession": "NA",
 		"address": "456",
 		"guardian2_relationship": "MOTHER",
 		"guardian2_name": "",
-		"grade_last": -1,
 		"minors_encouraged": "NA",
 		"guardian2_employment": "1",
 		"minors_profession": "NA",

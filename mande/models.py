@@ -169,7 +169,7 @@ class School(models.Model):
 
 class Classroom(models.Model):
 	classroom_id = models.AutoField(_('Classroom ID'),primary_key=True)
-	cohort = models.IntegerField(_('Target Grade'),choices=GRADES,default=2014)
+	cohort = models.IntegerField(_('Target Grade'),choices=GRADES,default=1)
 	school_id = models.ForeignKey(School,verbose_name=_('School ID'))
 	classroom_number = models.CharField(_('Description'),max_length=16,blank=True)
 	classroom_location = models.CharField(_('Classroom Location'),max_length=128,blank=True)
@@ -381,6 +381,7 @@ class IntakeSurvey(models.Model):
 		  pschool = None
 		if pschool == None:
 		  a = PublicSchoolHistory()
+		  a.student_id = self
 		  a.status = 'N'
 		  a.last_grade = 0
 		  a.reasons = 'Not Entered'
@@ -527,7 +528,7 @@ class Attendance(models.Model):
 	attendance = models.CharField(_('Attendance'),max_length=2,choices=ATTENDANCE_CODES,default='P',null=True)
 	notes = models.CharField(_('Notes'),max_length=256,blank=True)
 	def __unicode__(self):
-		return unicode(self.date) + ': '+ self.attendance + ' - ' + unicode(self.student_id)
+		return unicode(self.date) + ' - '+self.attendance + ' - ' + unicode(self.student_id)
 	class Meta:
 		unique_together = (('student_id', 'date'),)
 
@@ -539,7 +540,7 @@ class Discipline(models.Model):
 	incident_description = models.CharField(_('Incident description'),max_length=256,default='')
 
 	def __unicode__(self):
-			return unicode(self.incident_date)+ ':'+unicode(self.student_id)
+			return unicode(self.incident_date)+ ' - '+unicode(self.student_id)
 
 class Academic(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey,verbose_name=_('Student ID'))
@@ -550,7 +551,7 @@ class Academic(models.Model):
 	promote = models.BooleanField(_('Promote'),default=False)
 
 	def __unicode__(self):
-		return unicode(self.test_date)+ ':'+unicode(self.student_id)
+		return unicode(self.test_date)+ ' - '+unicode(self.student_id)
 	class Meta:
 		unique_together = (('student_id','test_date','test_level','promote'))
 
@@ -570,7 +571,7 @@ class Health(models.Model):
 	notes = models.TextField(_("Notes"),blank=True)									#all
 
 	def __unicode__(self):
-		return unicode(self.appointment_date) + ': '+self.appointment_type+ ' - '+unicode(self.student_id)
+		return unicode(self.appointment_date) + ' - '+self.appointment_type+ ' - '+unicode(self.student_id)
 
 	class Meta:
 		unique_together = (('student_id','appointment_date','appointment_type'))
@@ -582,7 +583,7 @@ class ClassroomEnrollment(models.Model):
 	drop_date = models.DateField(_('Drop Date'),null=True,blank=True)
 
 	def __unicode__(self):
-		return unicode(self.student_id)+unicode(self.classroom_id)
+		return unicode(self.student_id)+' - '+unicode(self.classroom_id)
 	class Meta:
 		unique_together = (('student_id','classroom_id'))
 
@@ -590,7 +591,7 @@ class ClassroomTeacher(models.Model):
 	classroom_id = models.ForeignKey(Classroom,verbose_name=_('Classroom ID'))
 	teacher_id = models.ForeignKey(Teacher,verbose_name=_('Teacher ID'))
 	def __unicode__(self):
-		return unicode(self.teacher_id)+unicode(self.classroom_id)
+		return unicode(self.teacher_id)+' - '+unicode(self.classroom_id)
 
 class NotificationLog(models.Model):
 	date = models.DateTimeField(_('Date'),auto_now=True)
@@ -600,7 +601,7 @@ class NotificationLog(models.Model):
 	font_awesome_icon = models.TextField('Font Awesome Icon',max_length=16,default="fa-bolt") #a font-awesome icon name
 
 	def __unicode__(self):
-		return unicode(self.date) + ' - '+ unicode(self.user) + ' ' + unicode(self.text)
+		return unicode(self.date) + ' - '+ unicode(self.user) + ' - ' + unicode(self.text)
 
 	class Meta:
 		get_latest_by = 'date'
@@ -612,7 +613,7 @@ class AttendanceLog(models.Model):
 	present = models.IntegerField(_("Present"),default=0)
 
 	def __unicode__(self):
-		return unicode(self.classroom) + ': '+ unicode(self.date)
+		return unicode(self.classroom) + ' - '+ unicode(self.date)
 	class Meta:
 			unique_together = (('classroom','date'))
 
