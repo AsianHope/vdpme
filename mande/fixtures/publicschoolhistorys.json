@@ -1,0 +1,28 @@
+[
+  {
+      "fields": {
+          "student_id": 1,
+          "status": "N",
+          "enroll_date": "2015-07-01",
+          "drop_date": "2016-07-01",
+          "grade":1,
+          "school_name": "test",
+          "reasons": "test"
+      },
+      "model": "mande.publicschoolhistory",
+      "pk": 1
+  },
+  {
+      "fields": {
+          "student_id": 1,
+          "status": "Y",
+          "enroll_date": "2017-07-01",
+          "drop_date": null,
+          "grade":2,
+          "school_name": "test",
+          "reasons": "test"
+      },
+      "model": "mande.publicschoolhistory",
+      "pk": 2
+  }
+]

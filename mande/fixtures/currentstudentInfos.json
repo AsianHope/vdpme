@@ -1,0 +1,155 @@
+[
+  {
+      "fields": {
+          "student_id": 1,
+          "name": "Test 1",
+          "site": 1,
+          "date": "2015-07-01",
+          "dob": "2005-07-01",
+          "gender": "F",
+          "refresh": "2017-01-01",
+          "age_appropriate_grade": 6,
+          "at_grade_level": false,
+          "in_public_school": false,
+          "vdp_grade": 50
+      },
+      "model": "mande.currentstudentinfo",
+      "pk": 1
+  },
+  {
+      "fields": {
+          "student_id": 2,
+          "name": "Test 1",
+          "site": 1,
+          "date": "2015-07-01",
+          "dob": "2005-07-01",
+          "gender": "F",
+          "refresh": "2017-01-01",
+          "age_appropriate_grade": 6,
+          "at_grade_level": false,
+          "in_public_school": false,
+          "vdp_grade": 1
+      },
+      "model": "mande.currentstudentinfo",
+      "pk": 2
+  },
+  {
+      "fields": {
+          "student_id": 3,
+          "name": "Test 1",
+          "site": 2,
+          "date": "2015-07-01",
+          "dob": "2005-07-01",
+          "gender": "M",
+          "refresh": "2017-01-01",
+          "age_appropriate_grade": 6,
+          "at_grade_level": false,
+          "in_public_school": false,
+          "vdp_grade": 50
+      },
+      "model": "mande.currentstudentinfo",
+      "pk": 3
+  },
+  {
+      "fields": {
+          "student_id": 4,
+          "name": "Test 1",
+          "site": 2,
+          "date": "2015-07-01",
+          "dob": "2005-07-01",
+          "gender": "M",
+          "refresh": "2017-01-01",
+          "age_appropriate_grade": 6,
+          "at_grade_level": false,
+          "in_public_school": false,
+          "vdp_grade": 2
+      },
+      "model": "mande.currentstudentinfo",
+      "pk": 4
+  },
+  {
+      "fields": {
+          "student_id": 5,
+          "name": "Test 1",
+          "site": 3,
+          "date": "2015-07-01",
+          "dob": "2005-07-01",
+          "gender": "M",
+          "refresh": "2017-01-01",
+          "age_appropriate_grade": 6,
+          "at_grade_level": false,
+          "in_public_school": false,
+          "vdp_grade": 3
+      },
+      "model": "mande.currentstudentinfo",
+      "pk": 5
+  },
+  {
+      "fields": {
+          "student_id": 6,
+          "name": "Test 1",
+          "site": 3,
+          "date": "2015-07-01",
+          "dob": "2005-07-01",
+          "gender": "M",
+          "refresh": "2017-01-01",
+          "age_appropriate_grade": 6,
+          "at_grade_level": false,
+          "in_public_school": false,
+          "vdp_grade": 4
+      },
+      "model": "mande.currentstudentinfo",
+      "pk": 6
+  },
+  {
+      "fields": {
+          "student_id": 7,
+          "name": "Test 1",
+          "site": 1,
+          "date": "2015-07-01",
+          "dob": "2001-07-01",
+          "gender": "M",
+          "refresh": "2017-01-01",
+          "age_appropriate_grade": 10,
+          "at_grade_level": false,
+          "in_public_school": false,
+          "vdp_grade": 5
+      },
+      "model": "mande.currentstudentinfo",
+      "pk": 7
+  },
+  {
+      "fields": {
+          "student_id": 8,
+          "name": "Test 1",
+          "site": 1,
+          "date": "2015-07-01",
+          "dob": "2003-07-01",
+          "gender": "M",
+          "refresh": "2017-01-01",
+          "age_appropriate_grade": 8,
+          "at_grade_level": false,
+          "in_public_school": false,
+          "vdp_grade": 6
+      },
+      "model": "mande.currentstudentinfo",
+      "pk": 8
+  },
+  {
+      "fields": {
+          "student_id": 9,
+          "name": "Test 1",
+          "site": 2,
+          "date": "2015-07-01",
+          "dob": "2003-07-01",
+          "gender": "M",
+          "refresh": "2017-01-01",
+          "age_appropriate_grade": 8,
+          "at_grade_level": false,
+          "in_public_school": false,
+          "vdp_grade": 0
+      },
+      "model": "mande.currentstudentinfo",
+      "pk": 9
+  }
+]

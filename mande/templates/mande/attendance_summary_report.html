@@ -42,7 +42,11 @@
                   {% endif %}
                 {% endfor %}
               </td>
+              {% if student.student_id %}
               <td><a href="{% url 'student_attendance_detail' student.student_id %}">{{ student }}</a></td>
+              {% else %}
+              <td><a href="{% url 'student_attendance_detail' student %}">{{ student }}</a></td>
+              {% endif %}
               <td>{{ student.gender }}</td>
               <td>{{ attendance.present }}</td>
               <td>{{ attendance.unapproved }}</td>

@@ -1,0 +1,12 @@
+[
+  {
+    "fields":{
+      "description": "test",
+      "test_date": "2017-01-01",
+      "marking_period_start": "2017-01-01",
+      "marking_period_end": "2017-01-01"
+    },
+    "model":"mande.academicmarkingperiod",
+    "pk": 1
+  }
+]

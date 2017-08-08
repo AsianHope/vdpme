@@ -1,5 +1,6 @@
 from django import forms
 from datetime import date
+from django.forms.models import modelformset_factory
 
 from mande.models import IntakeSurvey
 from mande.models import IntakeUpdate
@@ -164,6 +165,10 @@ class AttendanceForm(forms.ModelForm):
         model = Attendance
         exclude=[]
 
+AttendanceFormSet = modelformset_factory(Attendance,
+                                       form=AttendanceForm,
+                                       extra=0)
+                                       
 class AcademicForm(forms.ModelForm):
     promote = forms.BooleanField(label='',required=False)
     test_grade_math = forms.IntegerField(label='',widget=forms.TextInput(attrs={'size':'3'}), required=False)
@@ -173,6 +178,10 @@ class AcademicForm(forms.ModelForm):
     class Meta:
         model = Academic
         exclude = []
+
+AcademicFormSet = modelformset_factory(Academic,
+                                       form=AcademicForm,
+                                       extra=0)
 
 class HealthForm(forms.ModelForm):
     appointment_date = forms.DateField(label=_('Appointment date'),widget=Html5DateInput,initial=date.today().isoformat())
@@ -221,6 +230,10 @@ class StudentEvaluationForm(forms.ModelForm):
     class Meta:
         model = StudentEvaluation
         exclude = []
+
+StudentEvaluationFormSet = modelformset_factory(StudentEvaluation,
+                                       form=StudentEvaluationForm,
+                                       extra=0)
 
 class StudentPublicSchoolHistoryForm(forms.ModelForm):
     status = forms.ChoiceField(label=_('Enrolled in Public School'),choices=YESNO,initial='Y')

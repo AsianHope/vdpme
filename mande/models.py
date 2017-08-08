@@ -528,7 +528,7 @@ class Attendance(models.Model):
 	attendance = models.CharField(_('Attendance'),max_length=2,choices=ATTENDANCE_CODES,default='P',null=True)
 	notes = models.CharField(_('Notes'),max_length=256,blank=True)
 	def __unicode__(self):
-		return unicode(self.date) + ' - '+self.attendance + ' - ' + unicode(self.student_id)
+		return unicode(self.date) + ' - '+unicode(self.attendance) + ' - ' + unicode(self.student_id)
 	class Meta:
 		unique_together = (('student_id', 'date'),)
 

@@ -55,6 +55,7 @@ from mande.forms import AttendanceForm
 from mande.forms import AcademicForm
 from mande.forms import IntakeInternalForm
 from mande.forms import HealthForm
+from mande.forms import AttendanceFormSet
 
 from mande.utils import getEnrolledStudents
 from mande.utils import getStudentGradebyID
@@ -138,12 +139,6 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
       if len(student_attendance) > 0:
         message = 'Attendance for one or more students has been taken'
 
-      #pre instantiate data for this form so that we can update the whole queryset later
-      for student in students:
-        Attendance.objects.get_or_create(student_id=student.student_id,
-                                         date=attendance_date,
-                                         defaults={'attendance':None,
-                                                   'classroom':classroom})
 
       try:
         offered = classroom.getAttendanceDayOfferings(attendance_date)
@@ -154,15 +149,7 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
         submit_enabled = False
         #Attendance.objects.filter(attendance=None).delete()
 
-      #now get the whole set of attendance objects and create the formset
-      student_attendance = Attendance.objects.filter(student_id__in=students.values_list('student_id'),
-                                                   date=attendance_date)
-      AttendanceFormSet = modelformset_factory(Attendance,
-                                             form=AttendanceForm,
-                                             extra=0)
-
       if request.method == 'POST':
-
         formset = AttendanceFormSet(request.POST)
         if formset.is_valid():
             formset.save()
@@ -202,6 +189,15 @@ def take_class_attendance(request, classroom_id, attendance_date=date.today().is
                 return HttpResponseRedirect(next_url)
 
       else:
+        #pre instantiate data for this form so that we can update the whole queryset later
+        for student in students:
+          Attendance.objects.get_or_create(student_id=student.student_id,
+                                           date=attendance_date,
+                                           defaults={'attendance':None,
+                                                     'classroom':classroom})
+        #now get the whole set of attendance objects and create the formset
+        student_attendance = Attendance.objects.filter(student_id__in=students.values_list('student_id'),
+                                                     date=attendance_date)
         formset = AttendanceFormSet(queryset = student_attendance)
       context= {  'classroom':classroom,
                 'students':students,
@@ -289,7 +285,7 @@ def attendance_days(request,classroom_id,attendance_date=date.today().isoformat(
             add.save()
         #TODO: make a success template so we can be smarter in our JS
         #TODO: figure out a way to not group requests for slimmer logging
-        return render(request,'mande/attendancedays.html','')
+        return render(request,'mande/attendancedays.html',{})
 
       #copy this calendar to all other calendars at the site from today forward
       elif request.method == 'GET' and request.GET.get('autoapply'):
@@ -304,7 +300,7 @@ def attendance_days(request,classroom_id,attendance_date=date.today().isoformat(
 
 
 
-        return render(request,'mande/attendancedays.html','')
+        return render(request,'mande/attendancedays.html',{})
       #otherwise display the calendar
       else:
         attendance_days = AttendanceDayOffering.objects.filter(

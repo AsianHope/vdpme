@@ -319,7 +319,7 @@ def data_audit(request,audit_type='ALL'):
 
         '''students who are quite young or quite old'''
         if (student.dob.year > (datetime.now().year-TOO_YOUNG)) or (student.dob.year<datetime.now().year-TOO_OLD):
-            text = 'Incorrect DOB '
+            text = 'Incorrect DOB'
             age = '(~'+unicode(datetime.now().year-student.dob.year)+' years old)'
             resolution = reverse('intake_survey',kwargs={'student_id':student.student_id})
             limit = 'dob'
@@ -344,7 +344,7 @@ def data_audit(request,audit_type='ALL'):
                 filters.append(text)
         '''student no public school history'''
         if PublicSchoolHistory.objects.filter(student_id=student).count()==0:
-            text = 'No Public School History '
+            text = 'No Public School History'
             resolution = reverse('student_detail',kwargs={'student_id':student.student_id})
             addAnomaly(anomalies, student, text, resolution)
             filters.append(text)
@@ -1186,7 +1186,7 @@ def advanced_report(request):
 
          # ----- for field that has in intakeupdate -----
          if address != '':
-             recent_field_list['address'] == address
+             recent_field_list['address'] = address
 
          #  guardian 1
          if guardian1_name != '':

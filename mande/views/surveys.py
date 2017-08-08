@@ -130,19 +130,32 @@ def intake_survey(request,student_id=None):
                                         font_awesome_icon=icon)
                 log.save()
                 # update CurrentStudentInfo
-                student = CurrentStudentInfo(
-                    student_id=instance.student_id,
-                    name = instance.name,
-                    site = instance.site,
-                    date = instance.date,
-                    dob = instance.dob,
-                    gender = instance.gender,
-                    age_appropriate_grade = instance.age_appropriate_grade(),
-                    in_public_school = True if instance.get_pschool().status=='Y' else False,
-                    at_grade_level = studentAtAgeAppropriateGradeLevel(instance.student_id),
-                    vdp_grade = instance.current_vdp_grade()
-                )
-                student.save()
+                try:
+                    obj = CurrentStudentInfo.objects.get(student_id=instance.student_id)
+                    obj.name = instance.name
+                    obj.site = instance.site
+                    obj.date = instance.date
+                    obj.dob = instance.dob
+                    obj.gender = instance.gender
+                    obj.age_appropriate_grade = instance.age_appropriate_grade()
+                    obj.in_public_school = True if instance.get_pschool().status=='Y' else False
+                    obj.at_grade_level = studentAtAgeAppropriateGradeLevel(instance.student_id)
+                    obj.vdp_grade = instance.current_vdp_grade()
+                    obj.save()
+                except CurrentStudentInfo.DoesNotExist:
+                    obj = CurrentStudentInfo(
+                        student_id=instance.student_id,
+                        name = instance.name,
+                        site = instance.site,
+                        date = instance.date,
+                        dob = instance.dob,
+                        gender = instance.gender,
+                        age_appropriate_grade = instance.age_appropriate_grade(),
+                        in_public_school = True if instance.get_pschool().status=='Y' else False,
+                        at_grade_level = studentAtAgeAppropriateGradeLevel(instance.student_id),
+                        vdp_grade = instance.current_vdp_grade()
+                    )
+                    obj.save()
                 #then return, defaulting to an intake internal
                 # if next_url is None:
                 #     next_url = reverse('intake_internal',kwargs={'student_id':instance.student_id})
@@ -245,19 +258,21 @@ def intake_update(request,student_id=0):
             # update cache table
             student = IntakeSurvey.objects.get(student_id=instance.student_id.student_id)
             current = student.getRecentFields()
-
-            update_student = CurrentStudentInfo.objects.get(student_id=student.student_id)
-            update_student.name = current['name']
-            update_student.site = current['site']
-            update_student.date = current['date']
-            update_student.dob = current['dob']
-            update_student.gender = current['gender']
-            update_student.age_appropriate_grade = student.age_appropriate_grade()
-            update_student.in_public_school = True if student.get_pschool().status=='Y' else False
-            update_student.at_grade_level = studentAtAgeAppropriateGradeLevel(student.student_id)
-            update_student.vdp_grade = student.current_vdp_grade()
-            update_student.refresh = date.today().isoformat()
-            update_student.save()
+            try:
+                update_student = CurrentStudentInfo.objects.get(student_id=student.student_id)
+                update_student.name = current['name']
+                update_student.site = current['site']
+                update_student.date = current['date']
+                update_student.dob = current['dob']
+                update_student.gender = current['gender']
+                update_student.age_appropriate_grade = student.age_appropriate_grade()
+                update_student.in_public_school = True if student.get_pschool().status=='Y' else False
+                update_student.at_grade_level = studentAtAgeAppropriateGradeLevel(student.student_id)
+                update_student.vdp_grade = student.current_vdp_grade()
+                update_student.refresh = date.today().isoformat()
+                update_student.save()
+            except:
+                pass
             #then return
             return HttpResponseRedirect(next_url+'#'+next_tab)
       else:
@@ -498,7 +513,6 @@ def health_form(request, student_id=0, appointment_date=date.today().isoformat()
                 action = 'Input ' if created else 'Updated '
                 message = ( action+instance.appointment_type+
                             ' for '+instance.student_id.name)
-
                 log = NotificationLog(  user=request.user,
                                         text=message,
                                         font_awesome_icon='fa-medkit')

@@ -63,6 +63,9 @@ from mande.forms import HealthForm
 from mande.forms import StudentEvaluationForm
 from mande.forms import StudentPublicSchoolHistoryForm
 from mande.forms import AcademicMarkingPeriodForm
+from mande.forms import AcademicFormSet
+from mande.forms import StudentEvaluationFormSet
+
 
 from mande.utils import getEnrolledStudents
 from mande.utils import getStudentGradebyID
@@ -147,7 +150,7 @@ def student_detail(request, student_id):
           survey = IntakeSurvey.objects.get(pk=student_id)
       except IntakeSurvey.DoesNotExist as e:
           context = {
-            'error_sms':e
+            'error_sms':e.message
             }
           return render(request, 'mande/errors/intakesurveynotexist.html', context)
 
@@ -292,14 +295,13 @@ def teacher_form(request,status='active',teacher_id=0):
         form = TeacherForm(request.POST, instance=instance)
         if form.is_valid():
             instance = form.save()
-            stem = 'Added a new teacher:' if action is None else 'Updated teachers name:'
+            stem = 'Added a new teacher: ' if action is None else 'Updated teachers name: '
             message = stem+unicode(instance.name)
             log = NotificationLog(user=request.user,
                                   text=message,
                                   font_awesome_icon='fa-street-view')
             log.save()
             #then return
-            print reverse('teacher_form')
             return HttpResponseRedirect(reverse('teacher_form')+status)
       else:
             form = TeacherForm(instance=instance)
@@ -430,7 +432,6 @@ def classroomenrollment_form(request,classroom_id=0):
         #can't rely on classroom_id set by url - it may have been changed by the user.
         classroom_id = Classroom.objects.get(pk=request.POST.get('classroom_id'))
         enrollment_date = request.POST.get('enrollment_date')
-
         #this seems janky to me - surely there is a better way?
         for student in request.POST.getlist('student_id'):
             student_id = IntakeSurvey.objects.get(pk=student)
@@ -528,6 +529,7 @@ def academic_form(request, school_id, test_date=date.today().isoformat(), classr
       # find out if any student acadmics have been recorded
       student_academics = Academic.objects.filter(student_id__in=students.values_list('student_id'), test_date=test_date)
       #pre instantiate data for this form so that we can update the whole queryset later
+
       for student in students:
         Academic.objects.get_or_create( student_id=student.student_id,
                                                 test_date=test_date,
@@ -541,7 +543,6 @@ def academic_form(request, school_id, test_date=date.today().isoformat(), classr
           student_academics = Academic.objects.filter(student_id__in=students.values_list('student_id'),
                                                     test_date=test_date,
                                                     test_level=classroom.cohort)
-      AcademicFormSet = modelformset_factory(Academic, form=AcademicForm, extra=0)
 
       if request.method == 'POST':
         formset = AcademicFormSet(request.POST)
@@ -563,11 +564,14 @@ def academic_form(request, school_id, test_date=date.today().isoformat(), classr
                 for academic in instances:
                     # update cache table
                     student = IntakeSurvey.objects.get(student_id=academic.student_id.student_id)
-                    update_student = CurrentStudentInfo.objects.get(student_id=student.student_id)
-                    update_student.at_grade_level = studentAtAgeAppropriateGradeLevel(student.student_id)
-                    update_student.vdp_grade = student.current_vdp_grade()
-                    update_student.refresh = date.today().isoformat()
-                    update_student.save()
+                    try:
+                        update_student = CurrentStudentInfo.objects.get(student_id=student.student_id)
+                        update_student.at_grade_level = studentAtAgeAppropriateGradeLevel(student.student_id)
+                        update_student.vdp_grade = student.current_vdp_grade()
+                        update_student.refresh = date.today().isoformat()
+                        update_student.save()
+                    except:
+                        pass
             else:
                  warning = "Test date doesn't match with AcademicMarkingPeriod date."
       else:
@@ -655,12 +659,15 @@ def academic_form_single(request, student_id=0,test_id=None):
                                       font_awesome_icon='fa-calculator')
                 log.save()
                 # update cache table
-                student = IntakeSurvey.objects.get(student_id=instance.student_id.student_id)
-                update_student = CurrentStudentInfo.objects.get(student_id=student.student_id)
-                update_student.at_grade_level = studentAtAgeAppropriateGradeLevel(student.student_id)
-                update_student.vdp_grade = student.current_vdp_grade()
-                update_student.refresh = date.today().isoformat()
-                update_student.save()
+                try:
+                    student = IntakeSurvey.objects.get(student_id=instance.student_id.student_id)
+                    update_student = CurrentStudentInfo.objects.get(student_id=student.student_id)
+                    update_student.at_grade_level = studentAtAgeAppropriateGradeLevel(student.student_id)
+                    update_student.vdp_grade = student.current_vdp_grade()
+                    update_student.refresh = date.today().isoformat()
+                    update_student.save()
+                except:
+                    pass
                 # then return
                 return HttpResponseRedirect(
                             reverse('student_detail',
@@ -730,13 +737,10 @@ def studentevaluation_form(request, school_id, get_date=date.today().isoformat()
       student_evaluations = StudentEvaluation.objects.filter(student_id__in=students,
                                                 date=get_date)
 
-      StudentEvaluationFormSet = modelformset_factory(StudentEvaluation, form=StudentEvaluationForm, extra=0)
 
       if request.method == 'POST':
         formset = StudentEvaluationFormSet(request.POST)
-        print "Is formset valid?"
         if formset.is_valid():
-            print "yes!s"
             formset.save()
             message = "Saved."
             message = ('Recorded student evaluations for '+
@@ -870,7 +874,7 @@ def publicschool_form(request, student_id=0,id=None):
               #edit form
               instance = PublicSchoolHistory.objects.get(pk=id)
               form = StudentPublicSchoolHistoryForm(instance=instance)
-              action = 'Editing '
+              action = 'Editing'
           except ObjectDoesNotExist:
               #adding form
               form = StudentPublicSchoolHistoryForm(initial={'student_id': student_id})
@@ -892,17 +896,24 @@ def publicschool_form(request, student_id=0,id=None):
             if form.is_valid():
                 #process
                 instance = form.save()
-
+                sms = 'Edited' if action is 'Editing' else 'Added'
+                message = sms+' a public school history for '+instance.student_id.name
+                log = NotificationLog(user=request.user,
+                                      text=message,
+                                      font_awesome_icon='fa-graduation-cap')
+                log.save()
                 # update cache table
                 student = IntakeSurvey.objects.get(student_id=instance.student_id.student_id)
+                try:
+                    update_student = CurrentStudentInfo.objects.get(student_id=student.student_id)
+                    update_student.in_public_school = True if student.get_pschool().status=='Y' else False
+                    update_student.refresh = date.today().isoformat()
+                    update_student.save()
+                except:
+                    pass
 
-                update_student = CurrentStudentInfo.objects.get(student_id=student.student_id)
-                update_student.in_public_school = True if student.get_pschool().status=='Y' else False
-                update_student.refresh = date.today().isoformat()
-                update_student.save()
-
-                url = '/students/'+str(student_id)+'/#enrollment'
-                return HttpResponseRedirect(url)
+                url = reverse('student_detail',kwargs={'student_id':student_id})
+                return HttpResponseRedirect(url+'#enrollment')
             else:
                 print form.errors
 
@@ -930,10 +941,18 @@ def delete_public_school(request,id):
             pschool.delete()
             # update cache table
             student = IntakeSurvey.objects.get(student_id=pschool.student_id.student_id)
-            update_student = CurrentStudentInfo.objects.get(student_id=student.student_id)
-            update_student.in_public_school = True if student.get_pschool().status=='Y' else False
-            update_student.refresh = date.today().isoformat()
-            update_student.save()
+            try:
+                update_student = CurrentStudentInfo.objects.get(student_id=student.student_id)
+                update_student.in_public_school = True if student.get_pschool().status=='Y' else False
+                update_student.refresh = date.today().isoformat()
+                update_student.save()
+            except:
+                pass
+            sms = 'Deleted a public school history for '+student.name
+            log = NotificationLog(user=request.user,
+                                      text=sms,
+                                      font_awesome_icon='fa-graduation-cap')
+            log.save()
             messages.success(request, 'Public School History has been deleted successfully!', extra_tags='delete_public_school')
         except Exception as e:
             messages.error(request,'Fail to delete Public School History! ('+e.message+')',extra_tags='delete_public_school')

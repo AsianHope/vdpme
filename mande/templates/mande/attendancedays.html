@@ -42,13 +42,15 @@ $(document).ready( function() {
       //prevent whatever would have happend (probably nothing)
       e.preventDefault();
       //grab the day
-      var day = $(this).html();
+      var day = $(this).html().trim();
       //get the reference to the place we clicked
       var calendarhole = $(this)
       //send the day to the current location so we can toggle it in the DB
-      $.get(window.location.href,{'day':day},function( data ) {
-        calendarhole.toggleClass("filled")
-      });
+      if(day!='&nbsp;'){
+          $.get(window.location.href,{'day':day},function( data ) {
+            calendarhole.toggleClass("filled")
+          });
+      }
 
   });
   $('#decrement').click(function() {
