@@ -41,6 +41,7 @@ from mande.models import StudentEvaluation
 from mande.models import PublicSchoolHistory
 from mande.models import AcademicMarkingPeriod
 from mande.models import CurrentStudentInfo
+from mande.models import EvaluationMarkingPeriod
 
 from mande.models import GRADES
 from mande.models import ATTENDANCE_CODES
@@ -725,6 +726,11 @@ def studentevaluation_form(request, school_id, get_date=date.today().isoformat()
     if user_permissions(method_name,request.user):
       warning = ''
       message = ''
+      locked = True
+      today = date.today().isoformat()
+      making_period = EvaluationMarkingPeriod.objects.all().filter(Q(marking_period_start__lte=today) & Q(marking_period_end__gte=today))
+      if len(making_period) >=1 :
+        locked = False
       exit_surveys = ExitSurvey.objects.all().filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
       get_enrolled_student = ClassroomEnrollment.objects.exclude(student_id__in=exit_surveys).exclude(drop_date__lt=date.today().isoformat()).filter(classroom_id=classroom_id,student_id__date__lte=date.today().isoformat())
       students = get_enrolled_student
@@ -744,18 +750,22 @@ def studentevaluation_form(request, school_id, get_date=date.today().isoformat()
       if request.method == 'POST':
         formset = StudentEvaluationFormSet(request.POST)
         if formset.is_valid():
-            formset.save()
-            message = "Saved."
-            message = ('Recorded student evaluations for '+
-                            str(Classroom.objects.get(pk=classroom_id).get_cohort_display())
-                            +' - '+
-                            str(Classroom.objects.get(pk=classroom_id).classroom_number)
-                            +' at '+
-                            str(Classroom.objects.get(pk=classroom_id).school_id))
-            log = NotificationLog(  user=request.user,
-                                    text=message,
-                                    font_awesome_icon='fa-calculator')
-            log.save()
+            period = EvaluationMarkingPeriod.objects.all().filter(test_date=get_date)
+            if len(period)>=1:
+                formset.save()
+                message = "Saved."
+                message = ('Recorded student evaluations for '+
+                                str(Classroom.objects.get(pk=classroom_id).get_cohort_display())
+                                +' - '+
+                                str(Classroom.objects.get(pk=classroom_id).classroom_number)
+                                +' at '+
+                                str(Classroom.objects.get(pk=classroom_id).school_id))
+                log = NotificationLog(  user=request.user,
+                                        text=message,
+                                        font_awesome_icon='fa-calculator')
+                log.save()
+            else:
+                 warning = "Date doesn't match with EvaluationMarkingPeriod date."
         else:
             warning = 'Cannot record student evaluations. Please refresh the page and try again.'
             students = get_enrolled_student
@@ -781,7 +791,8 @@ def studentevaluation_form(request, school_id, get_date=date.today().isoformat()
                 'formset':formset,
                 'warning': mark_safe(warning),
                 'message': message,
-                'grades': dict(GRADES)
+                'grades': dict(GRADES),
+                'locked':locked
       }
 
       return render(request, 'mande/studentevaluationform.html', context)
@@ -798,9 +809,15 @@ def studentevaluation_select(request):
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
       classrooms = Classroom.objects.all()
+      locked = True
+      today = date.today().isoformat()
+      making_period = EvaluationMarkingPeriod.objects.all().filter(Q(marking_period_start__lte=today) & Q(marking_period_end__gte=today))
+      if len(making_period) >=1 :
+          locked = False
       context = {
                 'classrooms':classrooms,
                 'today': date.today().isoformat(),
+                'locked': locked
       }
       return render(request, 'mande/studentevaluationselect.html',context)
     else:
@@ -816,6 +833,11 @@ def studentevaluation_form_single(request, student_id=0):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
+      locked = True
+      today = date.today().isoformat()
+      making_period = EvaluationMarkingPeriod.objects.all().filter(Q(marking_period_start__lte=today) & Q(marking_period_end__gte=today))
+      if len(making_period) >=1 :
+            locked = False
       form = StudentEvaluationForm()
       get_date = request.POST.get('date') if request.method=='POST' else date.today().isoformat()
 
@@ -837,18 +859,22 @@ def studentevaluation_form_single(request, student_id=0):
         form = StudentEvaluationForm(request.POST)
         if form.is_valid():
             #process
-            instance = form.save()
-            message = 'Recorded student evaluation for '+instance.student_id.name
-            log = NotificationLog(user=request.user,
-                                  text=message,
-                                  font_awesome_icon='fa-calculator')
-            log.save()
-            #then return
-            return HttpResponseRedirect(
-                        reverse('student_detail',
-                                kwargs={'student_id':instance.student_id.student_id}))
-
-      context = {'form': form,'student_id':student_id}
+            evaluate_date = request.POST['date']
+            period = EvaluationMarkingPeriod.objects.all().filter(test_date=evaluate_date)
+            if len(period)>=1:
+                instance = form.save()
+                message = 'Recorded student evaluation for '+instance.student_id.name
+                log = NotificationLog(user=request.user,
+                                      text=message,
+                                      font_awesome_icon='fa-calculator')
+                log.save()
+                #then return
+                return HttpResponseRedirect(
+                            reverse('student_detail',
+                                    kwargs={'student_id':instance.student_id.student_id}))
+            else:
+               form.add_error('date', "Date doesn't match with EvaluationMarkingPeriod date.")
+      context = {'form': form,'student_id':student_id,'locked':locked}
 
       return render(request, 'mande/studentevaluationformsingle.html',context)
     else:

@@ -3,11 +3,17 @@
 {% load mandefilters %}
 {% load bootstrap3 %}
 {% block title %}
+{% if locked == True %}
+  {% trans 'Sorry, you cannot change Student Evaluation.' %}
+{% else %}
 {% trans "Student Evaluations for" %} {{classroom.school_id}} ({{classroom.get_cohort_display}} - {{classroom.classroom_number}})
+{% endif %}
 {% endblock %}
 
 {% block content %}
-
+{% if locked == True %}
+  {% trans 'Student Evaluation currently locked' %}
+{% else %}
 <div class="col-md-9">
   <p style="color:red">{{ warning }}</p>
 
@@ -69,7 +75,7 @@
   </ul>
 
 </div>
-
+{% endif %}
 
 {% endblock %}
 

@@ -3,10 +3,17 @@
 {% load bootstrap3 %}
 {% load mandefilters %}
 {% block title %}
+{% if locked == True %}
+  {% trans 'Sorry, you cannot change Student Evaluation.' %}
+{% else %}
 {% trans "Adding a Student Evaluation for" %} {{student_id|name_by_sid}}
+{% endif %}
 {% endblock %}
 
 {% block content %}
+{% if locked == True %}
+  {% trans 'Student Evaluation currently locked' %}
+{% else %}
 <div class="col-md-9">
 <form action = "{% url 'studentevaluation_form_single' student_id %}" method="post">
 
@@ -53,4 +60,5 @@
     {% if field.errors %}{{field.name}}{{field.errors}}{%endif%}
   {% endfor %}
   </div>
+{% endif %}
 {% endblock %}

@@ -652,3 +652,11 @@ class CurrentStudentInfo(models.Model):
 	vdp_grade = models.IntegerField(_('VDP Grade'),choices=GRADES)
 	def __unicode__(self):
 	   return unicode(self.student_id)+' - '+self.name
+
+class EvaluationMarkingPeriod(models.Model):
+	description = models.CharField(_('Description'),max_length=128)
+	test_date = models.DateField(_('Test Date'))
+	marking_period_start = models.DateField(_('Marking Period Start'))
+	marking_period_end =  models.DateField(_('Marking Period End'))
+	def __unicode__(self):
+		return unicode(self.description) + ' - '+ unicode(self.test_date)

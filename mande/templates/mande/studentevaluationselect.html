@@ -2,11 +2,18 @@
 {% load i18n %}
 {% load mandefilters %}
 {% block title %}
+{% if locked == True %}
+ {% trans 'Sorry, you cannot change Student Evaluation.' %}
+{% else %}
 {% trans "Please select a classroom." %}
+{% endif %}
 {% endblock %}
 
 {% block content %}
     <div class="col-md-9">
+     {% if locked == True %}
+         {% trans 'Student Evaluation currently locked' %}
+    {% else %}
       <table id="classroomDataTable" class="table table-bordered table-hover">
         <thead>
           <tr><th>{% trans "Site" %}</th><th>{% trans "Grade" %}</th><th>{% trans "Description" %}</th><th>{% trans "Evaluation" %}</th></tr>
@@ -26,6 +33,7 @@
           {% endfor %}
           </tbody>
       </table>
+    {% endif %}
     </div>
 {% endblock %}
 {% block script %}
