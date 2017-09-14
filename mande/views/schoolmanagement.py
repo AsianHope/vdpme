@@ -67,6 +67,7 @@ from mande.forms import StudentPublicSchoolHistoryForm
 from mande.forms import AcademicMarkingPeriodForm
 from mande.forms import AcademicFormSet
 from mande.forms import StudentEvaluationFormSet
+from mande.forms import EvaluationMarkingPeriodForm
 
 
 from mande.utils import getEnrolledStudents
@@ -1047,5 +1048,33 @@ def academic_making_period(request):
                 'form_message':form_message
                 }
         return render(request, 'mande/academicmarkingperiodform.html',context)
+    else:
+        raise PermissionDenied
+
+def evaluation_making_period(request):
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+        marking_periods = EvaluationMarkingPeriod.objects.all()
+        form = AcademicMarkingPeriodForm()
+        form_message = {'status':''};
+        if request.method == 'POST':
+          form = EvaluationMarkingPeriodForm(request.POST)
+          if form.is_valid():
+              #process
+              instance = form.save()
+              message = 'Added a Student Evaluation Marking Period ('+instance.description+')'
+              log = NotificationLog(user=request.user,
+                                    text=message,
+                                    font_awesome_icon='fa-calendar-o')
+              log.save()
+              form_message = {'status':'success','sms':'Successfully added a Student Evaluation Marking Period'};
+          else:
+              form_message = {'status':'error','sms':form.errors.as_text()};
+        context = {
+                'form': form,
+                'marking_periods':marking_periods,
+                'form_message':form_message
+                }
+        return render(request, 'mande/evaluationmarkingperiodform.html',context)
     else:
         raise PermissionDenied

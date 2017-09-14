@@ -59,6 +59,8 @@ perms_required = {
 	'save_photo': {'mande.view_save_photo'},
 	'academic_making_period': {'mande.view_academic_making_period'},
 	'generate': {'mande.view_generate'},
+	'evaluation_making_period': {'mande.view_evaluation_making_period'},
+
 
 }
 #this is a function to help test that the permissions above are

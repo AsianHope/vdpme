@@ -23,6 +23,7 @@ from mande.models import PublicSchoolHistory
 from mande.models import COHORTS
 from mande.models import YESNO
 from mande.models import AcademicMarkingPeriod
+from mande.models import EvaluationMarkingPeriod
 
 from mande.utils import getEnrolledStudents
 
@@ -168,7 +169,7 @@ class AttendanceForm(forms.ModelForm):
 AttendanceFormSet = modelformset_factory(Attendance,
                                        form=AttendanceForm,
                                        extra=0)
-                                       
+
 class AcademicForm(forms.ModelForm):
     promote = forms.BooleanField(label='',required=False)
     test_grade_math = forms.IntegerField(label='',widget=forms.TextInput(attrs={'size':'3'}), required=False)
@@ -272,4 +273,14 @@ class AcademicMarkingPeriodForm(forms.ModelForm):
 
     class Meta:
         model = AcademicMarkingPeriod
+        exclude = []
+
+
+class EvaluationMarkingPeriodForm(forms.ModelForm):
+    test_date = forms.DateField(label=_('Date'),widget=Html5DateInput)
+    marking_period_start = forms.DateField(label=_('Marking Period Start Date'),widget=Html5DateInput)
+    marking_period_end = forms.DateField(label=_('Marking Period End Date'),widget=Html5DateInput)
+
+    class Meta:
+        model = EvaluationMarkingPeriod
         exclude = []

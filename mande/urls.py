@@ -126,7 +126,7 @@ urlpatterns = [
     url(r'^school-management/student_publicschool/delete/(?P<id>\d+)/$', views.delete_public_school, name='delete_public_school'),
     url(r'^school-management/save_photo/$', views.save_photo, name='save_photo'),
     url(r'^school-management/academic_making_period/$', views.academic_making_period, name='academic_making_period'),
-
+    url(r'^school-management/evaluation_making_period/$', views.evaluation_making_period, name='evaluation_making_period'),
 
     url(r'^success/$', views.survey_success, name='success'),
     url(r'^log/$', views.notification_log, name='notification_log')
@@ -200,7 +200,8 @@ activity_map = [
             {'name':'classroomteacher_form','display':'Manage Classroom Assignments'},
             {'name':'academic_select','display':'Input Achievement Tests'},
             {'name':'studentevaluation_select','display':'Input Student Evaluations'},
-            {'name':'academic_making_period','display':'Academic Marking Period'}
+            {'name':'academic_making_period','display':'Academic Marking Period'},
+            {'name':'evaluation_making_period','display':'Student Evaluation Marking Period'}
         ]
     }
 ]
