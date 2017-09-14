@@ -941,6 +941,7 @@ class StudentEvaluationFormViewTestCase(TestCase):
         'notificationlogs.json','studentevaluations.json','exitsurveys.json',
         'classroomenrollment.json'
     ]
+    
     def setUp(self):
         self.client = Client()
         self.client.login(username='admin',password='test')
@@ -948,7 +949,8 @@ class StudentEvaluationFormViewTestCase(TestCase):
             student_id=IntakeSurvey.objects.get(pk=2),
             classroom_id=Classroom.objects.get(pk=1),
             enrollment_date='2014-01-01')
-    def test_context(self):
+
+    def test_context_locked_true(self):
         today = date.today().isoformat()
         school_id = 1
         classroom_id = 1
@@ -980,11 +982,51 @@ class StudentEvaluationFormViewTestCase(TestCase):
         self.assertEqual(resp.context['warning'],mark_safe(''))
         self.assertEqual(resp.context['date'],get_date)
         self.assertEqual(resp.context['grades'],dict(GRADES))
-
+        self.assertEqual(resp.context['locked'],True)
+        self.assertEqual(resp.context['message'],'')
         self.assertEqual(StudentEvaluation.objects.all().count(),3)
         self.assertEqual(NotificationLog.objects.all().count(),1)
 
-    def test_post_valid(self):
+    def test_context_locked_false(self):
+        today = date.today().isoformat()
+        today = date.today().isoformat()
+        EvaluationMarkingPeriod.objects.create(description="test",test_date=today,marking_period_start=today,marking_period_end=today)
+        school_id = 1
+        classroom_id = 1
+        get_date = today
+        url = reverse('studentevaluation_form',kwargs={'school_id':school_id,'get_date':get_date,'classroom_id':classroom_id})
+        resp = self.client.get(url,follow=True)
+
+        exit_surveys = ExitSurvey.objects.all().filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
+        get_enrolled_student = ClassroomEnrollment.objects.exclude(student_id__in=exit_surveys).exclude(drop_date__lt=date.today().isoformat()).filter(classroom_id=classroom_id,student_id__date__lte=date.today().isoformat())
+        students = get_enrolled_student
+        #pre instantiate data for this form so that we can update the whole queryset later
+        students_at_school_id = []
+        for student in students:
+            StudentEvaluation.objects.get_or_create(
+                                                student_id=student.student_id,date=get_date)
+            students_at_school_id.append(student.student_id)
+          #lets only work with the students at the specified school_id
+        students = students_at_school_id
+        student_evaluations = StudentEvaluation.objects.filter(student_id__in=students,
+                                                   date=get_date)
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp,'mande/studentevaluationform.html')
+        self.assertIsInstance(resp.context['formset'],StudentEvaluationFormSet)
+        self.assertEqual(list(resp.context['formset'].queryset),list(student_evaluations))
+        self.assertEqual(resp.context['classroom'],Classroom.objects.get(pk=classroom_id))
+        self.assertEqual(list(resp.context['classrooms_by_school']),list(Classroom.objects.filter(school_id=school_id)))
+        self.assertEqual(list(resp.context['students']),list(students))
+        self.assertEqual(resp.context['date'],get_date)
+        self.assertEqual(resp.context['warning'],mark_safe(''))
+        self.assertEqual(resp.context['date'],get_date)
+        self.assertEqual(resp.context['grades'],dict(GRADES))
+        self.assertEqual(resp.context['locked'],False)
+        self.assertEqual(resp.context['message'],'')
+
+        self.assertEqual(StudentEvaluation.objects.all().count(),3)
+        self.assertEqual(NotificationLog.objects.all().count(),1)
+    def test_post_marking_period_not_match(self):
         today = date.today().isoformat()
         school_id = 1
         classroom_id = 1
@@ -1007,6 +1049,36 @@ class StudentEvaluationFormViewTestCase(TestCase):
         self.assertTemplateUsed(resp,'mande/studentevaluationform.html')
         self.assertIsInstance(resp.context['formset'],StudentEvaluationFormSet)
         self.assertTrue(resp.context['formset'].is_valid())
+        self.assertEqual(resp.context['message'],'')
+        self.assertEqual(resp.context['warning'],"Date doesn't match with EvaluationMarkingPeriod date.")
+        self.assertEqual(StudentEvaluation.objects.all().count(),3)
+        self.assertEqual(NotificationLog.objects.all().count(),1)
+    def test_post_marking_period_match(self):
+        today = date.today().isoformat()
+        EvaluationMarkingPeriod.objects.create(description="test",test_date=today,marking_period_start=today,marking_period_end=today)
+        school_id = 1
+        classroom_id = 1
+        get_date = today
+        url = reverse('studentevaluation_form',kwargs={'school_id':school_id,'get_date':get_date,'classroom_id':classroom_id})
+        data = {
+            'form-TOTAL_FORMS': 1,
+            'form-INITIAL_FORMS': 0,
+            'form-MAX_NUM_FORMS': 10,
+            'form-0-student_id':3,
+            'form-0-faith_score':100,
+            'form-0-personal_score':100,
+            'form-0-study_score':100,
+            'form-0-hygiene_score':100,
+            'form-0-academic_score':100,
+            'form-0-date':get_date,
+        }
+        resp = self.client.post(url,data)
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp,'mande/studentevaluationform.html')
+        self.assertIsInstance(resp.context['formset'],StudentEvaluationFormSet)
+        self.assertTrue(resp.context['formset'].is_valid())
+        self.assertEqual(resp.context['warning'],'')
+
         message = ('Recorded student evaluations for '+
                         str(Classroom.objects.get(pk=classroom_id).get_cohort_display())
                         +' - '+
@@ -1022,6 +1094,7 @@ class StudentEvaluationFormViewTestCase(TestCase):
         )
         self.assertEqual(StudentEvaluation.objects.all().count(),4)
         self.assertEqual(NotificationLog.objects.all().count(),2)
+
     def test_post_invalid(self):
         today = date.today().isoformat()
         school_id = 1
@@ -1081,6 +1154,19 @@ class StudentEvaluationSelectViewTestCase(TestCase):
         self.assertTemplateUsed(resp,'mande/studentevaluationselect.html')
         self.assertEqual(list(resp.context['classrooms']),list(Classroom.objects.all()))
         self.assertEqual(resp.context['today'],date.today().isoformat())
+        self.assertEqual(resp.context['locked'],True)
+
+    def test_context_locked_false(self):
+        today = date.today().isoformat()
+        EvaluationMarkingPeriod.objects.create(description="test",test_date=today,marking_period_start=today,marking_period_end=today)
+        url = reverse('studentevaluation_select',kwargs={})
+        resp = self.client.get(url,follow=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp,'mande/studentevaluationselect.html')
+        self.assertEqual(list(resp.context['classrooms']),list(Classroom.objects.all()))
+        self.assertEqual(resp.context['today'],date.today().isoformat())
+        self.assertEqual(resp.context['locked'],False)
+
 class StudentEvaluationFormSingleViewTestCase(TestCase):
     fixtures = [
         'users.json','schools.json','classrooms.json','intakesurveys.json',
@@ -1089,7 +1175,7 @@ class StudentEvaluationFormSingleViewTestCase(TestCase):
     def setUp(self):
         self.client = Client()
         self.client.login(username='admin',password='test')
-    def test_context_evaluation_not_exist(self):
+    def test_context_locked_true(self):
         student_id = 1
         url = reverse('studentevaluation_form_single',kwargs={'student_id':student_id})
         resp = self.client.get(url,follow=True)
@@ -1098,6 +1184,25 @@ class StudentEvaluationFormSingleViewTestCase(TestCase):
         self.assertIsInstance(resp.context['form'],StudentEvaluationForm)
         self.assertEqual(resp.context['form'].data,{'student_id':str(student_id),'date':date.today().isoformat()})
         self.assertEqual(resp.context['student_id'],str(student_id))
+        self.assertEqual(resp.context['locked'],True)
+        self.assertEqual(StudentEvaluation.objects.all().count(),1)
+        self.assertEqual(NotificationLog.objects.all().count(),1)
+
+    def test_context_locked_false(self):
+        student_id = 1
+        today = date.today().isoformat()
+        EvaluationMarkingPeriod.objects.create(description="test",test_date=today,marking_period_start=today,marking_period_end=today)
+        url = reverse('studentevaluation_form_single',kwargs={'student_id':student_id})
+        resp = self.client.get(url,follow=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp,'mande/studentevaluationformsingle.html')
+        self.assertIsInstance(resp.context['form'],StudentEvaluationForm)
+        self.assertEqual(resp.context['form'].data,{'student_id':str(student_id),'date':date.today().isoformat()})
+        self.assertEqual(resp.context['student_id'],str(student_id))
+        self.assertEqual(resp.context['locked'],False)
+        self.assertEqual(StudentEvaluation.objects.all().count(),1)
+        self.assertEqual(NotificationLog.objects.all().count(),1)
+
     def test_context_evaluation_exist(self):
         # exist
         student_id = 1
@@ -1117,10 +1222,35 @@ class StudentEvaluationFormSingleViewTestCase(TestCase):
                               date=today)
         self.assertEqual(resp.context['form'].instance,instance)
         self.assertEqual(resp.context['student_id'],str(student_id))
+        self.assertEqual(resp.context['locked'],True)
+
         self.assertEqual(StudentEvaluation.objects.all().count(),2)
         self.assertEqual(NotificationLog.objects.all().count(),1)
-    def test_post(self):
+    def test_post_marking_period_not_match(self):
         today = date.today().isoformat()
+        EvaluationMarkingPeriod.objects.create(description="test",test_date='2017-01-01',marking_period_start=today,marking_period_end=today)
+
+        student_id = 1
+        url = reverse('studentevaluation_form_single',kwargs={'student_id':student_id})
+        data = {
+            'student_id':student_id,
+            'faith_score':100,
+            'study_score':100,
+            'date':today
+        }
+        resp = self.client.post(url,data)
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp,'mande/studentevaluationformsingle.html')
+        self.assertIsInstance(resp.context['form'],StudentEvaluationForm)
+        self.assertFalse(resp.context['form'].is_valid())
+        self.assertEqual(resp.context['student_id'],str(student_id))
+        self.assertEqual(resp.context['locked'],False)
+        self.assertEqual(StudentEvaluation.objects.all().count(),1)
+        self.assertEqual(NotificationLog.objects.all().count(),1)
+
+    def test_post_marking_period_match(self):
+        today = date.today().isoformat()
+        EvaluationMarkingPeriod.objects.create(description="test",test_date=today,marking_period_start=today,marking_period_end=today)
         student_id = 1
         url = reverse('studentevaluation_form_single',kwargs={'student_id':student_id})
         data = {
