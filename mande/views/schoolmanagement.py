@@ -11,6 +11,7 @@ from django.db.models import Max,F
 from django.utils.html import conditional_escape as esc
 from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
+from django.views.decorators.cache import cache_control
 
 from calendar import HTMLCalendar, monthrange
 
@@ -104,6 +105,8 @@ Student Detail
  - display a detailed view of all student information
 *****************************************************************************
 '''
+
+@cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)
 def student_detail(request, student_id):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
