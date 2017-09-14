@@ -941,7 +941,7 @@ class StudentEvaluationFormViewTestCase(TestCase):
         'notificationlogs.json','studentevaluations.json','exitsurveys.json',
         'classroomenrollment.json'
     ]
-    
+
     def setUp(self):
         self.client = Client()
         self.client.login(username='admin',password='test')
@@ -1500,4 +1500,70 @@ class AcademicMakingPeriodViewTestCase(TestCase):
             ).exists()
         )
         self.assertEqual(AcademicMarkingPeriod.objects.all().count(),2)
+        self.assertEqual(NotificationLog.objects.all().count(),2)
+
+
+class EvaluationMakingPeriodViewTestCase(TestCase):
+    fixtures = [
+        'users.json','schools.json','classrooms.json','intakesurveys.json',
+        'notificationlogs.json','evaluationmarkingperiods.json'
+    ]
+
+    def setUp(self):
+        self.client = Client()
+        self.client.login(username='admin',password='test')
+
+    def test_context(self):
+        url = reverse('evaluation_making_period',kwargs={})
+        resp = self.client.get(url,follow=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp,'mande/evaluationmarkingperiodform.html')
+        self.assertIsInstance(resp.context['form'],EvaluationMarkingPeriodForm)
+        self.assertEqual(list(resp.context['marking_periods']),list(EvaluationMarkingPeriod.objects.all()))
+        self.assertEqual(resp.context['form_message'],{'status':''})
+
+        self.assertEqual(EvaluationMarkingPeriod.objects.all().count(),1)
+        self.assertEqual(NotificationLog.objects.all().count(),1)
+
+    def test_context_post_invalid(self):
+        today = date.today().isoformat()
+        data = {
+                'description':'testtest',
+                'test_date':today,
+                'marking_period_start':today,
+                }
+        url = reverse('evaluation_making_period',kwargs={})
+        resp = self.client.post(url,data)
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp,'mande/evaluationmarkingperiodform.html')
+        self.assertIsInstance(resp.context['form'],EvaluationMarkingPeriodForm)
+        self.assertEqual(list(resp.context['marking_periods']),list(EvaluationMarkingPeriod.objects.all()))
+        self.assertEqual(resp.context['form_message'],{'status': 'error', 'sms': u'* marking_period_end\n  * This field is required.'})
+        self.assertEqual(EvaluationMarkingPeriod.objects.all().count(),1)
+        self.assertEqual(NotificationLog.objects.all().count(),1)
+
+    def test_context_post_valid(self):
+        today = date.today().isoformat()
+        data = {
+                'description':'testtest',
+                'test_date':today,
+                'marking_period_start':today,
+                'marking_period_end':today,
+                }
+        url = reverse('evaluation_making_period',kwargs={})
+        resp = self.client.post(url,data)
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp,'mande/evaluationmarkingperiodform.html')
+        self.assertIsInstance(resp.context['form'],EvaluationMarkingPeriodForm)
+        self.assertEqual(list(resp.context['marking_periods']),list(EvaluationMarkingPeriod.objects.all()))
+        self.assertEqual(resp.context['form_message'],{'status':'success','sms':'Successfully added a Student Evaluation Marking Period'})
+        instance = EvaluationMarkingPeriod.objects.get(description='testtest',test_date=today,marking_period_start=today,marking_period_end=today)
+        message = 'Added a Student Evaluation Marking Period ('+instance.description+')'
+        self.assertTrue(
+            NotificationLog.objects.filter(
+                text=message, font_awesome_icon='fa-calendar-o',
+                user=self.client.session['_auth_user_id']
+            ).exists()
+        )
+        self.assertEqual(EvaluationMarkingPeriod.objects.all().count(),2)
         self.assertEqual(NotificationLog.objects.all().count(),2)

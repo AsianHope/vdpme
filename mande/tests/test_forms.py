@@ -21,6 +21,7 @@ from mande.forms import HealthCheckupForm
 from mande.forms import StudentEvaluationForm
 from mande.forms import StudentPublicSchoolHistoryForm
 from mande.forms import AcademicMarkingPeriodForm
+from mande.forms import EvaluationMarkingPeriodForm
 
 
 class IntakeSurveyTestCase(TestCase):
@@ -548,6 +549,30 @@ class AcademicMarkingPeriodFormTestCase(TestCase):
             "marking_period_end":"2017-01-01",
         }
         form = AcademicMarkingPeriodForm(data)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors,
+            {'test_date': [u'This field is required.']}
+        )
+
+
+class EvaluationMarkingPeriodFormTestCase(TestCase):
+    def test_evaluation_marking_period_form_valid(self):
+        data={
+            "description":"test",
+            "test_date":"2017-01-01",
+            "marking_period_start":"2017-01-01",
+            "marking_period_end":"2017-01-01",
+        }
+        form = EvaluationMarkingPeriodForm(data)
+        self.assertTrue(form.is_valid())
+        
+    def test_evaluation_marking_period_form_invalid(self):
+        data={
+            "description":"test",
+            "marking_period_start":"2017-01-01",
+            "marking_period_end":"2017-01-01",
+        }
+        form = EvaluationMarkingPeriodForm(data)
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors,
             {'test_date': [u'This field is required.']}

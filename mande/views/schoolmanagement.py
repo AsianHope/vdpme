@@ -1055,7 +1055,7 @@ def evaluation_making_period(request):
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
         marking_periods = EvaluationMarkingPeriod.objects.all()
-        form = AcademicMarkingPeriodForm()
+        form = EvaluationMarkingPeriodForm()
         form_message = {'status':''};
         if request.method == 'POST':
           form = EvaluationMarkingPeriodForm(request.POST)
