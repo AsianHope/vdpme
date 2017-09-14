@@ -24,6 +24,7 @@ from mande.models import AttendanceLog
 from mande.models import PublicSchoolHistory
 from mande.models import AcademicMarkingPeriod
 from mande.models import CurrentStudentInfo
+from mande.models import EvaluationMarkingPeriod
 from django.contrib.auth.models import User
 
 class SchoolTestCase(TestCase):
@@ -350,4 +351,14 @@ class AcademicMarkingPeriodTestCass(TestCase):
             marking_period_end="2017-01-01"
         )
         self.assertIsInstance(entry,AcademicMarkingPeriod)
+        self.assertEqual(entry.__unicode__(),unicode(entry.description) + ' - '+ unicode(entry.test_date))
+class EvaluationMarkingPeriodTestCass(TestCase):
+    def test_evaluation_marking_period_creation(self):
+        entry = EvaluationMarkingPeriod.objects.create(
+            description="test",
+            test_date="2017-01-01",
+            marking_period_start="2017-01-01",
+            marking_period_end="2017-01-01"
+        )
+        self.assertIsInstance(entry,EvaluationMarkingPeriod)
         self.assertEqual(entry.__unicode__(),unicode(entry.description) + ' - '+ unicode(entry.test_date))
