@@ -2,13 +2,13 @@
 {% load i18n %}
 {% load mandefilters %}
 {% block title %}
-{% trans "Student Achievement Test Report" %} {% if selected_classroom %} {{selected_classroom}} {% endif %} {% if start_date and end_date%} {% trans "on" %} {{start_date}} - {{end_date}} {% endif %}
+{% trans "Student Achievement Test Report" %} {% if grade_id %} {{ grade_id | grade_by_id}} {% endif %} {% if start_date and end_date%} {% trans "on" %} {{start_date}} - {{end_date}} {% endif %}
 {% endblock %}
 
 {% block content %}
     <div class="col-md-12">
-      {% if classroom_id %}
-      <form action = "{% url 'student_achievement_test_report' classroom_id %}" method="post" class="form-inline" role="form" style="text-align: right; margin-bottom: 15px">
+      {% if grade_id %}
+      <form action = "{% url 'student_achievement_test_report' grade_id %}" method="post" class="form-inline" role="form" style="text-align: right; margin-bottom: 15px">
       {% else %}
       <form action = "{% url 'student_achievement_test_report' %}" method="post" class="form-inline" role="form" style="text-align: right; margin-bottom: 15px">
       {% endif %}
@@ -24,25 +24,27 @@
             </div>
       </form>
     </div>
+    <div class="col-md-12">
     <div class="col-md-3">
-      <table class="table table-responsive" id="classlist">
-        <thead><tr><th>{% trans "Classroom" %}</th></tr></thead>
-        <tbody>
-          <tr><td>
-            <a href = "{% url 'student_achievement_test_report' %}" role="button" class="btn btn-xs btn-warning">{% trans "All Classrooms" %}</a>
-          </td></tr>
-        {% for classroom in active_classrooms %}
-        {% if classroom.cohort < 7  %}
-          <tr>
-            <td>
-            <a href = "{% url 'student_achievement_test_report' classroom.classroom_id %}" role="button" class="btn btn-xs btn-success">{{classroom}}</a>
-            </td>
-          </tr>
-          {% endif %}
-        {% endfor %}
-        </tbody>
-      </table>
-
+        <table class="table table-responsive">
+          <thead><tr><th>{% trans "Grade Level" %}</th></tr></thead>
+          <tbody>
+            <tr>
+                <td>
+                    <a href = "{% url 'student_achievement_test_report' %}" role="button" class="btn btn-xs btn-warning">{% trans "All Grade Levels" %}</a>
+                </td>
+            </tr>
+            {% for grade_id,grade in grades.items %}
+              {% if grade_id >= 1 and grade_id <= 6 %}
+              <tr>
+                <td>
+                <a href = "{% url 'student_achievement_test_report' grade_id %}" role="button" class="btn btn-xs btn-success">{{grade}}</a>
+                </td>
+              </tr>
+              {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
     </div>
     <div class="col-md-9">
           <table class="table table-responsive table-bordered table-striped table-hover" id="evaluationReportTable">
@@ -50,6 +52,7 @@
               <tr>
                 <th>{% trans "Site" %}</th>
                 <th>{% trans "Student" %}</th>
+                <th>{% trans "Grade Level" %}</th>
                 <th>{% trans "Test Date" %}</th>
                 <th>{% trans "Level" %}</th>
                 <th>{% trans "Math" %}</th>
@@ -62,6 +65,7 @@
               <tr>
                   <td>{{ achievement_test.student_id.site }}</td>
                   <td><a href="{% url 'student_detail' achievement_test.student_id.student_id %}">{{ achievement_test.student_id }} </a></td>
+                  <td>{{ achievement_test.student_id.current_vdp_grade | grade_by_id }}</td>
                   <td>{{ achievement_test.test_date }}</td>
                   <td>{{achievement_test.test_level}}</td>
                   <td>{{achievement_test.test_grade_math}}</td>
@@ -73,7 +77,7 @@
 
           </table>
         </div>
-
+    <div class="col-md-12">
 {% endblock %}
 
 {% block script %}
@@ -98,17 +102,6 @@
                },
 
       ]
-    });
-    $('#classlist').DataTable({
-        responsive: true,
-        pageLength: 15,
-        order: [[0,'asc']],
-        dom: 'frtipB',
-        buttons: [
-        ],
-        oLanguage: {
-           "sSearch": "Filter Classrooms: "
-         }
     });
   });
 </script>

@@ -547,11 +547,10 @@ Student Evaluation Report
  - lists all student evaluations
 *****************************************************************************
 '''
-def student_evaluation_report(request,classroom_id=None):
+def student_evaluation_report(request,grade_id=None):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
-      active_classrooms = Classroom.objects.all().filter(active=True).order_by('classroom_location')
       start_date = None
       end_date = None
       if request.method == 'POST':
@@ -572,24 +571,26 @@ def student_evaluation_report(request,classroom_id=None):
                                                               personal_score=None,
                                                               hygiene_score=None,
                                                               faith_score=None)
-      if classroom_id is not None:
-        selected_classroom = Classroom.objects.get(pk=classroom_id)
+      if grade_id is not None:
         #select students who have not dropped the class, or have not dropped it yet.
-        enrolled_students = selected_classroom.classroomenrollment_set.all().filter(Q(student_id__date__lte=date.today().isoformat()) & Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))).values_list('student_id',flat=True)
+        enrolled_students = ClassroomEnrollment.objects.all().filter(
+                            Q(
+                                Q(student_id__date__lte=date.today().isoformat()) &
+                                Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))
+                            )
+                            &
+                            Q(classroom_id__cohort=grade_id)
+                        ).values_list('student_id',flat=True)
 
-        
         evaluations = evaluations.filter(student_id__in=enrolled_students)
-      else:
-        selected_classroom = None
       return render(request,
                     'mande/studentevaluationreport.html',
                     {
                         'evaluations':evaluations,
-                        'selected_classroom':selected_classroom,
-                        'active_classrooms':active_classrooms,
-                        'classroom_id':classroom_id,
+                        'grade_id':grade_id,
                         'start_date':start_date,
                         'end_date':end_date,
+                        'grades':dict(GRADES)
                     })
     else:
       raise PermissionDenied
@@ -599,11 +600,10 @@ Student Achievement Report
  - lists all student Achievement test
 *****************************************************************************
 '''
-def student_achievement_test_report(request,classroom_id=None):
+def student_achievement_test_report(request,grade_id=None):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
-      active_classrooms = Classroom.objects.all().filter(active=True).order_by('classroom_location')
       start_date = None
       end_date = None
       if request.method == 'POST':
@@ -618,22 +618,24 @@ def student_achievement_test_report(request,classroom_id=None):
                                                             test_grade_math=None,
                                                             test_grade_khmer=None,
                                                             )
-      if classroom_id is not None:
-        selected_classroom = Classroom.objects.get(pk=classroom_id)
+      if grade_id is not None:
         #select students who have not dropped the class, or have not dropped it yet.
-        enrolled_students = selected_classroom.classroomenrollment_set.all().filter(Q(student_id__date__lte=date.today().isoformat()) & Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))).values_list('student_id',flat=True)
-
+        enrolled_students = ClassroomEnrollment.objects.all().filter(
+                            Q(
+                                Q(student_id__date__lte=date.today().isoformat()) &
+                                Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))
+                            )
+                            &
+                            Q(classroom_id__cohort=grade_id)
+                        ).values_list('student_id',flat=True)
         achievement_tests = achievement_tests.filter(student_id__in=enrolled_students)
-      else:
-        selected_classroom = None
       return render(request, 'mande/studentachievementtestreport.html',
                                 {
                                     'achievement_tests':achievement_tests,
-                                    'selected_classroom':selected_classroom,
-                                    'active_classrooms':active_classrooms,
-                                    'classroom_id':classroom_id,
+                                    'grade_id':grade_id,
                                     'start_date':start_date,
-                                    'end_date':end_date
+                                    'end_date':end_date,
+                                    'grades':dict(GRADES)
                                 })
     else:
       raise PermissionDenied
