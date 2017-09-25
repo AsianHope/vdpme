@@ -709,13 +709,18 @@ class StudentEvaluationReportViewTestCase(TestCase):
     def setUp(self):
         self.client = Client()
         self.client.login(username='admin',password='test')
+        StudentEvaluation.objects.create(
+            student_id = IntakeSurvey.objects.get(pk=1),
+            date = date.today().isoformat(),
+            faith_score = 100,personal_score = 100,study_score = 100,
+            hygiene_score = 100,academic_score = 100,comments = 'good'
+        )
 
-    def test_context_classroom_id_none(self):
+    def test_context_grade_id_none(self):
         url = reverse('student_evaluation_report',kwargs={})
         resp = self.client.get(url,follow=True)
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp,'mande/studentevaluationreport.html')
-        active_classrooms = Classroom.objects.all().filter(active=True).order_by('classroom_location')
         evaluations = StudentEvaluation.objects.all().exclude(  academic_score=None,
                                                               study_score=None,
                                                               personal_score=None,
@@ -723,52 +728,51 @@ class StudentEvaluationReportViewTestCase(TestCase):
                                                               faith_score=None)
 
         self.assertEqual(list(resp.context['evaluations']),list(evaluations))
-        self.assertEqual(resp.context['selected_classroom'],None)
-        self.assertEqual(list(resp.context['active_classrooms']),list(active_classrooms))
-        self.assertEqual(resp.context['classroom_id'],None)
+        self.assertEqual(resp.context['grade_id'],None)
         self.assertEqual(resp.context['start_date'],None)
         self.assertEqual(resp.context['end_date'],None)
+        self.assertEqual(resp.context['grades'],dict(GRADES))
 
-    def test_context_classroom_id_not_none(self):
-        classroom_id = 1
-        url = reverse('student_evaluation_report',kwargs={'classroom_id':classroom_id})
+    def test_context_grade_id_not_none(self):
+        grade_id = 1
+        url = reverse('student_evaluation_report',kwargs={'grade_id':grade_id})
         resp = self.client.get(url,follow=True)
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp,'mande/studentevaluationreport.html')
-        active_classrooms = Classroom.objects.all().filter(active=True).order_by('classroom_location')
 
         evaluations = StudentEvaluation.objects.all().exclude(  academic_score=None,
                                                               study_score=None,
                                                               personal_score=None,
                                                               hygiene_score=None,
                                                               faith_score=None)
-        selected_classroom = Classroom.objects.get(pk=classroom_id)
-        enrolled_students = selected_classroom.classroomenrollment_set.all().filter(Q(student_id__date__lte=date.today().isoformat()) & Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))).values_list('student_id',flat=True)
+        enrolled_students = ClassroomEnrollment.objects.all().filter(
+                            Q(
+                                Q(student_id__date__lte=date.today().isoformat()) &
+                                Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))
+                            )
+                            &
+                            Q(classroom_id__cohort=grade_id)
+                        ).values_list('student_id',flat=True)
 
         evaluations = evaluations.filter(student_id__in=enrolled_students)
-        #select students who have not dropped the class, or have not dropped it yet.
-        enrolled_students = selected_classroom.classroomenrollment_set.all().filter(Q(student_id__date__lte=date.today().isoformat()) & Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))).values_list('student_id',flat=True)
         self.assertEqual(list(resp.context['evaluations']),list(evaluations))
-        self.assertEqual(resp.context['selected_classroom'],selected_classroom)
-        self.assertEqual(list(resp.context['active_classrooms']),list(active_classrooms))
-        self.assertEqual(resp.context['classroom_id'],str(classroom_id))
+        self.assertEqual(resp.context['grade_id'],str(grade_id))
         self.assertEqual(resp.context['start_date'],None)
         self.assertEqual(resp.context['end_date'],None)
+        self.assertEqual(resp.context['grades'],dict(GRADES))
 
-    def test_context_post_classroom_id_not_none(self):
-        classroom_id = 1
+    def test_context_post_grade_id_not_none(self):
+        grade_id = 1
         start_date = date.today().isoformat()
         end_date = date.today().isoformat()
         data = {
             'search_start_date':start_date,
             'search_end_date':end_date
         }
-        url = reverse('student_evaluation_report',kwargs={'classroom_id':classroom_id})
+        url = reverse('student_evaluation_report',kwargs={'grade_id':grade_id})
         resp = self.client.post(url,data)
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp,'mande/studentevaluationreport.html')
-        active_classrooms = Classroom.objects.all().filter(active=True).order_by('classroom_location')
-        selected_classroom = Classroom.objects.get(pk=classroom_id)
         evaluations = StudentEvaluation.objects.all().filter(
                                     Q(date__gte=start_date) & Q(date__lte=end_date)
                                 ).exclude(
@@ -778,14 +782,21 @@ class StudentEvaluationReportViewTestCase(TestCase):
                                     hygiene_score=None,
                                     faith_score=None
                                 )
-        enrolled_students = selected_classroom.classroomenrollment_set.all().filter(Q(student_id__date__lte=date.today().isoformat()) & Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))).values_list('student_id',flat=True)
+        enrolled_students = ClassroomEnrollment.objects.all().filter(
+                            Q(
+                                Q(student_id__date__lte=date.today().isoformat()) &
+                                Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))
+                            )
+                            &
+                            Q(classroom_id__cohort=grade_id)
+                        ).values_list('student_id',flat=True)
+
         evaluations = evaluations.filter(student_id__in=enrolled_students)
         self.assertEqual(list(resp.context['evaluations']),list(evaluations))
-        self.assertEqual(resp.context['selected_classroom'],selected_classroom)
-        self.assertEqual(list(resp.context['active_classrooms']),list(active_classrooms))
-        self.assertEqual(resp.context['classroom_id'],str(classroom_id))
+        self.assertEqual(resp.context['grade_id'],str(grade_id))
         self.assertEqual(resp.context['start_date'],start_date)
         self.assertEqual(resp.context['end_date'],end_date)
+        self.assertEqual(resp.context['grades'],dict(GRADES))
 
 class StudentAchievementTestReportViewTestCase(TestCase):
     fixtures = [
@@ -795,72 +806,89 @@ class StudentAchievementTestReportViewTestCase(TestCase):
     def setUp(self):
         self.client = Client()
         self.client.login(username='admin',password='test')
+        ClassroomEnrollment.objects.create(
+            student_id = IntakeSurvey.objects.get(pk=2),
+            classroom_id = Classroom.objects.get(pk=1),
+            enrollment_date = date.today().isoformat(),
+            drop_date = None
+        )
+        Academic.objects.create(
+            student_id = IntakeSurvey.objects.get(pk=2),
+            test_date = date.today().isoformat(),test_level=1,
+            test_grade_math = 10,test_grade_khmer=10,
+            promote=True
+        )
 
-    def test_context_classroom_id_none(self):
+    def test_context_grade_id_none(self):
         url = reverse('student_achievement_test_report',kwargs={})
         resp = self.client.get(url,follow=True)
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp,'mande/studentachievementtestreport.html')
-        active_classrooms = Classroom.objects.all().filter(active=True).order_by('classroom_location')
         achievement_tests = Academic.objects.all().exclude(
                                                        test_grade_math=None,
                                                        test_grade_khmer=None,
                                                        )
         self.assertEqual(list(resp.context['achievement_tests']),list(achievement_tests))
-        self.assertEqual(resp.context['selected_classroom'],None)
-        self.assertEqual(list(resp.context['active_classrooms']),list(active_classrooms))
-        self.assertEqual(resp.context['classroom_id'],None)
+        self.assertEqual(resp.context['grade_id'],None)
         self.assertEqual(resp.context['start_date'],None)
         self.assertEqual(resp.context['end_date'],None)
+        self.assertEqual(resp.context['grades'],dict(GRADES))
 
-    def test_context_classroom_id_not_none(self):
-        classroom_id = 1
-        url = reverse('student_achievement_test_report',kwargs={'classroom_id':classroom_id})
+    def test_context_grade_id_not_none(self):
+        grade_id = 1
+        url = reverse('student_achievement_test_report',kwargs={'grade_id':grade_id})
         resp = self.client.get(url,follow=True)
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp,'mande/studentachievementtestreport.html')
-        active_classrooms = Classroom.objects.all().filter(active=True).order_by('classroom_location')
-        selected_classroom = Classroom.objects.get(pk=classroom_id)
-
         achievement_tests = Academic.objects.all().exclude(
                                                        test_grade_math=None,
                                                        test_grade_khmer=None,
                                                        )
-        enrolled_students = selected_classroom.classroomenrollment_set.all().filter(Q(student_id__date__lte=date.today().isoformat()) & Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))).values_list('student_id',flat=True)
+        enrolled_students = ClassroomEnrollment.objects.all().filter(
+                            Q(
+                                Q(student_id__date__lte=date.today().isoformat()) &
+                                Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))
+                            )
+                            &
+                            Q(classroom_id__cohort=grade_id)
+                        ).values_list('student_id',flat=True)
         achievement_tests = achievement_tests.filter(student_id__in=enrolled_students)
         self.assertEqual(list(resp.context['achievement_tests']),list(achievement_tests))
-        self.assertEqual(resp.context['selected_classroom'],selected_classroom)
-        self.assertEqual(list(resp.context['active_classrooms']),list(active_classrooms))
-        self.assertEqual(resp.context['classroom_id'],str(classroom_id))
+        self.assertEqual(resp.context['grade_id'],str(grade_id))
         self.assertEqual(resp.context['start_date'],None)
         self.assertEqual(resp.context['end_date'],None)
+        self.assertEqual(resp.context['grades'],dict(GRADES))
 
-    def test_context_post_classroom_id_not_none(self):
-        classroom_id = 1
+    def test_context_post_grade_id_not_none(self):
+        grade_id = 1
         start_date = date.today().isoformat()
         end_date = date.today().isoformat()
         data = {
             'search_start_date':start_date,
             'search_end_date':end_date
         }
-        url = reverse('student_achievement_test_report',kwargs={'classroom_id':classroom_id})
+        url = reverse('student_achievement_test_report',kwargs={'grade_id':grade_id})
         resp = self.client.post(url,data)
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp,'mande/studentachievementtestreport.html')
-        active_classrooms = Classroom.objects.all().filter(active=True).order_by('classroom_location')
-        selected_classroom = Classroom.objects.get(pk=classroom_id)
         achievement_tests = Academic.objects.all().filter(Q(test_date__gte=start_date) & Q(test_date__lte=end_date)).exclude(
                                                         test_grade_math=None,
                                                         test_grade_khmer=None,
                                                         )
-        enrolled_students = selected_classroom.classroomenrollment_set.all().filter(Q(student_id__date__lte=date.today().isoformat()) & Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))).values_list('student_id',flat=True)
+        enrolled_students = ClassroomEnrollment.objects.all().filter(
+                            Q(
+                                Q(student_id__date__lte=date.today().isoformat()) &
+                                Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))
+                            )
+                            &
+                            Q(classroom_id__cohort=grade_id)
+                        ).values_list('student_id',flat=True)
         achievement_tests = achievement_tests.filter(student_id__in=enrolled_students)
         self.assertEqual(list(resp.context['achievement_tests']),list(achievement_tests))
-        self.assertEqual(resp.context['selected_classroom'],selected_classroom)
-        self.assertEqual(list(resp.context['active_classrooms']),list(active_classrooms))
-        self.assertEqual(resp.context['classroom_id'],str(classroom_id))
+        self.assertEqual(resp.context['grade_id'],str(grade_id))
         self.assertEqual(resp.context['start_date'],start_date)
         self.assertEqual(resp.context['end_date'],end_date)
+        self.assertEqual(resp.context['grades'],dict(GRADES))
 
 class StudentMedicalReportViewTestCase(TestCase):
     fixtures = [
