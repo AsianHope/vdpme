@@ -55,6 +55,10 @@ urlpatterns = [
     url(r'^reports/student_promoted_report/$', views.student_promoted_report, name='student_promoted_report'),
     url(r'^reports/students_promoted_times_report/$', views.students_promoted_times_report, name='students_promoted_times_report'),
     url(r'^reports/students_promoted_times_report/(?P<filter_seach>[\w-]+)/$', views.students_promoted_times_report, name='students_promoted_times_report'),
+    url(r'^reports/students_promoted_times_report/(?P<filter_seach>[\w-]+)/(?P<year>\d+)$', views.students_promoted_times_report, name='students_promoted_times_report'),
+    url(r'^reports/students_promoted_times_report/(?P<filter_seach>[\w-]+)/(?P<year>\d+)/(?P<school>\d+)$', views.students_promoted_times_report, name='students_promoted_times_report'),
+    url(r'^reports/students_promoted_times_report/(?P<filter_seach>[\w-]+)/(?P<year>\d+)/(?P<school>\d+)/(?P<grade>\d+)$', views.students_promoted_times_report, name='students_promoted_times_report'),
+    url(r'^reports/students_promoted_times_report/(?P<filter_seach>[\w-]+)/(?P<year>\d+)/(?P<school>\d+)/(?P<grade>\d+)/(?P<classroom>\d+)$', views.students_promoted_times_report, name='students_promoted_times_report'),
 
 
     url(r'^reports/public_school_report/$', views.public_school_report, name='public_school_report'),

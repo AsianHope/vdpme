@@ -1203,61 +1203,267 @@ class StudentPromotedReportViewTestCase(TestCase):
 class StudentPromotedTimesReportViewTestCase(TestCase):
     fixtures = [
         'users.json','schools.json','classrooms.json','intakesurveys.json',
-        'exitsurveys.json','academic.json'
+        'exitsurveys.json','academic.json','classroomenrollment.json',
+        'intakeinternals.json'
     ]
     def setUp(self):
         self.client = Client()
         self.client.login(username='admin',password='test')
+        academic_year_start = datetime.now().year-2013
+        self.academic_years = []
+        # generate list of year
+        for r in range(academic_year_start):
+           self.academic_years.append(datetime.now().year-r)
 
     def test_context(self):
+        # filter_seach is CURRENT
         url = reverse('students_promoted_times_report',kwargs={})
         resp = self.client.get(url,follow=True)
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp,'mande/students_promoted_times_report.html')
         exit_surveys = ExitSurvey.objects.filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
         students = IntakeSurvey.objects.exclude(student_id__in=exit_surveys).filter(date__lte=date.today().isoformat())
+        enrolled_catch_up = ClassroomEnrollment.objects.all().filter( Q( Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None)) & Q(Q(classroom_id__cohort__gte=1) & Q(classroom_id__cohort__lte=6)) ) ).values_list('student_id',flat=True)
+        students = students.filter(student_id__in=enrolled_catch_up)
 
         students_promoted = {}
         for student in students:
+          current_grade = student.current_vdp_grade_catch_up()
           #if the student has a valid current grade
-          if 0 < student.current_vdp_grade() < 12:
+          if current_grade < 50:
+              try:
+                 intake_date = student.intakeinternal_set.all().filter().order_by(
+                              '-enrollment_date'
+                          )[0].enrollment_date
+              except IndexError:
+                  intake_date = None
               students_promoted[student] = {
                   'promoted_times':len(Academic.objects.filter(student_id=student,promote=True)),
                   'lastest_promoted_date':Academic.objects.filter(student_id=student,promote=True).latest('test_date').test_date if len(Academic.objects.filter(student_id=student,promote=True)) > 0 else None,
-                  'enrolled_date' : student.intakeinternal_set.all().filter().order_by(
-                                                                      '-enrollment_date'
-                                                                  )[0].enrollment_date
+                  'enrolled_date' : intake_date
                                             }
 
         self.assertEqual(resp.context['students_promoted'],students_promoted)
-        self.assertEqual(resp.context['filter_seach'],None)
+        self.assertEqual(resp.context['filter_seach'],'CURRENT')
         self.assertEqual(list(resp.context['sites']),list(School.objects.all()))
         self.assertEqual(resp.context['grades'],dict(GRADES))
+        self.assertEqual(resp.context['academic_years'],self.academic_years)
+        self.assertEqual(resp.context['year'],0)
+        self.assertEqual(resp.context['school'],0)
+        self.assertEqual(resp.context['grade'],0)
+        self.assertEqual(resp.context['classroom'],0)
 
-    def test_context_filter_search_not_none(self):
+    def test_context_filter_search_ALL(self):
         filter_seach = 'ALL'
         url = reverse('students_promoted_times_report',kwargs={'filter_seach':filter_seach})
         resp = self.client.get(url,follow=True)
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp,'mande/students_promoted_times_report.html')
         students = IntakeSurvey.objects.all().filter(date__lte=date.today().isoformat())
-
         students_promoted = {}
         for student in students:
+          current_grade = student.current_vdp_grade_catch_up()
+
           #if the student has a valid current grade
-          if 0 < student.current_vdp_grade() < 12:
+          if current_grade < 50:
+              try:
+                 intake_date = student.intakeinternal_set.all().filter().order_by(
+                              '-enrollment_date'
+                          )[0].enrollment_date
+              except IndexError:
+                  intake_date = None
               students_promoted[student] = {
                   'promoted_times':len(Academic.objects.filter(student_id=student,promote=True)),
                   'lastest_promoted_date':Academic.objects.filter(student_id=student,promote=True).latest('test_date').test_date if len(Academic.objects.filter(student_id=student,promote=True)) > 0 else None,
-                  'enrolled_date' : student.intakeinternal_set.all().filter().order_by(
-                                                                      '-enrollment_date'
-                                                                  )[0].enrollment_date
+                  'enrolled_date' : intake_date
                                             }
 
         self.assertEqual(resp.context['students_promoted'],students_promoted)
         self.assertEqual(resp.context['filter_seach'],filter_seach)
         self.assertEqual(list(resp.context['sites']),list(School.objects.all()))
         self.assertEqual(resp.context['grades'],dict(GRADES))
+        self.assertEqual(resp.context['academic_years'],self.academic_years)
+        self.assertEqual(resp.context['year'],0)
+        self.assertEqual(resp.context['school'],0)
+        self.assertEqual(resp.context['grade'],0)
+        self.assertEqual(resp.context['classroom'],0)
+
+    def test_context_year_not_none(self):
+        filter_seach = 'ALL'
+        year = 2014
+        url = reverse('students_promoted_times_report',kwargs={'filter_seach':filter_seach,'year':year})
+        resp = self.client.get(url,follow=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp,'mande/students_promoted_times_report.html')
+        students = IntakeSurvey.objects.all().filter(date__lte=date.today().isoformat())
+        students_promoted = {}
+        school_year_start_date = str(year)+"-08-01"
+        school_year_end_date = str(int(year)+1)+"-07-31"
+        for student in students:
+          current_grade = student.current_vdp_grade_catch_up()
+
+          #if the student has a valid current grade
+          if current_grade < 50:
+              try:
+                 intake_date = student.intakeinternal_set.all().filter().order_by(
+                              '-enrollment_date'
+                          )[0].enrollment_date
+              except IndexError:
+                  intake_date = None
+              students_promoted[student] = {
+                  'promoted_times':len( Academic.objects.filter( Q(student_id=student) & Q(promote=True) & Q(Q(test_date__gte=school_year_start_date) & Q(test_date__lte=school_year_end_date)) ) ),
+                  'lastest_promoted_date':Academic.objects.filter(student_id=student,promote=True).latest('test_date').test_date if len(Academic.objects.filter(student_id=student,promote=True)) > 0 else None,
+                  'enrolled_date' : intake_date
+                                            }
+
+        self.assertEqual(resp.context['students_promoted'],students_promoted)
+        self.assertEqual(resp.context['filter_seach'],filter_seach)
+        self.assertEqual(list(resp.context['sites']),list(School.objects.all()))
+        self.assertEqual(resp.context['grades'],dict(GRADES))
+        self.assertEqual(resp.context['academic_years'],self.academic_years)
+        self.assertEqual(resp.context['year'],str(year))
+        self.assertEqual(resp.context['school'],0)
+        self.assertEqual(resp.context['grade'],0)
+        self.assertEqual(resp.context['classroom'],0)
+
+    def test_context_school_not_none(self):
+        filter_seach = 'ALL'
+        year = 2014
+        school = 1
+        url = reverse('students_promoted_times_report',
+                    kwargs={'filter_seach':filter_seach,'year':year,'school':school})
+        resp = self.client.get(url,follow=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp,'mande/students_promoted_times_report.html')
+        students = IntakeSurvey.objects.all().filter(date__lte=date.today().isoformat())
+        students = students.filter(site=school)
+        students_promoted = {}
+        school_year_start_date = str(year)+"-08-01"
+        school_year_end_date = str(int(year)+1)+"-07-31"
+        for student in students:
+          current_grade = student.current_vdp_grade_catch_up()
+
+          #if the student has a valid current grade
+          if current_grade < 50:
+              try:
+                 intake_date = student.intakeinternal_set.all().filter().order_by(
+                              '-enrollment_date'
+                          )[0].enrollment_date
+              except IndexError:
+                  intake_date = None
+              students_promoted[student] = {
+                  'promoted_times':len( Academic.objects.filter( Q(student_id=student) & Q(promote=True) & Q(Q(test_date__gte=school_year_start_date) & Q(test_date__lte=school_year_end_date)) ) ),
+                  'lastest_promoted_date':Academic.objects.filter(student_id=student,promote=True).latest('test_date').test_date if len(Academic.objects.filter(student_id=student,promote=True)) > 0 else None,
+                  'enrolled_date' : intake_date
+                                            }
+
+        self.assertEqual(resp.context['students_promoted'],students_promoted)
+        self.assertEqual(resp.context['filter_seach'],filter_seach)
+        self.assertEqual(list(resp.context['sites']),list(School.objects.all()))
+        self.assertEqual(resp.context['grades'],dict(GRADES))
+        self.assertEqual(resp.context['academic_years'],self.academic_years)
+        self.assertEqual(resp.context['year'],str(year))
+        self.assertEqual(resp.context['school'],str(school))
+        self.assertEqual(resp.context['grade'],0)
+        self.assertEqual(resp.context['classroom'],0)
+    def test_context_school_and_grade_not_none(self):
+        filter_seach = 'ALL'
+        year = 2014
+        school = 1
+        grade = 1
+        url = reverse('students_promoted_times_report',
+                    kwargs={
+                        'filter_seach':filter_seach,'year':year,
+                        'school':school,
+                        'grade':grade
+                           })
+        resp = self.client.get(url,follow=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp,'mande/students_promoted_times_report.html')
+        students = IntakeSurvey.objects.all().filter(date__lte=date.today().isoformat())
+        enrolled_class = ClassroomEnrollment.objects.filter(Q(Q(classroom_id__school_id=school) & Q(classroom_id__cohort=grade) & Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None)))).values_list('student_id',flat=True)
+        students = students.filter(student_id__in=enrolled_class)
+
+        students_promoted = {}
+        school_year_start_date = str(year)+"-08-01"
+        school_year_end_date = str(int(year)+1)+"-07-31"
+        for student in students:
+          current_grade = student.current_vdp_grade_catch_up()
+
+          #if the student has a valid current grade
+          if current_grade < 50:
+              try:
+                 intake_date = student.intakeinternal_set.all().filter().order_by(
+                              '-enrollment_date'
+                          )[0].enrollment_date
+              except IndexError:
+                  intake_date = None
+              students_promoted[student] = {
+                  'promoted_times':len( Academic.objects.filter( Q(student_id=student) & Q(promote=True) & Q(Q(test_date__gte=school_year_start_date) & Q(test_date__lte=school_year_end_date)) ) ),
+                  'lastest_promoted_date':Academic.objects.filter(student_id=student,promote=True).latest('test_date').test_date if len(Academic.objects.filter(student_id=student,promote=True)) > 0 else None,
+                  'enrolled_date' : intake_date
+                                            }
+
+        self.assertEqual(resp.context['students_promoted'],students_promoted)
+        self.assertEqual(resp.context['filter_seach'],filter_seach)
+        self.assertEqual(list(resp.context['sites']),list(School.objects.all()))
+        self.assertEqual(resp.context['grades'],dict(GRADES))
+        self.assertEqual(resp.context['academic_years'],self.academic_years)
+        self.assertEqual(resp.context['year'],str(year))
+        self.assertEqual(resp.context['school'],str(school))
+        self.assertEqual(resp.context['grade'],str(grade))
+        self.assertEqual(resp.context['classroom'],0)
+
+def test_context_school_and_grade_and_classroom_not_none(self):
+    filter_seach = 'ALL'
+    year = 2014
+    school = 1
+    grade = 1
+    classroom = 1
+    url = reverse('students_promoted_times_report',
+                kwargs={
+                    'filter_seach':filter_seach,'year':year,
+                    'school':school,
+                    'grade':grade,
+                    'classroom':classroom
+                     })
+    resp = self.client.get(url,follow=True)
+    self.assertEqual(resp.status_code, 200)
+    self.assertTemplateUsed(resp,'mande/students_promoted_times_report.html')
+    students = IntakeSurvey.objects.all().filter(date__lte=date.today().isoformat())
+
+    enrolled_class = ClassroomEnrollment.objects.filter(Q(Q(classroom_id=classroom) & Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None)))).values_list('student_id',flat=True)
+    students = students.filter(student_id__in=enrolled_class)
+
+    students_promoted = {}
+    school_year_start_date = str(year)+"-08-01"
+    school_year_end_date = str(int(year)+1)+"-07-31"
+    for student in students:
+      current_grade = student.current_vdp_grade_catch_up()
+
+      #if the student has a valid current grade
+      if current_grade < 50:
+          try:
+             intake_date = student.intakeinternal_set.all().filter().order_by(
+                          '-enrollment_date'
+                      )[0].enrollment_date
+          except IndexError:
+              intake_date = None
+          students_promoted[student] = {
+              'promoted_times':len( Academic.objects.filter( Q(student_id=student) & Q(promote=True) & Q(Q(test_date__gte=school_year_start_date) & Q(test_date__lte=school_year_end_date)) ) ),
+              'lastest_promoted_date':Academic.objects.filter(student_id=student,promote=True).latest('test_date').test_date if len(Academic.objects.filter(student_id=student,promote=True)) > 0 else None,
+              'enrolled_date' : intake_date
+                                        }
+
+    self.assertEqual(resp.context['students_promoted'],students_promoted)
+    self.assertEqual(resp.context['filter_seach'],filter_seach)
+    self.assertEqual(list(resp.context['sites']),list(School.objects.all()))
+    self.assertEqual(resp.context['grades'],dict(GRADES))
+    self.assertEqual(resp.context['academic_years'],self.academic_years)
+    self.assertEqual(resp.context['year'],str(year))
+    self.assertEqual(resp.context['school'],str(school))
+    self.assertEqual(resp.context['grade'],str(graade))
+    self.assertEqual(resp.context['classroom'],str(classroom))
 
 class PublicSchoolReportViewTestCase(TestCase):
     fixtures = [

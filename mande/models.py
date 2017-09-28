@@ -5,7 +5,7 @@ from datetime import date
 from django.core.exceptions import ObjectDoesNotExist
 from mande.permissions import perms_required
 from django.utils.translation import ugettext_lazy as _
-
+from django.db.models import Q
 
 GENDERS = (
 	('M', _('Male')),
@@ -324,6 +324,17 @@ class IntakeSurvey(models.Model):
 			current_grade = recent_intake.starting_grade if type(recent_intake) != str else 0
 
 		return current_grade
+	def current_vdp_grade_catch_up(self,view_date=datetime.datetime.now()):
+		enrolled_catch_ups = self.classroomenrollment_set.all().filter( Q( Q(Q(drop_date__gte=view_date) | Q(drop_date=None)) & Q(Q(classroom_id__cohort__gte=1) & Q(classroom_id__cohort__lte=6)) ) ).order_by('-enrollment_date')
+		if len(enrolled_catch_ups) > 0:
+			return enrolled_catch_ups[0].classroom_id.cohort
+
+		enrolled = self.classroomenrollment_set.all().filter( Q(Q(drop_date__gte=view_date) | Q(drop_date=None)) ).order_by('-enrollment_date')
+		if len(enrolled) > 0:
+		   return enrolled[0].classroom_id.cohort
+		return 0
+
+
 	# -------------------------------------------
 	def date_enrolled_grade(self,current_grade):
 		grade = current_grade-1

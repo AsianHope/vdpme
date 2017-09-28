@@ -1,14 +1,18 @@
 from django import template
 from mande.models import IntakeSurvey
-from mande.models import GRADES
-from mande.models import RELATIONSHIPS
 from mande.models import Academic
 from mande.models import IntakeInternal
 from mande.models import ClassroomEnrollment
+from mande.models import Classroom
+from mande.models import School
+
 from mande.models import COHORTS
 from mande.models import STATUS
 from mande.models import FREQUENCY
 from mande.models import YN
+from mande.models import GRADES
+from mande.models import RELATIONSHIPS
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from datetime import date
@@ -21,6 +25,14 @@ import subprocess
 import os
 
 register = template.Library()
+
+@register.filter(name='classroom_by_school_grade')
+def classroom_by_school_grade(value,arg):
+    classes = []
+    classrooms = Classroom.objects.filter(school_id=arg,cohort=value)
+    for classroom in classrooms:
+        classes.append(classroom)
+    return classes
 
 @register.filter(name='concate')
 def concate(value,arg):
@@ -58,6 +70,20 @@ def grade_by_id(value):
     else:
         grade_dict = dict(GRADES)
         return grade_dict.get(int(value), None)
+
+@register.filter(name='site_by_id')
+def site_by_id(value):
+    try:
+        return School.objects.get(pk=value)
+    except School.DoesNotExist:
+        return 'Unknown'
+
+@register.filter(name='classroom_by_id')
+def classroom_by_id(value):
+    try:
+        return Classroom.objects.get(pk=value)
+    except Classroom.DoesNotExist:
+        return 'Unknown'
 
 @register.filter(name='relationship_display')
 def relationship_display(value):

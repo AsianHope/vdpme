@@ -3,6 +3,13 @@
 {% load mandefilters %}
 {% block title %}
 {% trans "Students Promoted Times Report" %}
+{% if classroom == '0' or not classroom%}
+    {% if school and school != '0'  %}
+    {{school | site_by_id}}
+    {% if grade and grade != '0'  %} {{ grade | grade_by_id}} {%endif%}
+    {%endif%}
+{%endif%}
+{% if classroom and classroom != '0'  %} {{ classroom | classroom_by_id}} {%endif%}
 {% endblock %}
 
 {% block content %}
@@ -24,7 +31,7 @@
           <tr>
               <td>{{ student.site }}</td>
               <td><a href="{% url 'student_detail' student.student_id %}">{{ student }}</a></td>
-              <td>{{student.current_vdp_grade}}</td>
+              <td>{{student.current_vdp_grade_catch_up | grade_by_id}}</td>
               <td>{{promoted.enrolled_date|timesince}}</td>
               <td>{{promoted.lastest_promoted_date}}</td>
               <td>{{promoted.lastest_promoted_date|timesince}}</td>
@@ -38,33 +45,79 @@
 <div class="col-md-3">
   <ul class="buttonlist">
     <li>
-      <a href="{% url 'students_promoted_times_report' 'ALL' %}" class="btn {% if filter_seach != None %} btn-warning {% else %} btn-info {% endif %} btn-sm">
+        <a role="button" class="btn btn-sm btn-danger" href="{% url 'students_promoted_times_report' %}">{% trans "Clear Search" %}</a>
+    </li>
+    <li>
+      <a href="{% url 'students_promoted_times_report' 'ALL' year school grade classroom %}" class="btn {% if filter_seach != ALL %} btn-info {% else %} btn-warning {% endif %} btn-sm">
         {% trans "All Students" %}
       </a>
     </li>
     <li>
-    <a href="{% url 'students_promoted_times_report' %}" class="btn {% if filter_seach == None %} btn-warning {% else %} btn-info {% endif %} btn-sm">
-        {% trans "Current Students" %}
-    </a>
+        <a href="{% url 'students_promoted_times_report' 'CURRENT' year school grade classroom %}" class="btn {% if filter_seach == ALL %} btn-info {% else %} btn-warning {% endif %} btn-sm">
+            {% trans "Current Students" %}
+        </a>
     </li>
   </ul>
   <ul style="list-style:none; padding:0;">
+    <li>
+        {% trans "Academic Year" %}
+    </li>
+    <li>
+        <select class="form-control" id="select_year">
+            <option value="" selected="selected">--- Select Academic Year ---</option>
+            <option value="0">ALL</option>
+            {% for year in academic_years%}
+                <option value="{{year}}">{{year}}-{{year|add:1}}</option>
+            {% endfor%}
+
+        </select>
+    </li>
+  </ul>
+  <ul style="list-style:none; padding:0;">
+    <li>
+        {% trans "Number of Promoted Time" %}
+    </li>
+    <li>
+        <input class="form-control" id="search_promoted_time" type="number"​​ placeholder="Input Number of Promoted Time"/>
+    </li>
+  </ul>
+  <ul style="list-style:none; padding:0;">
+    <li style="margin-bottom:5px;">
+        <a class="btn btn-info" href="{% url 'students_promoted_times_report' filter_seach year 0 0 0 %}">{% trans "All Sites" %}</a>
+    <li>
     {% for site in sites %}
-      <li>
-        {{ site.school_name }}
-        <ul style="list-style:none; padding:0;">
-          {% for grade_id,grade in grades.items %}
-            {% if grade_id >= 1 and grade_id <= 6 %}
-            <li style="margin-bottom:5px;"><a role="button" class="btn btn-xs btn-info" onclick="table.column(0).search('{{site.school_name|escapejs}}').column(2).search('{{grade_id|escapejs}}').draw();" href="#">{{grade}}</a></li>
-            {% endif %}
-          {% endfor %}
-        </ul>
+      <li style="margin-bottom:5px;">
+        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="{{'#demo'|concate:site.school_id}}">{{ site.school_name }} <span class="caret"></span></button>
+         <div id="{{'demo'|concate:site.school_id}}" class="collapse">
+             <ul style="list-style:none; padding:0; margin-top:5px; margin-left:10px;">
+               <li style="margin-bottom:5px;">
+                    <a class="btn btn-success" href="{% url 'students_promoted_times_report' filter_seach year site.school_id 0 0 %}">{% trans "All Grades" %}</a>
+               <li>
+               {% for grade_id,grade in grades.items %}
+                 {% if grade_id >= 1 and grade_id <= 6 %}
+                 <li style="margin-bottom:5px;">
+                     <div class="dropdown">
+                       <button class="btn btn-success dropdown-toggle" id="{{site.school_name|concate:grade_id}}" type="button" data-toggle="dropdown">{{grade}}
+                       <span class="caret"></span></button>
+                       <ul class="dropdown-menu" role="menu" aria-labelledby="{{site.school_name|concate:grade_id}}">
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'students_promoted_times_report' filter_seach year site.school_id grade_id 0 %}">{% trans "All Classes" %}</a></li>
+                            <li role="presentation" class="divider"></li>
+                            {% for class in grade_id|classroom_by_school_grade:site.school_id %}
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'students_promoted_times_report' filter_seach year 0 0 class.classroom_id %}">{{class}}</a></li>
+                            <li role="presentation" class="divider"></li>
+                            {% endfor %}
+                       </ul>
+                     </div>
+                 </li>
+                 {% endif %}
+               {% endfor %}
+             </ul>
+         </div>
+
       </li>
     {% endfor %}
-      <li>
-        <a role="button" class="btn btn-sm btn-warning" onclick="table.column(0).search('').column(2).search('').draw();" href="#">{% trans "Clear Search" %}</a>
-      </li>
   </ul>
+
 </div>
 {% endblock %}
 {% block script %}
@@ -89,6 +142,27 @@ $(document).ready(function(){
              },
     ]
   });
+  $('#select_year').on('change', function() {
+      var selected_year = this.value;
+      var filter_seach = "{{filter_seach}}"
+      var school = "{{school}}"
+      var grade = "{{grade}}"
+      var classroom = "{{classroom}}"
+      url = '{%url 'students_promoted_times_report' %}'+ filter_seach + '/' + selected_year + '/' + school + '/' + grade + '/' + classroom
+      window.location.href = url;
+    })
+    $('#search_promoted_time').on( 'change', function () {
+        table
+        .columns(6)
+        .search( this.value )
+        .draw();
+    });
+    $('#search_promoted_time').on( 'keyup', function () {
+        table
+        .columns(6)
+        .search( this.value )
+        .draw();
+    });
 });
 </script>
 {% endblock %}

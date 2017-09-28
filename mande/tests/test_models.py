@@ -63,7 +63,9 @@ class TeacherTestCase(TestCase):
         self.assertIsInstance(entry,Teacher)
         self.assertEqual(entry.__unicode__(),unicode(entry.teacher_id)+' - '+unicode(entry.name))
 class IntakeSurveyTestCase(TestCase):
-    fixtures = ['schools.json','intakesurveys.json','intakeupdates.json','intakeinternals.json']
+    fixtures = ['schools.json','intakesurveys.json','intakeupdates.json',
+                'intakeinternals.json','classrooms.json','classroomenrollment.json'
+               ]
     def setUp(self):
         self.intake = IntakeSurvey.objects.get(pk=2)
     def test_intakesurvey_creation(self):
@@ -135,6 +137,59 @@ class IntakeSurveyTestCase(TestCase):
         self.assertEqual(intakesurvey.get_intakeinternal(),"Not enrolled")
         intakeinternal = IntakeInternal.objects.create(enrollment_date="2017-01-01",student_id=intakesurvey,starting_grade=1)
         self.assertEqual(intakesurvey.get_intakeinternal(),intakeinternal)
+
+    def test_current_vdp_grade_catch_up(self):
+        intakesurvey = IntakeSurvey.objects.create(
+            date=date.today().isoformat(),site=School.objects.get(pk=1),name="test",dob="2017-01-01",
+            grade_appropriate=1,gender="F",address="test",guardian1_name="test",
+            guardian1_relationship="FATHER",guardian1_phone="test",guardian1_profession="test",
+            guardian1_employment=1
+        )
+        classroom = Classroom.objects.get(pk=1)
+        ClassroomEnrollment.objects.create(
+            student_id = intakesurvey,
+            classroom_id=classroom,
+            enrollment_date=date.today().isoformat()
+        )
+        self.assertEqual(intakesurvey.current_vdp_grade_catch_up(),classroom.cohort)
+
+    def test_current_vdp_grade_catch_up_drop_class(self):
+        intakesurvey = IntakeSurvey.objects.create(
+            date=date.today().isoformat(),site=School.objects.get(pk=1),name="test",dob="2017-01-01",
+            grade_appropriate=1,gender="F",address="test",guardian1_name="test",
+            guardian1_relationship="FATHER",guardian1_phone="test",guardian1_profession="test",
+            guardian1_employment=1
+        )
+        classroom = Classroom.objects.get(pk=1)
+        ClassroomEnrollment.objects.create(
+            student_id = intakesurvey,
+            classroom_id=classroom,
+            enrollment_date=date.today().isoformat(),
+            drop_date="2014-01-01"
+        )
+        self.assertEqual(intakesurvey.current_vdp_grade_catch_up(),0)
+
+    def test_current_vdp_grade_catch_up_enrolled_in_catchup_and_skil(self):
+        intakesurvey = IntakeSurvey.objects.create(
+            date=date.today().isoformat(),site=School.objects.get(pk=1),name="test",dob="2017-01-01",
+            grade_appropriate=1,gender="F",address="test",guardian1_name="test",
+            guardian1_relationship="FATHER",guardian1_phone="test",guardian1_profession="test",
+            guardian1_employment=1
+        )
+        classroom_catch_up = Classroom.objects.get(pk=1)
+        ClassroomEnrollment.objects.create(
+            student_id = intakesurvey,
+            classroom_id=classroom_catch_up,
+            enrollment_date=date.today().isoformat()
+        )
+        classroom_english = Classroom.objects.get(pk=4)
+        ClassroomEnrollment.objects.create(
+            student_id = intakesurvey,
+            classroom_id=classroom_english,
+            enrollment_date=date.today().isoformat()
+        )
+        self.assertEqual(intakesurvey.current_vdp_grade_catch_up(),classroom_catch_up.cohort)
+
     def test_latest_public_school(self):
         self.assertEqual(self.intake.latest_public_school(),None)
         pschool1 = PublicSchoolHistory.objects.create(student_id=self.intake,

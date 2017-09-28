@@ -925,36 +925,85 @@ Students Promoted Times Report
  - lists all number of times student has been promoted
 *****************************************************************************
 '''
-def students_promoted_times_report(request,filter_seach=None):
+def students_promoted_times_report(request,filter_seach='CURRENT',year=0,school=0,grade=0,classroom=0):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
       sites = School.objects.all()
+      academic_year_start = datetime.now().year-2013
+      academic_years = []
+      # generate list of year
+      for r in range(academic_year_start):
+        academic_years.append(datetime.now().year-r)
 
-      #  get all student include student in ExitSurvey
-      if filter_seach is not None:
+      if filter_seach=='ALL':
         students = IntakeSurvey.objects.all().filter(date__lte=date.today().isoformat())
-      else:
+
+      elif filter_seach != 'ALL':
         exit_surveys = ExitSurvey.objects.filter(exit_date__lte=date.today().isoformat()).values_list('student_id',flat=True)
         students = IntakeSurvey.objects.exclude(student_id__in=exit_surveys).filter(date__lte=date.today().isoformat())
+        enrolled_catch_up = ClassroomEnrollment.objects.all().filter( Q( Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None)) & Q(Q(classroom_id__cohort__gte=1) & Q(classroom_id__cohort__lte=6)) ) ).values_list('student_id',flat=True)
+        students = students.filter(student_id__in=enrolled_catch_up)
+
+      if int(classroom) != 0:
+        enrolled_class = ClassroomEnrollment.objects.filter(Q(Q(classroom_id=int(classroom)) & Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None)))).values_list('student_id',flat=True)
+        students = students.filter(student_id__in=enrolled_class)
+      elif int(school) !=0 and int(grade) !=0:
+        enrolled_class = ClassroomEnrollment.objects.filter(Q(Q(classroom_id__school_id=int(school)) & Q(classroom_id__cohort=int(grade)) & Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None)))).values_list('student_id',flat=True)
+        students = students.filter(student_id__in=enrolled_class)
+      elif int(classroom) == 0 and int(school) != 0 and int(grade) == 0:
+        students = students.filter(site=school)
+
+
+
 
       students_promoted = {}
-      for student in students:
-        #if the student has a valid current grade
-        if 0 < student.current_vdp_grade() < 12:
-            students_promoted[student] = {
-                'promoted_times':len(Academic.objects.filter(student_id=student,promote=True)),
-                'lastest_promoted_date':Academic.objects.filter(student_id=student,promote=True).latest('test_date').test_date if len(Academic.objects.filter(student_id=student,promote=True)) > 0 else None,
-                'enrolled_date' : student.intakeinternal_set.all().filter().order_by(
-                                                                    '-enrollment_date'
-                                                                )[0].enrollment_date
-            }
+      if int(year) != 0:
+          school_year_start_date = str(year)+"-08-01"
+          school_year_end_date = str(int(year)+1)+"-07-31"
+          for student in students:
+              current_grade = student.current_vdp_grade_catch_up()
+              #if the student has a valid current grade
+              if current_grade < 50:
+                    try:
+                       intake_date = student.intakeinternal_set.all().filter().order_by(
+                                    '-enrollment_date'
+                                )[0].enrollment_date
+                    except IndexError:
+                        intake_date = None
+                    students_promoted[student] = {
+                        'promoted_times':len( Academic.objects.filter( Q(student_id=student) & Q(promote=True) & Q(Q(test_date__gte=school_year_start_date) & Q(test_date__lte=school_year_end_date)) ) ),
+                        'lastest_promoted_date':Academic.objects.filter(student_id=student,promote=True).latest('test_date').test_date if len(Academic.objects.filter(student_id=student,promote=True)) > 0 else None,
+                        'enrolled_date' : intake_date
+                    }
+      else:
+          for student in students:
+              current_grade = student.current_vdp_grade_catch_up()
+              #if the student current grade is in catch-up
+              if current_grade < 50:
+                    try:
+                       intake_date = student.intakeinternal_set.all().filter().order_by(
+                                    '-enrollment_date'
+                                )[0].enrollment_date
+                    except IndexError:
+                        intake_date = None
+                    students_promoted[student] = {
+                        'promoted_times':len( Academic.objects.filter( Q(student_id=student) & Q(promote=True)) ),
+                        'lastest_promoted_date':Academic.objects.filter(student_id=student,promote=True).latest('test_date').test_date if len(Academic.objects.filter(student_id=student,promote=True)) > 0 else None,
+                        'enrolled_date' : intake_date
+                    }
       return render(request, 'mande/students_promoted_times_report.html',
                             {
                                 'students_promoted':students_promoted,
                                 'filter_seach':filter_seach,
                                 'sites':sites,
-                                'grades':dict(GRADES)
+                                'grades':dict(GRADES),
+                                'academic_years':academic_years,
+                                'year':year,
+                                'school':school,
+                                'grade':grade,
+                                'classroom':classroom
+
                             })
     else:
       raise PermissionDenied

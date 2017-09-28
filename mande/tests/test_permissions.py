@@ -25,7 +25,7 @@ permissions_test_data = {
     'exit_surveys_list':{},
     'student_lag_report':{},
     'student_evaluation_report':{},
-    'student_evaluation_report':{'classroom_id':1},
+    'student_evaluation_report':{'grade_id':1},
     'student_medical_report':{},
     'student_dental_summary_report':{},
     'student_dental_summary_report':{'site_id':1},
