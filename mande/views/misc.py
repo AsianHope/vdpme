@@ -202,3 +202,5 @@ def notification_log(request):
       return render(request, 'mande/notificationlog.html',context)
     else:
       raise PermissionDenied
+
+#test jenkins
