@@ -97,25 +97,22 @@ def relationship_display(value):
 @register.filter(name='student_current_grade_by_id')
 def getStudentGradebyID(student_id):
     grade_dict = dict(GRADES)
+    # latest current grade in intakeupdate , if not get grade from intake internal
+    current_grade = 0  #not enrolled
     try:
         student = IntakeSurvey.objects.get(pk=student_id)
     except ObjectDoesNotExist:
-        current_grade = 0 #not enrolled
-
-    academics = student.academic_set.all().filter().order_by('-test_date')
-    intake = student.intakeinternal_set.all().filter().order_by('-enrollment_date')
-    if len(intake) > 0:
-        recent_intake = intake[0]
-    else:
-        recent_intake = 'Not enrolled'
-
+        return grade_dict.get(current_grade, None)
     try:
-        #their current grade is one more than that of the last test they passed
-        current_grade = (academics.filter(promote=True).latest('test_date').test_level)+1
-        if current_grade > 6:
-            current_grade = 50
+        updates = student.intakeupdate_set.exclude(current_grade=None).latest('date')
+        current_grade = updates.current_grade
+        print current_grade
     except ObjectDoesNotExist:
-        current_grade = recent_intake.starting_grade if type(recent_intake) != str else 0
+        try:
+            intake = student.intakeinternal_set.all().filter().latest('enrollment_date')
+            current_grade = intake.starting_grade
+        except ObjectDoesNotExist:
+            pass
 
     return grade_dict.get(current_grade, None)
 # get subtotal of each field in dental that group by date (year, month)

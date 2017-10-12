@@ -7,6 +7,8 @@ from mande import views
 urlpatterns = [
     # ex: /mande/
     url(r'^generate/$', views.generate, name='generate'),
+    url(r'^update/$', views.update_current_grade, name='update_current_grade'),
+
     url(r'^$', views.dashboard, name='index'),
     # ex: /mande/students/
     url(r'^students/$', views.student_list, name='student_list'),

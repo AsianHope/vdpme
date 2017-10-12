@@ -573,14 +573,34 @@ def student_evaluation_report(request,grade_id=None):
                                                               faith_score=None)
       if grade_id is not None:
         #select students who have not dropped the class, or have not dropped it yet.
-        enrolled_students = ClassroomEnrollment.objects.all().filter(
-                            Q(
-                                Q(student_id__date__lte=date.today().isoformat()) &
-                                Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))
-                            )
-                            &
-                            Q(classroom_id__cohort=grade_id)
-                        ).values_list('student_id',flat=True)
+        if grade_id == '50':
+            enrolled_students = ClassroomEnrollment.objects.all().filter(
+                                Q(
+                                    Q(student_id__date__lte=date.today().isoformat()) &
+                                    Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))
+                                )
+                                &
+                                Q(classroom_id__cohort__gt=50,classroom_id__cohort__lt=60)
+                            ).values_list('student_id',flat=True)
+        elif grade_id == '70':
+            enrolled_students = ClassroomEnrollment.objects.all().filter(
+                                Q(
+                                    Q(student_id__date__lte=date.today().isoformat()) &
+                                    Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))
+                                )
+                                &
+                                Q(classroom_id__cohort__gt=70,classroom_id__cohort__lt=80)
+                            ).values_list('student_id',flat=True)
+        else:
+            enrolled_students = ClassroomEnrollment.objects.all().filter(
+                                Q(
+                                    Q(student_id__date__lte=date.today().isoformat()) &
+                                    Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None))
+                                )
+                                &
+                                Q(classroom_id__cohort=grade_id)
+                            ).values_list('student_id',flat=True)
+
 
         evaluations = evaluations.filter(student_id__in=enrolled_students)
       return render(request,
@@ -750,15 +770,10 @@ def mande_summary_report(request,start_view_date=date.today().isoformat(),view_d
         students_enrolled_in_english_by_level = {}
         students_by_site= {}
 
-        # get biggest english levle
-        english_class_latest_level = Classroom.objects.filter(cohort=50).latest('classroom_number');
-        english_biggest_level = int(english_class_latest_level.classroom_number.rsplit(None, 1)[-1])
-        # generate_list of students group by site and grade
-
         grades_level = range(1,7)
-        english_level = ['Level '+str(x) for x in range(1,english_biggest_level+1)]
+        english_level = set(Classroom.objects.filter(cohort__gt=50,cohort__lt=60).values_list('cohort',flat=True))
 
-        # generate dict
+        # generate_list of students group by site and grade
         for school in schools:
            name = school.school_name
            students_by_site_grade[name] = {}
@@ -769,7 +784,6 @@ def mande_summary_report(request,start_view_date=date.today().isoformat(),view_d
            for a in grades_level:
                students_by_site_grade[name][a] = {'M':0,'F':0}
                students_by_site_grade[name]['appropriate'+str(a)] = {'M':0,'F':0}
-
                students_by_site_grade_plus_skill_vietnamese[name][a] = {'M':0,'F':0}
 
            students_by_site_grade[name][70] = {'M':0,'F':0}
@@ -788,55 +802,44 @@ def mande_summary_report(request,start_view_date=date.today().isoformat(),view_d
             grade = student.current_vdp_grade(view_date)
             site = student.site
             gender = student.gender
-
             # total student
             students_by_site[unicode(site)][gender] +=1
+            # english student by level
+            if (grade > 50 and grade <60):
 
-            if (grade >= 1 and grade <= 6) or grade == 70:
-               #    -----students_by_site_grade (catch-up school)----
-               students_by_site_grade[unicode(site)][grade][gender] +=1
+                students_enrolled_in_english_by_level[unicode(site)][grade][gender] +=1
+                students_enrolled_in_english_by_level[unicode(site)]['total'][gender] +=1
+
+
+            if (grade >= 1 and grade <= 6) or (grade > 70 and grade <80):
+               #    -----total students_by_site_grade (catch-up school)----
                students_by_site_grade[unicode(site)]['total'][gender] +=1
 
                if grade in grades_level:
+                   #    -----students_by_site_grade (catch-up school)----
+                   students_by_site_grade[unicode(site)][grade][gender] +=1
+
                    #student appropriate level
                    if (student.age_appropriate_grade(view_date) - grade < 1):
                        students_by_site_grade[unicode(site)]["appropriate"+str(grade)][gender] +=1
                        students_by_site_grade[unicode(site)]["appropriate_total"][gender] +=1
 
                    #-------------students_by_site_grade_plus_skill_vietnamese-------------
-
-                   enrolleds = ClassroomEnrollment.objects.filter(Q(student_id=student) & Q(Q(classroom_id__cohort=grade) | Q(classroom_id__cohort=70)) & Q( Q( Q(drop_date__gte=start_view_date) | Q(drop_date__gte=view_date)) | Q(drop_date=None)) &Q(enrollment_date__lte=view_date)
-                        ).order_by('classroom_id__cohort')
+                   enrolleds = ClassroomEnrollment.objects.filter(Q(student_id=student) & Q(Q(classroom_id__cohort=grade) | Q(Q(classroom_id__cohort__gt=70) &Q(classroom_id__cohort__lt=80))) & Q( Q( Q(drop_date__gte=start_view_date) | Q(drop_date__gte=view_date)) | Q(drop_date=None)) &Q(enrollment_date__lte=view_date)
+                        ).values_list('classroom_id__cohort',flat=True).order_by('-classroom_id__cohort')
                    if len(enrolleds)>1:
-                     classroom_number = enrolleds[0].classroom_id.cohort
-                     classroom_number1 = enrolleds[1].classroom_id.cohort
+                       if grade in enrolleds and enrolleds[0] in range(70,80):
+                            students_by_site_grade_plus_skill_vietnamese[unicode(site)][grade][gender] +=1
+                            students_by_site_grade_plus_skill_vietnamese[unicode(site)]['total'][gender] +=1
 
-                     if(classroom_number in grades_level) and (classroom_number1==70):
-                        students_by_site_grade_plus_skill_vietnamese[unicode(site)][grade][gender] +=1
-                        students_by_site_grade_plus_skill_vietnamese[unicode(site)]['total'][gender] +=1
                else:
-                #    ------------vietnamese only (catch-up school)----------------
-                   students_by_site_grade_plus_skill_vietnamese[unicode(site)][grade][gender] +=1
-                   students_by_site_grade_plus_skill_vietnamese[unicode(site)]['total'][gender] +=1
-            # english student by level
-            elif grade == 50:
-                english_student = None
-                enrolleds = ClassroomEnrollment.objects.filter(Q(student_id=student) & Q(classroom_id__cohort=50) & Q( Q(Q(drop_date__gte=view_date)| Q(drop_date__gte=start_view_date)) | Q(drop_date=None) ) &Q(enrollment_date__lte=view_date)
-                ).order_by('drop_date')
-                if len(enrolleds) > 1:
-                    if len(enrolleds.filter(drop_date=None)) != 0:
-                        english_student = enrolleds.filter(drop_date=None).latest('enrollment_date')
-                    else:
-                        english_student = enrolleds.latest('drop_date')
-                else:
-                    try:
-                        english_student = enrolleds[0]
-                    except:
-                        pass
-                if english_student is not None:
-                    level = english_student.classroom_id.classroom_number
-                    students_enrolled_in_english_by_level[unicode(site)][level][gender] +=1
-                    students_enrolled_in_english_by_level[unicode(site)]['total'][gender] +=1
+                    # ------------vietnamese only (catch-up school)----------------
+                    students_by_site_grade[unicode(site)][70][gender] +=1
+
+                   #-------------students_by_site_grade_plus_skill_vietnamese (vietnamese only )-------------
+                    students_by_site_grade_plus_skill_vietnamese[unicode(site)][70][gender] +=1
+                    students_by_site_grade_plus_skill_vietnamese[unicode(site)]['total'][gender] +=1
+
 
         return render(request, 'mande/mandesummaryreport.html',
                                 {
@@ -848,7 +851,7 @@ def mande_summary_report(request,start_view_date=date.today().isoformat(),view_d
                                     'students_by_site_grade_plus_skill_vietnamese':students_by_site_grade_plus_skill_vietnamese,
                                     'students_enrolled_in_english_by_level':students_enrolled_in_english_by_level,
                                     'grades_level':grades_level,
-                                    'english_level':english_level
+                                    'english_level':english_level,
                                 })
     else:
       raise PermissionDenied
@@ -962,7 +965,7 @@ def students_promoted_times_report(request,filter_seach='CURRENT',year=0,school=
           school_year_start_date = str(year)+"-08-01"
           school_year_end_date = str(int(year)+1)+"-07-31"
           for student in students:
-              current_grade = student.current_vdp_grade_catch_up()
+              current_grade = student.current_vdp_grade()
               #if the student has a valid current grade
               if current_grade < 50:
                     try:
@@ -978,7 +981,7 @@ def students_promoted_times_report(request,filter_seach='CURRENT',year=0,school=
                     }
       else:
           for student in students:
-              current_grade = student.current_vdp_grade_catch_up()
+              current_grade = student.current_vdp_grade()
               #if the student current grade is in catch-up
               if current_grade < 50:
                     try:
@@ -1019,7 +1022,10 @@ def public_school_report(request):
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
       students = getEnrolledStudents()
-      grades = {k:v for k, v in dict(GRADES).items() if (k>0 and k<=6) or k in [50,60,70] }
+      grades = {k:v for k, v in dict(GRADES).items() if (k>0 and k<=6) or k in [50,70]}
+      print type(grades)
+      grades[50]='E'
+      grades[70]='V'
       return render(request, 'mande/public_school_report.html',
                             {
                                 'students' : students,
@@ -1080,8 +1086,7 @@ def students_lag_summary(request):
             ]
         )
       for student in enrolled_students:
-        if student.current_vdp_grade() != 70:
-            if student.current_vdp_grade() != 50:
+        if student.current_vdp_grade() <= 6:
                 # for each site
                 for student_lag_by_site in students_lag_by_site :
                     if student.site == student_lag_by_site['school']:
@@ -1155,7 +1160,7 @@ def advanced_report(request):
 
       data_public_schools = list(PublicSchoolHistory.objects.all().values_list('school_name',flat=True).distinct())
       # sort khmer
-      data_public_schools = [x.encode('utf-8').strip() for x in data_public_schools]
+      data_public_schools = [x.encode('utf-8').strip() for x in data_public_schools if x is not None]
       locale = Locale('km_KH')
       collator = Collator.createInstance(locale)
       data_public_schools = sorted(set(data_public_schools),key=collator.getSortKey)
@@ -1451,6 +1456,7 @@ def generate(request):
                                 ).exclude(student_id__in=exit_surveys)
        for survey in active_surveys:
             recent_survey = survey.getRecentFields()
+
             student = CurrentStudentInfo(
                 student_id=recent_survey['student_id'],
                 name = recent_survey['name'],

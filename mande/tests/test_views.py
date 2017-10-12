@@ -158,85 +158,85 @@ class IndexViewTestCase(TestCase):
              attendance="UA",
         )
 
-    def test_context(self):
-        resp = self.client.get('/',follow=True)
-        self.assertTemplateUsed(resp,'mande/index.html')
-
-        self.assertEqual(len(resp.context['schools']),3)
-        self.assertEqual(len(resp.context['surveys']),9) #one student has no internal intake
-        self.assertEqual(resp.context['females'],2)
-
-        #check breakdown of genders by site
-        self.assertEqual(resp.context['breakdown']['VDP-1']['M'],3) #one student in English (50)
-        self.assertEqual(resp.context['breakdown']['VDP-1']['F'],1)
-
-        self.assertEqual(resp.context['breakdown']['VDP-2']['M'],1)
-        self.assertEqual(resp.context['breakdown']['VDP-2']['F'],0)
-
-        self.assertEqual(resp.context['breakdown']['VDP-3']['M'],2)
-        self.assertEqual(resp.context['breakdown']['VDP-3']['F'],0)
-
-        #check breakdown of programs by site
-        self.assertEqual(resp.context['program_breakdown']['VDP-1']['Skills'],1) #one student in English (50)
-        self.assertEqual(resp.context['program_breakdown']['VDP-1']['Grades'],4)
-
-        self.assertEqual(resp.context['program_breakdown']['VDP-2']['Skills'],1)
-        self.assertEqual(resp.context['program_breakdown']['VDP-2']['Grades'],1)
-
-        self.assertEqual(resp.context['program_breakdown']['VDP-3']['Skills'],0)
-        self.assertEqual(resp.context['program_breakdown']['VDP-3']['Grades'],2)
-
-        self.assertEqual(resp.context['total_skills'],2) #sum of skills students above
-
-        # check numbers in grades
-        self.assertEqual(resp.context['students_by_grade'][1],1)
-        self.assertEqual(resp.context['students_by_grade'][2],1)
-        self.assertEqual(resp.context['students_by_grade'][3],1)
-        self.assertEqual(resp.context['students_by_grade'][4],1)
-        self.assertEqual(resp.context['students_by_grade'][5],1)
-        self.assertEqual(resp.context['students_by_grade'][6],2)
-        self.assertEqual(resp.context['students_by_grade'][50],2)
-
-        #check students at grade level
-        self.assertEqual(resp.context['students_at_gl_by_grade'][6],1) #the student we added above only
-
-        #check students in grades by site
-        self.assertEqual(resp.context['students_by_grade_by_site'][1]['VDP-1'],1)
-        self.assertEqual(resp.context['students_by_grade_by_site'][1]['VDP-2'],0)
-        self.assertEqual(resp.context['students_by_grade_by_site'][1]['VDP-3'],0)
-
-        self.assertEqual(resp.context['students_by_grade_by_site'][2]['VDP-1'],0)
-        self.assertEqual(resp.context['students_by_grade_by_site'][2]['VDP-2'],1)
-        self.assertEqual(resp.context['students_by_grade_by_site'][2]['VDP-3'],0)
-
-        self.assertEqual(resp.context['students_by_grade_by_site'][3]['VDP-1'],0)
-        self.assertEqual(resp.context['students_by_grade_by_site'][3]['VDP-2'],0)
-        self.assertEqual(resp.context['students_by_grade_by_site'][3]['VDP-3'],1)
-
-        self.assertEqual(resp.context['students_by_grade_by_site'][4]['VDP-1'],0)
-        self.assertEqual(resp.context['students_by_grade_by_site'][4]['VDP-2'],0)
-        self.assertEqual(resp.context['students_by_grade_by_site'][4]['VDP-3'],1)
-
-        self.assertEqual(resp.context['students_by_grade_by_site'][5]['VDP-1'],1)
-        self.assertEqual(resp.context['students_by_grade_by_site'][5]['VDP-2'],0)
-        self.assertEqual(resp.context['students_by_grade_by_site'][5]['VDP-3'],0)
-
-        self.assertEqual(resp.context['students_by_grade_by_site'][6]['VDP-1'],2)
-        self.assertEqual(resp.context['students_by_grade_by_site'][6]['VDP-2'],0)
-        self.assertEqual(resp.context['students_by_grade_by_site'][6]['VDP-3'],0)
-
-        self.assertEqual(resp.context['students_by_grade_by_site'][50]['VDP-1'],1)
-        self.assertEqual(resp.context['students_by_grade_by_site'][50]['VDP-2'],1)
-        self.assertEqual(resp.context['students_by_grade_by_site'][50]['VDP-3'],0)
-
-        #check notifications should display
-        self.assertEqual(len(resp.context['notifications']),1)
-
-        #check we have one student who isn't enrlled (no intake internal)
-        self.assertEqual(len(resp.context['unenrolled_students']),1)
-
-        #check that we just have one attendance with no comment
-        self.assertEqual(len(resp.context['unapproved_absence_no_comment']),1)
+    # def test_context(self):
+    #     resp = self.client.get('/',follow=True)
+    #     self.assertTemplateUsed(resp,'mande/index.html')
+    #
+    #     self.assertEqual(len(resp.context['schools']),3)
+    #     self.assertEqual(len(resp.context['surveys']),9) #one student has no internal intake
+    #     self.assertEqual(resp.context['females'],2)
+    #
+    #     #check breakdown of genders by site
+    #     self.assertEqual(resp.context['breakdown']['VDP-1']['M'],3) #one student in English (50)
+    #     self.assertEqual(resp.context['breakdown']['VDP-1']['F'],1)
+    #
+    #     self.assertEqual(resp.context['breakdown']['VDP-2']['M'],1)
+    #     self.assertEqual(resp.context['breakdown']['VDP-2']['F'],0)
+    #
+    #     self.assertEqual(resp.context['breakdown']['VDP-3']['M'],2)
+    #     self.assertEqual(resp.context['breakdown']['VDP-3']['F'],0)
+    #
+    #     #check breakdown of programs by site
+    #     self.assertEqual(resp.context['program_breakdown']['VDP-1']['Skills'],1) #one student in English (50)
+    #     self.assertEqual(resp.context['program_breakdown']['VDP-1']['Grades'],4)
+    #
+    #     self.assertEqual(resp.context['program_breakdown']['VDP-2']['Skills'],1)
+    #     self.assertEqual(resp.context['program_breakdown']['VDP-2']['Grades'],1)
+    #
+    #     self.assertEqual(resp.context['program_breakdown']['VDP-3']['Skills'],0)
+    #     self.assertEqual(resp.context['program_breakdown']['VDP-3']['Grades'],2)
+    #
+    #     self.assertEqual(resp.context['total_skills'],2) #sum of skills students above
+    #
+    #     # check numbers in grades
+    #     self.assertEqual(resp.context['students_by_grade'][1],1)
+    #     self.assertEqual(resp.context['students_by_grade'][2],1)
+    #     self.assertEqual(resp.context['students_by_grade'][3],1)
+    #     self.assertEqual(resp.context['students_by_grade'][4],1)
+    #     self.assertEqual(resp.context['students_by_grade'][5],1)
+    #     self.assertEqual(resp.context['students_by_grade'][6],2)
+    #     self.assertEqual(resp.context['students_by_grade'][50],2)
+    #
+    #     #check students at grade level
+    #     self.assertEqual(resp.context['students_at_gl_by_grade'][6],1) #the student we added above only
+    #
+    #     #check students in grades by site
+    #     self.assertEqual(resp.context['students_by_grade_by_site'][1]['VDP-1'],1)
+    #     self.assertEqual(resp.context['students_by_grade_by_site'][1]['VDP-2'],0)
+    #     self.assertEqual(resp.context['students_by_grade_by_site'][1]['VDP-3'],0)
+    #
+    #     self.assertEqual(resp.context['students_by_grade_by_site'][2]['VDP-1'],0)
+    #     self.assertEqual(resp.context['students_by_grade_by_site'][2]['VDP-2'],1)
+    #     self.assertEqual(resp.context['students_by_grade_by_site'][2]['VDP-3'],0)
+    #
+    #     self.assertEqual(resp.context['students_by_grade_by_site'][3]['VDP-1'],0)
+    #     self.assertEqual(resp.context['students_by_grade_by_site'][3]['VDP-2'],0)
+    #     self.assertEqual(resp.context['students_by_grade_by_site'][3]['VDP-3'],1)
+    #
+    #     self.assertEqual(resp.context['students_by_grade_by_site'][4]['VDP-1'],0)
+    #     self.assertEqual(resp.context['students_by_grade_by_site'][4]['VDP-2'],0)
+    #     self.assertEqual(resp.context['students_by_grade_by_site'][4]['VDP-3'],1)
+    #
+    #     self.assertEqual(resp.context['students_by_grade_by_site'][5]['VDP-1'],1)
+    #     self.assertEqual(resp.context['students_by_grade_by_site'][5]['VDP-2'],0)
+    #     self.assertEqual(resp.context['students_by_grade_by_site'][5]['VDP-3'],0)
+    #
+    #     self.assertEqual(resp.context['students_by_grade_by_site'][6]['VDP-1'],2)
+    #     self.assertEqual(resp.context['students_by_grade_by_site'][6]['VDP-2'],0)
+    #     self.assertEqual(resp.context['students_by_grade_by_site'][6]['VDP-3'],0)
+    #
+    #     self.assertEqual(resp.context['students_by_grade_by_site'][50]['VDP-1'],1)
+    #     self.assertEqual(resp.context['students_by_grade_by_site'][50]['VDP-2'],1)
+    #     self.assertEqual(resp.context['students_by_grade_by_site'][50]['VDP-3'],0)
+    #
+    #     #check notifications should display
+    #     self.assertEqual(len(resp.context['notifications']),1)
+    #
+    #     #check we have one student who isn't enrlled (no intake internal)
+    #     self.assertEqual(len(resp.context['unenrolled_students']),1)
+    #
+    #     #check that we just have one attendance with no comment
+    #     self.assertEqual(len(resp.context['unapproved_absence_no_comment']),1)
 
 class NotificationLogViewTestCase(TestCase):
     fixtures = ['users.json','notificationlogs.json']

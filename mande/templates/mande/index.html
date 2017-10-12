@@ -11,7 +11,8 @@
                 <div class = "col-lg-8">
                   <div class="panel panel-default">
                       <div class="panel-heading">
-                          <i class="fa fa-bar-chart-o fa-fw"></i> {% trans "VDP by Grade" %}
+                          <i class="fa fa-bar-chart-o fa-fw"></i> {% trans "VDP Grade 1-6" %}
+                          <span id="color_list" style="margin-left:40px;"></span>
                           <div class="pull-right">
                               <div class="btn-group">
                                   <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
@@ -44,7 +45,138 @@
                       </div>
                       <!-- /.panel-body -->
                   </div>
+                  <div class="panel panel-default">
+                      <div class="panel-heading">
+                          <i class="fa fa-bar-chart-o fa-fw"></i> {% trans "VDP English and Vietnamese" %}
+                          <span id="color_list_skill" style="margin-left:40px;"></span>
+                          <div class="pull-right">
+                              <div class="btn-group">
+                                  <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                      {% trans "Actions" %}
+                                      <span class="caret"></span>
+                                  </button>
+                                  <ul class="dropdown-menu pull-right" role="menu">
+                                      <li><a href="#">{% trans "Action" %}</a>
+                                      </li>
+                                      <li><a href="#">{% trans "Another action" %}</a>
+                                      </li>
+                                      <li><a href="#">{% trans "Something else here"  %}</a>
+                                      </li>
+                                      <li class="divider"></li>
+                                      <li><a href="#">{% trans "Separated link" %}</a>
+                                      </li>
+                                  </ul>
+                              </div>
+                          </div>
+                      </div>
+                      <!-- /.panel-heading -->
+                      <div class="panel-body">
+                          <div class="row">
+                              <div class="col-lg-12">
+                                  <div id="morris-bar-chart-skill"></div>
+                              </div>
+                              <!-- /.col-lg-12 (nested) -->
+                          </div>
+                          <!-- /.row -->
+                      </div>
+                      <!-- /.panel-body -->
+                  </div>
                   <!-- /.panel -->
+                  <div class="panel panel-default">
+                      <div class="panel-heading">
+                          <i class="fa fa-bar-chart-o fa-fw"></i> {% trans "VDP at a Glance" %}
+                          <div class="pull-right">
+                              <div class="btn-group">
+                                  <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                      {% trans "Overview" %}
+                                      <span class="caret"></span>
+                                  </button>
+                                  <ul class="dropdown-menu pull-right" role="menu">
+                                      <li><a data-target="gender_panel" data-id="gender_panel" data-panel="objectives">{% trans "Overview" %}</a>
+                                      </li>
+                                      <li><a data-target="skills_panel" data-id="skills_panel" data-panel="objectives">{% trans "Objectives breakdown" %}</a>
+                                      </li>
+                                      <li><a href="#">{% trans "Something else here" %}</a>
+                                      </li>
+                                      <li class="divider"></li>
+                                      <li><a href="#">{% trans "Separated link" %}</a>
+                                      </li>
+                                  </ul>
+                              </div>
+                          </div>
+                      </div>
+                      <!-- /.panel-heading -->
+                      <div id="gender_panel" class="panel-body">
+                          <div class="col-md-12">
+                            <table class="table table-striped table-bordered table-hover">
+                              <tr><td colspan=3>{% trans "Catch Up Students" %}: <strong>{{surveys|length}}</strong>{% blocktrans %}({{females}} female){% endblocktrans %}</td></tr>
+                              <tr><td>
+                              {% for school,attributes in breakdown.items %}
+                              <div class="col-md-4">
+                              <strong>{{school}} <br/>({% trans "total" %}: {{attributes.M|add:attributes.F}})</strong>
+                                <div id="morris-donut-chart-{{school}}"></div>
+                              </div>
+                              {% endfor %}
+                              </td></tr>
+                            </table>
+                            <div class ="table-responsive">
+                              <table class="table table-striped table-bordered table-hover">
+                                <tr><td colspan=12>{% trans "At Age Appropriate Grade Level" %}/<strong>{% trans "Total" %}</strong>:</td></tr>
+                                <tr>
+                                {% for key, value in students_by_grade.items %}
+                                  {% if key <= 12 and key > 0 and value %}
+                                    <td><strong>{{key}}</strong></td>
+                                  {% endif %}
+                                {% endfor %}
+                              </tr>
+                                <tr>
+                                  {% for key, value in students_by_grade.items %}
+                                    {% if key <= 12 and key > 0  and value %}
+                                      {% with atgl=students_at_gl_by_grade|get_item:key %}
+                                      <td>{{atgl}}/<strong>{{value}}<br/> <small>({% widthratio atgl value 100 %}%)</small></strong></td>
+                                      {% endwith %}
+                                    {% endif %}
+                                  {% endfor %}
+                                </tr>
+                              </table>
+                            </div>
+
+                            <table class="table table-striped table-bordered table-hover">
+                              <tr><td colspan=3>{% trans "Skill Training Students" %}:</td></tr>
+                              <tr>
+                                {% for key, value in students_by_grade.items %}
+                                  {% if key > 12  and value %}
+                                    <td>
+                                      <strong>
+                                        {% blocktrans with myvar=key|grade_by_id %}{{ myvar }}{% endblocktrans %}:
+                                      </strong> {{value}}
+                                  </td>
+                                  {% endif %}
+                                {% endfor %}
+                              </tr>
+                            </table>
+                          </div>
+
+                      </div>
+                      <!-- /.panel-body -->
+                      <div id="skills_panel" class="panel-body" style="display:none">
+                          <div class="col-md-12">
+                            <table class="table table-striped table-bordered table-hover">
+                              <tr><td colspan=3>{% trans "Catch Up Students" %}: <strong>{{surveys|length}}</strong> {% blocktrans %}({{total_skills}} Skills Training){% endblocktrans %}</td></tr>
+                              <tr><td>
+                              {% for school,attributes in program_breakdown.items %}
+                              <div class="col-md-4">
+                              <strong>{{school}} <br/>({% trans "total" %}: {{attributes.Grades|add:attributes.Skills}})</strong>
+                                <div id="morris-donut-chart1-{{school}}"></div>
+                              </div>
+                              {% endfor %}
+                              </td></tr>
+                            </table>
+                          </div>
+
+                      </div>
+                      <!-- /.panel-body -->
+                  </div>
                 </div>
                 <!-- /.col-lg-8 -->
                 <div class = "col-lg-4">
@@ -112,148 +244,41 @@
                         </table>
                       </div>
                   </div>
+                  <div class="panel panel-default">
+                      <div class="panel-heading">
+                          <i class="fa fa-bell fa-fw"></i> {% trans "Recent Activity" %}
+                      </div>
+                      <!-- /.panel-heading -->
+                      <div class="panel-body">
+                          <div class="list-group">
+                            {% for notification in notifications %}
 
+                              <a href="#" class="list-group-item">
+                                  <i class="fa {{notification.font_awesome_icon}} fa-fw"></i> {{notification.text}}
+                                  <span class="pull-right text-muted small">
+                                    <em>{{notification.date|timesince}} ago by {{notification.user}}</em>
+                                  </span>
+                              </a>
+                            {% endfor %}
+                          </div>
+                          <!-- /.list-group -->
+                          <a href="{% url 'notification_log' %}" class="btn btn-default btn-block">{% trans "View All Alerts" %}</a>
+                      </div>
+                      <!-- /.panel-body -->
+                  </div>
+                  <!-- /.panel -->
+                  <div class="panel panel-default">
+                      <div class="panel-heading">
+                          <i class="fa fa-bar-chart-o fa-fw"></i> {% trans "Students at Grade Level" %}
+                      </div>
+                      <div class="panel-body">
+                          <div id="morris-area-chart"></div>
+                          <a href="#" class="btn btn-default btn-block">{% trans "View Details" %}</a>
+                      </div>
+                      <!-- /.panel-body -->
+                  </div>
                   <!-- /.panel -->
                 </div>
-                <!-- /.col-lg-4 -->
-                <div class="col-lg-8">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <i class="fa fa-bar-chart-o fa-fw"></i> {% trans "VDP at a Glance" %}
-                            <div class="pull-right">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                        {% trans "Overview" %}
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu pull-right" role="menu">
-                                        <li><a data-target="gender_panel" data-id="gender_panel" data-panel="objectives">{% trans "Overview" %}</a>
-                                        </li>
-                                        <li><a data-target="skills_panel" data-id="skills_panel" data-panel="objectives">{% trans "Objectives breakdown" %}</a>
-                                        </li>
-                                        <li><a href="#">{% trans "Something else here" %}</a>
-                                        </li>
-                                        <li class="divider"></li>
-                                        <li><a href="#">{% trans "Separated link" %}</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- /.panel-heading -->
-                        <div id="gender_panel" class="panel-body">
-                            <div class="col-md-12">
-                              <table class="table table-striped table-bordered table-hover">
-                                <tr><td colspan=3>{% trans "Catch Up Students" %}: <strong>{{surveys|length}}</strong>{% blocktrans %}({{females}} female){% endblocktrans %}</td></tr>
-                                <tr><td>
-                                {% for school,attributes in breakdown.items %}
-                                <div class="col-md-4">
-                                <strong>{{school}} <br/>({% trans "total" %}: {{attributes.M|add:attributes.F}})</strong>
-                                  <div id="morris-donut-chart-{{school}}"></div>
-                                </div>
-                                {% endfor %}
-                                </td></tr>
-                              </table>
-                              <div class ="table-responsive">
-                                <table class="table table-striped table-bordered table-hover">
-                                  <tr><td colspan=12>{% trans "At Age Appropriate Grade Level" %}/<strong>{% trans "Total" %}</strong>:</td></tr>
-                                  <tr>
-                                  {% for key, value in students_by_grade.items %}
-                                    {% if key <= 12 and key > 0 and value %}
-                                      <td><strong>{{key}}</strong></td>
-                                    {% endif %}
-                                  {% endfor %}
-                                </tr>
-                                  <tr>
-                                    {% for key, value in students_by_grade.items %}
-                                      {% if key <= 12 and key > 0  and value %}
-                                        {% with atgl=students_at_gl_by_grade|get_item:key %}
-                                        <td>{{atgl}}/<strong>{{value}}<br/> <small>({% widthratio atgl value 100 %}%)</small></strong></td>
-                                        {% endwith %}
-                                      {% endif %}
-                                    {% endfor %}
-                                  </tr>
-                                </table>
-                              </div>
-
-                              <table class="table table-striped table-bordered table-hover">
-                                <tr><td colspan=3>{% trans "Skill Training Students" %}:</td></tr>
-                                <tr>
-                                  {% for key, value in students_by_grade.items %}
-                                    {% if key > 12  and value %}
-                                      <td>
-                                        <strong>
-                                          {% blocktrans with myvar=key|grade_by_id %}{{ myvar }}{% endblocktrans %}:
-                                        </strong> {{value}}
-                                    </td>
-                                    {% endif %}
-                                  {% endfor %}
-                                </tr>
-                              </table>
-                            </div>
-
-                        </div>
-                        <!-- /.panel-body -->
-
-                        <div id="skills_panel" class="panel-body" style="display:none">
-                            <div class="col-md-12">
-                              <table class="table table-striped table-bordered table-hover">
-                                <tr><td colspan=3>{% trans "Catch Up Students" %}: <strong>{{surveys|length}}</strong> {% blocktrans %}({{total_skills}} Skills Training){% endblocktrans %}</td></tr>
-                                <tr><td>
-                                {% for school,attributes in program_breakdown.items %}
-                                <div class="col-md-4">
-                                <strong>{{school}} <br/>({% trans "total" %}: {{attributes.Grades|add:attributes.Skills}})</strong>
-                                  <div id="morris-donut-chart1-{{school}}"></div>
-                                </div>
-                                {% endfor %}
-                                </td></tr>
-                              </table>
-                            </div>
-
-                        </div>
-                        <!-- /.panel-body -->
-                    </div>
-                    <!-- /.panel -->
-
-                </div>
-                <!-- /.col-lg-8 -->
-                <div class="col-lg-4">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <i class="fa fa-bell fa-fw"></i> {% trans "Recent Activity" %}
-                        </div>
-                        <!-- /.panel-heading -->
-                        <div class="panel-body">
-                            <div class="list-group">
-                              {% for notification in notifications %}
-
-                                <a href="#" class="list-group-item">
-                                    <i class="fa {{notification.font_awesome_icon}} fa-fw"></i> {{notification.text}}
-                                    <span class="pull-right text-muted small">
-                                      <em>{{notification.date|timesince}} ago by {{notification.user}}</em>
-                                    </span>
-                                </a>
-                              {% endfor %}
-                            </div>
-                            <!-- /.list-group -->
-                            <a href="{% url 'notification_log' %}" class="btn btn-default btn-block">{% trans "View All Alerts" %}</a>
-                        </div>
-                        <!-- /.panel-body -->
-                    </div>
-                    <!-- /.panel -->
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <i class="fa fa-bar-chart-o fa-fw"></i> {% trans "Students at Grade Level" %}
-                        </div>
-                        <div class="panel-body">
-                            <div id="morris-area-chart"></div>
-                            <a href="#" class="btn btn-default btn-block">{% trans "View Details" %}</a>
-                        </div>
-                        <!-- /.panel-body -->
-                    </div>
-                    <!-- /.panel -->
-                </div>
-                <!-- /.col-lg-4 -->
             </div>
             <!-- /.row -->
 {% endblock %}
@@ -314,6 +339,15 @@
     });
 
       $(function() {
+          var colors = {'VDP-PKPN':'#0b62a4','VDP-TK':'#7a92a3','VDP-PPT':'#4da74d','VDP-KR':'#afd8f8'};
+          var colors_skill = {'E':'#4da74d','V':'#0b62a4'};
+
+          {% for site in schools %}
+          $('<canvas style="width:15px;height:15px;background:'+colors['{{site}}']+';"></canvas> <span style="margin-right:15px;">{{site}}</span>').appendTo("#color_list");
+          {% endfor %}
+          for (color in colors_skill){
+              $('<canvas style="width:15px;height:15px;background:'+colors_skill[color]+';"></canvas> <span style="margin-right:15px;">'+color+'</span>').appendTo("#color_list_skill");
+          }
 
           {% for school,attributes in breakdown.items %}
             Morris.Donut({
@@ -367,7 +401,50 @@
                 {% for school in schools %}'{{school.school_name}}',{% endfor %}
               ],
               hideHover: 'auto',
-              resize: true
+              resize: true,
+              barColors: function (row, series, type) {
+                if (series.key in colors){
+                    return colors[series.key];
+                }
+                else{
+                    return "#fec04c";
+                }
+              }
+          });
+          {% for grade, population in students_by_skill_by_site.items %}
+                console.log({{population}})
+                console.log({{grade}})
+          {% endfor %}
+          Morris.Bar({
+              element: 'morris-bar-chart-skill',
+              data: [
+                {% for grade, population in students_by_skill_by_site.items %}
+                  {
+                      y: '{{grade | grade_by_id}}',
+                      'Students': {{population}},
+                  },
+                {% endfor %}
+              ],
+              xkey: 'y',
+              ykeys: [
+                'Students'
+              ],
+              labels: [
+                'Students'
+              ],
+              hideHover: 'auto',
+              resize: true,
+              xLabelAngle: 60,
+              barSize: 15,
+              barColors: function (row, series, type) {
+                label = row.label[0];
+                if (label in colors_skill){
+                    return colors_skill[label];
+                }
+                else{
+                    return "#fec04c";
+                }
+              }
           });
 
       });

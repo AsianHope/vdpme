@@ -37,6 +37,7 @@ class SchoolAdmin(admin.ModelAdmin):
 class ClassroomAdmin(admin.ModelAdmin):
         list_display = ('school_id','classroom_id', 'cohort','classroom_number','classroom_location')
         list_filter = ('school_id','cohort')
+        search_fields = ['cohort']
 
 class TeacherAdmin(admin.ModelAdmin):
         list_display = ('teacher_id','name','active')
@@ -69,7 +70,7 @@ class IntakeInternalAdmin(admin.ModelAdmin):
     search_fields = ['student_id__student_id']
 
 class IntakeUpdateAdmin(admin.ModelAdmin):
-    list_display = ('student_id','date')
+    list_display = ('student_id','date','current_grade')
     list_filter = ('date',)
     raw_id_fields = ('student_id',)
     search_fields = ['student_id__student_id']

@@ -1,5 +1,5 @@
 from django import forms
-from datetime import date
+from datetime import date,datetime
 from django.forms.models import modelformset_factory
 
 from mande.models import IntakeSurvey
@@ -30,9 +30,12 @@ from mande.utils import getEnrolledStudents
 from django.forms.extras.widgets import SelectDateWidget
 from django.forms import CheckboxSelectMultiple
 from django.utils.safestring import mark_safe
+import pytz
 
 from django.utils.translation import ugettext_lazy as _
-VDP_GRADES = [g for g in GRADES if (g[0]>=1 and g[0]<=6) or (g[0] in [50,70])]
+VDP_GRADES = [g for g in GRADES if (g[0]>=1 and g[0]<=6) or (g[0]>50 and g[0]<60) or (g[0] >70 and g[0]<80)]
+CATCH_UP_GRADES = [g for g in GRADES if (g[0]>=1 and g[0]<=6)]
+
 
 class Html5DateInput(forms.DateInput):
         input_type = 'date'
@@ -76,6 +79,12 @@ class IntakeUpdateForm(forms.ModelForm):
         'minors_training_type',
         'grade_appropriate'
         ]
+    # def clean_date(self):
+    #     NYC_TIME = pytz.timezone('Asia/Phnom_Penh')
+    #     date = self.cleaned_data['date']
+    #     time = datetime.now(NYC_TIME).time()
+    #     date =datetime(date.year, date.month, date.day, time.hour, time.minute,tzinfo = NYC_TIME)
+    #     return date
 
 class ExitSurveyForm(forms.ModelForm):
     survey_date = forms.DateField(label=_("Survey Date"),widget=Html5DateInput)
@@ -175,7 +184,7 @@ class AcademicForm(forms.ModelForm):
     test_grade_math = forms.IntegerField(label='',widget=forms.TextInput(attrs={'size':'3'}), required=False)
     test_grade_khmer = forms.IntegerField(label='',widget=forms.TextInput(attrs={'size':'3'}), required=False)
     test_date = forms.DateField(label='',widget=Html5DateInput)
-    test_level = forms.ChoiceField(label='',choices=VDP_GRADES)
+    test_level = forms.ChoiceField(label='',choices=CATCH_UP_GRADES)
     class Meta:
         model = Academic
         exclude = []

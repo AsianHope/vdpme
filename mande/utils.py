@@ -41,26 +41,23 @@ def getEnrolledStudents(grade_id=None):
     return enrolled
 
 def getStudentGradebyID(student_id):
+    # latest current grade in intakeupdate , if not get grade from intake internal
+    current_grade = 0  #not enrolled
     try:
         student = IntakeSurvey.objects.get(pk=student_id)
     except ObjectDoesNotExist:
-        current_grade = 0 #not enrolled
-
-    academics = student.academic_set.all().filter().order_by('-test_level')
-    intake = student.intakeinternal_set.all().filter().order_by('-enrollment_date')
-    if len(intake) > 0:
-        recent_intake = intake[0]
-    else:
-        recent_intake = 'Not enrolled'
+        return current_grade
 
     try:
-        #their current grade is one more than that of the last test they passed
-        current_grade = (academics.filter(promote=True).latest('test_level').test_level)+1
-        if current_grade > 6:
-            current_grade = 50 #magic numbers are bad. should pull this from models.py
+        updates = student.intakeupdate_set.exclude(current_grade=None).latest('date')
+        current_grade = updates.current_grade
+        print current_grade
     except ObjectDoesNotExist:
-        current_grade = recent_intake.starting_grade if type(recent_intake) != str else 0
-
+        try:
+            intake = student.intakeinternal_set.all().filter().latest('enrollment_date')
+            current_grade = intake.starting_grade
+        except ObjectDoesNotExist:
+            pass
     return current_grade
 
 def studentAtSchoolGradeLevel(student_id):

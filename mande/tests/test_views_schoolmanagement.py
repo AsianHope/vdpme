@@ -449,7 +449,8 @@ class ClassroomTeacherFormViewTestCase(TestCase):
 class ClassroomEnrollmentFormViewTestCase(TestCase):
     fixtures = [
         'users.json','schools.json','classrooms.json','intakesurveys.json',
-        'notificationlogs.json','classroomenrollment.json'
+        'notificationlogs.json','classroomenrollment.json','intakeupdates.json',
+        'intakeinternals.json','currentstudentInfos.json'
     ]
     def setUp(self):
         self.client = Client()
@@ -483,22 +484,78 @@ class ClassroomEnrollmentFormViewTestCase(TestCase):
 
         self.assertEqual(ClassroomEnrollment.objects.all().count(),1)
         self.assertEqual(NotificationLog.objects.all().count(),1)
-
-    def test_post(self):
+    def test_post_not_update_current_grade(self):
         classroom_id = 1
+        today = date.today().isoformat()
         data = {
-            'classroom_id':1,
+            'classroom_id':classroom_id,
             'enrollment_date':date.today().isoformat(),
             'student_id':[1,2]
         }
         url = reverse('classroomenrollment_form',kwargs={})
         resp = self.client.post(url,data)
-        self.assertRedirects(resp, expected_url=reverse('classroomenrollment_form',kwargs={'classroom_id':1}), status_code=302, target_status_code=200)
-        classroom_id = Classroom.objects.get(pk=classroom_id)
-        message = 'Added 2 students to '+unicode(classroom_id)
+        self.assertRedirects(resp, expected_url=reverse('classroomenrollment_form',kwargs={'classroom_id':classroom_id}), status_code=302, target_status_code=200)
+        classroom = Classroom.objects.get(pk=classroom_id)
+        student1 = IntakeSurvey.objects.get(pk=1)
+        student2 = IntakeSurvey.objects.get(pk=2)
+
+        message = 'Added 2 students to '+unicode(classroom)
         self.assertTrue(
             NotificationLog.objects.filter(
                 text=message, font_awesome_icon='fa-level-up',
+                user=self.client.session['_auth_user_id']
+            ).exists()
+        )
+        self.assertTrue(
+            ClassroomEnrollment.objects.filter(
+                student_id=student1,classroom_id=classroom_id,
+                enrollment_date=date.today().isoformat(),
+            ).exists()
+         )
+        self.assertTrue(
+            ClassroomEnrollment.objects.filter(
+                student_id=student2,classroom_id=classroom_id,
+                enrollment_date=date.today().isoformat(),
+            ).exists()
+         )
+        self.assertEqual(ClassroomEnrollment.objects.all().count(),2)
+        self.assertEqual(NotificationLog.objects.all().count(),2)
+        self.assertEqual(IntakeUpdate.objects.all().count(),1)
+        self.assertEqual(CurrentStudentInfo.objects.all().count(),9)
+
+    def test_post_update_current_grade(self):
+        classroom_id = 2
+        today = date.today().isoformat()
+        data = {
+            'classroom_id':classroom_id,
+            'enrollment_date':date.today().isoformat(),
+            'student_id':[1,2]
+        }
+        url = reverse('classroomenrollment_form',kwargs={})
+        resp = self.client.post(url,data)
+        self.assertRedirects(resp, expected_url=reverse('classroomenrollment_form',kwargs={'classroom_id':classroom_id}), status_code=302, target_status_code=200)
+        classroom = Classroom.objects.get(pk=classroom_id)
+        student1 = IntakeSurvey.objects.get(pk=1)
+        student2 = IntakeSurvey.objects.get(pk=2)
+
+        message = 'Added 2 students to '+unicode(classroom)
+        self.assertTrue(
+            NotificationLog.objects.filter(
+                text=message, font_awesome_icon='fa-level-up',
+                user=self.client.session['_auth_user_id']
+            ).exists()
+        )
+        message = ('Updated current grade for '+student1.name)
+        self.assertTrue(
+            NotificationLog.objects.filter(
+                text=message, font_awesome_icon='fa-pencil-square-o',
+                user=self.client.session['_auth_user_id']
+            ).exists()
+        )
+        message = ('Updated current grade for '+student2.name)
+        self.assertTrue(
+            NotificationLog.objects.filter(
+                text=message, font_awesome_icon='fa-pencil-square-o',
                 user=self.client.session['_auth_user_id']
             ).exists()
         )
@@ -514,8 +571,38 @@ class ClassroomEnrollmentFormViewTestCase(TestCase):
                 enrollment_date=date.today().isoformat(),
             ).exists()
          )
-        self.assertEqual(ClassroomEnrollment.objects.all().count(),2)
-        self.assertEqual(NotificationLog.objects.all().count(),2)
+        self.assertTrue(
+            IntakeUpdate.objects.filter(
+                student_id=student1.student_id,
+                current_grade = classroom.cohort,
+            ).exists()
+        )
+        self.assertTrue(
+            IntakeUpdate.objects.filter(
+                student_id=student2.student_id,
+                current_grade = classroom.cohort,
+            ).exists()
+        )
+        self.assertTrue(
+            CurrentStudentInfo.objects.filter(
+                      student_id=student1.student_id,
+                      at_grade_level = studentAtAgeAppropriateGradeLevel(student1.student_id),
+                      vdp_grade = student1.current_vdp_grade(),
+                      refresh = today,
+            ).exists()
+        )
+        self.assertTrue(
+            CurrentStudentInfo.objects.filter(
+                      student_id=student2.student_id,
+                      at_grade_level = studentAtAgeAppropriateGradeLevel(student2.student_id),
+                      vdp_grade = student2.current_vdp_grade(),
+                      refresh = today,
+            ).exists()
+        )
+        self.assertEqual(ClassroomEnrollment.objects.all().count(),3)
+        self.assertEqual(NotificationLog.objects.all().count(),4)
+        self.assertEqual(IntakeUpdate.objects.all().count(),3)
+        self.assertEqual(CurrentStudentInfo.objects.all().count(),9)
 
 class ClassroomEnrollmentIndividualViewTestCase(TestCase):
     fixtures = [
@@ -572,7 +659,8 @@ class AcademicFormViewTestCase(TestCase):
     fixtures = [
         'users.json','schools.json','classrooms.json','intakesurveys.json',
         'notificationlogs.json','academic.json','academicmarkingperiods.json',
-        'classroomenrollment.json','exitsurveys.json','currentstudentInfos.json'
+        'classroomenrollment.json','exitsurveys.json','currentstudentInfos.json',
+        'intakeupdates.json'
     ]
     def setUp(self):
         self.client = Client()
@@ -641,20 +729,61 @@ class AcademicFormViewTestCase(TestCase):
         self.assertEqual(Academic.objects.all().count(),2)
         self.assertEqual(NotificationLog.objects.all().count(),1)
         self.assertEqual(CurrentStudentInfo.objects.all().count(),9)
-    def test_post_academic_marking_period_match(self):
+    def test_post_academic_marking_period_match_not_update_current_grade(self):
         today = date.today().isoformat()
         AcademicMarkingPeriod.objects.create(description="test",test_date=today,marking_period_start=today,marking_period_end=today)
         school_id = 1
         test_date = today
         classroom_id = 1
-        student_id = 1
+        student_id = 2
+        test_level = 1
         url = reverse('academic_form',kwargs={'school_id':school_id,'test_date':test_date,'classroom_id':classroom_id})
         data = {
             'form-TOTAL_FORMS': 1,
             'form-INITIAL_FORMS': 0,
             'form-MAX_NUM_FORMS': 10,
             'form-0-student_id':student_id,
-            'form-0-test_level':2,
+            'form-0-test_level':test_level,
+            'form-0-test_grade_math':90,
+            'form-0-test_grade_khmer':90,
+            'form-0-promote':False,
+            'form-0-test_date':today
+        }
+        resp = self.client.post(url,data)
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp,'mande/academicform.html')
+        classroom = Classroom.objects.get(pk=classroom_id)
+        message = ('Recorded semester tests for '+
+                  str(classroom.get_cohort_display())+' - '
+                 +str(classroom.classroom_number)+
+                ' at '+str(classroom.school_id))
+        self.assertEqual(resp.context['message'],mark_safe(message))
+        self.assertTrue(
+             Academic.objects.filter(
+                 student_id=student_id, test_date=today,
+                 promote=False,test_level=test_level
+             ).exists()
+          )
+        self.assertEqual(Academic.objects.all().count(),3)
+        self.assertEqual(NotificationLog.objects.all().count(),2)
+        self.assertEqual(CurrentStudentInfo.objects.all().count(),9)
+        self.assertEqual(IntakeUpdate.objects.all().count(),1)
+
+    def test_post_academic_marking_period_match_update_current_grade(self):
+        today = date.today().isoformat()
+        AcademicMarkingPeriod.objects.create(description="test",test_date=today,marking_period_start=today,marking_period_end=today)
+        school_id = 1
+        test_date = today
+        classroom_id = 1
+        student_id = 2
+        test_level = 1
+        url = reverse('academic_form',kwargs={'school_id':school_id,'test_date':test_date,'classroom_id':classroom_id})
+        data = {
+            'form-TOTAL_FORMS': 1,
+            'form-INITIAL_FORMS': 0,
+            'form-MAX_NUM_FORMS': 10,
+            'form-0-student_id':student_id,
+            'form-0-test_level':test_level,
             'form-0-test_grade_math':90,
             'form-0-test_grade_khmer':90,
             'form-0-promote':True,
@@ -664,6 +793,7 @@ class AcademicFormViewTestCase(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp,'mande/academicform.html')
         classroom = Classroom.objects.get(pk=classroom_id)
+        student = IntakeSurvey.objects.get(pk=student_id)
         message = ('Recorded semester tests for '+
                   str(classroom.get_cohort_display())+' - '
                  +str(classroom.classroom_number)+
@@ -676,12 +806,27 @@ class AcademicFormViewTestCase(TestCase):
                 user=self.client.session['_auth_user_id']
             ).exists()
         )
+        message = ('Updated current grade for '+IntakeSurvey.objects.get(pk=student_id).name)
+        self.assertTrue(
+            NotificationLog.objects.filter(
+                text=message, font_awesome_icon='fa-pencil-square-o',
+                user=self.client.session['_auth_user_id']
+            ).exists()
+        )
         self.assertTrue(
              Academic.objects.filter(
                  student_id=student_id, test_date=today,
-                 promote=True
+                 promote=True,test_level=test_level
              ).exists()
           )
+
+        self.assertTrue(
+            IntakeUpdate.objects.filter(
+                student_id=student.student_id,
+                current_grade = test_level+1,
+            ).exists()
+         )
+
         instance = IntakeSurvey.objects.get(pk=student_id)
         self.assertTrue(
                 CurrentStudentInfo.objects.filter(
@@ -692,8 +837,10 @@ class AcademicFormViewTestCase(TestCase):
                 ).exists()
         )
         self.assertEqual(Academic.objects.all().count(),3)
-        self.assertEqual(NotificationLog.objects.all().count(),2)
+        self.assertEqual(NotificationLog.objects.all().count(),3)
         self.assertEqual(CurrentStudentInfo.objects.all().count(),9)
+        self.assertEqual(IntakeUpdate.objects.all().count(),2)
+
 class AcademicSelectViewTestCase(TestCase):
     fixtures = [
         'users.json','schools.json','classrooms.json','intakesurveys.json',
@@ -726,7 +873,7 @@ class AcademicFormSingleViewTestCase(TestCase):
     fixtures = [
         'users.json','schools.json','classrooms.json','intakesurveys.json',
         'notificationlogs.json','academic.json','academicmarkingperiods.json',
-        'currentstudentInfos.json','intakeinternals.json'
+        'currentstudentInfos.json','intakeinternals.json','intakeupdates.json'
     ]
     def setUp(self):
         self.client = Client()
@@ -862,12 +1009,37 @@ class AcademicFormSingleViewTestCase(TestCase):
             self.assertEqual(Academic.objects.all().count(),2)
             self.assertEqual(CurrentStudentInfo.objects.all().count(),9)
             self.assertEqual(NotificationLog.objects.all().count(),1)
-
-    def test_post_locked_false_test_id_none(self):
+    def test_post_locked_false_test_id_none_not_update_current_grade(self):
             today = date.today().isoformat()
             AcademicMarkingPeriod.objects.create(description="test",test_date=today,marking_period_start=today,marking_period_end=today)
             test_date = today
-            student_id = 1
+            student_id = 2
+            test_level = 1
+            url = reverse('academic_form_single',kwargs={'student_id':student_id})
+            data = {
+                'student_id':student_id,
+                'test_date':test_date,
+                'test_level':test_level,
+                'promote':False
+            }
+            resp = self.client.post(url,data)
+            self.assertRedirects(resp, expected_url=reverse('student_detail',kwargs={'student_id':student_id}), status_code=302, target_status_code=200)
+            self.assertTrue(
+                Academic.objects.filter(
+                    test_level=test_level,test_date=test_date,
+                    student_id=student_id,promote=False
+                ).exists()
+            )
+            self.assertEqual(Academic.objects.all().count(),2)
+            self.assertEqual(CurrentStudentInfo.objects.all().count(),9)
+            self.assertEqual(NotificationLog.objects.all().count(),2)
+            self.assertEqual(IntakeUpdate.objects.all().count(),1)
+
+    def test_post_locked_false_test_id_none_update_current_grade(self):
+            today = date.today().isoformat()
+            AcademicMarkingPeriod.objects.create(description="test",test_date=today,marking_period_start=today,marking_period_end=today)
+            test_date = today
+            student_id = 2
             test_level = 1
             url = reverse('academic_form_single',kwargs={'student_id':student_id})
             data = {
@@ -887,6 +1059,13 @@ class AcademicFormSingleViewTestCase(TestCase):
                     user=self.client.session['_auth_user_id']
                 ).exists()
             )
+            message = ('Updated current grade for '+instance.student_id.name)
+            self.assertTrue(
+                NotificationLog.objects.filter(
+                    text=message, font_awesome_icon='fa-pencil-square-o',
+                    user=self.client.session['_auth_user_id']
+                ).exists()
+            )
             student = IntakeSurvey.objects.get(pk=student_id)
             self.assertTrue(
                 CurrentStudentInfo.objects.filter(
@@ -896,15 +1075,23 @@ class AcademicFormSingleViewTestCase(TestCase):
                     refresh = today,
                 ).exists()
             )
+            self.assertTrue(
+                IntakeUpdate.objects.filter(
+                    student_id=student.student_id,
+                    current_grade = test_level+1,
+                ).exists()
+            )
             self.assertEqual(Academic.objects.all().count(),2)
             self.assertEqual(CurrentStudentInfo.objects.all().count(),9)
-            self.assertEqual(NotificationLog.objects.all().count(),2)
-    def test_post_locked_false_test_id_not_none(self):
+            self.assertEqual(NotificationLog.objects.all().count(),3)
+            self.assertEqual(IntakeUpdate.objects.all().count(),2)
+
+    def test_post_locked_false_test_id_not_none_not_update_current_grade(self):
             today = date.today().isoformat()
             AcademicMarkingPeriod.objects.create(description="test",test_date=today,marking_period_start=today,marking_period_end=today)
             test_date = today
             student_id = 1
-            test_level = 1
+            test_level = 6
             test_id = 1
             url = reverse('academic_form_single',kwargs={'student_id':student_id,'test_id':test_id})
             data = {
@@ -923,18 +1110,11 @@ class AcademicFormSingleViewTestCase(TestCase):
                     user=self.client.session['_auth_user_id']
                 ).exists()
             )
-            student = IntakeSurvey.objects.get(pk=student_id)
-            self.assertTrue(
-                CurrentStudentInfo.objects.filter(
-                    student_id=student.student_id,
-                    at_grade_level = studentAtAgeAppropriateGradeLevel(student.student_id),
-                    vdp_grade = student.current_vdp_grade(),
-                    refresh = today,
-                ).exists()
-            )
             self.assertEqual(Academic.objects.all().count(),1)
             self.assertEqual(CurrentStudentInfo.objects.all().count(),9)
             self.assertEqual(NotificationLog.objects.all().count(),2)
+            self.assertEqual(IntakeUpdate.objects.all().count(),1)
+
 class StudentEvaluationFormViewTestCase(TestCase):
     fixtures = [
         'users.json','schools.json','classrooms.json','intakesurveys.json',

@@ -102,7 +102,7 @@ def intake_survey(request,student_id=None):
         data_guardian_profession.extend(intake_update_guardian1)
         data_guardian_profession.extend(intake_update_guardian2)
         # sort khmer
-        data_guardian_profession = [x.encode('utf-8').strip() for x in set(data_guardian_profession)]
+        data_guardian_profession = [x.encode('utf-8').strip() for x in set(data_guardian_profession) if x is not None]
         data_guardian_profession = sorted(set(data_guardian_profession),key=collator.getSortKey)
 
         instance = IntakeSurvey.objects.get(pk=student_id) if student_id else None
@@ -233,7 +233,7 @@ def intake_update(request,student_id=0):
       data_guardian_profession.extend(intake_update_guardian1)
       data_guardian_profession.extend(intake_update_guardian2)
       # sort khmer
-      data_guardian_profession = [x.encode('utf-8').strip() for x in set(data_guardian_profession)]
+      data_guardian_profession = [x.encode('utf-8').strip() for x in set(data_guardian_profession) if x is not None]
       data_guardian_profession = sorted(set(data_guardian_profession),key=collator.getSortKey)
 
       try:
@@ -428,7 +428,7 @@ def spiritualactivities_survey(request,student_id=0,survey_id=None):
       next_url = request.GET.get('next')
       data_church_names = list(SpiritualActivitiesSurvey.objects.all().values_list('church_name',flat=True).distinct())
       # sort khmer
-      data_church_names = [x.encode('utf-8').strip() for x in data_church_names]
+      data_church_names = [x.encode('utf-8').strip() for x in data_church_names if x is not None]
       data_church_names = sorted(set(data_church_names),key=collator.getSortKey)
       if int(student_id)>0:
           if survey_id != None:

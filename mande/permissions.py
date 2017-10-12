@@ -60,6 +60,8 @@ perms_required = {
 	'academic_making_period': {'mande.view_academic_making_period'},
 	'generate': {'mande.view_generate'},
 	'evaluation_making_period': {'mande.view_evaluation_making_period'},
+	'update_current_grade': {'mande.view_update_current_grade'},
+
 
 
 }

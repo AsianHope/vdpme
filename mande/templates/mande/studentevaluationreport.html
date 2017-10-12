@@ -37,7 +37,7 @@
                 </td>
             </tr>
             {% for grade_id,grade in grades.items %}
-              {% if grade_id >= 1 and grade_id <= 6 or grade_id == 50 or grade_id == 70 %}
+              {% if grade_id >= 1 and grade_id <= 6%}
               <tr>
                 <td>
                 <a href = "{% url 'student_evaluation_report' grade_id %}" role="button" class="btn btn-xs btn-success">{{grade}}</a>
@@ -45,6 +45,16 @@
               </tr>
               {% endif %}
             {% endfor %}
+            <tr>
+              <td>
+              <a href = "{% url 'student_evaluation_report' 50 %}" role="button" class="btn btn-xs btn-success">{% trans "English" %}</a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+              <a href = "{% url 'student_evaluation_report' 70 %}" role="button" class="btn btn-xs btn-success">{% trans "Vietnamese" %}</a>
+              </td>
+            </tr>
           </tbody>
         </table>
 

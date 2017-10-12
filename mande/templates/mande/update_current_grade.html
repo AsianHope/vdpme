@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load mandefilters %}
+{% block title %}
+    Update Current Grade
+{% endblock %}
+
+{% block content %}
+<div class="col-md-9">
+    Errors
+    <ul>
+    {% for student,error in errors.iteritems %}
+        <li>{{student}} : {{error}}</li>
+    {% endfor %}
+    </ul>
+    Not enrolled
+    <ul>
+    {% for student in not_enrolled_students %}
+        <li>{{student}}</li>
+    {% endfor %}
+    </ul>
+</div>
+{% endblock %}

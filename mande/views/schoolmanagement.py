@@ -12,6 +12,7 @@ from django.utils.html import conditional_escape as esc
 from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
 from django.views.decorators.cache import cache_control
+from django.views.decorators.cache import never_cache
 
 from calendar import HTMLCalendar, monthrange
 
@@ -429,7 +430,7 @@ def classroomenrollment_form(request,classroom_id=0):
         #select students who have not dropped the class, or have not dropped it yet.
         enrolled_students = instance.classroomenrollment_set.all().filter(Q(student_id__date__lte=date.today().isoformat()) & Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None)))
       else:
-        instance = None;
+        instance = None
         enrolled_students = None
 
 
@@ -440,11 +441,56 @@ def classroomenrollment_form(request,classroom_id=0):
         #this seems janky to me - surely there is a better way?
         for student in request.POST.getlist('student_id'):
             student_id = IntakeSurvey.objects.get(pk=student)
-            e_date, enrollment = ClassroomEnrollment.objects.get_or_create(
+            e_date, created = ClassroomEnrollment.objects.get_or_create(
                                                     classroom_id=classroom_id,
                                                     student_id=student_id)
+
             e_date.enrollment_date = enrollment_date
             e_date.save()
+            if created:
+                grade =  e_date.classroom_id.cohort
+                current_grade = student_id.current_vdp_grade()
+                enrolled_catch_ups = ClassroomEnrollment.objects.filter(Q(Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None)) & Q(student_id=student_id.student_id) & Q(Q(classroom_id__cohort__gte=1) & Q(classroom_id__cohort__lte=6))).exclude(id=e_date.id)
+                # if already in enrolled in catch-up school, and enrolling in skill, not update
+                if grade > 6 and len(enrolled_catch_ups)>0:
+                    print 'already enrolled in catch-up school, so not update grade'
+                else:
+                    # update current_grade, if current grade not equal enrollment grade
+                    if grade != current_grade:
+                        update_message = ('Updated current grade for '+student_id.name)
+                        log = NotificationLog(user=request.user,
+                                              text=update_message,
+                                              font_awesome_icon='fa-pencil-square-o')
+                        try:
+                            most_recent = student_id.getRecentFields()
+                            most_recent['date'] = date.today().isoformat()
+                            most_recent['current_grade'] = grade
+                            if most_recent['address'] == '' or most_recent['address']==None:
+                                most_recent['address']='None'
+
+                            upfate_form = IntakeUpdateForm(most_recent)
+                            if (upfate_form.is_valid()):
+                                upfate_form.save()
+                                log.save()
+                            else:
+                                if 'guardian1_employment' in upfate_form.errors:
+                                    most_recent['guardian1_employment']=1
+                                    upfate_form = IntakeUpdateForm(most_recent)
+                                    if (upfate_form.is_valid()):
+                                        upfate_form.save()
+                                        log.save()
+                        except Exception as e:
+                            pass
+                        # update cache table
+                        try:
+                            update_student = CurrentStudentInfo.objects.get(student_id=student_id.student_id)
+                            update_student.at_grade_level = studentAtAgeAppropriateGradeLevel(student_id.student_id)
+                            update_student.vdp_grade = student_id.current_vdp_grade()
+                            update_student.refresh = date.today().isoformat()
+                            update_student.save()
+                        except:
+                            pass
+
         num = len(request.POST.getlist('student_id'))
         plural = 's' if num>1 else ''
         message = 'Added '+str(num)+' student'+plural+' to '+unicode(classroom_id)
@@ -567,16 +613,45 @@ def academic_form(request, school_id, test_date=date.today().isoformat(), classr
                                         font_awesome_icon='fa-calculator')
                 log.save()
                 for academic in instances:
-                    # update cache table
-                    student = IntakeSurvey.objects.get(student_id=academic.student_id.student_id)
-                    try:
-                        update_student = CurrentStudentInfo.objects.get(student_id=student.student_id)
-                        update_student.at_grade_level = studentAtAgeAppropriateGradeLevel(student.student_id)
-                        update_student.vdp_grade = student.current_vdp_grade()
-                        update_student.refresh = date.today().isoformat()
-                        update_student.save()
-                    except:
-                        pass
+                    # update current_grade in IntakeUpdate
+                    test_level = academic.test_level+1
+                    current_vdp_grade = academic.student_id.current_vdp_grade()
+                    if academic.promote == True and test_level > current_vdp_grade:
+                        update_message = ('Updated current grade for '+academic.student_id.name)
+                        log = NotificationLog(user=request.user,
+                                              text=update_message,
+                                              font_awesome_icon='fa-pencil-square-o')
+                        # get recent filed
+                        try:
+                            most_recent = academic.student_id.getRecentFields()
+                            most_recent['date'] = date.today().isoformat()
+                            most_recent['current_grade'] = test_level
+                            if most_recent['address'] == '' or most_recent['address']==None:
+                                most_recent['address']='None'
+
+                            upfate_form = IntakeUpdateForm(most_recent)
+                            if (upfate_form.is_valid()):
+                                upfate_form.save()
+                                log.save()
+                            else:
+                                if 'guardian1_employment' in upfate_form.errors:
+                                    most_recent['guardian1_employment']=1
+                                    upfate_form = IntakeUpdateForm(most_recent)
+                                    if (upfate_form.is_valid()):
+                                        upfate_form.save()
+                                        log.save()
+                        except Exception as e:
+                            pass
+                        # update cache table
+                        try:
+                            student = IntakeSurvey.objects.get(student_id=academic.student_id.student_id)
+                            update_student = CurrentStudentInfo.objects.get(student_id=student.student_id)
+                            update_student.at_grade_level = studentAtAgeAppropriateGradeLevel(student.student_id)
+                            update_student.vdp_grade = student.current_vdp_grade()
+                            update_student.refresh = date.today().isoformat()
+                            update_student.save()
+                        except:
+                            pass
             else:
                  warning = "Test date doesn't match with AcademicMarkingPeriod date."
       else:
@@ -663,16 +738,49 @@ def academic_form_single(request, student_id=0,test_id=None):
                                       text=message,
                                       font_awesome_icon='fa-calculator')
                 log.save()
-                # update cache table
-                try:
-                    student = IntakeSurvey.objects.get(student_id=instance.student_id.student_id)
-                    update_student = CurrentStudentInfo.objects.get(student_id=student.student_id)
-                    update_student.at_grade_level = studentAtAgeAppropriateGradeLevel(student.student_id)
-                    update_student.vdp_grade = student.current_vdp_grade()
-                    update_student.refresh = date.today().isoformat()
-                    update_student.save()
-                except:
-                    pass
+
+                # update current_grade in IntakeUpdate
+                test_level = instance.test_level+1
+                current_vdp_grade = instance.student_id.current_vdp_grade()
+                if instance.promote == True and test_level > current_vdp_grade:
+                    message = ('Updated current grade for '+instance.student_id.name)
+                    log = NotificationLog(user=request.user,
+                                          text=message,
+                                          font_awesome_icon='fa-pencil-square-o')
+
+
+                    try:
+                        most_recent = instance.student_id.getRecentFields()
+                        most_recent['date'] = date.today().isoformat()
+                        most_recent['current_grade'] = test_level
+                        if most_recent['address'] == '' or most_recent['address']==None:
+                            most_recent['address']='None'
+
+                        upfate_form = IntakeUpdateForm(most_recent)
+                        if (upfate_form.is_valid()):
+                            upfate_form.save()
+                            log.save()
+                        else:
+                            if 'guardian1_employment' in upfate_form.errors:
+                                most_recent['guardian1_employment']=1
+                                upfate_form = IntakeUpdateForm(most_recent)
+                                if (upfate_form.is_valid()):
+                                    upfate_form.save()
+                                    log.save()
+                    except Exception as e:
+                        pass
+
+                    # update cache table
+                    try:
+                        student = IntakeSurvey.objects.get(student_id=instance.student_id.student_id)
+                        update_student = CurrentStudentInfo.objects.get(student_id=student.student_id)
+                        update_student.at_grade_level = studentAtAgeAppropriateGradeLevel(student.student_id)
+                        update_student.vdp_grade = student.current_vdp_grade()
+                        update_student.refresh = date.today().isoformat()
+                        update_student.save()
+                    except:
+                        pass
+
                 # then return
                 return HttpResponseRedirect(
                             reverse('student_detail',
@@ -893,7 +1001,7 @@ def publicschool_form(request, student_id=0,id=None):
     if user_permissions(method_name,request.user):
       data_public_schools = list(PublicSchoolHistory.objects.all().values_list('school_name',flat=True).distinct())
       # sort khmer
-      data_public_schools = [x.encode('utf-8').strip() for x in data_public_schools]
+      data_public_schools = [x.encode('utf-8').strip() for x in data_public_schools if x is not None]
       locale = Locale('km_KH')
       collator = Collator.createInstance(locale)
       data_public_schools = sorted(set(data_public_schools),key=collator.getSortKey)
@@ -1076,5 +1184,88 @@ def evaluation_making_period(request):
                 'form_message':form_message
                 }
         return render(request, 'mande/evaluationmarkingperiodform.html',context)
+    else:
+        raise PermissionDenied
+def update_current_grade(request):
+    method_name = inspect.currentframe().f_code.co_name
+    if user_permissions(method_name,request.user):
+        today = date.today().isoformat()
+        students = IntakeSurvey.objects.all()
+        form = {}
+        errors = {}
+        not_enrolled_students = []
+        for student in students:
+            current_grade = 0
+            enrolled_catch_ups = student.classroomenrollment_set.all().filter(
+                    Q( Q(Q(drop_date__gte=today) | Q(drop_date=None)) & Q(Q(classroom_id__cohort__gte=1) & Q(classroom_id__cohort__lte=6)) )
+            ).order_by('-enrollment_date')
+            # if current enrolled in catch up
+            if len(enrolled_catch_ups) > 0:
+                current_grade = enrolled_catch_ups[0].classroom_id.cohort
+                # check with pass test or not
+                try:
+                    test_level = student.academic_set.all().filter(promote=True).latest('test_level').test_level
+                    if test_level < 6:
+                        test_level = test_level+1
+                    if test_level > current_grade:
+                        current_grade = test_level
+                except ObjectDoesNotExist:
+                    pass
+            # if enrolled in skill or not enrolled
+            else:
+                # if currently enrolled in skill
+                try:
+                    current_grade = student.classroomenrollment_set.all().filter(
+                             Q(Q(drop_date__gte=today) | Q(drop_date=None))
+                    ).latest('enrollment_date').classroom_id.cohort
+                except ObjectDoesNotExist:
+                    # current not enrolled in any class
+                    enrolled_any_class = student.classroomenrollment_set.all().filter().order_by('-enrollment_date')
+                    if len(enrolled_any_class) > 0:
+                        current_grade = enrolled_any_class[0].classroom_id.cohort
+                        # if enrolled in catch up school, need to check with pass the test
+                        if current_grade >=1 and current_grade <=6:
+                            # check with passed test or not
+                            try:
+                                test_level = student.academic_set.all().filter(promote=True).latest('test_level').test_level
+                                # if test_level less then 6 add 1
+                                if test_level < 6:
+                                    test_level = test_level+1
+
+                                if test_level > current_grade:
+                                    current_grade = test_level
+                            except ObjectDoesNotExist:
+                                pass
+            if current_grade > 0:
+                most_recent={}
+                try:
+                    most_recent = student.getRecentFields()
+                    most_recent['date'] = date.today().isoformat()
+                    most_recent['current_grade'] = current_grade
+                    if most_recent['address'] == '' or most_recent['address']==None:
+                        most_recent['address']='None'
+                    form = IntakeUpdateForm(most_recent)
+                    if (form.is_valid()):
+                        form.save()
+                    else:
+                        if 'guardian1_employment' in form.errors:
+                            most_recent['guardian1_employment']=1
+                            form = IntakeUpdateForm(most_recent)
+                            if (form.is_valid()):
+                                form.save()
+                            else:
+                                errors[student] = form.errors
+
+                except Exception as e:
+                    errors[student] = e
+            else:
+                not_enrolled_students.append(student)
+
+
+        context = {
+            'errors':errors,
+            'not_enrolled_students':not_enrolled_students
+                }
+        return render(request, 'mande/update_current_grade.html',context)
     else:
         raise PermissionDenied

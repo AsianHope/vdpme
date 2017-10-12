@@ -102,21 +102,21 @@ class IntakeSurveyTestCase(TestCase):
         notes.append({'date':IntakeUpdate.objects.get(pk=update.id).date,'note':update.notes})
         self.assertEqual(self.intake.getNotes(),notes)
 
-    def test_current_vdp_grade_promote_true(self):
-        self.assertEqual(self.intake.current_vdp_grade(),1)
-        Academic.objects.create(student_id=self.intake,test_date="2017-01-02",test_level=1,promote=True)
-        self.assertNotEqual(self.intake.current_vdp_grade(),1)
-        self.assertEqual(self.intake.current_vdp_grade(),2)
+    # def test_current_vdp_grade_promote_true(self):
+    #     self.assertEqual(self.intake.current_vdp_grade(),1)
+    #     Academic.objects.create(student_id=self.intake,test_date="2017-01-02",test_level=1,promote=True)
+    #     self.assertNotEqual(self.intake.current_vdp_grade(),1)
+    #     self.assertEqual(self.intake.current_vdp_grade(),2)
     def test_current_vdp_grade_promote_false(self):
         self.assertEqual(self.intake.current_vdp_grade(),1)
         Academic.objects.create(student_id=self.intake,test_date="2017-01-02",test_level=1,promote=False)
         self.assertNotEqual(self.intake.current_vdp_grade(),2)
         self.assertEqual(self.intake.current_vdp_grade(),1)
-    def test_current_vdp_grade_promote_to_english(self):
-        self.assertEqual(self.intake.current_vdp_grade(),1)
-        Academic.objects.create(student_id=self.intake,test_date="2017-01-02",test_level=6,promote=True)
-        self.assertNotEqual(self.intake.current_vdp_grade(),6)
-        self.assertEqual(self.intake.current_vdp_grade(),50)
+    # def test_current_vdp_grade_promote_to_english(self):
+    #     self.assertEqual(self.intake.current_vdp_grade(),1)
+    #     Academic.objects.create(student_id=self.intake,test_date="2017-01-02",test_level=6,promote=True)
+    #     self.assertNotEqual(self.intake.current_vdp_grade(),6)
+    #     self.assertEqual(self.intake.current_vdp_grade(),50)
     def test_date_enrolled_grade(self):
         a = Academic.objects.create(student_id=self.intake,test_date="2017-01-02",test_level=1,promote=True)
         self.assertNotEqual(self.intake.date_enrolled_grade(2),"2005-07-01")
@@ -190,14 +190,14 @@ class IntakeSurveyTestCase(TestCase):
         )
         self.assertEqual(intakesurvey.current_vdp_grade_catch_up(),classroom_catch_up.cohort)
 
-    def test_latest_public_school(self):
-        self.assertEqual(self.intake.latest_public_school(),None)
-        pschool1 = PublicSchoolHistory.objects.create(student_id=self.intake,
-        status="Y",grade=1,enroll_date="2017-01-01",school_name="test")
-        pschool2 = PublicSchoolHistory.objects.create(student_id=self.intake,
-        status="Y",grade=1,enroll_date="2017-01-02",school_name="test")
-        self.assertNotEqual(self.intake.latest_public_school(),pschool1)
-        self.assertEqual(self.intake.latest_public_school(),pschool2)
+    # def test_latest_public_school(self):
+    #     self.assertEqual(self.intake.latest_public_school(),None)
+    #     pschool1 = PublicSchoolHistory.objects.create(student_id=self.intake,
+    #     status="Y",grade=1,enroll_date="2017-01-01",school_name="test")
+    #     pschool2 = PublicSchoolHistory.objects.create(student_id=self.intake,
+    #     status="Y",grade=1,enroll_date="2017-01-02",school_name="test")
+    #     self.assertNotEqual(self.intake.latest_public_school(),pschool1)
+    #     self.assertEqual(self.intake.latest_public_school(),pschool2)
     def test_get_pschool(self):
         # check if not public shool
         pschool = self.intake.get_pschool()

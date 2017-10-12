@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from mande.permissions import perms_required
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Q
+import pytz
 
 GENDERS = (
 	('M', _('Male')),
@@ -44,21 +45,23 @@ EMPLOYMENT = (
 GRADES = (
 	(-1,_('Not Applicable')),
 	(0,_('Not Enrolled')),
-	(1,_('Grade 1')),
-	(2,_('Grade 2')),
-	(3,_('Grade 3')),
-	(4,_('Grade 4')),
-	(5,_('Grade 5')),
-	(6,_('Grade 6')),
-	(7,_('Grade 7')),
-	(8,_('Grade 8')),
-	(9,_('Grade 9')),
-	(10,_('Grade 10')),
-	(11,_('Grade 11')),
-	(12,_('Grade 12')),
-	(50,_('English')),
+	(1,_('G1')),
+	(2,_('G2')),
+	(3,_('G3')),
+	(4,_('G4')),
+	(5,_('G5')),
+	(6,_('G6')),
+	(51,_('E1')),
+	(52,_('E2')),
+	(53,_('E3')),
+	(54,_('E4')),
+	(55,_('E5')),
 	(60,_('Computers')),
-	(70,_('Vietnamese')),
+	(71,_('V1')),
+	(72,_('V2')),
+	(73,_('V3')),
+	(74,_('V4')),
+	(75,_('V5')),
 	(999,_('No Grade / Never Studied'))
 
 )
@@ -125,6 +128,8 @@ RELATIONSHIPS = (
 	('NONE',_('No guardian'))
 )
 PUBLIC_SCHOOL_GRADES = (
+	(-1,_('Not Applicable')),
+	(0,_('Not Enrolled')),
 	(1, _('Grade 1')),
 	(2, _('Grade 2')),
 	(3, _('Grade 3')),
@@ -136,7 +141,8 @@ PUBLIC_SCHOOL_GRADES = (
 	(9, _('Grade 9')),
 	(10, _('Grade 10')),
 	(11, _('Grade 11')),
-	(12, _('Grade 12'))
+	(12, _('Grade 12')),
+	(999,_('No Grade / Never Studied'))
 )
 STATUS = (
 	('COMPLETED', _('Completed')),
@@ -274,6 +280,14 @@ class IntakeSurvey(models.Model):
 			updates = IntakeUpdate.objects.all().filter(student_id=self.student_id).filter(date__lte=view_date).order_by('date')
 		else:
 			updates = IntakeUpdate.objects.all().filter(student_id=self.student_id).filter().order_by('date')
+
+		# latest current grade
+		try:
+			current_grade_updates = updates.exclude(current_grade=None).order_by('-date')[0]
+			recent['current_grade'] = current_grade_updates.current_grade
+		except IndexError:
+			recent['current_grade'] = None
+
 		for update in updates:
 			for field in self._meta.fields:
 				try:
@@ -306,25 +320,25 @@ class IntakeSurvey(models.Model):
 
 		return notes;
 
-	def current_vdp_grade(self,view_date=datetime.datetime.now()):
-		academics = self.academic_set.all().filter(test_date__lte=view_date).order_by('-test_level')
-		intake = self.intakeinternal_set.all().filter().order_by('-enrollment_date')
-		if len(intake) > 0:
-			recent_intake = intake[0]
-		else:
-			recent_intake = 'Not enrolled'
-
-
+	def current_vdp_grade(self,view_date=datetime.date.today().isoformat()):
+		NYC_TIME = pytz.timezone('Asia/Phnom_Penh')
+		time = datetime.datetime.now(NYC_TIME).time()
+		view_date = datetime.datetime.strptime(view_date, '%Y-%m-%d').date()
+		view_date =datetime.datetime(view_date.year, view_date.month, view_date.day, time.hour, time.minute,tzinfo = NYC_TIME)
+		# latest current grade in intakeupdate , if not get grade from intake internal
+		current_grade = 0
 		try:
-		    #their current grade is one more than that of the last test they passed
-			current_grade = (academics.filter(promote=True).latest('test_level').test_level)+1
-			if current_grade > 6:
-				current_grade = 50 #magic numbers are bad. should pull this from models.py
+			updates = self.intakeupdate_set.filter(date__lte=view_date).exclude(current_grade=None).latest('date')
+			current_grade = updates.current_grade
 		except ObjectDoesNotExist:
-			current_grade = recent_intake.starting_grade if type(recent_intake) != str else 0
-
+			try:
+				intake = self.intakeinternal_set.all().filter().latest('enrollment_date')
+				current_grade = intake.starting_grade
+			except ObjectDoesNotExist:
+				pass
 		return current_grade
-	def current_vdp_grade_catch_up(self,view_date=datetime.datetime.now()):
+
+	def current_vdp_grade_catch_up(self,view_date=datetime.date.today().isoformat()):
 		enrolled_catch_ups = self.classroomenrollment_set.all().filter( Q( Q(Q(drop_date__gte=view_date) | Q(drop_date=None)) & Q(Q(classroom_id__cohort__gte=1) & Q(classroom_id__cohort__lte=6)) ) ).order_by('-enrollment_date')
 		if len(enrolled_catch_ups) > 0:
 			return enrolled_catch_ups[0].classroom_id.cohort
@@ -422,6 +436,7 @@ class IntakeUpdate(models.Model):
 
 	student_id = models.ForeignKey(IntakeSurvey,verbose_name=_('Student ID'))
 	date = models.DateTimeField(_('Date of Update'))
+	current_grade = models.IntegerField(_('Current Grade'),choices=GRADES,null=True,blank=True)
 	address = models.TextField(_('Home Address'))
 
 	guardian1_name = models.CharField(_('Guardian 1\'s Name'),max_length=64,blank=True)
@@ -493,7 +508,7 @@ class ExitSurvey(models.Model):
 	survey_date = models.DateField(_('Exit Survey Performed'),default=datetime.date.today)
 	exit_date = models.DateField(_('Exit Date'))
 	early_exit = models.CharField(_('Early Exit (before achieveing age appropriate level)'),max_length=2,choices=YN,default='NA')
-	last_grade = models.IntegerField(_('Public School Grade at Exit'),choices=GRADES,default=1)
+	last_grade = models.IntegerField(_('Public School Grade at Exit'),choices=PUBLIC_SCHOOL_GRADES,default=1)
 	early_exit_reason = models.CharField(_('Reason for Leaving Early'),choices=EXIT_REASONS,max_length=32)
 	early_exit_comment = models.TextField(_('Comment'),blank=True)
 	secondary_enrollment = models.CharField(_('Plan to enroll in secondary school?'),max_length=2,choices=YN,default='NA')
@@ -516,8 +531,8 @@ class PostExitSurvey(models.Model):
 
 	minors = models.IntegerField(_('How many children in the household?'),default=0)
 	enrolled = models.CharField(_('Currently in school? [Primary Child]'),max_length=2,choices=YN,default='NA')
-	grade_current = models.IntegerField(_('Current Grade in formal school (if in school)'),choices=GRADES,default=1)
-	grade_previous = models.IntegerField(_('Last Grade attended (if not in school)'),choices=GRADES,default=1)
+	grade_current = models.IntegerField(_('Current Grade in formal school (if in school)'),choices=PUBLIC_SCHOOL_GRADES,default=1)
+	grade_previous = models.IntegerField(_('Last Grade attended (if not in school)'),choices=PUBLIC_SCHOOL_GRADES,default=1)
 	reasons = models.TextField(_('Reasons for not attending'),blank=True)
 	def __unicode__(self):
 		return unicode(self.exit_date)+' - '+unicode(self.student_id)

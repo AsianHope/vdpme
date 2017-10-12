@@ -141,10 +141,12 @@
           <table style="border:1px solid black; display:inline-table;" class="table table-bordered table-striped table-hover">
             <tr><th>&nbsp;</th></tr>
             <tr><td>&nbsp;</td></tr>
-            {% for level in english_level %}
+            {% for l in english_level %}
                 <tr>
                   <td>
+                    {% with level=l|grade_by_id%}
                     {% trans level%}
+                    {% endwith %}
                   </td>
                 </tr>
             {% endfor %}
@@ -164,16 +166,15 @@
             </tr>
             {% for level in english_level %}
                 <tr>
+                  {%with data=value|get_item:level%}
                   <td>
-                    {%with data=value|get_item:level%}
                     {{ data.M }}
-                    {%endwith%}
                   </td>
                   <td>
-                    {%with data=value|get_item:level%}
                     {{ data.F }}
-                    {%endwith%}
                   </td>
+                  {%endwith%}
+
                 </tr>
             {% endfor %}
             <tr>

@@ -16,6 +16,7 @@ from calendar import HTMLCalendar, monthrange
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
+from collections import OrderedDict
 
 from django.views.generic import ListView
 from mande.models import IntakeSurvey
@@ -106,21 +107,29 @@ def dashboard(request):
       breakdown = {}
 
       students_by_grade = dict(GRADES)
+      students_by_skill = dict(GRADES)
       students_at_gl_by_grade = dict(GRADES)
-      students_by_grade_by_site  = dict(GRADES)
+    #   students_by_grade_by_site  = {k: v for k, v in dict(GRADES).iteritems() if k > 0 and k <= 6}
+      students_by_grade_by_site = {}
+      students_by_skill_by_site = {}
 
       program_breakdown = {}
 
       #zero things out for accurate counts
       for key,grade in students_by_grade.iteritems():
-        students_by_grade_by_site[key] = {}
+        if key >= 1 and key <=6:
+            students_by_grade_by_site[key] = {}
+        if key >= 50 and key <80:
+            students_by_skill_by_site[key] = ClassroomEnrollment.objects.filter( Q( Q( Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None) ) & Q(classroom_id__cohort=key)) ).values_list('student_id',flat=True).distinct().count()
 
         students_by_grade[key] = surveys.filter(vdp_grade=key).count()
+        students_by_skill[key] = ClassroomEnrollment.objects.filter( Q( Q( Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None) ) & Q(classroom_id__cohort=key) ) ).values_list('student_id',flat=True).distinct().count()
         students_at_gl_by_grade[key] = surveys.filter(at_grade_level=True,vdp_grade=key).count()
 
         for school in schools:
             name = school.school_name
-            students_by_grade_by_site[key][unicode(name)] = surveys.filter(site=school.school_id,vdp_grade=key).count()
+            if key >=1 and key <=6:
+                students_by_grade_by_site[key][unicode(name)] = surveys.filter(site=school.school_id,vdp_grade=key).count()
 
       #get information for morris donut charts
       for school in schools:
@@ -133,13 +142,18 @@ def dashboard(request):
 
         program_breakdown[name] = {'Grades': 0, 'Skills': 0}
         program_breakdown[name]['Grades'] = surveys.filter(site=school_id,vdp_grade__gte=1,vdp_grade__lte=6).count()
-        program_breakdown[name]['Skills'] = surveys.filter(site=school_id,vdp_grade__gte=50,vdp_grade__lte=70).count()
+        program_breakdown[name]['Skills'] = surveys.filter(site=school_id,vdp_grade__gte=50,vdp_grade__lt=80).count()
 
       #clean up students_by_grade_by_site so we're not displaying a bunch of blank data
       clean_students_by_grade_by_site = dict(students_by_grade_by_site)
       for key,grade in students_by_grade_by_site.iteritems():
         if students_by_grade[key] == 0:
             del clean_students_by_grade_by_site[key]
+
+      clean_students_by_skill_by_site = dict(students_by_skill_by_site)
+      for key,grade in students_by_skill_by_site.iteritems():
+        if students_by_skill[key] == 0:
+            del clean_students_by_skill_by_site[key]
 
       #find students with unapproved absences and no notes ; get only current school year
       today = date.today()
@@ -153,6 +167,7 @@ def dashboard(request):
       school_year_end_date = str(school_year+1)+"-07-31"
 
       unapproved_absence_no_comment = Attendance.objects.all().filter(attendance__exact="UA").filter(Q(Q(notes=u"") |Q(notes=None)) & Q(Q(date__gte=school_year_start_date) & Q(date__lte=school_year_end_date))).order_by('-date')
+
       context = { 'surveys': surveys,
                 'females': tot_females,
                 'breakdown':breakdown,
@@ -161,6 +176,7 @@ def dashboard(request):
                 'students_by_grade':students_by_grade,
                 'students_at_gl_by_grade': students_at_gl_by_grade,
                 'students_by_grade_by_site':clean_students_by_grade_by_site,
+                'students_by_skill_by_site':OrderedDict(sorted(clean_students_by_skill_by_site.items())),
                 'schools':schools,
                 'notifications':notifications,
                 'unenrolled_students':unenrolled_students,
