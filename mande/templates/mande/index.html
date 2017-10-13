@@ -81,7 +81,15 @@
                       </div>
                       <!-- /.panel-body -->
                   </div>
+                  <div class="container" style="padding-bottom:30px;">
+                      <div style="color:blue;">
+                        <h3>{% trans "All Amount Student in Catch up school & skill" %}</h3>
+                        <h4>Total : {{surveys|length}} Students</h4>
+                      </div>
+                      Grade 1-6 : {{total_catchup}} Student &nbsp;|&nbsp; English : {{total_english}} Student &nbsp;|&nbsp; Vietnamese : {{total_vietnamese}} student (Vietnamese Only : {{total_vietnamese_only}})
+                  </div>
                   <!-- /.panel -->
+
                   <div class="panel panel-default">
                       <div class="panel-heading">
                           <i class="fa fa-bar-chart-o fa-fw"></i> {% trans "VDP at a Glance" %}

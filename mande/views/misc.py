@@ -100,7 +100,12 @@ def dashboard(request):
       surveys = surveys.exclude(student_id__in=not_enrolled)
 
       tot_females = surveys.filter(gender='F').count()
-      total_skills = surveys.filter(vdp_grade__gte=50,vdp_grade__lte=70).count()
+      total_skills = surveys.filter(vdp_grade__gte=50,vdp_grade__lte=79).count()
+
+      total_catchup = surveys.filter(vdp_grade__gte=1,vdp_grade__lte=6).count()
+      total_english = surveys.filter(vdp_grade__gt=50,vdp_grade__lt=60).count()
+      total_vietnamese_only = surveys.filter(vdp_grade__gt=70,vdp_grade__lt=80).count()
+      total_vietnamese = ClassroomEnrollment.objects.filter( Q( Q( Q(drop_date__gte=date.today().isoformat()) | Q(drop_date=None) ) & Q(classroom_id__cohort__gt=70) & Q(classroom_id__cohort__lt=80))).count()
 
       #set up for collecting school breakdowns
       schools = School.objects.all()
@@ -180,8 +185,12 @@ def dashboard(request):
                 'schools':schools,
                 'notifications':notifications,
                 'unenrolled_students':unenrolled_students,
-                'unapproved_absence_no_comment':unapproved_absence_no_comment}
-
+                'unapproved_absence_no_comment':unapproved_absence_no_comment,
+                'total_catchup':total_catchup,
+                'total_english':total_english,
+                'total_vietnamese':total_vietnamese,
+                'total_vietnamese_only':total_vietnamese_only,
+                }
       return render(request, 'mande/index.html', context)
     else:
       raise PermissionDenied
