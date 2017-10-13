@@ -2,19 +2,14 @@
 {% load i18n %}
 {% load mandefilters %}
 {% block title %}
-{% trans "Student Evaluation Report" %}{% if grade_id %} {{grade_id | grade_by_id}} {% endif %}
+{% trans "Student Evaluation Report" %}{% if grade_id and grade_id != '0'%} {{grade_id | grade_by_id}} {% endif %}
 {% if start_date and end_date%} {% trans "on" %} {{start_date}} - {{end_date}} {% endif %}
 {% endblock %}
 
 {% block content %}
 
     <div class="col-md-12">
-      {% if grade_id %}
-      <form action = "{% url 'student_evaluation_report' grade_id %}" method="post" class="form-inline" role="form" style="text-align: right; margin-bottom: 15px">
-      {% else %}
-      <form action = "{% url 'student_evaluation_report' %}" method="post" class="form-inline" role="form" style="text-align: right; margin-bottom: 15px">
-      {% endif %}
-          {% csrf_token %}
+        <div class="form-inline" style="text-align: right; margin-bottom: 15px">
             <div class="form-group">
               <input type="date" name="search_start_date" class="form-control" id="search_start_date" required>
             </div>
@@ -22,9 +17,9 @@
               <input type="date" name="search_end_date" class="form-control" id="search_end_date" required>
             </div>
             <div class="form-group">
-              <button type="submit" class="btn btn-primary form-control">{% trans "Submit" %}</button>
+              <button type="button" class="btn btn-primary form-control" onclick="submit();">{% trans "Submit" %}</button>
             </div>
-      </form>
+      </div>
     </div>
 
     <div class="col-md-3">
@@ -33,26 +28,42 @@
           <tbody>
             <tr>
                 <td>
+                    {% if start_date and end_date %}
+                    <a href = "{% url 'student_evaluation_report' 0 start_date end_date %}" role="button" class="btn btn-xs btn-warning">{% trans "All Grade Levels" %}</a>
+                    {% else %}
                     <a href = "{% url 'student_evaluation_report' %}" role="button" class="btn btn-xs btn-warning">{% trans "All Grade Levels" %}</a>
+                    {% endif %}
                 </td>
             </tr>
             {% for grade_id,grade in grades.items %}
               {% if grade_id >= 1 and grade_id <= 6%}
               <tr>
                 <td>
+                {% if start_date and end_date %}
+                <a href = "{% url 'student_evaluation_report' grade_id start_date end_date %}" role="button" class="btn btn-xs btn-success">{{grade}}</a>
+                {% else %}
                 <a href = "{% url 'student_evaluation_report' grade_id %}" role="button" class="btn btn-xs btn-success">{{grade}}</a>
+                {% endif %}
                 </td>
               </tr>
               {% endif %}
             {% endfor %}
             <tr>
               <td>
+              {% if start_date and end_date%}
+              <a href = "{% url 'student_evaluation_report' 50 start_date end_date %}" role="button" class="btn btn-xs btn-success">{% trans "English" %}</a>
+              {% else %}
               <a href = "{% url 'student_evaluation_report' 50 %}" role="button" class="btn btn-xs btn-success">{% trans "English" %}</a>
+              {% endif %}
               </td>
             </tr>
             <tr>
               <td>
+              {% if start_date and end_date %}
+              <a href = "{% url 'student_evaluation_report' 70 start_date end_date %}" role="button" class="btn btn-xs btn-success">{% trans "Vietnamese" %}</a>
+              {% else %}
               <a href = "{% url 'student_evaluation_report' 70 %}" role="button" class="btn btn-xs btn-success">{% trans "Vietnamese" %}</a>
+              {% endif %}
               </td>
             </tr>
           </tbody>
@@ -100,7 +111,20 @@
 {% block script %}
  <!-- DataTables JavaScript -->
 <script type="text/javascript">
-$('#datePicker').val('{{attendance_date}}');
+var search_start_date = "{{start_date}}"
+var search_end_date = "{{end_date}}"
+var grade_id  = "{{grade_id}}"
+
+$('#search_start_date').val(search_start_date);
+$('#search_end_date').val(search_end_date);
+
+function submit()
+{
+   search_start_date = $('#search_start_date').val()
+   search_end_date = $('#search_end_date').val()
+   url = '{%url 'student_evaluation_report' %}' + grade_id + "/" + search_start_date + "/" + search_end_date
+   window.location.href = url
+}
 
 $(document).ready(function(){
   $('#evaluationReportTable').DataTable({

@@ -547,15 +547,11 @@ Student Evaluation Report
  - lists all student evaluations
 *****************************************************************************
 '''
-def student_evaluation_report(request,grade_id=None):
+def student_evaluation_report(request,grade_id=0,start_date=None,end_date=None):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
-      start_date = None
-      end_date = None
-      if request.method == 'POST':
-        start_date = request.POST['search_start_date']
-        end_date = request.POST['search_end_date']
+      if start_date and end_date:
         evaluations = StudentEvaluation.objects.all().filter(
                                     Q(date__gte=start_date) & Q(date__lte=end_date)
                                 ).exclude(
@@ -571,7 +567,7 @@ def student_evaluation_report(request,grade_id=None):
                                                               personal_score=None,
                                                               hygiene_score=None,
                                                               faith_score=None)
-      if grade_id is not None:
+      if grade_id != 0 and grade_id !='0':
         #select students who have not dropped the class, or have not dropped it yet.
         if grade_id == '50':
             enrolled_students = ClassroomEnrollment.objects.all().filter(
@@ -620,15 +616,11 @@ Student Achievement Report
  - lists all student Achievement test
 *****************************************************************************
 '''
-def student_achievement_test_report(request,grade_id=None):
+def student_achievement_test_report(request,grade_id=0,start_date=None,end_date=None):
     #get current method name
     method_name = inspect.currentframe().f_code.co_name
     if user_permissions(method_name,request.user):
-      start_date = None
-      end_date = None
-      if request.method == 'POST':
-        start_date = request.POST['search_start_date']
-        end_date = request.POST['search_end_date']
+      if start_date and end_date:
         achievement_tests = Academic.objects.all().filter(Q(test_date__gte=start_date) & Q(test_date__lte=end_date)).exclude(
                                                         test_grade_math=None,
                                                         test_grade_khmer=None,
@@ -638,7 +630,7 @@ def student_achievement_test_report(request,grade_id=None):
                                                             test_grade_math=None,
                                                             test_grade_khmer=None,
                                                             )
-      if grade_id is not None:
+      if grade_id != 0 and grade_id !='0':
         #select students who have not dropped the class, or have not dropped it yet.
         enrolled_students = ClassroomEnrollment.objects.all().filter(
                             Q(

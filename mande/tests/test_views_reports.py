@@ -728,7 +728,7 @@ class StudentEvaluationReportViewTestCase(TestCase):
                                                               faith_score=None)
 
         self.assertEqual(list(resp.context['evaluations']),list(evaluations))
-        self.assertEqual(resp.context['grade_id'],None)
+        self.assertEqual(resp.context['grade_id'],0)
         self.assertEqual(resp.context['start_date'],None)
         self.assertEqual(resp.context['end_date'],None)
         self.assertEqual(resp.context['grades'],dict(GRADES))
@@ -766,11 +766,12 @@ class StudentEvaluationReportViewTestCase(TestCase):
         start_date = date.today().isoformat()
         end_date = date.today().isoformat()
         data = {
-            'search_start_date':start_date,
-            'search_end_date':end_date
+            'grade_id':grade_id,
+            'start_date':start_date,
+            'end_date':end_date
         }
-        url = reverse('student_evaluation_report',kwargs={'grade_id':grade_id})
-        resp = self.client.post(url,data)
+        url = reverse('student_evaluation_report',kwargs=data)
+        resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp,'mande/studentevaluationreport.html')
         evaluations = StudentEvaluation.objects.all().filter(
@@ -829,7 +830,7 @@ class StudentAchievementTestReportViewTestCase(TestCase):
                                                        test_grade_khmer=None,
                                                        )
         self.assertEqual(list(resp.context['achievement_tests']),list(achievement_tests))
-        self.assertEqual(resp.context['grade_id'],None)
+        self.assertEqual(resp.context['grade_id'],0)
         self.assertEqual(resp.context['start_date'],None)
         self.assertEqual(resp.context['end_date'],None)
         self.assertEqual(resp.context['grades'],dict(GRADES))
@@ -864,11 +865,12 @@ class StudentAchievementTestReportViewTestCase(TestCase):
         start_date = date.today().isoformat()
         end_date = date.today().isoformat()
         data = {
-            'search_start_date':start_date,
-            'search_end_date':end_date
+            'grade_id':grade_id,
+            'start_date':start_date,
+            'end_date':end_date
         }
-        url = reverse('student_achievement_test_report',kwargs={'grade_id':grade_id})
-        resp = self.client.post(url,data)
+        url = reverse('student_achievement_test_report',kwargs=data)
+        resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp,'mande/studentachievementtestreport.html')
         achievement_tests = Academic.objects.all().filter(Q(test_date__gte=start_date) & Q(test_date__lte=end_date)).exclude(
