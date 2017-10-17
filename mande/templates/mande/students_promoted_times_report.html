@@ -3,6 +3,9 @@
 {% load mandefilters %}
 {% block title %}
 {% trans "Students Promoted Times Report" %}
+{% if year and year != '0'  %}
+    {{year}}-{{year|add:1}}
+{% endif %}
 {% if classroom == '0' or not classroom%}
     {% if school and school != '0'  %}
     {{school | site_by_id}}
@@ -48,12 +51,12 @@
         <a role="button" class="btn btn-sm btn-danger" href="{% url 'students_promoted_times_report' %}">{% trans "Clear Search" %}</a>
     </li>
     <li>
-      <a href="{% url 'students_promoted_times_report' 'ALL' year school grade classroom %}" class="btn {% if filter_seach != ALL %} btn-info {% else %} btn-warning {% endif %} btn-sm">
+      <a href="{% url 'students_promoted_times_report' 'ALL' year school grade classroom %}" class="btn {% if filter_seach != 'ALL' %} btn-info {% else %} btn-warning {% endif %} btn-sm">
         {% trans "All Students" %}
       </a>
     </li>
     <li>
-        <a href="{% url 'students_promoted_times_report' 'CURRENT' year school grade classroom %}" class="btn {% if filter_seach == ALL %} btn-info {% else %} btn-warning {% endif %} btn-sm">
+        <a href="{% url 'students_promoted_times_report' 'CURRENT' year school grade classroom %}" class="btn {% if filter_seach == 'ALL' %} btn-info {% else %} btn-warning {% endif %} btn-sm">
             {% trans "Current Students" %}
         </a>
     </li>
@@ -64,7 +67,6 @@
     </li>
     <li>
         <select class="form-control" id="select_year">
-            <option value="" selected="selected">--- Select Academic Year ---</option>
             <option value="0">ALL</option>
             {% for year in academic_years%}
                 <option value="{{year}}">{{year}}-{{year|add:1}}</option>
@@ -83,11 +85,11 @@
   </ul>
   <ul style="list-style:none; padding:0;">
     <li style="margin-bottom:5px;">
-        <a class="btn btn-info" href="{% url 'students_promoted_times_report' filter_seach year 0 0 0 %}">{% trans "All Sites" %}</a>
+        <a class="btn btn-info" id="school0" href="{% url 'students_promoted_times_report' filter_seach year 0 0 0 %}">{% trans "All Sites" %}</a>
     <li>
     {% for site in sites %}
       <li style="margin-bottom:5px;">
-        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="{{'#demo'|concate:site.school_id}}">{{ site.school_name }} <span class="caret"></span></button>
+        <button type="button" id="{{'school'|concate:site.school_id}}" class="btn btn-info" data-toggle="collapse" data-target="{{'#demo'|concate:site.school_id}}">{{ site.school_name }} <span class="caret"></span></button>
          <div id="{{'demo'|concate:site.school_id}}" class="collapse">
              <ul style="list-style:none; padding:0; margin-top:5px; margin-left:10px;">
                <li style="margin-bottom:5px;">
@@ -97,13 +99,13 @@
                  {% if grade_id >= 1 and grade_id <= 6 %}
                  <li style="margin-bottom:5px;">
                      <div class="dropdown">
-                       <button class="btn btn-success dropdown-toggle" id="{{site.school_name|concate:grade_id}}" type="button" data-toggle="dropdown">{{grade}}
+                       <button class="btn btn-success dropdown-toggle" id="{{'grade'|concate:grade_id}}" type="button" data-toggle="dropdown">{{grade}}
                        <span class="caret"></span></button>
-                       <ul class="dropdown-menu" role="menu" aria-labelledby="{{site.school_name|concate:grade_id}}">
+                       <ul class="dropdown-menu" role="menu" aria-labelledby="{{'grade'|concate:grade_id}}">
                             <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'students_promoted_times_report' filter_seach year site.school_id grade_id 0 %}">{% trans "All Classes" %}</a></li>
                             <li role="presentation" class="divider"></li>
                             {% for class in grade_id|classroom_by_school_grade:site.school_id %}
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'students_promoted_times_report' filter_seach year 0 0 class.classroom_id %}">{{class}}</a></li>
+                            <li role="presentation"><a role="menuitem" id="{{'classroom'|concate:class.classroom_id}}" tabindex="-1" href="{% url 'students_promoted_times_report' filter_seach year 0 0 class.classroom_id %}">{{class}}</a></li>
                             <li role="presentation" class="divider"></li>
                             {% endfor %}
                        </ul>
@@ -142,6 +144,19 @@ $(document).ready(function(){
              },
     ]
   });
+  var classroom = {{classroom}}
+  // current year
+  $("#select_year").val({{year}});
+  if(classroom=='0'){
+      // current site
+      $("#school{{school}}").css({"background":"#f0ad4e","border-color":"#f0ad4e"});
+  }
+
+  // current grade
+  $("#grade{{grade}}").css({"background":"#f0ad4e","border-color":"#f0ad4e"});
+  // current class
+  $("#classroom{{classroom}}").css({"background":"#f0ad4e","color":"white"});
+
   $('#select_year').on('change', function() {
       var selected_year = this.value;
       var filter_seach = "{{filter_seach}}"
