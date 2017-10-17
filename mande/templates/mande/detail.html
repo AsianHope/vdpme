@@ -609,7 +609,7 @@
    <script src="/static/mande/bower_components/DataTables/media/js/jquery.dataTables.min.js"></script>
    <script src="/static/mande/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
 
-   <script language="JavaScript">
+ <script type="text/javascript">
    //  popup window
    //----- OPEN
    var $image = $("#photo")
@@ -678,27 +678,27 @@
     }
     //  save upload or cropped photo
     function post(path, params, method) {
-    method = method || "post"; // Set method to post by default if not specified.
-    // The rest of this code assumes you are not using a library.
-    // It can be made less wordy if you use one.
-    var form = document.createElement("form");
-    form.setAttribute("method", method);
-    form.setAttribute("action", path);
+        method = method || "post"; // Set method to post by default if not specified.
+        // The rest of this code assumes you are not using a library.
+        // It can be made less wordy if you use one.
+        var form = document.createElement("form");
+        form.setAttribute("method", method);
+        form.setAttribute("action", path);
 
-    for(var key in params) {
-        if(params.hasOwnProperty(key)) {
-            var hiddenField = document.createElement("input");
-            hiddenField.setAttribute("type", "hidden");
-            hiddenField.setAttribute("name", key);
-            hiddenField.setAttribute("value", params[key]);
+        for(var key in params) {
+            if(params.hasOwnProperty(key)) {
+                var hiddenField = document.createElement("input");
+                hiddenField.setAttribute("type", "hidden");
+                hiddenField.setAttribute("name", key);
+                hiddenField.setAttribute("value", params[key]);
 
-            form.appendChild(hiddenField);
-         }
+                form.appendChild(hiddenField);
+             }
+        }
+
+        document.body.appendChild(form);
+        form.submit();
     }
-
-    document.body.appendChild(form);
-    form.submit();
-}
     function save_photo(){
       var img_url = $("#preview").attr("src")
       post("{% url 'save_photo' %}", {'img_url': img_url,'student_id':'{{survey.student_id}}','csrfmiddlewaretoken':'{{csrf_token}}'});
@@ -715,8 +715,7 @@
     function zoom_out(){
       $image.cropper("zoom",-0.1)
     }
-</script>
-<script type="text/javascript">
+
 $("#delete_spiritualactivities_survey").click(function(event){
     event.preventDefault();
     if(confirm("Are you sure you want to delete?")) {
@@ -741,6 +740,7 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
 })
 $(document).ready( function() {
   $(function() {
+    $("#profile_pic").attr('src','{{MEDIA_URL}}{{survey.student_id}}.jpg?'+new Date().getTime());
     $('#decrement').click(function() {
         //split on /
         $url = window.location.href.split('/')
