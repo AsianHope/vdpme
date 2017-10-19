@@ -79,12 +79,12 @@ class IntakeUpdateForm(forms.ModelForm):
         'minors_training_type',
         'grade_appropriate'
         ]
-    # def clean_date(self):
-    #     NYC_TIME = pytz.timezone('Asia/Phnom_Penh')
-    #     date = self.cleaned_data['date']
-    #     time = datetime.now(NYC_TIME).time()
-    #     date =datetime(date.year, date.month, date.day, time.hour, time.minute,tzinfo = NYC_TIME)
-    #     return date
+    def clean_date(self):
+        NYC_TIME = pytz.timezone('Asia/Phnom_Penh')
+        date = self.cleaned_data['date']
+        time = datetime.now(NYC_TIME).time()
+        date =datetime(date.year, date.month, date.day, time.hour, time.minute,tzinfo = NYC_TIME)
+        return date
 
 class ExitSurveyForm(forms.ModelForm):
     survey_date = forms.DateField(label=_("Survey Date"),widget=Html5DateInput)

@@ -3,7 +3,7 @@
     "fields": {
         "student_id":"1",
         "enrollment_date":"2005-07-01",
-        "starting_grade":"50"
+        "starting_grade":"53"
     },
     "model":"mande.intakeinternal",
     "pk":1
@@ -21,7 +21,7 @@
     "fields": {
         "student_id":"3",
         "enrollment_date":"2005-07-01",
-        "starting_grade":"50"
+        "starting_grade":"53"
     },
     "model":"mande.intakeinternal",
     "pk":3

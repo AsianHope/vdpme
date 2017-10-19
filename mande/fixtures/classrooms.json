@@ -35,7 +35,7 @@
   {
       "fields": {
           "active": true,
-          "cohort": 50,
+          "cohort": 53,
           "classroom_location": "",
           "school_id": 3,
           "classroom_number": "English 3"

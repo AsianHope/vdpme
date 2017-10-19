@@ -64,7 +64,8 @@ class TeacherTestCase(TestCase):
         self.assertEqual(entry.__unicode__(),unicode(entry.teacher_id)+' - '+unicode(entry.name))
 class IntakeSurveyTestCase(TestCase):
     fixtures = ['schools.json','intakesurveys.json','intakeupdates.json',
-                'intakeinternals.json','classrooms.json','classroomenrollment.json'
+                'intakeinternals.json','classrooms.json','classroomenrollment.json',
+                'intakeupdates.json'
                ]
     def setUp(self):
         self.intake = IntakeSurvey.objects.get(pk=2)
@@ -102,21 +103,22 @@ class IntakeSurveyTestCase(TestCase):
         notes.append({'date':IntakeUpdate.objects.get(pk=update.id).date,'note':update.notes})
         self.assertEqual(self.intake.getNotes(),notes)
 
-    # def test_current_vdp_grade_promote_true(self):
-    #     self.assertEqual(self.intake.current_vdp_grade(),1)
-    #     Academic.objects.create(student_id=self.intake,test_date="2017-01-02",test_level=1,promote=True)
-    #     self.assertNotEqual(self.intake.current_vdp_grade(),1)
-    #     self.assertEqual(self.intake.current_vdp_grade(),2)
-    def test_current_vdp_grade_promote_false(self):
+    def test_current_vdp_grade_no_intakeinternal(self):
+        intake = IntakeSurvey.objects.get(pk=9)
+        self.assertEqual(intake.current_vdp_grade(),0)
+
+    def test_current_vdp_grade_no_intakeupdate(self):
         self.assertEqual(self.intake.current_vdp_grade(),1)
-        Academic.objects.create(student_id=self.intake,test_date="2017-01-02",test_level=1,promote=False)
-        self.assertNotEqual(self.intake.current_vdp_grade(),2)
+
+    def test_current_vdp_grade_with_intakeudpate(self):
         self.assertEqual(self.intake.current_vdp_grade(),1)
-    # def test_current_vdp_grade_promote_to_english(self):
-    #     self.assertEqual(self.intake.current_vdp_grade(),1)
-    #     Academic.objects.create(student_id=self.intake,test_date="2017-01-02",test_level=6,promote=True)
-    #     self.assertNotEqual(self.intake.current_vdp_grade(),6)
-    #     self.assertEqual(self.intake.current_vdp_grade(),50)
+        intakeupdate = IntakeUpdate.objects.create(
+         student_id = IntakeSurvey.objects.get(pk=2),
+         current_grade = 2,
+         date=date.today().isoformat()
+        )
+        self.assertEqual(self.intake.current_vdp_grade(),2)
+
     def test_date_enrolled_grade(self):
         a = Academic.objects.create(student_id=self.intake,test_date="2017-01-02",test_level=1,promote=True)
         self.assertNotEqual(self.intake.date_enrolled_grade(2),"2005-07-01")

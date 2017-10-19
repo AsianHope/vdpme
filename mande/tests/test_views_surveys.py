@@ -3,8 +3,9 @@ from django.test import Client
 
 from mande.models import *
 from mande.forms import *
+from django.db.models import Q
 
-from datetime import date
+from datetime import date,datetime
 from django.core.urlresolvers import reverse
 from django.utils.translation import activate
 import json
@@ -375,50 +376,51 @@ class IntakeUpdateViewTestCase(TestCase):
         self.assertEqual(NotificationLog.objects.all().count(),1)
         self.assertEqual(CurrentStudentInfo.objects.all().count(),9)
 
-    # def test_context_post(self):
-    #     student_id = 1
-    #     data = {
-    #         "student_id":student_id,
-    #         "minors_in_public_school":0,
-    #         "minors_in_other_school":0,
-    #         "guardian1_relationship":'FATHER',
-    #         "guardian1_employment":1,
-    #         "minors":0,
-    #         "date":date.today().isoformat(),
-    #         "address": "test",
-    #     }
-    #     url = reverse('intake_update',kwargs={'student_id':student_id})
-    #     next_url = reverse('student_detail',kwargs={'student_id':student_id})
-    #     resp = self.client.post(url+'?next='+next_url+'&tab=enrollment',data)
-    #     self.assertRedirects(resp, expected_url=next_url+'#enrollment', status_code=302, target_status_code=200)
-    #     instance = IntakeUpdate.objects.get(student_id=student_id,date=date.today().isoformat())
-    #     self.assertEqual(IntakeUpdate.objects.all().count(),2)
-    #     self.assertEqual(NotificationLog.objects.all().count(),2)
-    #     self.assertEqual(CurrentStudentInfo.objects.all().count(),9)
-    #     message = 'Updated '+unicode(instance.student_id.name)+'\'s record'
-    #     self.assertTrue(
-    #         NotificationLog.objects.filter(
-    #             text=message, font_awesome_icon='fa-upload',
-    #             user=self.client.session['_auth_user_id']
-    #         ).exists()
-    #     )
-    #     student = IntakeSurvey.objects.get(student_id=instance.student_id.student_id)
-    #     current = student.getRecentFields()
-    #     self.assertTrue(
-    #             CurrentStudentInfo.objects.filter(
-    #             student_id=student.student_id,
-    #             name = current['name'],
-    #             site = current['site'],
-    #             date = current['date'],
-    #             dob = current['dob'],
-    #             gender = current['gender'],
-    #             age_appropriate_grade = student.age_appropriate_grade(),
-    #             in_public_school = True if student.get_pschool().status=='Y' else False,
-    #             at_grade_level = studentAtAgeAppropriateGradeLevel(student.student_id),
-    #             vdp_grade = student.current_vdp_grade(),
-    #             refresh = date.today().isoformat(),
-    #             ).exists()
-    #     )
+    def test_context_post(self):
+        student_id = 1
+        survey_date = "2017-10-19"
+        data = {
+            "student_id":student_id,
+            "minors_in_public_school":0,
+            "minors_in_other_school":0,
+            "guardian1_relationship":'FATHER',
+            "guardian1_employment":1,
+            "minors":0,
+            "date":survey_date,
+            "address": "test",
+        }
+        url = reverse('intake_update',kwargs={'student_id':student_id})
+        next_url = reverse('student_detail',kwargs={'student_id':student_id})
+        resp = self.client.post(url+'?next='+next_url+'&tab=enrollment',data)
+        self.assertRedirects(resp, expected_url=next_url+'#enrollment', status_code=302, target_status_code=200)
+        instance = IntakeUpdate.objects.get(student_id=student_id,date__startswith=survey_date)
+        self.assertEqual(IntakeUpdate.objects.all().count(),2)
+        self.assertEqual(NotificationLog.objects.all().count(),2)
+        self.assertEqual(CurrentStudentInfo.objects.all().count(),9)
+        message = 'Updated '+unicode(instance.student_id.name)+'\'s record'
+        self.assertTrue(
+            NotificationLog.objects.filter(
+                text=message, font_awesome_icon='fa-upload',
+                user=self.client.session['_auth_user_id']
+            ).exists()
+        )
+        student = IntakeSurvey.objects.get(student_id=instance.student_id.student_id)
+        current = student.getRecentFields()
+        self.assertTrue(
+                CurrentStudentInfo.objects.filter(
+                student_id=student.student_id,
+                name = current['name'],
+                site = current['site'],
+                date = current['date'],
+                dob = current['dob'],
+                gender = current['gender'],
+                age_appropriate_grade = student.age_appropriate_grade(),
+                in_public_school = True if student.get_pschool().status=='Y' else False,
+                at_grade_level = studentAtAgeAppropriateGradeLevel(student.student_id),
+                vdp_grade = student.current_vdp_grade(),
+                refresh = date.today().isoformat(),
+                ).exists()
+        )
 
 class ExitSurveyViewTestCase(TestCase):
     fixtures = ['users.json','schools.json','intakesurveys.json',

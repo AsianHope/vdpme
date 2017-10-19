@@ -11,7 +11,7 @@
           "age_appropriate_grade": 6,
           "at_grade_level": false,
           "in_public_school": false,
-          "vdp_grade": 50
+          "vdp_grade": 53
       },
       "model": "mande.currentstudentinfo",
       "pk": 1
@@ -45,7 +45,7 @@
           "age_appropriate_grade": 6,
           "at_grade_level": false,
           "in_public_school": false,
-          "vdp_grade": 50
+          "vdp_grade": 53
       },
       "model": "mande.currentstudentinfo",
       "pk": 3

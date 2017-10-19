@@ -1,6 +1,9 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.test import Client
+import pytz
+from datetime import datetime
+
 from mande.forms import IntakeSurveyForm
 from mande.forms import IntakeInternalForm
 from mande.forms import IntakeUpdateForm
@@ -92,8 +95,9 @@ class IntakeInternalFormTestCase(TestCase):
 class IntakeUpdateFormTestCase(TestCase):
     fixtures = ['schools.json','intakesurveys.json']
     def test_IntakeUpdateForm_valid(self):
+        date = "2017-01-01"
         data = {
-            "date":"2017-01-01",
+            "date":date,
             "student_id":1,
             "address":"test",
             "guardian1_relationship":"FATHER",
@@ -104,6 +108,15 @@ class IntakeUpdateFormTestCase(TestCase):
         }
         form = IntakeUpdateForm(data)
         self.assertTrue(form.is_valid())
+
+        self.assertNotEqual(form.cleaned_data['date'],date)
+        date = datetime.strptime(date, "%Y-%m-%d").date()
+        NYC_TIME = pytz.timezone('Asia/Phnom_Penh')
+        time = datetime.now(NYC_TIME).time()
+        clean_date =datetime(date.year, date.month, date.day, time.hour, time.minute,tzinfo = NYC_TIME)
+        self.assertEqual(form.cleaned_data['date'],clean_date)
+
+
     def test_IntakeUpdateForm_invalid(self):
         data = {
             "date":"2017-01-01",
@@ -565,7 +578,7 @@ class EvaluationMarkingPeriodFormTestCase(TestCase):
         }
         form = EvaluationMarkingPeriodForm(data)
         self.assertTrue(form.is_valid())
-        
+
     def test_evaluation_marking_period_form_invalid(self):
         data={
             "description":"test",
