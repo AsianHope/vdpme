@@ -30,6 +30,7 @@ from mande.models import PublicSchoolHistory
 from mande.models import AcademicMarkingPeriod
 from mande.models import CurrentStudentInfo
 from mande.models import EvaluationMarkingPeriod
+from mande.models import NotificationLog
 
 class SchoolAdmin(admin.ModelAdmin):
         list_display = ('school_name','school_location')
@@ -160,6 +161,13 @@ class EvaluationMarkingPeriodAdmin(admin.ModelAdmin):
     list_filter = ('test_date',)
     search_fields = ['description']
 
+class NotificationLogAdmin(admin.ModelAdmin):
+    list_display = ('user','date','text',)
+    list_filter = ('date','user',)
+    search_fields = ['text']
+
+
+
 admin.site.register(School,SchoolAdmin)
 admin.site.register(Classroom,ClassroomAdmin)
 admin.site.register(Teacher,TeacherAdmin)
@@ -187,3 +195,4 @@ admin.site.register(PublicSchoolHistory,PublicSchoolHistoryAdmin)
 admin.site.register(AcademicMarkingPeriod,AcademicMarkingPeriodAdmin)
 admin.site.register(CurrentStudentInfo,CurrentStudentInfoAdmin)
 admin.site.register(EvaluationMarkingPeriod,EvaluationMarkingPeriodAdmin)
+admin.site.register(NotificationLog,NotificationLogAdmin)
