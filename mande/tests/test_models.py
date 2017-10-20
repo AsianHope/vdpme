@@ -26,6 +26,7 @@ from mande.models import AcademicMarkingPeriod
 from mande.models import CurrentStudentInfo
 from mande.models import EvaluationMarkingPeriod
 from django.contrib.auth.models import User
+from django.db import IntegrityError
 
 class SchoolTestCase(TestCase):
     def setUp(self):
@@ -277,6 +278,24 @@ class ExitSurveyTestCase(TestCase):
         )
         self.assertIsInstance(entry,ExitSurvey)
         self.assertEqual(entry.__unicode__(),unicode(entry.exit_date)+' - '+unicode(entry.student_id))
+    def test_ExitSurvey_duplicate(self):
+        entry = ExitSurvey.objects.create(
+            student_id=IntakeSurvey.objects.get(pk=1),
+            survey_date=date.today().isoformat(),
+            exit_date=date.today().isoformat(),
+        )
+        error_occured = False
+        try:
+            ExitSurvey.objects.create(
+                student_id=IntakeSurvey.objects.get(pk=1),
+                survey_date=date.today().isoformat(),
+                exit_date=date.today().isoformat(),
+            )
+        except IntegrityError:
+            error_occured = True
+
+        self.assertTrue(error_occured)
+
 class PostExitSurveyTestCass(TestCase):
     fixtures = ['schools.json','intakesurveys.json']
     def test_PostExitSurvey_creation(self):

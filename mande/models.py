@@ -514,6 +514,8 @@ class ExitSurvey(models.Model):
 	secondary_enrollment = models.CharField(_('Plan to enroll in secondary school?'),max_length=2,choices=YN,default='NA')
 	def __unicode__(self):
 		return unicode(self.exit_date)+' - '+unicode(self.student_id)
+	class Meta:
+		unique_together = (('student_id', 'exit_date'),)
 
 class PostExitSurvey(models.Model):
 	student_id = models.ForeignKey(IntakeSurvey,verbose_name=_('Student ID'))
