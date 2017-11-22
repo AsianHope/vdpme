@@ -101,3 +101,102 @@ ul.buttonlist li{
 .img-container > img {
   max-width: 100%;
 }
+
+/*collape sidebar*/
+.wrapper, .row {
+    height: 100%;
+    margin-left:0;
+    margin-right:0;
+}
+.nav-sidebar{
+    position: fixed;
+    z-index: 400;
+    width: 250px;
+    transition: left 0.15s;
+    top: 52px;
+    bottom: 0;
+    left: 0;
+    background-color: #f5f5f5;
+    /*box-shadow: inset -2px 0 0 #e5e5e5;*/
+    transform: translate3d(0, 0, 0);
+}
+.nav-sidebar.sidebar-icons-only {
+    width: auto;
+    min-width: 50px;
+}
+.content-wrapper{
+    width: 100%;
+    transition: padding 0.15s;
+}
+.page-with-sidebar>.content-wrapper{
+    min-height: calc(100vh - 40px);
+}
+.content-wrapper.page-with-new-nav{
+    margin-top: 40px;
+}
+.page-with-new-sidebar {
+    padding-left: 250px;
+}
+.page-with-icon-sidebar {
+    padding-left: 63px;
+}
+.nav-sidebar-inner-scroll{
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+}
+.sidebar-icons-only .toggle-sidebar-button{
+    width: 50px;
+    padding: 16px;
+}
+.toggle-sidebar-button{
+    width: 250px;
+    position: fixed;
+    bottom: 0;
+    padding: 16px;
+    background-color: #f5f5f5;
+    border: 0;
+    border-top: 2px solid #e5e5e5;
+    color: #707070;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+.top_header{
+    top: 0;
+    margin: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    position: fixed;
+}
+
+.sidebar-sub-level-items{
+    position: fixed;
+    left: 235px;
+    min-width: 200px;
+    overflow-y: scroll;
+    height: 350px;
+    width: auto;
+    padding: 4px 1px;
+    background-color: #fff;
+    box-shadow: 2px 1px 3px rgba(0,0,0,0.1);
+    border: 1px solid #eee;
+    border-left: 0;
+    border-radius: 0 3px 3px 0;
+    margin-top: -38px;
+    display: none;
+    z-index: 999;
+}
+.sidebar-sub-level-items .active{
+    background-color: #eee;
+}
+.sidebar-icons-only .sidebar-sub-level-items{
+    left: 48px;
+}
+.show {
+    display: block;
+}
+.sidebar-top .active{
+    background-color: #eee;
+}

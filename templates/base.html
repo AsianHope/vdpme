@@ -50,11 +50,9 @@
 </head>
 
 <body>
-
     <div id="wrapper">
-
         <!-- Navigation -->
-        <nav class="navbar navbar-default navbar-/static-top" role="navigation" style="margin-bottom: 0">
+        <nav class="top_header navbar navbar-default navbar-/static-top" role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
@@ -63,6 +61,14 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="/">Jethro {% get_version %}</a>
+            </div>
+            <div class="input-group custom-search-form" style="width: 200px; float: left; margin-top: 8px;">
+                <input type="number" class="form-control" placeholder="Search..." id="search_box" required>
+                <span class="input-group-btn">
+                  <button class="btn btn-default" type="submit">
+                    <i class="fa fa-search"></i>
+                  </button>
+                </span>
             </div>
             <!-- /.navbar-header -->
 
@@ -86,67 +92,60 @@
                 <!-- /.dropdown -->
             </ul>
             <!-- /.navbar-top-links -->
+            <!-- /.navbar-/static-side -->
 
-            <div class="navbar-default sidebar" role="navigation">
-                <div class="sidebar-nav navbar-collapse">
-                    <ul class="nav" id="side-menu">
-                        <li class="sidebar-search">
-                          <form method="post" name="search_form" onsubmit="get_action();">
-                            {% csrf_token %}
-                            <div class="input-group custom-search-form">
 
-                                <input type="number" class="form-control" placeholder="Search..." id="search_box" required>
-                                <span class="input-group-btn">
-                                  <button class="btn btn-default" type="submit">
-                                    <i class="fa fa-search"></i>
-                                  </button>
-                                </span>
-                            </div>
-                          </form>
-                            <!-- /input-group -->
-                        </li>
+        </nav>
 
+        <div class="page-with-new-sidebar page-with-sidebar">
+            <div class="nav-sidebar">
+
+                <div class="nav-sidebar-inner-scroll" style="overflow-y: scroll;">
+                    <ul class="nav">
                         <li>
-                            <a href="{% url 'index' %}"><i class="fa fa-dashboard fa-fw"></i>{% trans "Dashboard" %}</a>
+                            <a href="{% url 'index' %}"><i class="fa fa-dashboard fa-fw"></i><span style="display:inline;" class="collapse in hidden-xs">{% trans "Dashboard" %}</span></a>
                         </li>
 
                         {% for heading in menu %}
-                        <li>
-                          <a href="#"><i class="fa {{heading.icon}} fa-fw"></i>{% trans heading.display %}<span class="fa arrow"></span></a>
-                          <ul class="nav nav-second-level">
+                        <li class="list_menu">
+                          <a href="#"><i class="fa {{heading.icon}} fa-fw"></i><span style="display:inline;" class="collapse in hidden-xs">{% trans heading.display %}</span><span class="collapse in hidden-xs fa arrow"></span></a>
+
+                          <ul class="nav sidebar-sub-level-items">
                             {% for item in heading.items %}
                               <li>
                                 <a href="{% url item.name %}">{% trans item.display %}</a>
                               </li>
                             {% endfor %}
                           </ul>
+                          <ul class="nav sub-menu" style="display:none; padding-left: 20px;">
+                                  {% for item in heading.items %}
+                                    <li>
+                                      <a href="{% url item.name %}">{% trans item.display %}</a>
+                                    </li>
+                                  {% endfor %}
+                            </ul>
+
                         </li>
                         {% endfor %}
-
+                        <a href="#" data-toggle="offcanvas" class="toggle-sidebar-button js-toggle-sidebar" style="text-decoration:none;"title="Toggle sidebar">
+                            <i class="fa fa-angle-double-left"></i> &nbsp;
+                            <span class="collapse in hidden-xs">Collapse sidebar</span>
+                        </a>
                     </ul>
                 </div>
-                <!-- /.sidebar-collapse -->
             </div>
-            <!-- /.navbar-/static-side -->
-        </nav>
 
-        <div id="page-wrapper">
-            <div class="row">
-                <div class="col-lg-12">
-                  <h1 class="page-header">{% block title %}{% endblock %}</h1>
-{% block content %}{% endblock %}
-                  </div>
-                  <!-- /.col-lg-12 -->
-                  </div>
-                  <!-- /.row -->
-                  </div>
-
-                  <!-- /.container-fluid -->
-                  </div>
-                  <!-- /#page-wrapper -->
-
-                  </div>
-                  <!-- /#wrapper -->
+            <div class="content-wrapper page-with-new-nav">
+                <div class="row">
+                    <div class="col-lg-12">
+                      <h1 class="page-header">{% block title %}{% endblock %}</h1>
+                      {% block content %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /#wrapper -->
                   <!-- jQuery -->
                   <script src="/static/mande/bower_components/jquery/dist/jquery.min.js"></script>
 
@@ -181,6 +180,31 @@
 <script type="text/javascript" src="https://jira.asianhope.org/s/431c2762976caec12827c94ff810e709-T/en_USmpmr87/6346/321/1.4.16/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=ac436889"></script>
 
 <script type="text/javascript">
+    /* sidebar toggle */
+    $('[data-toggle=offcanvas]').click(function() {
+        $('.collapse').toggleClass('in').toggleClass('hidden-xs').toggleClass('visible-xs');
+        $('.page-with-new-sidebar').toggleClass('page-with-icon-sidebar');
+        $('.nav-sidebar').toggleClass('sidebar-icons-only');
+        $('.toggle-sidebar-button i').toggleClass('fa-angle-double-left').toggleClass('fa-angle-double-right');
+        if ($(".toggle-sidebar-button i").hasClass("fa-angle-double-right")){
+            $(".sub-menu").removeClass("show");
+        }
+    });
+    $('.list_menu').hover(function() {
+        if (!$(this).children(".sidebar-sub-level-items").hasClass("show")) {
+            $(this).children(".sidebar-sub-level-items").addClass("show");
+        }
+    }, function() {
+        $(this).children(".sidebar-sub-level-items").removeClass("show");
+    });
+    $( ".list_menu" ).click(function() {
+        if (!$(this).children(".sub-menu").hasClass("show") && $('.collapse').is(':visible')) {
+            $(this).children(".sub-menu").addClass("show");
+        }
+        else{
+            $(this).children(".sub-menu").removeClass("show");
+        }
+    });
     function get_action() {
         var student_id = $("#search_box").val();
         document.search_form.action = "/students/"+student_id+"/"
