@@ -46,7 +46,7 @@ class IntakeSurveyForm(forms.ModelForm):
     address = forms.CharField(label=_('Home Address'),widget=forms.Textarea(attrs={'rows': 4}))
     notes = forms.CharField(label=_('Notes'),widget=forms.Textarea(attrs={'rows': 4}),required=False)
     enrollment_date = forms.DateField(label=_('Enrollment Date'),widget=Html5DateInput)
-    starting_grade = forms.ChoiceField(label=_('Starting Grade'),choices=VDP_GRADES)
+    starting_grade = forms.ChoiceField(label=_('Starting Grade in VDP'),choices=VDP_GRADES)
 
     class Meta:
         model = IntakeSurvey
