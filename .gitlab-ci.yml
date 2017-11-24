@@ -1,0 +1,54 @@
+# Official framework image. Look for the different tagged releases at:
+# https://hub.docker.com/r/library/python
+image: python:latest
+
+cache:
+  paths:
+  - ~/.cache/pip/
+
+before_script:
+  - python -V                                   # Print out python version for debugging
+  - pip install -r requirements.txt
+  # Install ssh-agent if not already installed, it is required by Docker.
+  # (change apt-get to yum if you use a CentOS-based image)
+  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+
+  # Run ssh-agent (inside the build environment)
+  - eval $(ssh-agent -s)
+
+  # Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
+  - ssh-add <(echo "$SSH_PRIVATE_KEY")
+
+  # For Docker builds disable host key checking. Be aware that by adding that
+  # you are suspectible to man-in-the-middle attacks.
+  - mkdir -p ~/.ssh
+  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+stages:
+  - test
+  - deploy
+
+test:
+  script:
+  - python manage.py test
+
+deploy_staging:
+  stage: deploy
+  script:
+     - echo "Deploy to staging server"
+  environment:
+     name: staging
+     url: https://staging.jethro.asianhope.org
+  only:
+  - master 
+
+deploy_prod:
+  stage: deploy
+  script:
+     - echo "Deploying to production server"
+  environment:
+     name: production
+     url:  https://jethro.asianhope.org
+  when: manual
+  only:
+  - master
